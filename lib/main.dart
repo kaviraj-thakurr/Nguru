@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
+import 'package:nguru/logic/login_cubit/login_cubit.dart';
+import 'package:nguru/repo/api/auth_repo.dart';
 import 'package:nguru/screen/addSchool.dart';
+import 'package:nguru/theme/app_theme.dart';
 
 import 'screen/login_screen.dart';
 
-void main() {
+void main() async{
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+       create: (context) => AddSchoolCubit(AuthRepo())),
+        BlocProvider(
+       create: (context) => LoginCubit(AuthRepo())),
+
+      ],
+      child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: AppThemes.light,
+      darkTheme: AppThemes.dark,
       home: AddSchool(),
-    );
-  }
-}
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Demo Home Page'),
-      ),
-      body: Center(
-        child: Text(
-          'Hello, Flutter!',
-          style: TextStyle(fontSize: 24),
-        ),
       ),
     );
   }

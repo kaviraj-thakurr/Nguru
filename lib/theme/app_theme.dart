@@ -7,13 +7,13 @@ import 'package:nguru/custom_widgets/my_colors.dart';
 class AppThemes {
   AppThemes._();
   static final light = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: MyColors.primaryColor),
+    colorScheme: ColorScheme.fromSeed(seedColor: MyColors.white),
     useMaterial3: false,
     fontFamily: GoogleFonts.poppins().fontFamily,
   );
 
   static final dark = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: MyColors.secondaryColor),
+    colorScheme: ColorScheme.fromSeed(seedColor: MyColors.addButtonColor),
     useMaterial3: true,
     fontFamily: GoogleFonts.poppins().fontFamily,
   );

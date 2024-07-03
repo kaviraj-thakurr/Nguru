@@ -1,7 +1,8 @@
 class MyStrings{
   const MyStrings._();
 
-  static const String appName = "School URL";
+  static const String schoolurl = "School URL";
+  static const String appName = "Nguru";
   static const String add = "+Add";
   static const String submit = "Submit";
   static const String needHelp = "Need help?";
@@ -11,6 +12,8 @@ class MyStrings{
   static const String passWord = "Password";
   static const String signin = "Sign in";
   static const String forgotpassword = "Forgot password?";
+  static const String enterschoolurl = "Enter School URL";
+  static const String enterusernamepass = "Enter Username and Password";
 
 
 }
