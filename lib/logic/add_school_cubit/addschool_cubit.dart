@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
-import 'package:nguru/repo/api/auth_repo.dart';
+import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 
 class AddSchoolCubit extends Cubit<AddSchoolState> {
   final AuthRepo?  authRepo;

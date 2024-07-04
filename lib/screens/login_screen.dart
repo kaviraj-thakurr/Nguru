@@ -2,27 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:nguru/custom_widgets/font_util.dart';
+import 'package:nguru/utils/font_util.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
-import 'package:nguru/custom_widgets/my_assets.dart';
-import 'package:nguru/custom_widgets/my_colors.dart';
+import 'package:nguru/utils/my_assets.dart';
+import 'package:nguru/utils/my_colors.dart';
 
-import 'package:nguru/custom_widgets/my_strings.dart';
+import 'package:nguru/utils/my_strings.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
-
-import 'package:nguru/custom_widgets/text_button.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
-import 'package:nguru/screen/addSchool.dart';
+import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 final _formKey = GlobalKey<FormState>();
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? title;
+  const LoginScreen({super.key, this.title});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         gradient: MyColors.divider,
                         height: 2.0, // Customize height as needed
                       ),
-                      42.heightBox,
+                      16.heightBox,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:  Colors.black,
+                              border:
+                                  Border.all(color: Colors.black, width: 2.0),
+                            ),
+                            width: 13,
+                            height: 14.0,
+                          ),
+                          5.widthBox,
+                          Text(widget.title ?? "")
+                        ],
+                      ),
+                      10.heightBox,
                       Form(
                         key: _formKey,
                         child: Column(
@@ -113,13 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocListener<LoginCubit, LoginState>(
                         listener: (context, state) {
                           if (state is LoginSuccessState) {
-                            NavigationService.navigateTo(
-                                AddSchool(), context);
+                            NavigationService.navigateTo(AddSchool(), context);
                           } else if (state is LoginErrorState) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  state.message,
+                                  state.responseMessage,
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
@@ -130,7 +147,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           title: MyStrings.signin,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                          context.read<LoginCubit>().Login(userNameController.text.trim(), passWordController.text.toString());
+                              context.read<LoginCubit>().logIn(
+                                  userNameController.text.trim(),
+                                  passWordController.text.toString());
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

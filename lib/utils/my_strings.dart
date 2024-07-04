@@ -14,6 +14,7 @@ class MyStrings{
   static const String forgotpassword = "Forgot password?";
   static const String enterschoolurl = "Enter School URL";
   static const String enterusernamepass = "Enter Username and Password";
+  static const String nicknamerequired = "Nickname required";
 
 
 }

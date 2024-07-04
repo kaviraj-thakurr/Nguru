@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
-import 'package:nguru/repo/api/auth_repo.dart';
-import 'package:nguru/screen/addSchool.dart';
+import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/theme/app_theme.dart';
 
-import 'screen/login_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async{
   runApp(MyApp());
