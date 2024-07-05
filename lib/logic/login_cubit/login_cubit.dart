@@ -21,7 +21,7 @@ class LoginCubit extends Cubit<LoginState> {
         if(result.responseCode == "200" ){
           emit(LoginSuccessState());
         }else {
-          LoginErrorState(result.responseMessage ?? "Error occured");
+emit(LoginErrorState(result.responseMessage ?? "Error occured"));
         }
         
       }

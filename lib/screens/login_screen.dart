@@ -65,9 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color:  Colors.black,
+                              color:  Colors.white,
+                              
                               border:
-                                  Border.all(color: Colors.black, width: 2.0),
+                                  Border.all(color: Colors.black, width: 3.0),
                             ),
                             width: 13,
                             height: 14.0,
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  state.responseMessage,
+                                  state.message,
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
@@ -174,11 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         } else {
-          return Scaffold(
-            body: Center(
-              child: Text(''),
-            ),
-          );
+          return Container();
         }
       },
     );

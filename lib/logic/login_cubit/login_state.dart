@@ -21,6 +21,6 @@ class LoginSuccessState extends LoginState {
 }
 
 class LoginErrorState extends LoginState {
-  final String responseMessage;
-  LoginErrorState(this.responseMessage);
+  final String message;
+  LoginErrorState(this.message);
 }

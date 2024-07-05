@@ -140,7 +140,6 @@ class _AddSchoolState extends State<AddSchool> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<AddSchoolCubit>().addSchool(schoolurlController.text.trim());
-                        NavigationService.navigateTo(LoginScreen(title: nickNameController.text.trim()), context);
                       } else {
                        String errorMessage = '';
                         if (schoolurlController.text.isEmpty) {

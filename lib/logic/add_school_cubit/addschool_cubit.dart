@@ -18,8 +18,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
         if(result.responseCode == "200" || result.schoolName != null){
           emit(AddSchoolSuccessState(schoolName: result.schoolName));
         }else {
-          AddSchoolErrorState(result.responseMessage ?? "Error occured");
-        }
+          emit(AddSchoolErrorState(result.responseMessage ?? "Error occured"));}
         
       }
     } catch (e) {
