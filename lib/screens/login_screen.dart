@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/screens/dashboard_screen.dart';
 
 import 'package:nguru/utils/font_util.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
@@ -132,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocListener<LoginCubit, LoginState>(
                         listener: (context, state) {
                           if (state is LoginSuccessState) {
-                            NavigationService.navigateTo(AddSchool(), context);
+                            NavigationService.navigateTo(NguruDashboardScreen(), context);
                           } else if (state is LoginErrorState) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
