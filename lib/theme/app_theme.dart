@@ -10,6 +10,7 @@ class AppThemes {
     colorScheme: ColorScheme.fromSeed(seedColor: MyColors.white),
     useMaterial3: false,
     fontFamily: GoogleFonts.poppins().fontFamily,
+    
   );
 
   static final dark = ThemeData(

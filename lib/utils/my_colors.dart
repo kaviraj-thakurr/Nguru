@@ -14,7 +14,18 @@ class MyColors{
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
   static const Color addButtonColor = Color(0xFF0C0C0B);
+
+//container boarder color
+  static const Color boarderColor = Color(0xFFEBEBEB);
+
+//text colors
+  static const Color boldTextColor = Color(0xFF242424);
+  static const Color fadedTextColor = Color(0xFF434343);
   static const Color white = Color(0xFFFFFFFF);
+
+
+
+// gradients
    static const LinearGradient buttonColors = LinearGradient(
     colors: [Color(0xFF0160AE), Color(0xFFA0CA7B)],
     begin: Alignment.topLeft,
