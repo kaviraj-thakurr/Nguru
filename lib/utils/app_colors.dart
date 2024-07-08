@@ -27,4 +27,14 @@ class MyColors{
     begin: Alignment.topLeft,    
     end: Alignment.bottomRight
   );
+
+
+//cards colors 
+  static  LinearGradient cardColors = LinearGradient(
+    colors: [Color(0xFF0261AE
+).withOpacity(0.10), Color(0xFFA0CB7C
+).withOpacity(0.10)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

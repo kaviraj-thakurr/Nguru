@@ -20,9 +20,11 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
   String selectedValue = 'Session 2024-25';
-  List<String> dropdownItems = ['Session 2023-24', 
-  'Session 2024-25', 
-  'Session 2025-26'];
+  List<String> dropdownItems = [
+    'Session 2023-24',
+    'Session 2024-25',
+    'Session 2025-26'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,25 +34,31 @@ class _CustomAppBarState extends State<CustomAppBar> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               DropdownButton<String>(
                 value: selectedValue,
-                icon: SvgPicture.asset(
-                  MyAssets.drop_down_arrow,
-                  color: MyColors.addButtonColor,
+                icon: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: SvgPicture.asset(
+                    MyAssets.drop_down_arrow,
+                    color: MyColors.addButtonColor,
+                  ),
                 ),
+                underline: SizedBox.shrink(),
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedValue = newValue!;
                   });
                 },
-                items: dropdownItems.map<DropdownMenuItem<String>>((String value) {
+                items:
+                    dropdownItems.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
-              ),
+              )
             ],
           ),
           92.heightBox,
@@ -59,28 +67,28 @@ class _CustomAppBarState extends State<CustomAppBar> {
               IconButton(
                 icon: SvgPicture.asset(MyAssets.school),
                 onPressed: () {
-                  // Add your onPressed code here
+                  
                 },
               ),
               2.heightBox,
               IconButton(
                 icon: SvgPicture.asset(MyAssets.travel),
                 onPressed: () {
-                  // Add your onPressed code here!
+
                 },
               ),
               2.heightBox,
               IconButton(
                 icon: SvgPicture.asset(MyAssets.message),
                 onPressed: () {
-                  // Add your onPressed code here!
+                 
                 },
               ),
               2.heightBox,
               IconButton(
                 icon: SvgPicture.asset(MyAssets.notifications),
                 onPressed: () {
-                  // Add your onPressed code here!
+
                 },
               ),
             ],
