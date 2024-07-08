@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 
-import 'package:nguru/utils/font_util.dart';
+import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
-import 'package:nguru/utils/my_assets.dart';
-import 'package:nguru/utils/my_colors.dart';
+import 'package:nguru/utils/app_assets.dart';
+import 'package:nguru/utils/app_colors.dart';
 
-import 'package:nguru/utils/my_strings.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';

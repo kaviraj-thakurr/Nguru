@@ -2,14 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nguru/utils/my_colors.dart';
+import 'package:nguru/utils/app_colors.dart';
 
 
 class FontUtil {
       static TextStyle hintText = TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: MyColors.textcolors,
+      fontFamily: 'FontMain');
+
+       static TextStyle sessionchanged = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      color: MyColors.addButtonColor,
       fontFamily: 'FontMain');
 
       static TextStyle customData = TextStyle(

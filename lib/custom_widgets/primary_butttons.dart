@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'package:nguru/utils/font_util.dart';
-import 'package:nguru/utils/my_colors.dart';
+import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PrimaryButton extends StatelessWidget {
