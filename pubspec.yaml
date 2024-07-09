@@ -46,7 +46,10 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_pretty_dio_logger: ^2.0.3
   shared_preferences: ^2.2.3
-  
+  advstory: ^0.2.1
+  story_view: ^0.16.5
+  table_calendar: ^3.1.2
+  percent_indicator: ^4.2.3
  
 
 dev_dependencies:

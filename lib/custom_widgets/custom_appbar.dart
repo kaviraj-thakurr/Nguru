@@ -26,6 +26,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     'Session 2025-26'
   ];
 
+  // Variable to keep track of the selected icon
+  String selectedIcon = '';
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -65,30 +68,58 @@ class _CustomAppBarState extends State<CustomAppBar> {
           Row(
             children: [
               IconButton(
-                icon: SvgPicture.asset(MyAssets.school),
+                icon: SvgPicture.asset(
+                  MyAssets.school,
+                  color: selectedIcon == 'school'
+                      ? MyColors.appColor1
+                      : null,
+                ),
                 onPressed: () {
-                  
+                  setState(() {
+                    selectedIcon = 'school';
+                  });
                 },
               ),
               2.heightBox,
               IconButton(
-                icon: SvgPicture.asset(MyAssets.travel),
+                icon: SvgPicture.asset(
+                  MyAssets.travel,
+                  color: selectedIcon == 'travel'
+                      ? MyColors.appColor1
+                      : null,
+                ),
                 onPressed: () {
-
+                  setState(() {
+                    selectedIcon = 'travel';
+                  });
                 },
               ),
               2.heightBox,
               IconButton(
-                icon: SvgPicture.asset(MyAssets.message),
+                icon: SvgPicture.asset(
+                  MyAssets.message,
+                  color: selectedIcon == 'message'
+                      ? MyColors.appColor1
+                      : null,
+                ),
                 onPressed: () {
-                 
+                  setState(() {
+                    selectedIcon = 'message';
+                  });
                 },
               ),
               2.heightBox,
               IconButton(
-                icon: SvgPicture.asset(MyAssets.notifications),
+                icon: SvgPicture.asset(
+                  MyAssets.notifications,
+                  color: selectedIcon == 'notifications'
+                      ? MyColors.appColor1
+                      : null,
+                ),
                 onPressed: () {
-
+                  setState(() {
+                    selectedIcon = 'notifications';
+                  });
                 },
               ),
             ],
