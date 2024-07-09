@@ -4,36 +4,37 @@
 
 import 'dart:convert';
 
-AddSchoolModel addSchoolFromJson(String str) => AddSchoolModel.fromJson(json.decode(str));
+AddSchoolModel addSchoolFromJson(String str) =>
+    AddSchoolModel.fromJson(json.decode(str));
 
 String addSchoolToJson(AddSchoolModel data) => json.encode(data.toJson());
 
 class AddSchoolModel {
-    String? schoolPhoto;
-    int? schoolId;
-    String? schoolName;
-    String? schoolCode;
-    String? address;
-    String? mobileNo;
-    String? pincode;
-    dynamic schoolLogo;
-    String? responseCode;
-    String? responseMessage;
+  String? schoolPhoto;
+  int? schoolId;
+  String? schoolName;
+  String? schoolCode;
+  String? address;
+  String? mobileNo;
+  String? pincode;
+  dynamic schoolLogo;
+  String? responseCode;
+  String? responseMessage;
 
-    AddSchoolModel({
-        this.schoolPhoto,
-        this.schoolId,
-        this.schoolName,
-        this.schoolCode,
-        this.address,
-        this.mobileNo,
-        this.pincode,
-        this.schoolLogo,
-        this.responseCode,
-        this.responseMessage,
-    });
+  AddSchoolModel({
+    this.schoolPhoto,
+    this.schoolId,
+    this.schoolName,
+    this.schoolCode,
+    this.address,
+    this.mobileNo,
+    this.pincode,
+    this.schoolLogo,
+    this.responseCode,
+    this.responseMessage,
+  });
 
-    factory AddSchoolModel.fromJson(Map<String, dynamic> json) => AddSchoolModel(
+  factory AddSchoolModel.fromJson(Map<String, dynamic> json) => AddSchoolModel(
         schoolPhoto: json["schoolPhoto"],
         schoolId: json["schoolID"],
         schoolName: json["schoolName"],
@@ -44,9 +45,9 @@ class AddSchoolModel {
         schoolLogo: json["schoolLogo"],
         responseCode: json["responseCode"],
         responseMessage: json["responseMessage"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "schoolPhoto": schoolPhoto,
         "schoolID": schoolId,
         "schoolName": schoolName,
@@ -57,5 +58,5 @@ class AddSchoolModel {
         "schoolLogo": schoolLogo,
         "responseCode": responseCode,
         "responseMessage": responseMessage,
-    };
+      };
 }

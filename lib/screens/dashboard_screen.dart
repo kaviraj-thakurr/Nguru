@@ -102,7 +102,6 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             radius: 38,
                             gradient: MyColors.arrowColor,
                             title: "Circular",
-
                             child: Image.network(
                                 'https://via.placeholder.com/150'),
                           ),
@@ -114,7 +113,6 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             child: Image.network(
                                 'https://via.placeholder.com/150'),
                           ),
-
                         ],
                       ),
                       18.heightBox,

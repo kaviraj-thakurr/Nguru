@@ -70,9 +70,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               IconButton(
                 icon: SvgPicture.asset(
                   MyAssets.school,
-                  color: selectedIcon == 'school'
-                      ? MyColors.appColor1
-                      : null,
+                  color: selectedIcon == 'school' ? MyColors.appColor1 : null,
                 ),
                 onPressed: () {
                   setState(() {
@@ -84,9 +82,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               IconButton(
                 icon: SvgPicture.asset(
                   MyAssets.travel,
-                  color: selectedIcon == 'travel'
-                      ? MyColors.appColor1
-                      : null,
+                  color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                 ),
                 onPressed: () {
                   setState(() {
@@ -98,9 +94,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               IconButton(
                 icon: SvgPicture.asset(
                   MyAssets.message,
-                  color: selectedIcon == 'message'
-                      ? MyColors.appColor1
-                      : null,
+                  color: selectedIcon == 'message' ? MyColors.appColor1 : null,
                 ),
                 onPressed: () {
                   setState(() {

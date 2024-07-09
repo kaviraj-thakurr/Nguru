@@ -12,7 +12,6 @@ class AuthRepo {
   final _myService = Networking();
   var userToken = "";
 
-
   Future<AddSchoolModel> addSchool(String schoolUrl) async {
     try {
       final res = await _myService.networkPost(

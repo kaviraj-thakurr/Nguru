@@ -12,7 +12,8 @@ Widget personInfoCard(
   String idNo,
   Function(String) onNameChange,
 ) {
-  List<String> names = ['Anshul Goswami','Kaviraj Thakur'];;
+  List<String> names = ['Anshul Goswami', 'Kaviraj Thakur'];
+  ;
 
   // Ensure the personName is a valid value
   if (!names.contains(personName)) {
@@ -62,7 +63,7 @@ Widget personInfoCard(
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.boldTextColor),
                 onChanged: (String? newValue) {
-                  onNameChange(newValue??"");
+                  onNameChange(newValue ?? "");
                 },
                 items: names.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(

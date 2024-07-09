@@ -17,6 +17,7 @@ class FontUtil {
       fontFamily: 'FontMain',
     );
   }
+
   static TextStyle hintText = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w500,
@@ -69,13 +70,11 @@ class FontUtil {
       fontSize: 12,
       fontWeight: FontWeight.w400,
       color: MyColors.textcolors,
-      
       fontFamily: 'FontMain');
 
-      static TextStyle search = TextStyle(
+  static TextStyle search = TextStyle(
       fontSize: 14.h,
       fontWeight: FontWeight.w500,
       color: MyColors.search,
-      
       fontFamily: 'FontMain');
 }

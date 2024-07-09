@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
- 
+
 ///use for font Size
 const double fontExtraSmall = 8;
 const double fontSmall = 10;
@@ -14,10 +14,9 @@ const double fontExtraExtraLarge = 24;
 const double fontSizeHeader = 20;
 const double fontSize13 = 13;
 const double fontSize32 = 32;
- 
+
 const double fontExtraLarge = 18;
- 
- 
+
 /// use for height width
 const double depthExtraSmall = 2;
 const double depthSmall = 4;
@@ -28,7 +27,7 @@ const double depthExtraLarge = 12;
 const double depth30 = 30;
 const double depth40 = 40;
 const double depth80 = 80;
- 
+
 /// use for circular radius
 const double radiusExtraSmall = 2;
 const double radiusSmall = 4;
@@ -52,7 +51,7 @@ const double radius100 = 100;
 const double raduis14 = 14;
 const double raduis19 = 19;
 const double raduis48 = 48;
- 
+
 /// use for padding
 const double paddingZero = 0;
 const double paddingExtraSmall = 2;
@@ -75,7 +74,7 @@ const double paddingExtraRegularLarge = 20;
 const double paddingSize18 = 18;
 const double paddingSize20 = 20;
 const double paddingRegularLarge18 = 18;
- 
+
 const double padding13 = 13;
 const double padding18 = 18;
 const double padding19 = 19;
@@ -92,7 +91,7 @@ const double padding65 = 65;
 const double padding23 = 23;
 const double padding27 = 27;
 const double padding92 = 92;
- 
+
 /// use for margin
 const double marginExtraSmall = 2;
 const double marginSmall = 4;
@@ -113,42 +112,44 @@ const double margin24 = 24;
 const double margin26 = 26;
 const double margin28 = 28;
 const double margin30 = 30;
- 
+
 // This is where the magic happens.
 // This functions are responsible to make UI responsive across all the mobile devices.
- 
-Size size =
-    WidgetsBinding.instance.window.physicalSize / WidgetsBinding.instance.window.devicePixelRatio;
- 
+
+Size size = WidgetsBinding.instance.window.physicalSize /
+    WidgetsBinding.instance.window.devicePixelRatio;
+
 // Caution! If you think these are static values and are used to build a static UI,  you mustn’t.
 // These are the Viewport values of your Figma Design.
 // These are used in the code as a reference to create your UI Responsively.
 const num FIGMA_DESIGN_WIDTH = 360;
 const num FIGMA_DESIGN_HEIGHT = 800;
 const num FIGMA_DESIGN_STATUS_BAR = 24;
- 
+
 ///This method is used to get device viewport width.
 get width {
   return size.width;
 }
- 
+
 ///This method is used to get device viewport height.
 get height {
-  num statusBar = MediaQueryData.fromWindow(WidgetsBinding.instance.window).viewPadding.top;
+  num statusBar =
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window).viewPadding.top;
   num screenHeight = size.height - statusBar;
   return screenHeight;
 }
- 
+
 ///This method is used to set padding/margin (for the left and Right side) & width of the screen or widget according to the Viewport width.
 double getHorizontalSize(double px) {
   return ((px * width) / FIGMA_DESIGN_WIDTH).floorToDouble();
 }
- 
+
 ///This method is used to set padding/margin (for the top and bottom side) & height of the screen or widget according to the Viewport height.
 double getVerticalSize(double px) {
-  return ((px * height) / (FIGMA_DESIGN_HEIGHT - FIGMA_DESIGN_STATUS_BAR)).floorToDouble();
+  return ((px * height) / (FIGMA_DESIGN_HEIGHT - FIGMA_DESIGN_STATUS_BAR))
+      .floorToDouble();
 }
- 
+
 ///This method is used to set smallest px in image height and width
 double getSize(double px) {
   var height = getVerticalSize(px);
@@ -159,12 +160,12 @@ double getSize(double px) {
     return width.toInt().toDouble();
   }
 }
- 
+
 ///This method is used to set text font size according to Viewport
 double getFontSize(double px) {
   return getSize(px);
 }
- 
+
 ///This method is used to set padding responsively
 EdgeInsetsGeometry getPadding({
   double? all,
@@ -181,7 +182,7 @@ EdgeInsetsGeometry getPadding({
     bottom: bottom,
   );
 }
- 
+
 ///This method is used to get padding or margin responsively
 EdgeInsetsGeometry getMarginOrPadding({
   double? all,
@@ -211,10 +212,9 @@ EdgeInsetsGeometry getMarginOrPadding({
     ),
   );
 }
- 
+
 EdgeInsetsGeometry padding16 = EdgeInsets.fromLTRB(16, 16, 16, 16);
 EdgeInsetsGeometry padding16pts10 = EdgeInsets.fromLTRB(16, 10, 10, 16);
 EdgeInsetsGeometry paddingOnly2pt5 = EdgeInsets.only(top: 2.5, bottom: 2.5);
 EdgeInsetsGeometry paddingOnly20 = EdgeInsets.only(top: 20);
 EdgeInsetsGeometry padding59LR = EdgeInsets.fromLTRB(20, 0, 20, 0);
- 

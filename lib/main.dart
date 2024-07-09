@@ -11,10 +11,9 @@ import 'package:nguru/screens/stories.dart';
 import 'package:nguru/theme/app_theme.dart';
 import 'screens/login_screen.dart';
 
-
 //creds- school url: https://quickschool.niitnguru.com/demoschool , password: google1s
 
-void main() async{
+void main() async {
   runApp(MyApp());
 }
 
@@ -23,23 +22,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-       create: (context) => AddSchoolCubit(AuthRepo())),
-        BlocProvider(
-       create: (context) => LoginCubit(AuthRepo())),
-
+        BlocProvider(create: (context) => AddSchoolCubit(AuthRepo())),
+        BlocProvider(create: (context) => LoginCubit(AuthRepo())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
         child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppThemes.light,
-        darkTheme: AppThemes.dark,
-        home: NguruDashboardScreen(),
-        
-        // CalendarScreen(),
-        //AddSchool(),
+          debugShowCheckedModeBanner: false,
+          theme: AppThemes.light,
+          darkTheme: AppThemes.dark,
+          home: NguruDashboardScreen(),
+
+          // CalendarScreen(),
+          //AddSchool(),
         ),
       ),
     );

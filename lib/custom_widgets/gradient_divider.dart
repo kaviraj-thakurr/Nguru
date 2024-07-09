@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class GradientDivider extends StatelessWidget {
   final LinearGradient gradient;
-  
-  final double ? height;
+
+  final double? height;
 
   const GradientDivider({
     Key? key,
     required this.gradient,
-    this.height ,
+    this.height,
   }) : super(key: key);
 
   @override

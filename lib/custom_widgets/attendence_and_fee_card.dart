@@ -13,7 +13,7 @@ Widget attendenceAndFeeCard(BuildContext context,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20.0),
       border: Border.all(
-        color:  MyColors.boarderColor,
+        color: MyColors.boarderColor,
         width: 2.0,
       ),
     ),
@@ -29,20 +29,21 @@ Widget attendenceAndFeeCard(BuildContext context,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 if (headerText != null)
-                  Text(
-                    headerText,
-                    style:  FontUtil.customStyle(fontSize: 10, fontWeight: FontWeight.w300, textColor: MyColors.textcolors)
-                  ),
-                Text(
-                  mainText ?? '__',
-                  style:  FontUtil.customStyle(fontSize: 28, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor)
-                ),
-                Text(
-                  footerText ?? 'N/A',
-                  style: FontUtil.customStyle(fontSize: 10, fontWeight: FontWeight.w300, textColor: MyColors.textcolors)
-                   
-                ),
-                
+                  Text(headerText,
+                      style: FontUtil.customStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w300,
+                          textColor: MyColors.textcolors)),
+                Text(mainText ?? '__',
+                    style: FontUtil.customStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.boldTextColor)),
+                Text(footerText ?? 'N/A',
+                    style: FontUtil.customStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w300,
+                        textColor: MyColors.textcolors)),
               ],
             ),
           ),

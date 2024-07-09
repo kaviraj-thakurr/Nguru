@@ -123,7 +123,9 @@ class _AddSchoolState extends State<AddSchool> {
                 BlocListener<AddSchoolCubit, AddSchoolState>(
                   listener: (context, state) {
                     if (state is AddSchoolSuccessState) {
-                      NavigationService.navigateTo(LoginScreen(title: nickNameController.text.trim()), context);
+                      NavigationService.navigateTo(
+                          LoginScreen(title: nickNameController.text.trim()),
+                          context);
                     } else if (state is AddSchoolErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -139,19 +141,21 @@ class _AddSchoolState extends State<AddSchool> {
                     title: MyStrings.submit,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<AddSchoolCubit>().addSchool(schoolurlController.text.trim());
+                        context
+                            .read<AddSchoolCubit>()
+                            .addSchool(schoolurlController.text.trim());
                       } else {
-                       String errorMessage = '';
+                        String errorMessage = '';
                         if (schoolurlController.text.isEmpty) {
                           errorMessage = MyStrings.enterschoolurl;
-                        } else if (_validateNickName(nickNameController.text) != null) {
+                        } else if (_validateNickName(nickNameController.text) !=
+                            null) {
                           errorMessage = 'Nickname required';
                         }
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(errorMessage),
                           ),
-                        
                         );
                       }
                     },

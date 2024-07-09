@@ -28,7 +28,8 @@ class GradientCircleAvatar extends StatelessWidget {
             gradient: gradient,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(4), // Padding for space between border and image
+            padding: const EdgeInsets.all(
+                4), // Padding for space between border and image
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,

@@ -17,10 +17,10 @@ class MyColors {
   static const Color appColor1 = Color(0xFF0160AE);
   static const Color appColor2 = Color(0xFFA0CA7B);
   static const Color cardsubTitle = Color(0xFF323232);
-   static const Color cardTitle = Color(0xFF111111);
+  static const Color cardTitle = Color(0xFF111111);
 
-   static const Color search = Color(0xFFA1A1A1);
-   static const Color searchbackgroundColor = Color(0xFFF3F3F3);
+  static const Color search = Color(0xFFA1A1A1);
+  static const Color searchbackgroundColor = Color(0xFFF3F3F3);
 
 //container boarder color
   static const Color boarderColor = Color(0xFFEBEBEB);
@@ -52,11 +52,9 @@ class MyColors {
     end: Alignment.bottomRight,
   );
 
-
 //arrow color
   static const Gradient arrowColor = LinearGradient(
-    colors: <Color>[Color(0xFF0261AE
-), Color(0xFFA0CB7C)],
+    colors: <Color>[Color(0xFF0261AE), Color(0xFFA0CB7C)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

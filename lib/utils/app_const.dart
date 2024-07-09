@@ -1,11 +1,10 @@
-
 class AppConstants {
-   const AppConstants._();
+  const AppConstants._();
 
 // URLs
   static const String BASE_URL = "https://quickschool.niitguru.com";
   static const String SIGN_IN_DATA = '/mobileappservice/Api/School/GetDetail/';
-  
+
   // user profile key
   static const String USER_PROFILE = 'user_profile';
   static const String LATITUDE = 'latitude';

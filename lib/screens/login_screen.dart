@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AddSchoolCubit, AddSchoolState>(
@@ -66,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color:  Colors.white,
-                              
+                              color: Colors.white,
                               border:
                                   Border.all(color: Colors.black, width: 3.0),
                             ),
@@ -133,7 +131,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocListener<LoginCubit, LoginState>(
                         listener: (context, state) {
                           if (state is LoginSuccessState) {
-                            NavigationService.navigateTo(NguruDashboardScreen(), context);
+                            NavigationService.navigateTo(
+                                NguruDashboardScreen(), context);
                           } else if (state is LoginErrorState) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
