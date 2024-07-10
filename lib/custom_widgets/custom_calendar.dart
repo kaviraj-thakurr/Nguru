@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:nguru/custom_widgets/custom_attendence_footer_card.dart';
+import 'package:nguru/utils/app_colors.dart';
+import 'package:nguru/utils/app_font.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
   const CustomCalendar({super.key});
 
   @override
+ 
   _CustomCalendarState createState() => _CustomCalendarState();
 }
 
@@ -14,22 +18,28 @@ class _CustomCalendarState extends State<CustomCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      height: MediaQuery.of(context).size.height *0.6,
+    return SizedBox(
       width: double.infinity,
       child: Column(
-      //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          SizedBox(height: 30,),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-               Text("Attendence", style: TextStyle(fontSize: 24)),
-            ],
-          ),
           _buildMonthSelector(),
-           SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           TableCalendar(
+            rowHeight: 45,
+            
+            daysOfWeekHeight: 20,
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: FontUtil.customStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  textColor: MyColors.calendarDateColor),
+              weekendStyle: FontUtil.customStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w200,
+                  textColor: MyColors.calendarDateColor),
+            ),
             firstDay: DateTime.utc(2010, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),
             focusedDay: _focusedDay,
@@ -43,14 +53,33 @@ class _CustomCalendarState extends State<CustomCalendar> {
               });
             },
             calendarFormat: CalendarFormat.month,
-            calendarStyle: const CalendarStyle(
+            calendarStyle: CalendarStyle(
+              
+              defaultTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  textColor: MyColors.calendarDateColor),
+              weekendTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w200,
+                  textColor: MyColors.fadedTextColor),
+              selectedTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  textColor: Colors.blue),
+              todayTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  textColor: Colors.pink),
               todayDecoration: BoxDecoration(
-                color: Colors.pink,
+                color: Colors.white,
                 shape: BoxShape.circle,
+                border: Border.all(width: 2, color: Colors.white),
               ),
               selectedDecoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.white,
                 shape: BoxShape.circle,
+                border: Border.all(width: 2, color: Colors.white),
               ),
             ),
             headerVisible: false,
@@ -58,6 +87,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
           ),
           const SizedBox(height: 10),
           _buildLegend(),
+          //  const SizedBox(height: 10,),
+          //    customAttendenceFooterCard(context),
         ],
       ),
     );
@@ -78,27 +109,71 @@ class _CustomCalendarState extends State<CustomCalendar> {
       "Nov",
       "Dec"
     ];
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
+      padding:const EdgeInsets.only(left: 8.0,right: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
           bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: ChoiceChip(
-              label: Text(month),
-              selected: isSelected,
-              onSelected: (selected) {
-                if (selected) {
-                  setState(() {
-                    _focusedDay = DateTime(
-                      _focusedDay.year,
-                      months.indexOf(month) + 1,
-                    );
-                  });
-                }
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _focusedDay = DateTime(
+                    _focusedDay.year,
+                    months.indexOf(month) + 1,
+                  );
+                });
               },
+              child: isSelected
+                  ? ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return MyColors.buttonColors.createShader(bounds);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white, // This color is not visible
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Text(
+                          month,
+                          style: FontUtil.customStyle(
+                            fontSize: 10,
+                            fontWeight:
+                                isSelected ? FontWeight.w500 : FontWeight.w400,
+                            textColor: MyColors.monthNameColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6.0, horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                          color: Colors.grey, // This color is not visible
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        month,
+                        style: FontUtil.customStyle(
+                          fontSize: 10,
+                          fontWeight:
+                              isSelected ? FontWeight.w500 : FontWeight.w400,
+                          textColor: MyColors.monthNameColor,
+                        ),
+                      ),
+                    ),
             ),
           );
         }).toList(),
@@ -107,16 +182,15 @@ class _CustomCalendarState extends State<CustomCalendar> {
   }
 
   Widget _buildLegend() {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 10.0,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildLegendItem("Present", Colors.green),
-        _buildLegendItem("Absent", Colors.red),
-        _buildLegendItem("Half Day", Colors.blue),
-        _buildLegendItem("Late", Colors.purple),
-        _buildLegendItem("Leave", Colors.orange),
-        _buildLegendItem("Holiday", Colors.grey),
+        _buildLegendItem("Present", MyColors.buildLegendColor_6),
+        _buildLegendItem("Absent", MyColors.buildLegendColor_5),
+        _buildLegendItem("Half Day", MyColors.buildLegendColor_4),
+        _buildLegendItem("Late", MyColors.buildLegendColor_3),
+        _buildLegendItem("Leave", MyColors.buildLegendColor_2),
+        _buildLegendItem("Holiday", MyColors.buildLegendColor_1),
       ],
     );
   }
@@ -129,7 +203,10 @@ class _CustomCalendarState extends State<CustomCalendar> {
         const SizedBox(width: 3),
         Text(
           text,
-          style:const TextStyle(fontSize: 12),
+          style: FontUtil.customStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+              textColor: MyColors.textcolors),
         ),
       ],
     );

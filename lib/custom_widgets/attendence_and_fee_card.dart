@@ -1,62 +1,68 @@
 import 'package:flutter/material.dart';
-
+import 'package:nguru/utils/app_colors.dart';
+import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_strings.dart';
 
 Widget attendenceAndFeeCard(BuildContext context,
-    {String? headerText, String? mainText, String? footerText}) {
+    {bool? isFeeCard, headerText, String? mainText, String? footerText}) {
   return Container(
-    height: MediaQuery.of(context).size.height * 0.13,
-    width: MediaQuery.of(context).size.width * 0.34,
+    padding: const EdgeInsets.all(8.0),
+    constraints: BoxConstraints(
+      maxHeight: isFeeCard!
+          ? MediaQuery.of(context).size.height * 0.12
+          : MediaQuery.of(context).size.height * 0.11,
+      maxWidth: MediaQuery.of(context).size.width * 0.33,
+    ),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(
-          20.0), // Half of the width/height for a perfect circle
+      borderRadius: BorderRadius.circular(10.0),
       border: Border.all(
-        color: const Color.fromARGB(255, 240, 240, 240),
+        color: MyColors.boarderColor,
         width: 2.0,
       ),
     ),
-    child: Padding(
-      padding:const EdgeInsets.all(14.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-             headerText  != null
-                  ? Text(
-                      headerText ?? 'N/A',
-                      style: const TextStyle(
-                        fontSize: 10.0,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : const SizedBox(),
-              Text(
-                mainText ?? '__',
-                style: const TextStyle(
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.bold,
+              if (headerText != null)
+                Flexible(
+                  flex: 1,
+                  child: Text(headerText,
+                      style: FontUtil.customStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w300,
+                          textColor: MyColors.textcolors)),
                 ),
+              Flexible(
+                flex: 3,
+                child: Text(mainText ?? '__',
+                    style: FontUtil.customStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.boldTextColor)),
               ),
-               Text(
-                      footerText ?? 'N/A',
-                      style: const TextStyle(
-                        fontSize: 10.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  
+              Flexible(
+                flex: 1,
+                child: Text(footerText ?? 'N/A',
+                    style: FontUtil.customStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w300,
+                        textColor: MyColors.textcolors)),
+              ),
             ],
           ),
-        const  Icon(
-            Icons.circle,
-            color: Colors.green,
-            size: 10,
-          ),
-        ],
-      ),
+        ),
+        const Icon(
+          Icons.circle,
+          color: Colors.green,
+          size: 10,
+        ),
+      ],
     ),
   );
 }
