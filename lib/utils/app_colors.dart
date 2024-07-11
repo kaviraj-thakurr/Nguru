@@ -18,6 +18,7 @@ class MyColors {
   static const Color appColor2 = Color(0xFFA0CA7B);
   static const Color cardsubTitle = Color(0xFF323232);
   static const Color cardTitle = Color(0xFF111111);
+   static const Color circular = Color(0xFF333333);
 
   static const Color search = Color(0xFFA1A1A1);
   static const Color searchbackgroundColor = Color(0xFFF3F3F3);

@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppThemes.light,
           darkTheme: AppThemes.dark,
-          home: NguruDashboardScreen(),
+          home: 
 
-          // CalendarScreen(),
-          //AddSchool(),
+          
+          NguruDashboardScreen(),
         ),
       ),
     );

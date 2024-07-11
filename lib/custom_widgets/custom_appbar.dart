@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -34,10 +36,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+           // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               DropdownButton<String>(
                 value: selectedValue,
@@ -45,6 +46,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: SvgPicture.asset(
                     MyAssets.drop_down_arrow,
+
                     color: MyColors.addButtonColor,
                   ),
                 ),
@@ -64,57 +66,70 @@ class _CustomAppBarState extends State<CustomAppBar> {
               )
             ],
           ),
-          92.heightBox,
+          Spacer(),
+
           Row(
             children: [
-              IconButton(
-                icon: SvgPicture.asset(
-                  MyAssets.school,
-                  color: selectedIcon == 'school' ? MyColors.appColor1 : null,
+              Container(
+                height: 25,width: 25,
+
+
+                child: IconButton(padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    MyAssets.school,
+                    color: selectedIcon == 'school' ? MyColors.appColor1 : null,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedIcon = 'school';
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    selectedIcon = 'school';
-                  });
-                },
               ),
-              2.heightBox,
-              IconButton(
-                icon: SvgPicture.asset(
-                  MyAssets.travel,
-                  color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
+              12.widthBox,
+              Container( height: 25,width: 25,
+                child: IconButton(padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    MyAssets.travel,
+                    color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedIcon = 'travel';
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    selectedIcon = 'travel';
-                  });
-                },
               ),
-              2.heightBox,
-              IconButton(
-                icon: SvgPicture.asset(
-                  MyAssets.message,
-                  color: selectedIcon == 'message' ? MyColors.appColor1 : null,
+              12.widthBox,
+              Container( height: 25,width: 25,
+                child: IconButton(padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    MyAssets.message,
+                    color: selectedIcon == 'message' ? MyColors.appColor1 : null,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedIcon = 'message';
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    selectedIcon = 'message';
-                  });
-                },
               ),
-              2.heightBox,
-              IconButton(
-                icon: SvgPicture.asset(
-                  MyAssets.notifications,
-                  color: selectedIcon == 'notifications'
-                      ? MyColors.appColor1
-                      : null,
+              12.widthBox,
+              Container(
+                height: 25,width: 25,
+                child: IconButton(padding: EdgeInsets.zero,
+                  icon: SvgPicture.asset(
+                    MyAssets.notifications,
+                    color: selectedIcon == 'notifications'
+                        ? MyColors.appColor1
+                        : null,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedIcon = 'notifications';
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    selectedIcon = 'notifications';
-                  });
-                },
               ),
             ],
           ),

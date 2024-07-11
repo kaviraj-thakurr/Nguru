@@ -35,10 +35,7 @@ class GradientCircleAvatar extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Colors.white, // Background color for the inner circle
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(3), // Inner padding for the image
-                child: ClipOval(child: child),
-              ),
+              child: SizedBox()
             ),
           ),
         ),
