@@ -25,10 +25,12 @@ class CustomSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxHeight: 42),
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+      
+      // constraints: const BoxConstraints(maxHeight: 42),
+     padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       decoration: BoxDecoration(
+        
         borderRadius: BorderRadius.circular(8),
         color: MyColors.searchbackgroundColor,
       ),
@@ -37,6 +39,7 @@ class CustomSearchBar extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+            
               onTap: onTap,
               onChanged: onChange,
               readOnly: readOnly,

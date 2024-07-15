@@ -109,4 +109,20 @@ class FontUtil {
       color: MyColors.circular,
       fontFamily: 'FontMain'
       );
+
+       static TextStyle circularsubttile = TextStyle(
+      fontSize: 12.h,
+      fontWeight: FontWeight.w400,
+      color: MyColors.circularsubttile,
+      fontFamily: 'FontMain'
+      );
+
+
+      static TextStyle circularTitle = TextStyle(
+      fontSize: 14.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.circularsubttile,
+        fontFamily: 'FontMain');
+
+      
 }

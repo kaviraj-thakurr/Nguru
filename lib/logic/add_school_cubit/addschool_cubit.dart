@@ -8,15 +8,15 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
 
   AddSchoolCubit(this.authRepo) : super(AddSchoolLoadingState());
 
-  Future<void> addSchool(String schoolName) async {
+  Future<void> addSchool(String schoolName,String subDomain) async {
     try {
       emit(AddSchoolLoadingState());
       final result = await authRepo?.addSchool(
-        schoolName,
+        schoolName,subDomain
       );
       if (result != null) {
-        if (result.responseCode == "200" || result.schoolName != null) {
-          emit(AddSchoolSuccessState(schoolName: result.schoolName));
+        if (result.responseCode == "200" || result.schoolName != null || result.schoolPhoto !=null) {
+          emit(AddSchoolSuccessState(schoolName: result.schoolName,schoolPhoto: result.schoolPhoto));
         } else {
           emit(AddSchoolErrorState(result.responseMessage ?? "Error occured"));
         }

@@ -31,6 +31,7 @@ class _AddSchoolState extends State<AddSchool> {
   final FocusNode _firstFocusNode = FocusNode();
   final FocusNode _secondFocusNode = FocusNode();
   TextEditingController schoolurlController = TextEditingController();
+  TextEditingController subdomainController = TextEditingController();
   TextEditingController nickNameController = TextEditingController();
 
   String? _validateNickName(String? value) {
@@ -62,10 +63,7 @@ class _AddSchoolState extends State<AddSchool> {
             child: Column(
               children: [
                 169.heightBox,
-                Image.asset(
-                  MyAssets.niitLogo,
-                  height: 70,
-                ),
+                SvgPicture.asset(MyAssets.signIN),
                 50.heightBox,
                 Text(
                   MyStrings.customData,
@@ -99,7 +97,27 @@ class _AddSchoolState extends State<AddSchool> {
                       ),
                       14.heightBox,
                       VxTextField(
+                        controller: subdomainController,
                         focusNode: _secondFocusNode,
+                        enableSuggestions: true,
+                        fillColor: Colors.transparent,
+                        borderColor: MyColors.borderColor,
+                        borderType: VxTextFieldBorderType.roundLine,
+                        hint: MyStrings.subdomain,
+                        style: FontUtil.hintText,
+                        borderRadius: 9,
+                        onSubmitted: (value) {
+                          FocusScope.of(context).requestFocus(_secondFocusNode);
+                        },
+                        validator: (subdomain) {
+                          if (subdomain == null || subdomain.isEmpty) {
+                            return MyStrings.subdomainrequired;
+                          }
+                          return null;
+                        },
+                      ),
+                      14.heightBox,
+                      VxTextField(
                         controller: nickNameController,
                         fillColor: Colors.transparent,
                         borderColor: MyColors.borderColor,
@@ -117,15 +135,17 @@ class _AddSchoolState extends State<AddSchool> {
                   onPressed: () {},
                   child: Text(
                     MyStrings.add,
-                    style: FontUtil.needHelp,
+                    style: FontUtil.customStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.addButtonColor),
                   ),
                 ),
                 BlocListener<AddSchoolCubit, AddSchoolState>(
                   listener: (context, state) {
                     if (state is AddSchoolSuccessState) {
                       NavigationService.navigateTo(
-                          LoginScreen(title: nickNameController.text.trim()),
-                          context);
+                          LoginScreen(title: state.schoolName ), context);
                     } else if (state is AddSchoolErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -141,12 +161,14 @@ class _AddSchoolState extends State<AddSchool> {
                     title: MyStrings.submit,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context
-                            .read<AddSchoolCubit>()
-                            .addSchool(schoolurlController.text.trim());
+                        context.read<AddSchoolCubit>().addSchool(
+                            schoolurlController.text.trim(),
+                            subdomainController.text.trim());
                       } else {
                         String errorMessage = '';
                         if (schoolurlController.text.isEmpty) {
+                          errorMessage = MyStrings.enterschoolurl;
+                        } else if (subdomainController.text.isEmpty) {
                           errorMessage = MyStrings.enterschoolurl;
                         } else if (_validateNickName(nickNameController.text) !=
                             null) {
@@ -162,13 +184,6 @@ class _AddSchoolState extends State<AddSchool> {
                   ),
                 ),
                 20.heightBox,
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    MyStrings.needHelp,
-                    style: FontUtil.needHelp,
-                  ),
-                ),
               ],
             ),
           ),

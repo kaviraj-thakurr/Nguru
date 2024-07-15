@@ -7,6 +7,7 @@ class MyStrings {
   static const String submit = "Submit";
   static const String needHelp = "Need help?";
   static const String nickName = "Nickname";
+  static const String subdomain = "Sub Domain";
   static const String customData =
       "Lorem ipsum dolor sit amet consectetur. Eget enim vulputate porta diam diam. ";
   static const String userName = "Username";
@@ -14,6 +15,7 @@ class MyStrings {
   static const String signin = "Sign in";
   static const String forgotpassword = "Forgot password?";
   static const String enterschoolurl = "Enter School URL";
+  static const String subdomainrequired = "Enter School Sub Domain";
   static const String enterusernamepass = "Enter Username and Password";
   static const String nicknamerequired = "Nickname required";
   static const String search = "Search";

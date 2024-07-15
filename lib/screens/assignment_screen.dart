@@ -14,12 +14,12 @@ import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/app_utils.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class CircularScreen extends StatefulWidget {
+class AssignmentScreen extends StatefulWidget {
   @override
-  State<CircularScreen> createState() => _CircularScreenState();
+  State<AssignmentScreen> createState() => _CircularScreenState();
 }
 
-class _CircularScreenState extends State<CircularScreen> {
+class _CircularScreenState extends State<AssignmentScreen> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -32,29 +32,30 @@ class _CircularScreenState extends State<CircularScreen> {
             dashboardAppBar(),
             CustomSearchBar(controller: searchController),
             
-            screenTitleHeader("Circular"),
-            
+            screenTitleHeader("Assignment"),
             5.widthBox,
             Row(
            //   mainAxisAlignment: MainAxisAlignment.start,
               
               children: [
-                animatedbutton(),
+                animatedButton(context,"All"),
                 10.widthBox,
-                animatedbutton(),
+                animatedButton(context,"Read"),
               10.widthBox,
-              animatedbutton(),
+              animatedButton(context,"Unread"),
               ],
             ),
+            
              
             Expanded(
               child: PageView.builder(
-               itemCount: 3,
+               itemCount: 2,
                itemBuilder:(context, index) => ListView.builder(
                   itemCount: 5,
+
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: CardDesign(context),
                     );
                   },
@@ -84,36 +85,39 @@ IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.front_arrow)),
 
 Widget CardDesign(BuildContext context) {
   return Container(
-    height: MediaQuery.sizeOf(context).height * 0.11,
-    // width: MediaQuery.sizeOf(context).width * 0.5,
+    height: MediaQuery.of(context).size.height * 0.14,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8),
       color: MyColors.searchbackgroundColor,
     ),
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          Image.asset(MyAssets.bookz),
-          10.widthBox,
+          Image.asset(MyAssets.bookz, height: 50),  // Adjust height based on requirement
+          SizedBox(width: 10),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Important Reminders for Students..",
+                  "The Oak Tree | Ch.2 | Class XI B",
                   style: FontUtil.circularTitle,
+                ),
+                AppGapping.padding5,
+                Text(
+                  "Lorem ipsum dolor sit amet consectetur.\nEros eget posuere faucibus lectus congue.",
+                  style: FontUtil.circularsubttile,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Lorem ipsum dolor sit amet consectetur.\n Eros eget posuere faucibus lectus congue.",
-                      style: FontUtil.circularsubttile,
-                    ),
+                    dateWidget(),
                     IconButton(
-                        onPressed: () {}, icon: SvgPicture.asset(MyAssets.seen))
+                      onPressed: () {},
+                      icon: SvgPicture.asset(MyAssets.seen),
+                    ),
                   ],
                 ),
               ],
@@ -126,21 +130,21 @@ Widget CardDesign(BuildContext context) {
 }
 
 
-GradientBorderButton animatedbutton(){
-  return GradientBorderButton();
-}
-class GradientBorderButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Get the screen width and height
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
-    // Calculate the button width and height based on screen size
-    final buttonWidth = screenWidth * 0.12;
-    final buttonHeight = screenHeight * 0.03;
+  
+  Widget animatedButton(BuildContext context, String title) {
+  // Get the screen width and height
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
+  // Calculate the button width and height based on screen size
+  final buttonWidth = screenWidth * 0.15;
+  final buttonHeight = screenHeight * 0.03;
+
+  return InkWell(
+    onTap: (){},
+    child: Container(
+      margin: EdgeInsets.all(2),
       width: buttonWidth,
       height: buttonHeight,
       padding: EdgeInsets.all(1), // Border width
@@ -157,19 +161,74 @@ class GradientBorderButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'All',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                ),
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 2),
             Icon(
               Icons.close,
               color: Colors.black,
               size: 12,
             ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+Date dateWidget(){
+  return Date();
+}
+class Date extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Get the screen width and height
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate the button width and height based on screen size
+    final buttonWidth = screenWidth * 0.20;
+    final buttonHeight = screenHeight * 0.03;
+
+    return Container(
+      width: buttonWidth,
+      height: buttonHeight,
+      margin: EdgeInsets.symmetric(horizontal: 2),
+      padding: EdgeInsets.all(1), // Border width
+      decoration: BoxDecoration(
+       
+        
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: MyColors.assignmentDate,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                'Jyly 14,2024',
+                style: TextStyle(
+                  color: MyColors.assignmentdateColor,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+          
           ],
         ),
       ),

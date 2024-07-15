@@ -10,6 +10,7 @@ import 'package:nguru/custom_widgets/custom_floating_action_button.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
+import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/stories.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -134,8 +135,6 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             title: MyStrings.timeTable,
                             content: MyStrings.timeTablesub,
                             isPngImage: false,
-                            // titleSize: 20.0,
-                            // contentSize: 10.0,
                             icon: Icons.arrow_forward,
                             onIconPressed: () {
                               print("forward");
@@ -151,14 +150,14 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           title: MyStrings.examination,
                           content: MyStrings.examinationsub,
                           isPngImage: true,
-                          // titleSize: 20.0,
-                          // contentSize: 16.0,
                           icon: Icons.arrow_forward,
                           cardHeight: double.maxFinite,
                           cardWidth: screenWidth * 0.35,
                           image: MyAssets.exams,
                           onIconPressed: () {
-                            print("forward");
+                                  NavigationService.navigateTo(
+                         AssignmentScreen(),
+                          context);
                           },
                         ),
                       ],
@@ -175,8 +174,6 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           title: MyStrings.calender,
                           content: MyStrings.calendarsub,
                           isPngImage: false,
-                          // titleSize: 20.0,
-                          // contentSize: 16.0,
                           icon: Icons.arrow_forward,
                           cardHeight: double.maxFinite,
                           cardWidth: screenWidth * 0.35,
@@ -194,8 +191,6 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             title: MyStrings.activity,
                             content: MyStrings.activitysub,
                             isPngImage: false,
-                            // titleSize: 20.0,
-                            // contentSize: 10.0,
                             icon: Icons.arrow_forward,
                             onIconPressed: () {
                               print("forward");
@@ -218,14 +213,12 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             context: context,
                             title: MyStrings.Library,
                             content: MyStrings.Librarysub,
-                            // titleSize: 20.0,
-                            // contentSize: 10.0,
                             isPngImage: false,
                             icon: Icons.arrow_forward,
                             onIconPressed: () {
                               print("forward");
                             },
-                            // cardHeight: 125,
+                           
 
                             image: MyAssets.library,
                           ),
@@ -236,14 +229,12 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             context: context,
                             title: MyStrings.infirmary,
                             content: MyStrings.infirmarysub,
-                            // titleSize: 20.0,
-                            // contentSize: 10.0,
                             isPngImage: false,
                             icon: Icons.arrow_forward,
                             onIconPressed: () {
                               print("forward");
                             },
-                            // cardHeight: 125,
+                            
 
                             image: MyAssets.infirmary,
                           ),
@@ -254,15 +245,14 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                             context: context,
                             title: MyStrings.gallery,
                             content: MyStrings.gallerysub,
-                            // titleSize: 10.0,
-                            // contentSize: 10.0,
+
                             icon: Icons.arrow_forward,
                             isPngImage: false,
                             onIconPressed: () {
                               print("forward");
                             },
                             image: MyAssets.gallery,
-                            //cardHeight: 125,
+                           
                           ),
                         ),
                       ],
@@ -270,13 +260,12 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                   ),
                 ],
               ),
-              // SvgPicture.asset(MyAssets.examination),
+             
             ],
           ),
         ),
       ),
-      // floatingActionButton: customFloatingActionButton(context),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      
     );
   }
 

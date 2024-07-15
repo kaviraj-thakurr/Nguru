@@ -4,7 +4,7 @@ import 'package:nguru/custom_widgets/attendence_and_fee_card.dart';
 import 'package:nguru/custom_widgets/custom_calendar.dart';
 import 'package:nguru/custom_widgets/custom_floating_action_button.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
-import 'package:nguru/utils/my_assets.dart';
+
 
 class AttendenceScreen extends StatefulWidget {
   const AttendenceScreen({super.key});
@@ -20,9 +20,9 @@ class _AttendenceScreenState extends State<AttendenceScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          floatingActionButton: customFloatingActionButton(context),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          // floatingActionButton: customFloatingActionButton(context),
+          // floatingActionButtonLocation:
+          //     FloatingActionButtonLocation.centerDocked,
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(

@@ -12,22 +12,24 @@ class AuthRepo {
   final _myService = Networking();
   var userToken = "";
 
-  Future<AddSchoolModel> addSchool(String schoolUrl) async {
-    try {
-      final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com/mobileappservice/Api/School/GetDetail/",
-        data: {
-          "schoolURL": schoolUrl,
-        },
-      );
-      AddSchoolModel addSchool = addSchoolFromJson(res.toString());
-      return addSchool;
-    } catch (e) {
-      print(e.toString());
-      throw Exception("Failed to add school: $e");
-    }
+  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain) async {
+  // Concatenate the base URL and the subdomain
+  String fullSchoolUrl = "$schoolurl$subDomain";
+  
+  try {
+    final res = await _myService.networkPost(
+      url: "https://quickschool.niitnguru.com/mobileappservice/Api/School/GetDetail/",
+      data: {
+        "schoolURL": fullSchoolUrl,
+      },
+    );
+    AddSchoolModel addSchool = addSchoolFromJson(res.toString());
+    return addSchool;
+  } catch (e) {
+    print(e.toString());
+    throw Exception("Failed to add school: $e");
   }
+}
 
   Future<LoginModel> logIn(
       {String? deviceToken,
@@ -41,8 +43,7 @@ class AuthRepo {
             "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/Login/",
         data: {
           "schoolURL": "https://quickschool.niitnguru.com/demoschool",
-          "deviceToken":
-              "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+          "deviceToken":"cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
           "deviceType": "1",
           "password": password,
           "userName": userName
@@ -55,4 +56,23 @@ class AuthRepo {
       throw Exception("Failed to login: $e");
     }
   }
+
+Future <dynamic> forgotPassword (String userName)async{
+  try{
+    final res = await _myService.networkPost(url: "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/ForgetPassword",
+    data: {
+      "userName": userName
+    }
+    );
+  var result = json.decode(res.toString());
+  return result;
+
+  }catch(e){
+     print(e.toString());
+     throw Exception("Failed to login: $e");
+  }
+
+
+}
+
 }

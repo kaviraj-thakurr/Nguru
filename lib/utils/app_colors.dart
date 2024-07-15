@@ -6,8 +6,9 @@ import 'package:flutter/widgets.dart';
 
 class MyColors {
   const MyColors._();
-
+static const Color assignmentdateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
+  static const Color searchbox = Color(0xFFF3F3F3);
   static const Color borderColor = Color(0xFFD7D7D7);
   static const Color textcolors = Color(0xFF7A7A7A);
   static const Color buttonColor = Color(0xFF7A7A7A);
@@ -19,6 +20,7 @@ class MyColors {
   static const Color cardsubTitle = Color(0xFF323232);
   static const Color cardTitle = Color(0xFF111111);
    static const Color circular = Color(0xFF333333);
+   static const Color circularsubttile = Color(0xFF242424);
 
   static const Color search = Color(0xFFA1A1A1);
   static const Color searchbackgroundColor = Color(0xFFF3F3F3);
@@ -30,6 +32,20 @@ class MyColors {
   static const Color boldTextColor = Color(0xFF242424);
   static const Color fadedTextColor = Color(0xFF434343);
   static const Color white = Color(0xFFFFFFFF);
+
+  //calendar screen colors
+   static const Color calendarFooterCard = Color(0xFFF4F4F4);
+  static const Color buildLegendColor_1 = Color(0xFF545557);
+   static const Color buildLegendColor_2 = Color(0xFF78818B);
+   static const Color buildLegendColor_3 = Color(0xFF8D4399);
+   static const Color buildLegendColor_4 = Color(0xFF0160AE);
+   static const Color buildLegendColor_5 = Color(0xFFFF3D3D);
+   static const Color buildLegendColor_6 = Color(0xFF05B637);
+    static const Color calendarDateColor = Color(0xFF1A1A1A);
+
+    //container boarder color
+  
+  static const Color monthNameColor = Color(0xFF333333);
 
 // gradients
   static const LinearGradient buttonColors = LinearGradient(
@@ -56,6 +72,12 @@ class MyColors {
 //arrow color
   static const Gradient arrowColor = LinearGradient(
     colors: <Color>[Color(0xFF0261AE), Color(0xFFA0CB7C)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const Gradient assignmentDate = LinearGradient(
+    colors: <Color>[Color(0xFF90CDFF), Color(0xFFC9E6FF),],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

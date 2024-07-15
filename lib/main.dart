@@ -8,6 +8,7 @@ import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/screens/attendence_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/stories.dart';
+import 'package:nguru/screens/time_table_screen.dart';
 import 'package:nguru/theme/app_theme.dart';
 import 'screens/login_screen.dart';
 
@@ -28,14 +29,16 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
+        splitScreenMode: true,
+        useInheritedMediaQuery: true,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppThemes.light,
           darkTheme: AppThemes.dark,
-          home: 
+          home: TimetableScreen()
 
           
-          NguruDashboardScreen(),
+         // AddSchool(),
         ),
       ),
     );

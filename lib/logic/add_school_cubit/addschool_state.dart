@@ -6,7 +6,8 @@ class AddSchoolLoadingState extends AddSchoolState {}
 
 class AddSchoolSuccessState extends AddSchoolState {
   final String? schoolName;
-  AddSchoolSuccessState({required this.schoolName});
+  final String ? schoolPhoto;
+  AddSchoolSuccessState({required this.schoolName, required this.schoolPhoto});
 }
 
 class AddSchoolErrorState extends AddSchoolState {
