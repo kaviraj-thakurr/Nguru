@@ -23,87 +23,77 @@ class _CircularScreenState extends State<CircularCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              children: [
-                _buildMonthSelector(),
-                const SizedBox(
-                  height: 20,
-                ),
-                TableCalendar(
-                  rowHeight: 45,
-                  
-                  daysOfWeekHeight: 20,
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                    weekdayStyle: FontUtil.customStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        textColor: MyColors.calendarDateColor),
-                    weekendStyle: FontUtil.customStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w200,
-                        textColor: MyColors.calendarDateColor),
-                  ),
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: _focusedDay,
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
-                  },
-                  calendarFormat: CalendarFormat.week,
-                  calendarStyle: CalendarStyle(
-                    
-                    defaultTextStyle: FontUtil.customStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        textColor: MyColors.calendarDateColor),
-                    weekendTextStyle: FontUtil.customStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w200,
-                        textColor: MyColors.fadedTextColor),
-                    selectedTextStyle: FontUtil.customStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        textColor: Colors.blue),
-                    todayTextStyle: FontUtil.customStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        textColor: Colors.pink),
-                    todayDecoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 2, color: Colors.white),
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 2, color: Colors.white),
-                    ),
-                  ),
-                  headerVisible: false,
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                ),
-                const SizedBox(height: 10),
-             //   _buildLegend(),
-                //  const SizedBox(height: 10,),
-                //    customAttendenceFooterCard(context),
-              ],
-            ),
+    return  Column(
+        children: [
+          _buildMonthSelector(),
+          const SizedBox(
+            height: 20,
           ),
-        ),
-      ),
-    );
+          TableCalendar(
+            rowHeight: 55,
+            
+            daysOfWeekHeight: 20,
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: FontUtil.customStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  textColor: MyColors.calendarDateColor),
+              weekendStyle: FontUtil.customStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w200,
+                  textColor: MyColors.calendarDateColor),
+            ),
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            calendarFormat: CalendarFormat.week,
+            calendarStyle: CalendarStyle(
+              
+              defaultTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  textColor: MyColors.calendarDateColor),
+              weekendTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w200,
+                  textColor: MyColors.fadedTextColor),
+              selectedTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  textColor: Colors.blue),
+              todayTextStyle: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  textColor: Colors.pink),
+              todayDecoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(width: 2, color: Colors.white),
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(width: 2, color: Colors.white),
+              ),
+            ),
+            headerVisible: false,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+          ),
+          const SizedBox(height: 10),
+       //   _buildLegend(),
+          //  const SizedBox(height: 10,),
+          //    customAttendenceFooterCard(context),
+        ],
+      );
   }
 
   Widget _buildMonthSelector() {

@@ -6,6 +6,8 @@ import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/screens/attendence_screen.dart';
+import 'package:nguru/screens/circular_calendar.dart';
+import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/stories.dart';
 import 'package:nguru/screens/time_table_screen.dart';
@@ -35,10 +37,14 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppThemes.light,
           darkTheme: AppThemes.dark,
-          home: TimetableScreen()
+          home: 
+         // TimetableScreen()
+      CircularScreen()
 
+      //  CircularCalendar()
+//AttendenceScreen()
           
-         // AddSchool(),
+          //AddSchool(),
         ),
       ),
     );

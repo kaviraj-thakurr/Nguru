@@ -7,6 +7,7 @@ import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_progress_bar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
+import 'package:nguru/screens/circular_calendar.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -44,19 +45,24 @@ class _CircularScreenState extends State<CircularScreen> {
                 animatedbutton(),
               10.widthBox,
               animatedbutton(),
+
+             
               ],
             ),
+            10.heightBox,
+
+           
+
+           circularCalendar(),
+          
              
-            Expanded(
+            Flexible(
               child: PageView.builder(
-               itemCount: 3,
+               itemCount: 6,
                itemBuilder:(context, index) => ListView.builder(
                   itemCount: 5,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CardDesign(context),
-                    );
+                    return CardDesign(context);
                   },
                 ),
                   
@@ -84,14 +90,14 @@ IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.front_arrow)),
 
 Widget CardDesign(BuildContext context) {
   return Container(
-    height: MediaQuery.sizeOf(context).height * 0.11,
+    height: MediaQuery.sizeOf(context).height * 0.10,
     // width: MediaQuery.sizeOf(context).width * 0.5,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8),
       color: MyColors.searchbackgroundColor,
     ),
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
           Image.asset(MyAssets.bookz),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -24,25 +25,38 @@ class _TimeTableScreenState extends State<TimetableScreen> {
             children: [
               dashboardAppBar(),
               screenTitleHeader("TimeTable"),
-              timetableCards(context, "1st", "Agatha D'Souza", "English"),
-              12.heightBox,
-              timetableCards(context, "2nd", "Agatha D'Souza", "English"),
-              12.heightBox,
-              breaktimecard(context),
-              12.heightBox,
-              timetableCards(context, "3rd", "Sumedha Rani", "Hindi"),
-              12.heightBox,
-              timetableCards(context, "4th", "Anjali Kapur", "Computer"),
-              12.heightBox,
-              breaktimecard(context),
-              12.heightBox,
-              timetableCards(context, "5th", "Anjali Kapur", "Computer"),
-              12.heightBox,
-              timetableCards(context, "6th", "Anjali Kapur", "Computer"),
-              12.heightBox,
-              breaktimecard(context)
-            ],
-          ),
+              PageView(
+                children: [
+                  Container(
+                  height: MediaQuery.sizeOf(context).height*0.9,
+                  child: Column(
+                    children: [
+                      timetableCards(context, "1st", "Agatha D'Souza", "English"),
+                    
+                  
+                  12.heightBox,
+                  timetableCards(context, "2nd", "Agatha D'Souza", "English"),
+                  12.heightBox,
+                  breaktimecard(context),
+                  12.heightBox,
+                  timetableCards(context, "3rd", "Sumedha Rani", "Hindi"),
+                  12.heightBox,
+                  timetableCards(context, "4th", "Anjali Kapur", "Computer"),
+                  12.heightBox,
+                  breaktimecard(context),
+                  12.heightBox,
+                  timetableCards(context, "5th", "Anjali Kapur", "Computer"),
+                  12.heightBox,
+                  timetableCards(context, "6th", "Anjali Kapur", "Computer"),
+                  12.heightBox,
+                  breaktimecard(context)
+                              ],
+                            ),
+                ),
+                ]
+              ),
+            ]
+          )
         ),
       ),
     );
@@ -61,8 +75,8 @@ class _TimeTableScreenState extends State<TimetableScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        
               children: [
                 Text(
                   periodNumber,
@@ -71,7 +85,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.addButtonColor),
                 ),
-                20.widthBox,
+               
                 Text(
                   teachername,
                   style: FontUtil.customStyle(
@@ -79,7 +93,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.addButtonColor),
                 ),
-                106.widthBox,
+              
                 Text(
                   subject,
                   style: FontUtil.customStyle(
@@ -104,7 +118,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
     BuildContext context,
   ) {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.052,
+      height: MediaQuery.sizeOf(context).height * 0.055,
       width: double.maxFinite,
       decoration: BoxDecoration(
           gradient: MyColors.assignmentDate,
