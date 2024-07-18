@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/logic/notification/notification_cubit.dart';
+import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -17,7 +20,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   _CustomAppBarState createState() => _CustomAppBarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
@@ -38,7 +41,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       child: Row(
         children: [
           Row(
-           // mainAxisAlignment: MainAxisAlignment.spaceAround,
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               DropdownButton<String>(
                 value: selectedValue,
@@ -46,11 +49,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: SvgPicture.asset(
                     MyAssets.drop_down_arrow,
-
                     color: MyColors.addButtonColor,
                   ),
                 ),
-                underline: SizedBox.shrink(),
+                underline: const SizedBox.shrink(),
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedValue = newValue!;
@@ -66,15 +68,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
               )
             ],
           ),
-          Spacer(),
-
+          const Spacer(),
           Row(
             children: [
-              Container(
-                height: 25,width: 25,
-
-
-                child: IconButton(padding: EdgeInsets.zero,
+              SizedBox(
+                height: 25,
+                width: 25,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     MyAssets.school,
                     color: selectedIcon == 'school' ? MyColors.appColor1 : null,
@@ -87,8 +88,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               12.widthBox,
-              Container( height: 25,width: 25,
-                child: IconButton(padding: EdgeInsets.zero,
+              SizedBox(
+                height: 25,
+                width: 25,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     MyAssets.travel,
                     color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
@@ -101,11 +105,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               12.widthBox,
-              Container( height: 25,width: 25,
-                child: IconButton(padding: EdgeInsets.zero,
+              SizedBox(
+                height: 25,
+                width: 25,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
                   icon: SvgPicture.asset(
                     MyAssets.message,
-                    color: selectedIcon == 'message' ? MyColors.appColor1 : null,
+                    color:
+                        selectedIcon == 'message' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
                     setState(() {
@@ -115,21 +123,63 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
               12.widthBox,
-              Container(
-                height: 25,width: 25,
-                child: IconButton(padding: EdgeInsets.zero,
-                  icon: SvgPicture.asset(
-                    MyAssets.notifications,
-                    color: selectedIcon == 'notifications'
-                        ? MyColors.appColor1
-                        : null,
+              BlocConsumer<NotificationCubit, NotificationState>(
+                  listener: (context, state) {
+          if (state is NotificationErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          if(state is NotificationLoadingState){
+            return const Center(child: CircularProgressIndicator());
+          }
+          else if(state is NotificationSuccessState) {
+            return Stack(children: [
+                  Positioned(
+                    bottom: 15,
+                    right: 0,
+                    child: Container(
+                      height: 12,
+                      width: 12,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color.fromARGB(255, 124, 232, 127)),
+                      child: const Center(
+                          child: Text(
+                        "1",
+                        style: TextStyle(fontSize: 10),
+                      )),
+                    ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      selectedIcon = 'notifications';
-                    });
-                  },
-                ),
+                  SizedBox(
+                    height: 28,
+                    width: 25,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        MyAssets.notifications,
+                        color: selectedIcon == 'notifications'
+                            ? MyColors.appColor1
+                            : null,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedIcon = 'notifications';
+                        });
+                      },
+                    ),
+                  ),
+                ]);
+            
+          } else{
+                  const Text("data");
+          }
+          return const SizedBox();
+        } ,
+
+                
               ),
             ],
           ),

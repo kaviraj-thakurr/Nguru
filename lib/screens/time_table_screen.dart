@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
+import 'package:nguru/screens/circular_calendar.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -25,47 +26,52 @@ class _TimeTableScreenState extends State<TimetableScreen> {
             children: [
               dashboardAppBar(),
               screenTitleHeader("TimeTable"),
-              PageView(
-                children: [
-                  Container(
-                  height: MediaQuery.sizeOf(context).height*0.9,
-                  child: Column(
-                    children: [
-                      timetableCards(context, "1st", "Agatha D'Souza", "English"),
-                    
-                  
-                  12.heightBox,
-                  timetableCards(context, "2nd", "Agatha D'Souza", "English"),
-                  12.heightBox,
-                  breaktimecard(context),
-                  12.heightBox,
-                  timetableCards(context, "3rd", "Sumedha Rani", "Hindi"),
-                  12.heightBox,
-                  timetableCards(context, "4th", "Anjali Kapur", "Computer"),
-                  12.heightBox,
-                  breaktimecard(context),
-                  12.heightBox,
-                  timetableCards(context, "5th", "Anjali Kapur", "Computer"),
-                  12.heightBox,
-                  timetableCards(context, "6th", "Anjali Kapur", "Computer"),
-                  12.heightBox,
-                  breaktimecard(context)
-                              ],
-                            ),
+              circularCalendar(),
+              Container(
+                height: MediaQuery.sizeOf(context).height * 0.9,
+                child: PageView(
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    timetablePage(context, 1),
+                    timetablePage(context, 2),
+                    timetablePage(context, 3),
+                  ],
                 ),
-                ]
               ),
-            ]
-          )
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget timetablePage(BuildContext context, int pageIndex) {
+    return Column(
+      children: [
+        timetableCards(context, "1st", "Agatha D'Souza", "English"),
+        12.heightBox,
+        timetableCards(context, "2nd", "Agatha D'Souza", "English"),
+        12.heightBox,
+        breaktimecard(context),
+        12.heightBox,
+        timetableCards(context, "3rd", "Sumedha Rani", "Hindi"),
+        12.heightBox,
+        timetableCards(context, "4th", "Anjali Kapur", "Computer"),
+        12.heightBox,
+        breaktimecard(context),
+        12.heightBox,
+        timetableCards(context, "5th", "Anjali Kapur", "Computer"),
+        12.heightBox,
+        timetableCards(context, "6th", "Anjali Kapur", "Computer"),
+        12.heightBox,
+        breaktimecard(context),
+      ],
     );
   }
 
   Widget timetableCards(BuildContext context, String periodNumber,
       String teachername, String subject) {
     return Container(
-      //  color: Colors.transparent,
       height: MediaQuery.sizeOf(context).height * 0.099,
       width: double.maxFinite,
       decoration: BoxDecoration(
@@ -76,7 +82,6 @@ class _TimeTableScreenState extends State<TimetableScreen> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        
               children: [
                 Text(
                   periodNumber,
@@ -85,7 +90,6 @@ class _TimeTableScreenState extends State<TimetableScreen> {
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.addButtonColor),
                 ),
-               
                 Text(
                   teachername,
                   style: FontUtil.customStyle(
@@ -93,7 +97,6 @@ class _TimeTableScreenState extends State<TimetableScreen> {
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.addButtonColor),
                 ),
-              
                 Text(
                   subject,
                   style: FontUtil.customStyle(
@@ -114,9 +117,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
     );
   }
 
-  Widget breaktimecard(
-    BuildContext context,
-  ) {
+  Widget breaktimecard(BuildContext context) {
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.055,
       width: double.maxFinite,
@@ -136,7 +137,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
                   fontWeight: FontWeight.w500,
                   textColor: MyColors.appColor1),
             ),
-            Text("10:01 am - 10:30")
+            Text("10:01 am - 10:30"),
           ],
         ),
       ),

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
+import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
+import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendence_screen.dart';
 import 'package:nguru/screens/circular_calendar.dart';
 import 'package:nguru/screens/circular_screen.dart';
@@ -27,6 +30,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AddSchoolCubit(AuthRepo())),
         BlocProvider(create: (context) => LoginCubit(AuthRepo())),
+        BlocProvider(create: (context) => DashboardCubit(AuthRepo())),
+         BlocProvider(create: (context) => NotificationCubit(AuthRepo())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -38,11 +43,11 @@ class MyApp extends StatelessWidget {
           theme: AppThemes.light,
           darkTheme: AppThemes.dark,
           home: 
-         // TimetableScreen()
-      CircularScreen()
-
+      //    TimetableScreen()
+      //   CircularScreen()
       //  CircularCalendar()
-//AttendenceScreen()
+      //AssignmentScreen()
+        NguruDashboardScreen()
           
           //AddSchool(),
         ),

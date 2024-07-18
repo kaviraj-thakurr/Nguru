@@ -10,12 +10,10 @@ Widget personInfoCard(
     String idNo,
     Function(String) onNameChange,
     ) {
-  List<String> names = ['Anshul Goswami','Name Surname'];
+ 
 
   // Ensure the personName is a valid value
-  if (!names.contains(personName)) {
-    personName = names.first;
-  }
+ 
 
   return Container(
     padding: const EdgeInsets.all(16.0),

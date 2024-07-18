@@ -32,58 +32,55 @@ class _CircularScreenState extends State<CircularScreen> {
           children: [
             dashboardAppBar(),
             CustomSearchBar(controller: searchController),
-            
+
             screenTitleHeader("Circular"),
-            
+
             5.widthBox,
             Row(
-           //   mainAxisAlignment: MainAxisAlignment.start,
-              
+              //   mainAxisAlignment: MainAxisAlignment.start,
+
               children: [
                 animatedbutton(),
                 10.widthBox,
                 animatedbutton(),
-              10.widthBox,
-              animatedbutton(),
-
-             
+                10.widthBox,
+                animatedbutton(),
               ],
             ),
-            10.heightBox,
+            15.heightBox,
 
-           
+            circularCalendar(),
 
-           circularCalendar(),
-          
-             
             Flexible(
               child: PageView.builder(
-               itemCount: 6,
-               itemBuilder:(context, index) => ListView.builder(
+                itemCount: 6,
+                itemBuilder: (context, index) => ListView.builder(
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return CardDesign(context);
                   },
                 ),
-                  
-                
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.back_arrow)),
-IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.front_arrow)),
-
+                IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(MyAssets.back_arrow)),
+                IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(MyAssets.front_arrow)),
               ],
             ),
             // Text('asdasdas')
-            CustomProgressBar(progress: 0.3,dotCount: 0,)
-           
+            CustomProgressBar(
+              progress: 0.3,
+              dotCount: 0,
+            )
           ],
         ),
       ),
-     
     );
   }
 }
@@ -131,10 +128,10 @@ Widget CardDesign(BuildContext context) {
   );
 }
 
-
-GradientBorderButton animatedbutton(){
+GradientBorderButton animatedbutton() {
   return GradientBorderButton();
 }
+
 class GradientBorderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

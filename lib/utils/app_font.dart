@@ -9,12 +9,14 @@ class FontUtil {
     required double fontSize,
     required FontWeight fontWeight,
     required Color textColor,
+    String? fontFamily,
+    
   }) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: textColor,
-      fontFamily: 'FontMain',
+      fontFamily: "Nunito",
     );
   }
 

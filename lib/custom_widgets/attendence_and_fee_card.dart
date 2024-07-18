@@ -40,11 +40,12 @@ Widget attendenceAndFeeCard(BuildContext context,
                 ),
               Flexible(
                 flex: 3,
-                child: Text(mainText ?? '__',
+                child: Text("sujay" ?? '__',
                     style: FontUtil.customStyle(
                         fontSize: 26,
+                        fontFamily: "Nunito",
                         fontWeight: FontWeight.w500,
-                        textColor: MyColors.boldTextColor)),
+                        textColor: MyColors.primaryColor)),
               ),
               Flexible(
                 flex: 1,
