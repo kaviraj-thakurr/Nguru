@@ -6,7 +6,7 @@ abstract class NotificationState{}
 class NotificationLoadingState extends NotificationState {}
 
 class NotificationSuccessState extends NotificationState {
-  final String? notificationCount;
+  final int? notificationCount;
  
 
   NotificationSuccessState({

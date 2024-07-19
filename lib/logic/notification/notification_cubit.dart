@@ -11,7 +11,7 @@ Future <void> notificationCount () async{
     emit(NotificationLoadingState());
     final result = await authRepo?.notificationCount();
     if(result != null){
-      if(result.responseCode == 200){
+      if(result.responseCode == "200"){
         emit(NotificationSuccessState(
           notificationCount: result.notificationCount,
         ));

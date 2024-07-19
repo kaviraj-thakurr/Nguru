@@ -9,6 +9,7 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
+import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/stories.dart';
@@ -33,6 +34,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   @override
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
+     context.read<NotificationCubit>().notificationCount();
+    
     super.initState();
   }
 

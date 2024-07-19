@@ -6,6 +6,9 @@ import 'package:flutter/widgets.dart';
 
 class MyColors {
   const MyColors._();
+
+
+static const Color sessiontext = Color(0xFF231F20);
 static const Color assignmentdateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
   static const Color searchbox = Color(0xFFF3F3F3);

@@ -33,6 +33,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
   // Variable to keep track of the selected icon
   String selectedIcon = '';
+  @override
+  void initState() {
+    context.read<NotificationCubit>().notificationCount();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +68,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     dropdownItems.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.sessiontext),
+                    ),
                   );
                 }).toList(),
               )
@@ -124,62 +136,59 @@ class _CustomAppBarState extends State<CustomAppBar> {
               ),
               12.widthBox,
               BlocConsumer<NotificationCubit, NotificationState>(
-                  listener: (context, state) {
-          if (state is NotificationErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          if(state is NotificationLoadingState){
-            return const Center(child: CircularProgressIndicator());
-          }
-          else if(state is NotificationSuccessState) {
-            return Stack(children: [
-                  Positioned(
-                    bottom: 15,
-                    right: 0,
-                    child: Container(
-                      height: 12,
-                      width: 12,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: const Color.fromARGB(255, 124, 232, 127)),
-                      child: const Center(
-                          child: Text(
-                        "1",
-                        style: TextStyle(fontSize: 10),
-                      )),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 28,
-                    width: 25,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: SvgPicture.asset(
-                        MyAssets.notifications,
-                        color: selectedIcon == 'notifications'
-                            ? MyColors.appColor1
-                            : null,
+                listener: (context, state) {
+                  if (state is NotificationErrorState) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message)),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is NotificationLoadingState) {
+                    return const Center(child: SizedBox());
+                  } else if (state is NotificationErrorState) {
+                    return const Center(child: Text("error"));
+                  } else if (state is NotificationSuccessState) {
+                    return Stack(children: [
+                      Positioned(
+                        bottom: 15,
+                        right: 0,
+                        child: Container(
+                          height: 12,
+                          width: 12,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: const Color.fromARGB(255, 124, 232, 127)),
+                          child: Center(
+                              child: Text(
+                            "${state.notificationCount ?? ""}",
+                            style: TextStyle(fontSize: 10, color: Colors.white),
+                          )),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          selectedIcon = 'notifications';
-                        });
-                      },
-                    ),
-                  ),
-                ]);
-            
-          } else{
-                  const Text("data");
-          }
-          return const SizedBox();
-        } ,
-
-                
+                      SizedBox(
+                        height: 28,
+                        width: 25,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: SvgPicture.asset(
+                            MyAssets.notifications,
+                            color: selectedIcon == 'notifications'
+                                ? MyColors.appColor1
+                                : null,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedIcon = 'notifications';
+                            });
+                          },
+                        ),
+                      ),
+                    ]);
+                  } else {
+                    return const Text("qwerty");
+                  }
+                },
               ),
             ],
           ),

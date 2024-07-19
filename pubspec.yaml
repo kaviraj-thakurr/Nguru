@@ -38,11 +38,9 @@ dependencies:
   flutter_bloc: ^8.1.6
   dio: ^5.4.3+1
   pretty_dio_logger: ^1.2.0-beta-1
-  google_fonts: ^6.2.1
   velocity_x: ^4.2.1
   flutter_svg: ^2.0.10+1
   flutter_screenutil: ^5.9.3
-  auto_route: ^8.1.3
   flutter_dotenv: ^5.1.0
   flutter_pretty_dio_logger: ^2.0.3
   shared_preferences: ^2.2.3
@@ -80,10 +78,7 @@ flutter:
     - assets/icons/
   #   - images/a_dot_ham.jpeg
 
-flutter_assets:
-  assets_path: assets/images/
-  output_path: lib/custom_widgets/
-  filename: my_assets.dart
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -103,10 +98,10 @@ flutter_assets:
   #       - asset: assets/fonts/Quicksand-Light.ttf
   #         weight: 400
   fonts:
-   - family: Nunito
-     fonts:
-      - asset: assets/fonts/PlaywriteHRLijeva-Thin.ttf
-        weight: 400
+    - family: Effra_Trial
+      fonts:
+        - asset: assets/fonts/Effra_Trial_Hair.ttf
+          weight: 400
       
              
   #       - asset: fonts/Schyler-Italic.ttf

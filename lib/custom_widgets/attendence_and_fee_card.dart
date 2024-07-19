@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
-import 'package:nguru/utils/app_strings.dart';
+
 
 Widget attendenceAndFeeCard(BuildContext context,
     {bool? isFeeCard, headerText, String? mainText, String? footerText}) {
@@ -40,12 +41,11 @@ Widget attendenceAndFeeCard(BuildContext context,
                 ),
               Flexible(
                 flex: 3,
-                child: Text("sujay" ?? '__',
+                child: Text(mainText ?? '__',
                     style: FontUtil.customStyle(
                         fontSize: 26,
-                        fontFamily: "Nunito",
                         fontWeight: FontWeight.w500,
-                        textColor: MyColors.primaryColor)),
+                        textColor: MyColors.boldTextColor)),
               ),
               Flexible(
                 flex: 1,
