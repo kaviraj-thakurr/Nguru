@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         home:
         
              const AttendenceScreen()
-        // CalendarScreen(),
+         // CalendarScreen(),
         //AddSchool(),
             //  home: NguruDashboardScreen(),
         ),
