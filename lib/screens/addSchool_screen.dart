@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -21,6 +20,7 @@ import 'package:velocity_x/velocity_x.dart';
 final _formKey = GlobalKey<FormState>();
 
 class AddSchool extends StatefulWidget {
+  // ignore: prefer_const_constructors_in_immutables
   AddSchool({super.key});
 
   @override
@@ -53,13 +53,38 @@ class _AddSchoolState extends State<AddSchool> {
     super.dispose();
   }
 
+  bool _showClearIcon = false;
+  bool _showClearIconSubdomain = false;
+  bool _showClearIconNickName = false;
+  @override
+  void initState() {
+    super.initState();
+    schoolurlController.addListener(() {
+      setState(() {
+        _showClearIcon = schoolurlController.text.isNotEmpty;
+      });
+    });
+
+    subdomainController.addListener(() {
+      setState(() {
+        _showClearIconSubdomain = subdomainController.text.isNotEmpty;
+      });
+    });
+
+    nickNameController.addListener(() {
+      setState(() {
+        _showClearIconNickName = nickNameController.text.isNotEmpty;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 23),
+            padding: const EdgeInsets.symmetric(horizontal: 23),
             child: Column(
               children: [
                 169.heightBox,
@@ -75,19 +100,37 @@ class _AddSchoolState extends State<AddSchool> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      VxTextField(
+                      TextFormField(
                         controller: schoolurlController,
-                        focusNode: _firstFocusNode,
-                        enableSuggestions: true,
-                        fillColor: Colors.transparent,
-                        borderColor: MyColors.borderColor,
-                        borderType: VxTextFieldBorderType.roundLine,
-                        hint: MyStrings.schoolurl,
-                        style: FontUtil.hintText,
-                        borderRadius: 9,
-                        onSubmitted: (value) {
-                          FocusScope.of(context).requestFocus(_secondFocusNode);
-                        },
+                        decoration: InputDecoration(
+                          hintText: MyStrings.schoolurl,
+                          hintStyle: FontUtil.hintText,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 20.0),
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(9.0)),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: MyColors.borderColor,
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(9.0)),
+                          ),
+                          suffixIcon: _showClearIcon
+                              ? IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    schoolurlController.clear();
+                                  },
+                                )
+                              : null,
+                        ),
                         validator: (url) {
                           if (url == null || url.isEmpty) {
                             return MyStrings.enterschoolurl;
@@ -96,19 +139,37 @@ class _AddSchoolState extends State<AddSchool> {
                         },
                       ),
                       14.heightBox,
-                      VxTextField(
+                      TextFormField(
                         controller: subdomainController,
-                        focusNode: _secondFocusNode,
-                        enableSuggestions: true,
-                        fillColor: Colors.transparent,
-                        borderColor: MyColors.borderColor,
-                        borderType: VxTextFieldBorderType.roundLine,
-                        hint: MyStrings.subdomain,
-                        style: FontUtil.hintText,
-                        borderRadius: 9,
-                        onSubmitted: (value) {
-                          FocusScope.of(context).requestFocus(_secondFocusNode);
-                        },
+                        decoration: InputDecoration(
+                          hintText: MyStrings.subdomain,
+                          hintStyle: FontUtil.hintText,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15.0, horizontal: 20.0),
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(9.0)),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: MyColors.borderColor,
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(9.0)),
+                          ),
+                          suffixIcon: _showClearIconSubdomain
+                              ? IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    subdomainController.clear();
+                                  },
+                                )
+                              : null,
+                        ),
                         validator: (subdomain) {
                           if (subdomain == null || subdomain.isEmpty) {
                             return MyStrings.subdomainrequired;
@@ -117,16 +178,39 @@ class _AddSchoolState extends State<AddSchool> {
                         },
                       ),
                       14.heightBox,
-                      VxTextField(
-                        controller: nickNameController,
-                        fillColor: Colors.transparent,
-                        borderColor: MyColors.borderColor,
-                        borderType: VxTextFieldBorderType.roundLine,
-                        hint: MyStrings.nickName,
-                        style: FontUtil.hintText,
-                        borderRadius: 9,
-                        validator: _validateNickName,
-                      ),
+                      TextFormField(
+                          controller: nickNameController,
+                          decoration: InputDecoration(
+                            hintText: MyStrings.nickName,
+                            hintStyle: FontUtil.hintText,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15.0, horizontal: 20.0),
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(9.0)),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: MyColors.borderColor,
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(9.0)),
+                            ),
+                            suffixIcon: _showClearIconNickName
+                                ? IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      nickNameController.clear();
+                                    },
+                                  )
+                                : null,
+                          ),
+                          validator: _validateNickName),
+                      14.heightBox,
                     ],
                   ),
                 ),
@@ -145,13 +229,13 @@ class _AddSchoolState extends State<AddSchool> {
                   listener: (context, state) {
                     if (state is AddSchoolSuccessState) {
                       NavigationService.navigateTo(
-                          LoginScreen(title: state.schoolName ), context);
+                          LoginScreen(title: state.schoolName), context);
                     } else if (state is AddSchoolErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             state.message,
-                            style: TextStyle(color: Colors.red),
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
                       );

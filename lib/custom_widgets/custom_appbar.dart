@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
+import 'package:nguru/screens/contact_screen.dart';
+
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
-import 'package:nguru/utils/app_gapping.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 
 CustomAppBar dashboardAppBar() {
@@ -93,9 +95,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: selectedIcon == 'school' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-                    setState(() {
-                      selectedIcon = 'school';
-                    });
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ContactScreen()))
+                        .then((value) => setState(() {
+                              selectedIcon = 'school';
+                            }));
                   },
                 ),
               ),

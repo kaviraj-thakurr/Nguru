@@ -83,7 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
+
+                            
                             VxTextField(
+                              autofocus: true,
                               controller: userNameController,
                               fillColor: Colors.transparent,
                               borderColor: MyColors.borderColor,

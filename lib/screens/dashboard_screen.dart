@@ -3,21 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/attendence_and_fee_card.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
-import 'package:nguru/custom_widgets/custom_card.dart';
+
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
-import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
-import 'package:nguru/screens/stories.dart';
+import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/story/story_screen.dart';
+
 import 'package:nguru/screens/time_table_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
-import 'package:nguru/utils/app_sizebox.dart';
+
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -34,8 +35,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   @override
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
-     context.read<NotificationCubit>().notificationCount();
-    
+    context.read<NotificationCubit>().notificationCount();
+
     super.initState();
   }
 
@@ -57,220 +58,221 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
           if (state is DashboardLoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is DashboardSuccessState) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    dashboardAppBar(),
-                    CustomSearchBar(controller: searchController),
-                    12.heightBox,
-                    Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      constraints: BoxConstraints(
-                        maxHeight: screenHeight * 0.2,
-                        maxWidth: double.infinity,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          personInfoCard(
-                            context,
-                            "${state.studentPicture}",
-                            "${state.studentName}",
-                            "${state.qualification} ${state.section}",
-                            "${state.admissionNumber}",
-                            (String newName) {
-                              setState(() {});
-                            },
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                flex: 4,
-                                child: attendenceAndFeeCard(
-                                  context,
-                                  mainText: "53%",
-                                  footerText: "Attendance",
-                                  isFeeCard: false,
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 5,
-                                child: attendenceAndFeeCard(
-                                  context,
-                                  headerText: "Paid 23k",
-                                  mainText: "23k",
-                                  footerText: "Advance 23k",
-                                  isFeeCard: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    20.heightBox,
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+            return Stack(
+              children: [
+                Container(height:  MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,color: Colors.white,child:  SvgPicture.asset(MyAssets.background,fit: BoxFit.fill,),),
+                // Positioned.fill(child: SvgPicture.asset(MyAssets.background,fit: BoxFit.fill,)),
+                SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      dashboardAppBar(),
+                      CustomSearchBar(controller: searchController),
+                      12.heightBox,
+                      Container(
+                        margin: const EdgeInsets.only(top: 8.0),
+                        constraints: BoxConstraints(
+                          maxHeight: screenHeight * 0.2,
+                          maxWidth: double.infinity,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const GradientCircleAvatar(
-                              radius: 35,
-                              title: "10",
-                              gradient: MyColors.arrowColor,
-                              child: Text("10"),
+                            personInfoCard(
+                              context,
+                              "${state.studentPicture}",
+                              "${state.studentName}",
+                              "${state.qualification} ${state.section}",
+                              "${state.admissionNumber}",
+                              (String newName) {
+                                setState(() {});
+                              },
                             ),
-                            8.widthBox,
-                            const GradientCircleAvatar(
-                              radius: 35,
-                              gradient: MyColors.arrowColor,
-                              title: "45",
-                              child: Text("10"),
-                            ),
-                            8.widthBox,
-                            const GradientCircleAvatar(
-                              radius: 35,
-                              title: "45",
-                              gradient: MyColors.arrowColor,
-                              child: Text("10"),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  flex: 4,
+                                  child: attendenceAndFeeCard(
+                                    context,
+                                    mainText: "53%",
+                                    footerText: "Attendance",
+                                    isFeeCard: false,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Flexible(
+                                  flex: 5,
+                                  child: attendenceAndFeeCard(
+                                    context,
+                                    headerText: "Paid 23k",
+                                    mainText: "23k",
+                                    footerText: "Advance 23k",
+                                    isFeeCard: true,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        18.heightBox,
-                        Container(
-                          height: screenHeight * 0.14,
-                          width: screenWidth,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: customCard(
+                      ),
+                      20.heightBox,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                           StoryScreen(),
+                          18.heightBox,
+                          Container(
+                            height: screenHeight * 0.17,
+                            width: screenWidth,
+                            child: Row(
+                              children: [
+                                customCard(
                                   context: context,
-                                  title: state.dashboardList?[5]['dashboardItem']  ?? MyStrings.timeTable,
+                                  title: state.dashboardList?[5]
+                                          ['dashboardItem'] ??
+                                      MyStrings.timeTable,
                                   content: MyStrings.timeTablesub,
                                   isPngImage: false,
                                   icon: Icons.arrow_forward,
                                   onIconPressed: () {
-                                    NavigationService.navigateTo(const TimetableScreen(), context);
+                                    NavigationService.navigateTo(
+                                        const TimetableScreen(), context);
                                   },
                                   cardWidth: screenWidth * 0.5,
                                   cardHeight: double.maxFinite,
                                   image: MyAssets.timetable_card_image,
                                 ),
-                              ),
-                              15.widthBox,
-                              customCard(
-                                context: context,
-                                title:state.dashboardList?[6]['dashboardItem'] ?? "",
-                                content: MyStrings.examinationsub,
-                                isPngImage: true,
-                                icon: Icons.arrow_forward,
-                                cardHeight: double.maxFinite,
-                                cardWidth: screenWidth * 0.35,
-                                image: MyAssets.exams,
-                                onIconPressed: () {
-                                  NavigationService.navigateTo(const TimetableScreen(), context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        14.heightBox,
-                        SizedBox(
-                          height: screenHeight * 0.13,
-                          width: screenWidth,
-                          child: Row(
-                            children: [
-                              customCard(
-                                context: context,
-                                title:state.dashboardList?[8]['dashboardItem'] ?? "MyStrings.calender",
-                                content: MyStrings.calendarsub,
-                                isPngImage: false,
-                                icon: Icons.arrow_forward,
-                                cardHeight: double.maxFinite,
-                                cardWidth: screenWidth * 0.35,
-                                onIconPressed: () {
-                                  NavigationService.navigateTo(CircularScreen(), context);
-                                },
-                                image: MyAssets.calendar,
-                              ),
-                              14.widthBox,
-                              Expanded(
-                                child: customCard(
+                                15.widthBox,
+                                customCard(
                                   context: context,
-                                  title: state.dashboardList?[9]['dashboardItem'] ?? MyStrings.activity,
-                                  content: MyStrings.activitysub,
-                                  isPngImage: false,
+                                  title: state.dashboardList?[6]
+                                          ['dashboardItem'] ??
+                                      "",
+                                  content: MyStrings.examinationsub,
+                                  isPngImage: true,
                                   icon: Icons.arrow_forward,
-                                  onIconPressed: () {
-                                    print("forward");
-                                  },
                                   cardHeight: double.maxFinite,
-                                  cardWidth: 250,
-                                  image: MyAssets.activity,
+                                  cardWidth: screenWidth * 0.35,
+                                  image: MyAssets.exams,
+                                  onIconPressed: () {
+                                    NavigationService.navigateTo(
+                                        const TimetableScreen(), context);
+                                  },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        14.heightBox,
-                        SizedBox(
-                          width: screenWidth,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: customCard(
+                          14.heightBox,
+                          SizedBox(
+                            height: screenHeight * 0.14,
+                            width: screenWidth,
+                            child: Row(
+                              children: [
+                                customCard(
                                   context: context,
-                                  title: state.dashboardList?[10]['dashboardItem'] ?? MyStrings.Library,
-                                  content: MyStrings.Librarysub,
+                                  title: state.dashboardList?[8]
+                                          ['dashboardItem'] ??
+                                      "MyStrings.calender",
+                                  content: MyStrings.calendarsub,
                                   isPngImage: false,
                                   icon: Icons.arrow_forward,
+                                  cardHeight: double.maxFinite,
+                                  cardWidth: screenWidth * 0.35,
                                   onIconPressed: () {
-                                    print("forward");
+                                    NavigationService.navigateTo(
+                                        CircularScreen(), context);
                                   },
-                                  image: MyAssets.library,
+                                  image: MyAssets.calendar,
                                 ),
-                              ),
-                              15.widthBox,
-                              Expanded(
-                                child: customCard(
-                                  context: context,
-                                  title: state.dashboardList?[11]['dashboardItem'] ?? MyStrings.infirmary,
-                                  content: MyStrings.infirmarysub,
-                                  isPngImage: false,
-                                  icon: Icons.arrow_forward,
-                                  onIconPressed: () {
-                                    print("forward");
-                                  },
-                                  image: MyAssets.infirmary,
+                                14.widthBox,
+                                Expanded(
+                                  child: customCard(
+                                    context: context,
+                                    title: state.dashboardList?[9]
+                                            ['dashboardItem'] ??
+                                        MyStrings.activity,
+                                    content: MyStrings.activitysub,
+                                    isPngImage: false,
+                                    icon: Icons.arrow_forward,
+                                    onIconPressed: () {
+                                      print("forward");
+                                    },
+                                    cardHeight: double.maxFinite,
+                                    cardWidth: 250,
+                                    image: MyAssets.activity,
+                                  ),
                                 ),
-                              ),
-                              15.widthBox,
-                              Expanded(
-                                child: customCard(
-                                  context: context,
-                                  title: state.dashboardList?[13]['dashboardItem'] ?? MyStrings.gallery,
-                                  content: MyStrings.gallerysub,
-                                  icon: Icons.arrow_forward,
-                                  isPngImage: false,
-                                  onIconPressed: () {
-                                    print("forward");
-                                  },
-                                  image: MyAssets.gallery,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          14.heightBox,
+                          SizedBox(
+                            width: screenWidth,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: customCard(
+                                    context: context,
+                                    title: state.dashboardList?[10]
+                                            ['dashboardItem'] ??
+                                        MyStrings.Library,
+                                    content: MyStrings.Librarysub,
+                                    isPngImage: false,
+                                    icon: Icons.arrow_forward,
+                                    onIconPressed: () {
+                                      print("forward");
+                                    },
+                                    image: MyAssets.library,
+                                  ),
+                                ),
+                                15.widthBox,
+                                Expanded(
+                                  child: customCard(
+                                    context: context,
+                                    title: state.dashboardList?[11]
+                                            ['dashboardItem'] ??
+                                        MyStrings.infirmary,
+                                    content: MyStrings.infirmarysub,
+                                    isPngImage: false,
+                                    icon: Icons.arrow_forward,
+                                    onIconPressed: () {
+                                      print("forward");
+                                    },
+                                    image: MyAssets.infirmary,
+                                  ),
+                                ),
+                                15.widthBox,
+                                Expanded(
+                                  child: customCard(
+                                    context: context,
+                                    title: state.dashboardList?[13]
+                                            ['dashboardItem'] ??
+                                        MyStrings.gallery,
+                                    content: MyStrings.gallerysub,
+                                    icon: Icons.arrow_forward,
+                                    isPngImage: false,
+                                    image: MyAssets.gallery,
+                                    onIconPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                GalleryScreen())),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              ]
             );
           } else {
             return const Center(child: Text('Unknown state'));
@@ -306,11 +308,11 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(title, maxLines: 2, style: FontUtil.cardTitle),
-              Text(content, maxLines: 2, style: FontUtil.cardsubTitle),
+              Text(title, maxLines: 1, style: FontUtil.cardTitle),
+              Text(content, maxLines: 3, style: FontUtil.cardsubTitle),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+               // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
                     padding: EdgeInsets.zero,
@@ -328,7 +330,9 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                     onPressed: onIconPressed,
                   ),
                   Flexible(
-                    child: isPngImage == false ? SvgPicture.asset(image) : Image.asset(image),
+                    child: isPngImage == false
+                        ? SvgPicture.asset(image)
+                        : Image.asset(image),
                   ),
                 ],
               ),

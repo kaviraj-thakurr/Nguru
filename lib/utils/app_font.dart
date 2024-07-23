@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/utils/app_colors.dart';
 
+
+
+const  String  APP_FONT = "Effra_Trial";
 class FontUtil {
   static TextStyle customStyle({
     required double fontSize,
@@ -19,49 +22,49 @@ class FontUtil {
     );
   }
 
-  static TextStyle hintText = TextStyle(
+  static TextStyle hintText = const TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: MyColors.textcolors,
        fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle sessionchanged = TextStyle(
+  static TextStyle sessionchanged = const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
       color: MyColors.addButtonColor,
        fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle customData = TextStyle(
+  static TextStyle customData = const TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w400,
-      color: MyColors.textcolors,
-       fontFamily: 'Effra_Trial'
+      color: MyColors.customdataColor,
+       fontFamily: APP_FONT
       );
 
-  static TextStyle primaryButton = TextStyle(
+  static TextStyle primaryButton = const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w500,
       color: MyColors.white,
       fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle needHelp = TextStyle(
+  static TextStyle needHelp = const TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w400,
       color: MyColors.needHelpColor,
       fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle addButton = TextStyle(
+  static TextStyle addButton = const TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w500,
       color: MyColors.addButtonColor,
        fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle forgotpassword = TextStyle(
+  static TextStyle forgotpassword = const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w500,
       color: Colors.red,
@@ -75,8 +78,8 @@ class FontUtil {
   //     fontFamily: 'QuickStand'
   //     );
 
-  static TextStyle cardsubTitle = TextStyle(
-      fontSize: 9,
+  static TextStyle cardsubTitle = const TextStyle(
+      fontSize: 10,
       fontWeight: FontWeight.w400,
       color: MyColors.textcolors,
         fontFamily: 'Effra_Trial');
