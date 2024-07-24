@@ -23,8 +23,9 @@ final _formKey = GlobalKey<FormState>();
 
 class LoginScreen extends StatefulWidget {
   final String? title;
-  final String ? schoolLogo;
-  const LoginScreen({super.key, this.title , this.schoolLogo});
+  final String? schoolLogo;
+
+  const LoginScreen({super.key, this.title, this.schoolLogo});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       8.heightBox,
                       const GradientDivider(
                         gradient: MyColors.divider,
-                        height: 2.0, // Customize height as needed
+                        height: 2.0,
                       ),
                       16.heightBox,
                       Row(
@@ -67,12 +69,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: Colors.black, width: 3.0),
+                              gradient: MyColors.arrowColor,
+                              border: Border.all(
+                                color: Colors.black,
+                                width: .0,
+                              ),
                             ),
                             width: 13,
                             height: 14.0,
+                            child: Center(
+                              child: Container(),
+                            ),
                           ),
                           5.widthBox,
                           Text(widget.title ?? "")
@@ -83,17 +90,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
-
-                            
-                            VxTextField(
-                              autofocus: true,
+                            TextFormField(
                               controller: userNameController,
-                              fillColor: Colors.transparent,
-                              borderColor: MyColors.borderColor,
-                              borderType: VxTextFieldBorderType.roundLine,
-                              hint: MyStrings.userName,
-                              style: FontUtil.hintText,
-                              borderRadius: 9,
+                              decoration: InputDecoration(
+                                hintText: MyStrings.userName,
+                                hintStyle: FontUtil.hintText,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.textfield,
                               validator: (url) {
                                 if (url == null || url.isEmpty) {
                                   return MyStrings.userName;
@@ -102,17 +122,44 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                             14.heightBox,
-                            VxTextField(
+                            TextFormField(
+                              obscureText: _obscureText,
                               controller: passWordController,
-                              isPassword: true,
-                              obscureText: true,
-                              suffixColor: MyColors.textcolors,
-                              fillColor: Colors.transparent,
-                              borderColor: MyColors.borderColor,
-                              borderType: VxTextFieldBorderType.roundLine,
-                              hint: MyStrings.passWord,
-                              style: FontUtil.hintText,
-                              borderRadius: 9,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    color: MyColors.passIcon,
+                                    _obscureText
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                ),
+                                hintText: MyStrings.passWord,
+                                hintStyle: FontUtil.hintText,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.textfield,
                               validator: (url) {
                                 if (url == null || url.isEmpty) {
                                   return MyStrings.passWord;
@@ -171,13 +218,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          MyStrings.needHelp,
-                          style: FontUtil.needHelp,
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {},
+                      //   child: Text(
+                      //     MyStrings.needHelp,
+                      //     style: FontUtil.needHelp,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

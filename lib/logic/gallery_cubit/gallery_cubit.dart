@@ -16,7 +16,8 @@ class GalleryPhotosCubit extends Cubit<GalleryPhotosState> {
       final result = await authRepo?.getGalleryPhotoList();
       if (result != null) {
         if(result.responseCode == "200" ){
-          emit(GalleryPhotosSuccessState(galleryPhotos: result));
+          emit(
+            GalleryPhotosSuccessState(galleryPhotos: result));
         }else {
 emit(GalleryPhotosErrorState(result.responseMessage ?? "Error occured"));
         }

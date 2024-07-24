@@ -7,6 +7,7 @@ import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_state.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
+import 'package:nguru/screens/login_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
@@ -77,11 +78,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       textColor: MyColors.needHelpColor),
                 ),
                 25.heightBox,
-                BlocListener<ForgetPassCubit, ForgetPasswordState>(
-                  listener: (context, state) {
+                BlocBuilder<ForgetPassCubit, ForgetPasswordState>(
+                  
+                  builder: (context, state) {
                     if (state is ForgetPassSuccessState) {
                       NavigationService.navigateTo(
-                          NguruDashboardScreen(), context);
+                          const LoginScreen(), context);
                     } else if (state is ForgetPassErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -92,8 +94,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         ),
                       );
                     }
-                  },
-                  child: PrimaryButton(
+               
+                  return PrimaryButton(
                     title: "Sign in",
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -108,7 +110,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         );
                       }
                     },
-                  ),
+                  );
+                  }
                 ),
               ],
             ),

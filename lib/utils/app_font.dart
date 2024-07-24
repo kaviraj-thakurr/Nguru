@@ -24,6 +24,7 @@ class FontUtil {
 
   static TextStyle hintText = const TextStyle(
       fontSize: 14,
+      fontStyle: FontStyle.italic,
       fontWeight: FontWeight.w600,
       color: MyColors.textcolors,
        fontFamily: 'Effra_Trial'
@@ -67,7 +68,7 @@ class FontUtil {
   static TextStyle forgotpassword = const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w500,
-      color: Colors.red,
+      color: MyColors.forgetpassword,
        fontFamily: 'Effra_Trial'
       );
 
@@ -127,6 +128,14 @@ class FontUtil {
       fontWeight: FontWeight.w500,
       color: MyColors.circularsubttile,
         fontFamily: 'Effra_Trial');
+
+
+     static TextStyle textfield = TextStyle(
+      fontSize: 16.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.textfieldColor,
+      fontFamily: 'Effra_Trial'
+     )  ;
 
       
 }

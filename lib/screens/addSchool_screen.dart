@@ -101,6 +101,7 @@ class _AddSchoolState extends State<AddSchool> {
                   child: Column(
                     children: [
                       TextFormField(
+                      
                         controller: schoolurlController,
                         decoration: InputDecoration(
                           hintText: MyStrings.schoolurl,
@@ -122,15 +123,8 @@ class _AddSchoolState extends State<AddSchool> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(9.0)),
                           ),
-                          suffixIcon: _showClearIcon
-                              ? IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    schoolurlController.clear();
-                                  },
-                                )
-                              : null,
                         ),
+                        style: FontUtil.textfield,
                         validator: (url) {
                           if (url == null || url.isEmpty) {
                             return MyStrings.enterschoolurl;
@@ -161,15 +155,8 @@ class _AddSchoolState extends State<AddSchool> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(9.0)),
                           ),
-                          suffixIcon: _showClearIconSubdomain
-                              ? IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    subdomainController.clear();
-                                  },
-                                )
-                              : null,
                         ),
+                        style: FontUtil.textfield,
                         validator: (subdomain) {
                           if (subdomain == null || subdomain.isEmpty) {
                             return MyStrings.subdomainrequired;
@@ -200,15 +187,8 @@ class _AddSchoolState extends State<AddSchool> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(9.0)),
                             ),
-                            suffixIcon: _showClearIconNickName
-                                ? IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      nickNameController.clear();
-                                    },
-                                  )
-                                : null,
                           ),
+                          style: FontUtil.textfield,
                           validator: _validateNickName),
                       14.heightBox,
                     ],
@@ -229,7 +209,7 @@ class _AddSchoolState extends State<AddSchool> {
                   listener: (context, state) {
                     if (state is AddSchoolSuccessState) {
                       NavigationService.navigateTo(
-                          LoginScreen(title: state.schoolName), context);
+                          LoginScreen(title: nickNameController.text), context);
                     } else if (state is AddSchoolErrorState) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

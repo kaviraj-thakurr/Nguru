@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
@@ -12,7 +10,6 @@ import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
-import 'package:nguru/utils/app_utils.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
@@ -26,62 +23,66 @@ class _CircularScreenState extends State<AssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            dashboardAppBar(),
-            CustomSearchBar(controller: searchController),
-            
-            screenTitleHeader("Assignment"),
-            5.widthBox,
-
-            circularCalendar(),
-            Row(
-           //   mainAxisAlignment: MainAxisAlignment.start,
-              
+      body: Stack(children: [
+        Positioned.fill(
+            child: Image.asset(
+          MyAssets.bg,
+          fit: BoxFit.fill,
+        )),
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
               children: [
-                animatedButton(context,"All"),
-                10.widthBox,
-                animatedButton(context,"Read"),
-              10.widthBox,
-              animatedButton(context,"Unread"),
-              ],
-            ),
-            
-             
-            Expanded(
-              child: PageView.builder(
-               itemCount: 2,
-               itemBuilder:(context, index) => ListView.builder(
-                  itemCount: 5,
-
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: CardDesign(context),
-                    );
-                  },
+                dashboardAppBar(),
+                CustomSearchBar(controller: searchController),
+                screenTitleHeader("Assignment",
+                    onPressed: () => Navigator.pop(context)),
+                5.widthBox,
+                circularCalendar(),
+                Row(
+                  children: [
+                    animatedButton(context, "All"),
+                    10.widthBox,
+                    animatedButton(context, "Read"),
+                    10.widthBox,
+                    animatedButton(context, "Unread"),
+                  ],
                 ),
-                  
-                
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.back_arrow)),
-IconButton(onPressed: (){}, icon: SvgPicture.asset(MyAssets.front_arrow)),
-
+                Expanded(
+                  child: PageView.builder(
+                    itemCount: 2,
+                    itemBuilder: (context, index) => ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: CardDesign(context),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                        onPressed: () {},
+                        icon: SvgPicture.asset(MyAssets.back_arrow)),
+                    IconButton(
+                        onPressed: () {},
+                        icon: SvgPicture.asset(MyAssets.front_arrow)),
+                  ],
+                ),
+                const CustomProgressBar(
+                  progress: 0.3,
+                  dotCount: 0,
+                )
               ],
             ),
-            // Text('asdasdas')
-            CustomProgressBar(progress: 0.3,dotCount: 0,)
-           
-          ],
+          ),
         ),
-      ),
-     
+      ]),
     );
   }
 }
@@ -97,8 +98,8 @@ Widget CardDesign(BuildContext context) {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          Image.asset(MyAssets.bookz, height: 50),  // Adjust height based on requirement
-          SizedBox(width: 10),
+          Image.asset(MyAssets.bookz, height: 50),
+          const SizedBox(width: 10),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,25 +133,18 @@ Widget CardDesign(BuildContext context) {
   );
 }
 
-
-
-  
-  Widget animatedButton(BuildContext context, String title) {
-  // Get the screen width and height
+Widget animatedButton(BuildContext context, String title) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
-
-  // Calculate the button width and height based on screen size
   final buttonWidth = screenWidth * 0.15;
   final buttonHeight = screenHeight * 0.03;
-
   return InkWell(
-    onTap: (){},
+    onTap: () {},
     child: Container(
-      margin: EdgeInsets.all(2),
+      margin: const EdgeInsets.all(2),
       width: buttonWidth,
       height: buttonHeight,
-      padding: EdgeInsets.all(1), // Border width
+      padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
         gradient: MyColors.arrowColor,
         borderRadius: BorderRadius.circular(30),
@@ -168,18 +162,13 @@ Widget CardDesign(BuildContext context) {
               fit: BoxFit.scaleDown,
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 12,
                 ),
               ),
             ),
-            SizedBox(width: 2),
-            Icon(
-              Icons.close,
-              color: Colors.black,
-              size: 12,
-            ),
+            const SizedBox(width: 2),
           ],
         ),
       ),
@@ -187,43 +176,38 @@ Widget CardDesign(BuildContext context) {
   );
 }
 
-
-Date dateWidget(){
+Date dateWidget() {
   return Date();
 }
+
 class Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and height
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Calculate the button width and height based on screen size
     final buttonWidth = screenWidth * 0.20;
     final buttonHeight = screenHeight * 0.03;
 
     return Container(
       width: buttonWidth,
       height: buttonHeight,
-      margin: EdgeInsets.symmetric(horizontal: 2),
-      padding: EdgeInsets.all(1), // Border width
-      decoration: BoxDecoration(
-       
-        
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      padding: const EdgeInsets.all(1),
+      decoration: const BoxDecoration(),
       child: Container(
         decoration: BoxDecoration(
           gradient: MyColors.assignmentDate,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Row(
+        child: const Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: EdgeInsets.all(5.0),
               child: Text(
-                'Jyly 14,2024',
+                'July 14,2024',
                 style: TextStyle(
                   color: MyColors.assignmentdateColor,
                   fontSize: 12,
@@ -231,7 +215,6 @@ class Date extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8),
-          
           ],
         ),
       ),

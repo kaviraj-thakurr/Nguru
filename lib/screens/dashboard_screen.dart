@@ -60,9 +60,9 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
           } else if (state is DashboardSuccessState) {
             return Stack(
               children: [
-                Container(height:  MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,color: Colors.white,child:  SvgPicture.asset(MyAssets.background,fit: BoxFit.fill,),),
-                // Positioned.fill(child: SvgPicture.asset(MyAssets.background,fit: BoxFit.fill,)),
+                // Container(height:  MediaQuery.of(context).size.height,
+                // width: MediaQuery.of(context).size.width,color: Colors.white,child:Image.asset(MyAssets.bg,fit: BoxFit.fill,),),
+                 Positioned.fill(child: Image.asset(MyAssets.bg,fit: BoxFit.fill,)),
                 SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -118,7 +118,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           ],
                         ),
                       ),
-                      20.heightBox,
+                      14.heightBox,
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,8 +159,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   cardWidth: screenWidth * 0.35,
                                   image: MyAssets.exams,
                                   onIconPressed: () {
-                                    NavigationService.navigateTo(
-                                        const TimetableScreen(), context);
+                                    // c
                                   },
                                 ),
                               ],

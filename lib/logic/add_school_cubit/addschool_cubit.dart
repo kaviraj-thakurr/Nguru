@@ -12,11 +12,11 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
     try {
       emit(AddSchoolLoadingState());
       final result = await authRepo?.addSchool(
-        schoolName,subDomain
+        schoolName,subDomain,
       );
       if (result != null) {
         if (result.responseCode == "200" || result.schoolName != null || result.schoolPhoto !=null) {
-          emit(AddSchoolSuccessState(schoolName: result.schoolName,schoolPhoto: result.schoolPhoto));
+          emit(AddSchoolSuccessState(schoolName: result.schoolName,schoolPhoto: result.schoolPhoto,));
         } else {
           emit(AddSchoolErrorState(result.responseMessage ?? "Error occured"));
         }

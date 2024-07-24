@@ -15,6 +15,7 @@ import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/screens/contact_screen.dart';
+import 'package:nguru/screens/dashboard_screen.dart';
 
 
 void main() {
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
                 //   CircularScreen()
                 //  CircularCalendar()
                 //AssignmentScreen()
-            // const   NguruDashboardScreen()
+             //const   NguruDashboardScreen()
            
 
            AddSchool(),

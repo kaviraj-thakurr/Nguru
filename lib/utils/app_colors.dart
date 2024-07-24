@@ -18,12 +18,14 @@ class MyColors {
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
   static const Color addButtonColor = Color(0xFF0C0C0B);
+  static const Color pagenocolor = Color(0xFF606060);
   static const Color appColor1 = Color(0xFF0160AE);
   static const Color appColor2 = Color(0xFFA0CA7B);
   static const Color cardsubTitle = Color(0xFF323232);
   static const Color cardTitle = Color(0xFF111111);
   static const Color circular = Color(0xFF333333);
   static const Color circularsubttile = Color(0xFF242424);
+  static const Color textfieldColor = Color(0xB3070707);
 
   static const Color search = Color(0xFFA1A1A1);
   static const Color searchbackgroundColor = Color(0xFFF3F3F3);
@@ -32,7 +34,7 @@ class MyColors {
   static const Color boarderColor = Color(0xFFEBEBEB);
 
 //text colors
-  static const Color boldTextColor = Color(0xFF242424);
+  static const Color boldTextColor = Color(0xFF000000);
   static const Color fadedTextColor = Color(0xFF434343);
   static const Color white = Color(0xFFFFFFFF);
   static const Color greyShade_3 = Color(0xFFAAAAAA);
@@ -46,6 +48,8 @@ class MyColors {
   static const Color buildLegendColor_5 = Color(0xFFFF3D3D);
   static const Color buildLegendColor_6 = Color(0xFF05B637);
   static const Color calendarDateColor = Color(0xFF1A1A1A);
+  static const Color forgetpassword = Color(0xFF0160AE);
+  static const Color passIcon = Color(0xFF858585);
 
   //container boarder color
 
@@ -73,6 +77,12 @@ class MyColors {
 // gradients
   static const LinearGradient buttonColors = LinearGradient(
     colors: [Color(0xFF0160AE), Color(0xFFA0CA7B)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient animatedborder = LinearGradient(
+    colors: [Color.fromARGB(255, 242, 241, 241), Color.fromARGB(255, 231, 233, 235)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
