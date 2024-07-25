@@ -12,6 +12,8 @@ import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/notification_models.dart';
+import 'package:nguru/models/push_notification_model.dart';
+import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/services/networking.dart';
 import 'package:nguru/utils/app_const.dart';
 
@@ -422,6 +424,84 @@ class AuthRepo {
           url:
               "https://qsstg.niiteducation.com/mobileappservice/Api/PhotoGallery/GetList/",
           data: {
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "downloadAttachment": 0,
+            "isNotification": 0,
+            "messageTypeId": 0,
+            "month": 0,
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
+            "sessionID": 178,
+            "studentID": 106045,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "112968",
+            "year": 0
+          });
+      GalleryPhotosModel galleryPhotoResponse =
+          galleryPhotosModelFromJson(res.toString());
+      return galleryPhotoResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to login: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     SIGNOUT API      //////////////////////////////////////////////////////
+
+  Future<Map<String, String>> signout({
+    int? pageNumber,
+  }) async {
+    try {
+      final res = await _myService.networkPost(
+          url:
+              "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/Logout/",
+          data: {
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "deviceToken":
+                "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+            "deviceType": "1",
+            "downloadAttachment": 0,
+            "isNotification": 0,
+            "messageTypeId": 0,
+            "month": 0,
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "sessionID": 58,
+            "studentID": 888,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "6135",
+            "year": 0
+          });
+      Map<String, String> signoutResponse = res;
+      return signoutResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to logout: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
+
+  Future<ResetPasswordModel> resetPassword({
+    int? pageNumber,
+    required String? newPassword,
+    required String? oldPassword,
+  }) async {
+    try {
+      final res = await _myService.networkPost(
+          url:
+              "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
+          data: {
             
               "appMessageID": 0,
               "circularID": 0,
@@ -430,24 +510,69 @@ class AuthRepo {
               "isNotification": 0,
               "messageTypeId": 0,
               "month": 0,
-              "pageNumber": 5,
+              "newPassword": "$newPassword",
+              "oldPassword": "$oldPassword",
+              "pageNumber": 0,
               "pageSize": 0,
               "schoolID": 1,
-              "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-              "sessionID": 178,
-              "studentID": 106045,
+              "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+              "sessionID": 107,
+              "studentID": 896,
               "subjectID": 0,
               "type": 0,
-              "userID": "112968",
+              "userID": "6135",
               "year": 0
-            
-          });
-      GalleryPhotosModel galleryPhotoResponse =
-          galleryPhotosModelFromJson(res.toString());
-      return galleryPhotoResponse;
+            }
+          );
+      ResetPasswordModel resetResponse =
+          resetPasswordModelFromJson(res.toString());
+      return resetResponse;
     } catch (e) {
       print(e.toString());
-      throw Exception("Failed to login: $e");
+      throw Exception("Failed to logout: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     PUSH NOTIFICATION API      //////////////////////////////////////////////////////
+
+  Future<PushNotificationModel> pushNotification({
+    int? pageNumber,
+    required int? isNotification,
+  }) async {
+    try {
+      final res = await _myService.networkPost(
+          url:
+              "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
+          data: {
+            {
+              "appMessageID": 0,
+              "circularID": 0,
+              "contentType": 0,
+              "deviceToken":
+                  "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+              "deviceType": "1",
+              "downloadAttachment": 0,
+              "isNotification": isNotification,
+              "messageTypeId": 0,
+              "month": 0,
+              "pageNumber": 0,
+              "pageSize": 0,
+              "schoolID": 1,
+              "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+              "sessionID": 107,
+              "studentID": 896,
+              "subjectID": 0,
+              "type": 0,
+              "userID": "6135",
+              "year": 0
+            }
+          });
+      PushNotificationModel pushNotificationResponse =
+          pushNotificationModelFromJson(res.toString());
+      return pushNotificationResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to logout: $e");
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:story_view/controller/story_controller.dart';
 
 class AssignmentStoryScreen extends StatefulWidget {
@@ -20,6 +21,10 @@ class AssignmentStoryScreen extends StatefulWidget {
 }
 
 class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
+
+
+
+
 
 
   @override
@@ -88,7 +93,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                               textColor: Colors.black),
                         ),
                         Text(
-                    widget.subject?.assignments?.first.assignmentDetail !=null ?   "${widget.subject?.assignments?.first.assignmentDetail }" :  "N/A",
+                    widget.subject?.assignments?.first.assignmentDetail !=null ?   removeHtmlTags("${widget.subject?.assignments?.first.assignmentDetail }") :  "N/A",
                           textAlign: TextAlign.center,
                           style: FontUtil.customStyle(
                               fontSize: 17,
@@ -118,7 +123,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                                         ),
                                         Flexible(
                                             child: Text(
-                                             widget.subject?.assignments?.first.assignmentDetail !=null ?   "${widget.subject?.assignments?.first.assignmentDetail }" :  "N/A",
+                                             widget.subject?.assignments?.first.assignmentDetail !=null ?  removeHtmlTags("${widget.subject?.assignments?.first.assignmentDetail }") :  "N/A",
                                           style: FontUtil.customStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,

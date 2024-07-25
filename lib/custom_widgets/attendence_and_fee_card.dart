@@ -30,15 +30,15 @@ Widget attendenceAndFeeCard(BuildContext context,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (headerText != null)
-                Flexible(
-                  flex: 1,
-                  child: Text(headerText,
-                      style: FontUtil.customStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          textColor: MyColors.textcolors)),
-                ),
+              // if (headerText != null)
+              //   Flexible(
+              //     flex: 1,
+              //     child: Text(headerText,
+              //         style: FontUtil.customStyle(
+              //             fontSize: 10,
+              //             fontWeight: FontWeight.w300,
+              //             textColor: MyColors.textcolors)),
+              //   ),
               Flexible(
                 flex: 3,
                 child: Text(mainText ?? '__',

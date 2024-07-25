@@ -4,19 +4,17 @@ import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 
 Widget personInfoCard(
-  BuildContext context,
-  String profileImage,
-  String personName,
-  String classAndSection,
-  String idNo,
-  Function(String) onNameChange,
-) {
-  List<String> names = ['Anshul Goswami','Name Surname'];
+    BuildContext context,
+    String profileImage,
+    String personName,
+    String classAndSection,
+    String idNo,
+    Function(String) onNameChange,
+    ) {
+ 
 
   // Ensure the personName is a valid value
-  if (!names.contains(personName)) {
-    personName = names.first;
-  }
+ 
 
   return Container(
     padding: const EdgeInsets.all(16.0),
@@ -37,19 +35,19 @@ Widget personInfoCard(
       children: [
         profileImage.isNotEmpty
             ? Flexible(
-              flex: 2,
-              child: CircleAvatar(
-                  radius: 45.0,
-                  backgroundImage: NetworkImage(profileImage),
-                ),
-            )
+          flex: 2,
+          child: CircleAvatar(
+            radius: 45.0,
+            backgroundImage: NetworkImage(profileImage),
+          ),
+        )
             :const Flexible(
-              child:  CircleAvatar(
-                  radius: 45.0,
-                  backgroundImage:
-                      NetworkImage('https://via.placeholder.com/150'),
-                ),
-            ),
+          child:  CircleAvatar(
+            radius: 45.0,
+            backgroundImage:
+            NetworkImage('https://via.placeholder.com/150'),
+          ),
+        ),
 
         // for drop down value change (will make it bottom drop down)
         // DropdownButton<String>(

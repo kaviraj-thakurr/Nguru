@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
-<<<<<<<<< Temporary merge branch 1
+import 'package:nguru/screens/contact_screen.dart';
 import 'package:nguru/screens/attendence_screen.dart';
-=========
 import 'package:nguru/screens/dashboard_screen.dart';
->>>>>>>>> Temporary merge branch 2
+import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/theme/app_theme.dart';
 import 'screens/login_screen.dart';
 
@@ -50,19 +50,40 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ForgetPassCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => ResetPasswordCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => PushNotificationCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => SignoutCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
+        designSize: const Size(390, 844),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        useInheritedMediaQuery: true,
         child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppThemes.light,
-        darkTheme: AppThemes.dark,
-        home:
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            home:
+              //  ContactScreen()
+                //    TimetableScreen()
+                //   CircularScreen()
+                //  CircularCalendar()
+                //AssignmentScreen()
+            const   NguruDashboardScreen()
+         //  const SettingScreen()
 
-             const AttendenceScreen()
-         // CalendarScreen(),
-        //AddSchool(),
-            //  home: NguruDashboardScreen(),
-        ),
+
+        //  AddSchool(),
+            ),
       ),
     );
   }

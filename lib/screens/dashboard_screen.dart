@@ -10,8 +10,10 @@ import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
+import 'package:nguru/screens/attendence_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
 
 import 'package:nguru/screens/time_table_screen.dart';
@@ -78,28 +80,34 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           maxWidth: double.infinity,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            personInfoCard(
-                              context,
-                              "${state.studentPicture}",
-                              "${state.studentName}",
-                              "${state.qualification} ${state.section}",
-                              "${state.admissionNumber}",
-                              (String newName) {
-                                setState(() {});
-                              },
+                            GestureDetector(
+                              onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingScreen())),
+                              child: personInfoCard(
+                                context,
+                                "${state.studentPicture}",
+                                "${state.studentName}",
+                                "${state.qualification} ${state.section}",
+                                "${state.admissionNumber}",
+                                (String newName) {
+                                  setState(() {});
+                                },
+                              ),
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  flex: 4,
-                                  child: attendenceAndFeeCard(
-                                    context,
-                                    mainText: "53%",
-                                    footerText: "Attendance",
-                                    isFeeCard: false,
+                                  flex: 5,
+                                  child: GestureDetector(
+                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen())),
+                                    child: attendenceAndFeeCard(
+                                      context,
+                                      mainText: "53%",
+                                      footerText: "Attendance",
+                                      isFeeCard: false,
+                                    ),
                                   ),
                                 ),
                                 const Spacer(),
@@ -108,8 +116,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   child: attendenceAndFeeCard(
                                     context,
                                     headerText: "Paid 23k",
-                                    mainText: "23k",
-                                    footerText: "Advance 23k",
+                                    mainText: "41%",
+                                    footerText: "Fees Paid",
                                     isFeeCard: true,
                                   ),
                                 ),

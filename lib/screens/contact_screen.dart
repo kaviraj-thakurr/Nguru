@@ -22,24 +22,24 @@ class ContactScreen extends StatefulWidget {
   State<ContactScreen> createState() => _ContactScreenState();
 }
 
-class _ContactScreenState extends State<ContactScreen>
-    with TickerProviderStateMixin {
+class _ContactScreenState extends State<ContactScreen> with TickerProviderStateMixin {
   final TextEditingController _searchConroller = TextEditingController();
   late AnimationController _phoneIconController;
   late Animation<double> _phoneIconAnimation;
-   late AnimationController _messageIconController;
+  late AnimationController _messageIconController;
   late Animation<double> _messageIconAnimation;
+  bool _firstVisit = true; // Flag to check if it's the first visit
 
   @override
   void initState() {
+    super.initState();
 
-//Getting ContactUs details
+    // Getting ContactUs details
     context.read<ContactUsCubit>().getContactUs();
 
-
-// Phone Icon Animation initialization
+    // Phone Icon Animation initialization
     _phoneIconController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 400), // Custom duration for phone icon
       vsync: this,
     );
 
@@ -50,10 +50,9 @@ class _ContactScreenState extends State<ContactScreen>
       ),
     );
 
-
-// Email Icon Animation Initialization
-      _messageIconController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+    // Email Icon Animation Initialization
+    _messageIconController = AnimationController(
+      duration: const Duration(milliseconds: 600), // Custom duration for message icon
       vsync: this,
     );
 
@@ -64,7 +63,27 @@ class _ContactScreenState extends State<ContactScreen>
       ),
     );
 
-    super.initState();
+    // Trigger the animations on first visit
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_firstVisit) {
+        _firstVisit = false;
+        _animateIcons();
+      }
+    });
+  }
+
+  void _animateIcons() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _phoneIconController.forward().then((_) {
+        _phoneIconController.reverse();
+        // Delay the start of the second animation
+        Future.delayed(const Duration(milliseconds: 300), () {
+          _messageIconController.forward().then((_) {
+            _messageIconController.reverse();
+          });
+        });
+      });
+    });
   }
 
   Future<void> _makePhoneCall(String url) async {
@@ -75,8 +94,7 @@ class _ContactScreenState extends State<ContactScreen>
     }
   }
 
-  Future<void> sendEmail(
-      {String? email, String subject = "", String body = ""}) async {
+  Future<void> sendEmail({String? email, String subject = "", String body = ""}) async {
     String mail = "mailto:$email?subject=$subject&body=${Uri.encodeFull(body)}";
     if (await canLaunch(mail)) {
       await launch(mail);
@@ -91,23 +109,15 @@ class _ContactScreenState extends State<ContactScreen>
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      
-      floatingActionButton:
-          GestureDetector(
-            onTap:()=> Navigator.pop(context),
-            child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
+      floatingActionButton: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: BlocConsumer<ContactUsCubit, ContactUsState>(
         listener: (BuildContext context, ContactUsState state) {},
         builder: (context, state) {
-          if (state is ContactUsInitialState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is ContactUsLoadingState) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          if (state is ContactUsInitialState || state is ContactUsLoadingState) {
+            return const Center(child: CircularProgressIndicator());
           } else if (state is ContactUsSuccessState) {
             return contactUsWidget(
                 screenHeight,
@@ -120,7 +130,7 @@ class _ContactScreenState extends State<ContactScreen>
           } else if (state is ContactUsErrorState) {
             return const Text("Error state");
           } else {
-            return const Center(child: Text("undifined state"));
+            return const Center(child: Text("Undefined state"));
           }
         },
       ),
@@ -137,158 +147,165 @@ class _ContactScreenState extends State<ContactScreen>
       String landlineNumber) {
     return BlocBuilder<ContactUsCubit, ContactUsState>(
         builder: (context, state) {
-      return SingleChildScrollView(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: screenHeight * 0.8,
-            maxWidth: double.infinity,
-          ),
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              20.heightBox,
-              CustomSearchBar(controller: _searchConroller),
-              15.heightBox,
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(
-                    color: MyColors.borderColor,
-                    width: 1.0,
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: screenHeight * 0.8,
+              maxWidth: double.infinity,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomAppBar(),
+                CustomSearchBar(controller: _searchConroller),
+                15.heightBox,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: MyColors.borderColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  height: screenHeight * 0.43,
+                  width: screenWidth * 0.85,
+                  child: schoolPhotoBytes == ""
+                      ? Image.network(
+                          "https://via.placeholder.com/600",
+                          fit: BoxFit.cover,
+                        )
+                      : Image.memory(base64Decode(schoolPhotoBytes)),
+                ),
+                10.heightBox,
+                Flexible(
+                  child: Text(
+                    "Address: $address" ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: FontUtil.customStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        textColor: Colors.black),
                   ),
                 ),
-                height: screenHeight * 0.43,
-                width: screenWidth * 0.85,
-                child: schoolPhotoBytes == ""
-                    ? Image.network(
-                        "https://via.placeholder.com/600",
-                        fit: BoxFit.cover,
-                      )
-                    : Image.memory(base64Decode(schoolPhotoBytes ?? "")),
-              ),
-              10.heightBox,
-              Flexible(
-                child: Text(
-                  "Address: ${address}" ?? "N/A",
-                  textAlign: TextAlign.center,
-                  style: FontUtil.customStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      textColor: Colors.black),
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  "Email: ${email}" ?? "N/A",
-                  textAlign: TextAlign.center,
-                  style: FontUtil.customStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      textColor: MyColors.fadedTextColor),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  "Mobile Number: ${mobileNumber}" ?? "N/A",
-                  textAlign: TextAlign.center,
-                  style: FontUtil.customStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      textColor: MyColors.fadedTextColor),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  "Landline Number: ${landlineNumber}" ?? "N/A",
-                  textAlign: TextAlign.center,
-                  style: FontUtil.customStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      textColor: MyColors.fadedTextColor),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-              ),
-             Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-
-                  GestureDetector(
-                    onVerticalDragUpdate: (details) {
-                      double delta = details.primaryDelta!;
-                      double newValue =
-                          (_phoneIconAnimation.value - delta).clamp(-100.0, 0.0);
-                      _phoneIconController.value = -newValue / 100.0;
-                    },
-                    onVerticalDragEnd: (details) {
-                      if (_phoneIconController.value > 0.5 ||
-                          details.primaryVelocity! < 0) {
-                        _phoneIconController
-                            .forward()
-                            .then(
-                              (_) => _makePhoneCall('tel:$landlineNumber'),
-                            )
-                            .then((value) => _phoneIconController.value = 0.0);
-                      } else {
-                        _phoneIconController.reverse();
-                      }
-                    },
-                    child: AnimatedBuilder(
-                        animation: _phoneIconController,
-                        builder: (context, child) {
-                          return Transform.translate(
-                            offset: Offset(0, _phoneIconAnimation.value),
-                            child: child,
-                          );
-                        },
-                        child: SvgPicture.asset("assets/icons/call_icon.svg")),
+                Flexible(
+                  child: Text(
+                    "Email: $email" ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: FontUtil.customStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        textColor: MyColors.fadedTextColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
-                  const SizedBox(
-                    width: 15,
+                ),
+                Flexible(
+                  child: Text(
+                    "Mobile Number: $mobileNumber" ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: FontUtil.customStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        textColor: MyColors.fadedTextColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
-
-
-                   GestureDetector(
-                    onVerticalDragUpdate: (details) {
-                      double delta = details.primaryDelta!;
-                      double newValue =
-                          (_messageIconAnimation.value - delta).clamp(-100.0, 0.0);
-                      _messageIconController.value = -newValue / 100.0;
-                    },
-                    onVerticalDragEnd: (details) {
-                      if (_messageIconController.value > 0.5 ||
-                          details.primaryVelocity! < 0) {
-                        _messageIconController
-                            .forward()
-                            .then(
-                              (_) =>  sendEmail(email: "$email", subject: "", body: ""),
-                            )
-                            .then((value) => _messageIconController.value = 0.0);
-                      } else {
-                        _messageIconController.reverse();
-                      }
-                    },
-                    child: AnimatedBuilder(
-                        animation: _messageIconController,
-                        builder: (context, child) {
-                          return Transform.translate(
-                            offset: Offset(0, _messageIconAnimation.value),
-                            child: child,
-                          );
-                        },
-                        child: SvgPicture.asset("assets/icons/message_icon.svg")),
+                ),
+                Flexible(
+                  child: Text(
+                    "Landline Number: $landlineNumber" ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: FontUtil.customStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        textColor: MyColors.fadedTextColor),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
-                ],
-              ),
-              // 100.heightBox,
-            ],
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onVerticalDragUpdate: (details) {
+                        double delta = details.primaryDelta!;
+                        double newValue =
+                            (_phoneIconAnimation.value - delta).clamp(-100.0, 0.0);
+                        _phoneIconController.value = -newValue / 100.0;
+                      },
+                      onVerticalDragEnd: (details) {
+                        if (_phoneIconController.value > 0.5 ||
+                            details.primaryVelocity! < 0) {
+                          _phoneIconController
+                              .forward()
+                              .then(
+                                (_) => _makePhoneCall('tel:$landlineNumber'),
+                              )
+                              .then((value) => _phoneIconController.value = 0.0);
+                        } else {
+                          _phoneIconController.reverse();
+                        }
+                      },
+                      child: AnimatedBuilder(
+                          animation: _phoneIconController,
+                          builder: (context, child) {
+                            return Transform.translate(
+                              offset: Offset(0, _phoneIconAnimation.value),
+                              child: child,
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              const CircleAvatar(backgroundColor: Colors.white, radius: 30),
+                              SvgPicture.asset("assets/icons/call_icon.svg"),
+                            ],
+                          )),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    GestureDetector(
+                      onVerticalDragUpdate: (details) {
+                        double delta = details.primaryDelta!;
+                        double newValue =
+                            (_messageIconAnimation.value - delta).clamp(-100.0, 0.0);
+                        _messageIconController.value = -newValue / 100.0;
+                      },
+                      onVerticalDragEnd: (details) {
+                        if (_messageIconController.value > 0.5 ||
+                            details.primaryVelocity! < 0) {
+                          _messageIconController
+                              .forward()
+                              .then(
+                                (_) => sendEmail(email: "$email", subject: "", body: ""),
+                              )
+                              .then((value) => _messageIconController.value = 0.0);
+                        } else {
+                          _messageIconController.reverse();
+                        }
+                      },
+                      child: AnimatedBuilder(
+                          animation: _messageIconController,
+                          builder: (context, child) {
+                            return Transform.translate(
+                              offset: Offset(0, _messageIconAnimation.value),
+                              child: child,
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              const CircleAvatar(backgroundColor: Colors.white, radius: 30),
+                              SvgPicture.asset("assets/icons/message_icon.svg"),
+                            ],
+                          )),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

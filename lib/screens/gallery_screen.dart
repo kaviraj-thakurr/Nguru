@@ -48,7 +48,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             dashboardAppBar(),
@@ -59,7 +59,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
               child: BlocBuilder<GalleryPhotosCubit, GalleryPhotosState>(
                 builder: (context, state) {
                   if (state is GalleryPhotosLoadingState) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is GalleryPhotosSuccessState) {
                     return GridView.builder(
                       itemCount:
@@ -149,18 +149,25 @@ class _GalleryScreenState extends State<GalleryScreen> {
           screenHeight, screenWidth, galleryItem.photoList![i].photo ?? ""));
     }
     log("perticular story count: ${photos.length}");
-    return StoryView(
-        indicatorForegroundColor: MyColors.appColorBlue,
-        storyItems: stoyItems,
-        controller: _storyController,
-        repeat: true,
-        //  onStoryShow: (s) {},
-        onComplete: () {},
-        onVerticalSwipeComplete: (direction) {
-          if (direction == Direction.down) {
-            Navigator.pop(context);
-          }
-        });
+    return Scaffold(
+       floatingActionButton:
+          GestureDetector(
+            onTap: ()=> Navigator.pop(context),
+            child: SvgPicture.asset("assets/icons/floating_action_down_button.svg")),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: StoryView(
+          indicatorForegroundColor: MyColors.appColorBlue,
+          storyItems: stoyItems,
+          controller: _storyController,
+          repeat: true,
+          //  onStoryShow: (s) {},
+          onComplete: () {},
+          onVerticalSwipeComplete: (direction) {
+            if (direction == Direction.down) {
+              Navigator.pop(context);
+            }
+          }),
+    );
   }
 
   StoryItem customStoryWidget(
@@ -171,7 +178,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           width: double.infinity,
           child: Image.memory(
             base64Decode(photo ?? ""),
-            fit: BoxFit.cover,
+            fit: BoxFit.scaleDown,
           ),
         ),
         duration: const Duration(seconds: 3));

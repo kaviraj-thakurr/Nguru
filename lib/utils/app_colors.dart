@@ -20,8 +20,15 @@ class MyColors {
   static const Color addButtonColor = Color(0xFF0C0C0B);
   static const Color appColorGreen =  Color(0xFFA0CA7B);
   static const Color appColorBlue = Color(0xFF0160AE);
+  static const Color appColor1 = Color(0xFF0160AE);
+  static const Color appColor2 = Color(0xFFA0CA7B);
+  static const Color cardsubTitle = Color(0xFF323232);
+  static const Color cardTitle = Color(0xFF111111);
+  static const Color circular = Color(0xFF333333);
+  static const Color circularsubttile = Color(0xFF242424);
+
   static const Color search = Color(0xFFA1A1A1);
-   static const Color searchbackgroundColor = Color(0xFFF3F3F3);
+  static const Color searchbackgroundColor = Color(0xFFF3F3F3);
 
   //calendar screen colors
    static const Color calendarFooterCard = Color(0xFFF4F4F4);
@@ -59,7 +66,7 @@ class MyColors {
 
   //container boarder color
 
-  static const Color monthNameColor = Color(0xFF333333);
+//  static const Color monthNameColor = Color(0xFF333333);
 
   // setting screen
 
@@ -87,8 +94,8 @@ class MyColors {
     end: Alignment.bottomRight,
   );
 
-  static const LinearGradient animatedborder = LinearGradient(
-    colors: [Color.fromARGB(255, 242, 241, 241), Color.fromARGB(255, 231, 233, 235)],
+    static const LinearGradient greyGradient = LinearGradient(
+    colors: [buildLegendColor_2, buildLegendColor_2],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
