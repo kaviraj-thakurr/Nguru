@@ -37,7 +37,7 @@ class FontUtil {
        fontFamily: 'Effra_Trial'
       );
 
-  static TextStyle customData = const TextStyle(
+  static TextStyle customData =  TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w400,
       color: MyColors.customdataColor,
@@ -45,7 +45,7 @@ class FontUtil {
       );
 
   static TextStyle primaryButton = const TextStyle(
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
       color: MyColors.white,
       fontFamily: 'Effra_Trial'
@@ -67,6 +67,13 @@ class FontUtil {
 
   static TextStyle forgotpassword = const TextStyle(
       fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: MyColors.forgetpassword,
+       fontFamily: 'Effra_Trial'
+      );
+
+        static TextStyle add = const TextStyle(
+      fontSize: 18,
       fontWeight: FontWeight.w500,
       color: MyColors.forgetpassword,
        fontFamily: 'Effra_Trial'

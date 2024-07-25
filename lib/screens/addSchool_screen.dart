@@ -1,8 +1,11 @@
+// ignore: unused_import
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -28,11 +31,11 @@ class AddSchool extends StatefulWidget {
 }
 
 class _AddSchoolState extends State<AddSchool> {
-  final FocusNode _firstFocusNode = FocusNode();
-  final FocusNode _secondFocusNode = FocusNode();
+  final FocusNode _schoolUrlFocusNode = FocusNode();
   TextEditingController schoolurlController = TextEditingController();
   TextEditingController subdomainController = TextEditingController();
   TextEditingController nickNameController = TextEditingController();
+  bool _isButtonEnabled = false;
 
   String? _validateNickName(String? value) {
     if (value == null || value.isEmpty) {
@@ -46,36 +49,15 @@ class _AddSchoolState extends State<AddSchool> {
 
   @override
   void dispose() {
-    _firstFocusNode.dispose();
-    _secondFocusNode.dispose();
-    schoolurlController.dispose();
-    nickNameController.dispose();
+    _schoolUrlFocusNode.dispose();
+
     super.dispose();
   }
 
-  bool _showClearIcon = false;
-  bool _showClearIconSubdomain = false;
-  bool _showClearIconNickName = false;
   @override
   void initState() {
     super.initState();
-    schoolurlController.addListener(() {
-      setState(() {
-        _showClearIcon = schoolurlController.text.isNotEmpty;
-      });
-    });
-
-    subdomainController.addListener(() {
-      setState(() {
-        _showClearIconSubdomain = subdomainController.text.isNotEmpty;
-      });
-    });
-
-    nickNameController.addListener(() {
-      setState(() {
-        _showClearIconNickName = nickNameController.text.isNotEmpty;
-      });
-    });
+    schoolurlController.text = 'https://quickschool.niitnguru.com/';
   }
 
   @override
@@ -101,11 +83,23 @@ class _AddSchoolState extends State<AddSchool> {
                   child: Column(
                     children: [
                       TextFormField(
-                      
+                        focusNode: _schoolUrlFocusNode,
                         controller: schoolurlController,
                         decoration: InputDecoration(
-                          hintText: MyStrings.schoolurl,
-                          hintStyle: FontUtil.hintText,
+                          //   hintText: "kaviraj",hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                _schoolUrlFocusNode.requestFocus();
+                              },
+                              icon: SvgPicture.asset(MyAssets.edit)),
+                          label: const Text(
+                            MyStrings.schoolurl,
+                            style: TextStyle(
+                                // fontStyle: FontStyle.italic,
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontFamily: "Effra_Trial"),
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 20.0),
                           border: const OutlineInputBorder(
@@ -134,10 +128,18 @@ class _AddSchoolState extends State<AddSchool> {
                       ),
                       14.heightBox,
                       TextFormField(
+                        inputFormatters: [LengthLimitingTextInputFormatter(20)],
                         controller: subdomainController,
+                        // ignore: prefer_const_constructors
                         decoration: InputDecoration(
-                          hintText: MyStrings.subdomain,
-                          hintStyle: FontUtil.hintText,
+                          label: const Text(
+                            MyStrings.subdomain,
+                            style: TextStyle(
+                                fontSize: 15,
+                                // fontStyle: FontStyle.italic,
+                                color: Colors.grey,
+                                fontFamily: "Effra_Trial"),
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 20.0),
                           border: const OutlineInputBorder(
@@ -167,9 +169,16 @@ class _AddSchoolState extends State<AddSchool> {
                       14.heightBox,
                       TextFormField(
                           controller: nickNameController,
+                          // ignore: prefer_const_constructors
                           decoration: InputDecoration(
-                            hintText: MyStrings.nickName,
-                            hintStyle: FontUtil.hintText,
+                            label: const Text(
+                              MyStrings.schoolname,
+                              style: TextStyle(
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 15,
+                                  color: Colors.grey,
+                                  fontFamily: "Effra_Trial"),
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 15.0, horizontal: 20.0),
                             border: const OutlineInputBorder(
@@ -199,54 +208,52 @@ class _AddSchoolState extends State<AddSchool> {
                   onPressed: () {},
                   child: Text(
                     MyStrings.add,
-                    style: FontUtil.customStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        textColor: MyColors.addButtonColor),
+                    style: FontUtil.add,
                   ),
                 ),
-                BlocListener<AddSchoolCubit, AddSchoolState>(
-                  listener: (context, state) {
-                    if (state is AddSchoolSuccessState) {
-                      NavigationService.navigateTo(
-                          LoginScreen(title: nickNameController.text), context);
-                    } else if (state is AddSchoolErrorState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.message,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  child: PrimaryButton(
-                    title: MyStrings.submit,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<AddSchoolCubit>().addSchool(
-                            schoolurlController.text.trim(),
-                            subdomainController.text.trim());
-                      } else {
-                        String errorMessage = '';
-                        if (schoolurlController.text.isEmpty) {
-                          errorMessage = MyStrings.enterschoolurl;
-                        } else if (subdomainController.text.isEmpty) {
-                          errorMessage = MyStrings.enterschoolurl;
-                        } else if (_validateNickName(nickNameController.text) !=
-                            null) {
-                          errorMessage = 'Nickname required';
+                BlocConsumer<AddSchoolCubit, AddSchoolState>(
+                    builder: (context, state) {
+                  if (state is AddSchoolLoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return PrimaryButton(
+                      title: "Submit",
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AddSchoolCubit>().addSchool(
+                              schoolurlController.text.trim(),
+                              subdomainController.text.trim());
+                        } else {
+                          String errorMessage = '';
+                          if (schoolurlController.text.isEmpty) {
+                            errorMessage = MyStrings.enterschoolurl;
+                          } else if (subdomainController.text.isEmpty) {
+                            errorMessage = MyStrings.enterschoolurl;
+                          } else if (_validateNickName(
+                                  nickNameController.text) !=
+                              null) {
+                            errorMessage = 'Nickname required';
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+
+                            SnackBar(
+                              content: Text(errorMessage),
+                            ),
+                          );
                         }
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(errorMessage),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
+                      },
+                    );
+                  }
+                }, listener: (context, state) {
+                  if (state is AddSchoolSuccessState) {
+                    NavigationService.navigateTo(
+                        LoginScreen(title: nickNameController.text), context);
+                  } else if (state is AddSchoolErrorState) {
+                    _showSnackBar(context , state.message);
+                  }
+                }),
                 20.heightBox,
               ],
             ),
@@ -255,4 +262,15 @@ class _AddSchoolState extends State<AddSchool> {
       ),
     );
   }
+    void _showSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).clearSnackBars(); 
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: Duration(seconds: 3), 
+      ),
+    );
+  }
+
 }

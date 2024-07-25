@@ -1,6 +1,9 @@
 
 abstract class AddSchoolState {}
 
+
+class AddSchoolInitState extends AddSchoolState {}
+
 class AddSchoolLoadingState extends AddSchoolState {}
 
 class AddSchoolSuccessState extends AddSchoolState {

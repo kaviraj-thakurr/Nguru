@@ -7,7 +7,7 @@ import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 class ForgetPassCubit extends Cubit<ForgetPasswordState> {
   final AuthRepo? authRepo;
 
-  ForgetPassCubit(this.authRepo) : super(ForgetPassLoadingState());
+  ForgetPassCubit(this.authRepo) : super(ForgetPassInitState());
 
   Future<void> forgotPassword(String userName) async {
     try {

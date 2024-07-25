@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
@@ -38,6 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
 
   @override
+  void initState() {
+  widget.title??"";
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<AddSchoolCubit, AddSchoolState>(
       listener: (context, state) {},
@@ -55,58 +63,96 @@ class _LoginScreenState extends State<LoginScreen> {
                       15.heightBox,
                       Text(
                         state.schoolName ?? 'School Name',
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                       8.heightBox,
                       const GradientDivider(
                         gradient: MyColors.divider,
-                        height: 2.0,
+                        height: 1.0,
                       ),
-                      16.heightBox,
+                      20.heightBox,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: MyColors.arrowColor,
-                              border: Border.all(
-                                color: Colors.black,
-                                width: .0,
+                          Stack(
+                            children: [
+                              ShaderMask(
+                                shaderCallback: (Rect bounds) {
+                                  return MyColors.buttonColors
+                                      .createShader(bounds);
+                                },
+                                child: Container(
+                                  height: 18,
+                                  width: 18,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6.0, horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    border: Border.all(
+                                      color: Colors
+                                          .white, // This color is not visible
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            width: 13,
-                            height: 14.0,
-                            child: Center(
-                              child: Container(),
-                            ),
+                              Positioned(
+                                top: 3,
+                                left: 3,
+                                child: Container(
+                                  height: 12,
+                                  width: 12,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6.0, horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    gradient: MyColors.buttonColors,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    border: Border.all(
+                                      color: Colors
+                                          .white, // This color is not visible
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           5.widthBox,
                           Text(widget.title ?? "")
                         ],
                       ),
-                      10.heightBox,
+                      17.heightBox,
                       Form(
                         key: _formKey,
                         child: Column(
                           children: [
                             TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(20)
+                              ],
                               controller: userNameController,
-                              decoration: InputDecoration(
-                                hintText: MyStrings.userName,
-                                hintStyle: FontUtil.hintText,
-                                contentPadding: const EdgeInsets.symmetric(
+                              decoration: const InputDecoration(
+                                label: Text(
+                                  MyStrings.userName,
+                                  style: TextStyle(
+                                      //   fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
                                     vertical: 15.0, horizontal: 20.0),
-                                border: const OutlineInputBorder(
+                                border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(9.0)),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: MyColors.borderColor,
                                   ),
                                 ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.grey, width: 1.0),
                                   borderRadius:
@@ -126,6 +172,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: _obscureText,
                               controller: passWordController,
                               decoration: InputDecoration(
+                                label: const Text(
+                                  MyStrings.passWord,
+                                  style: TextStyle(
+                                      // fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     color: MyColors.passIcon,
@@ -139,8 +193,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     });
                                   },
                                 ),
-                                hintText: MyStrings.passWord,
-                                hintStyle: FontUtil.hintText,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 15.0, horizontal: 20.0),
                                 border: const OutlineInputBorder(
@@ -176,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             onPressed: () {
                               NavigationService.navigateTo(
-                                  ForgotPassword(), context);
+                                  const ForgotPassword(), context);
                             },
                             child: Text(
                               MyStrings.forgotpassword,
@@ -185,39 +237,72 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      BlocListener<LoginCubit, LoginState>(
-                        listener: (context, state) {
-                          if (state is LoginSuccessState) {
-                            NavigationService.navigateTo(
-                                NguruDashboardScreen(), context);
-                          } else if (state is LoginErrorState) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  state.message,
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        child: PrimaryButton(
-                          title: MyStrings.signin,
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              context.read<LoginCubit>().logIn(
-                                  userNameController.text.trim(),
-                                  passWordController.text.toString());
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(MyStrings.enterusernamepass),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
+                      BlocConsumer<LoginCubit, LoginState>(
+                          builder: (context, state) {
+                        if (state is LoginLoadingState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          return PrimaryButton(
+                            title: "Sign in",
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                context.read<LoginCubit>().logIn(
+                                    userNameController.text.trim(),
+                                    passWordController.text.toString());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(MyStrings.enterusernamepass),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }
+                      }, listener: (context, state) {
+                        if (state is LoginSuccessState) {
+                          NavigationService.navigateTo(
+                              const NguruDashboardScreen(), context);
+                        } else if (state is LoginErrorState) {
+                           _showSnackBar(context , state.message);
+                        }
+                      }),
+
+                      // BlocListener<LoginCubit, LoginState>(
+                      //   listener: (context, state) {
+                      //     if (state is LoginSuccessState) {
+                      //       NavigationService.navigateTo(
+                      //           const NguruDashboardScreen(), context);
+                      //     } else if (state is LoginErrorState) {
+                      //       ScaffoldMessenger.of(context).showSnackBar(
+                      //         SnackBar(
+                      //           content: Text(
+                      //             state.message,
+                      //             style: const TextStyle(color: Colors.red),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     }
+                      //   },
+                      //   child: PrimaryButton(
+                      //     title: MyStrings.signin,
+                      //     onPressed: () {
+                      //       if (_formKey.currentState!.validate()) {
+                      //         context.read<LoginCubit>().logIn(
+                      //             userNameController.text.trim(),
+                      //             passWordController.text.toString());
+                      //       } else {
+                      //         ScaffoldMessenger.of(context).showSnackBar(
+                      //           const SnackBar(
+                      //             content: Text(MyStrings.enterusernamepass),
+                      //           ),
+                      //         );
+                      //       }
+                      //     },
+                      //   ),
+                      // ),
                       // TextButton(
                       //   onPressed: () {},
                       //   child: Text(
@@ -235,6 +320,20 @@ class _LoginScreenState extends State<LoginScreen> {
           return Container();
         }
       },
+    );
+
+
+
+  }
+
+  void _showSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).clearSnackBars(); 
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: Duration(seconds: 3), 
+      ),
     );
   }
 }

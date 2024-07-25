@@ -1,6 +1,7 @@
 import 'package:nguru/models/login_model.dart';
 
 abstract class LoginState {}
+class LoginInitState extends LoginState {}
 
 class LoginLoadingState extends LoginState {}
 

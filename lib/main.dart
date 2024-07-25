@@ -16,6 +16,7 @@ import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/screens/contact_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
+import 'package:nguru/test.dart';
 
 
 void main() {
@@ -76,8 +77,8 @@ class MyApp extends StatelessWidget {
                 //AssignmentScreen()
              //const   NguruDashboardScreen()
            
-
-           AddSchool(),
+//SimpleCustomRadioButton(),
+          AddSchool(),
             ),
       ),
     );

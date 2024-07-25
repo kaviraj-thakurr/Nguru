@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
@@ -47,57 +48,96 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 10.heightBox,
                 Text(
-                  "Lorem ipsum dolor sit amet consectetur. Eget enim vulputate porta diam diam.",
-                  style: TextStyle(fontSize: 17),
+                  "Enter your username to receive instructions on how to reset your password.",
+                  style: FontUtil.customStyle(fontSize: 17, fontWeight: FontWeight.w500, textColor: MyColors.forgotColor ,fontFamily: "Effra_Trial",
                 ),
-                25.heightBox,
+                ),
+                 25.heightBox,
                 Form(
                   key: _formKey,
-                  child: VxTextField(
-                    controller: userNameController,
-                    fillColor: Colors.transparent,
-                    borderColor: MyColors.borderColor,
-                    borderType: VxTextFieldBorderType.roundLine,
-                    hint: MyStrings.userName,
-                    style: FontUtil.hintText,
-                    borderRadius: 9,
-                    validator: (username) {
-                      if (username == null || username.isEmpty) {
-                        return MyStrings.userName;
-                      }
-                      return null;
-                    },
-                  ),
+
+
+                  
+                  child:
+                      TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(20)
+                              ],
+                              controller: userNameController,
+                              decoration: const InputDecoration(
+                                label: Text(
+                                  MyStrings.userName,
+                                  style: TextStyle(
+                                      //   fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.textfield,
+                              validator: (url) {
+                                if (url == null || url.isEmpty) {
+                                  return MyStrings.userName;
+                                }
+                                return null;
+                              },
+                            ),
+                  
+                  
+                  
+                  //  VxTextField(
+                  //   controller: userNameController,
+                  //   fillColor: Colors.transparent,
+                  //   borderColor: MyColors.borderColor,
+                  //   borderType: VxTextFieldBorderType.roundLine,
+                  //   hint: MyStrings.userName,
+                  //   style: FontUtil.hintText,
+                  //   borderRadius: 9,
+                  //   validator: (username) {
+                  //     if (username == null || username.isEmpty) {
+                  //       return MyStrings.userName;
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                 ),
                 10.heightBox,
                 Text(
                   "Lorem ipsum dolor sit amet consectetur. Eget enim vulputate porta diam diam.",
                   style: FontUtil.customStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Effra_Trial",
                       textColor: MyColors.needHelpColor),
                 ),
                 25.heightBox,
-                BlocBuilder<ForgetPassCubit, ForgetPasswordState>(
-                  
-                  builder: (context, state) {
-                    if (state is ForgetPassSuccessState) {
-                      NavigationService.navigateTo(
-                          const LoginScreen(), context);
-                    } else if (state is ForgetPassErrorState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.message,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      );
-                    }
-               
-                  return PrimaryButton(
-                    title: "Sign in",
-                    onPressed: () {
+BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
+              builder: (context, state) {
+            if (state is ForgetPassLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return PrimaryButton(
+                  title: "Submit",
+                   onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<ForgetPassCubit>().forgotPassword(
                               userNameController.text.trim(),
@@ -111,12 +151,62 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       }
                     },
                   );
-                  }
-                ),
+            }
+          }, listener: (context, state) {
+            if (state is ForgetPassSuccessState) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Password reset instruction has been sent to your registered Email/Phone")));
+                 Navigator.pop(context);
+            } else if (state is ForgetPassErrorState) {
+              _showSnackBar(context , state.message);
+            }
+          }),
+
+
+
+                // BlocBuilder<ForgetPassCubit, ForgetPasswordState>(
+                  
+                //   builder: (context, state) {
+                //     if (state is ForgetPassSuccessState) {
+                //       NavigationService.navigateTo(
+                //           const LoginScreen(), context);
+                //     } else if (state is ForgetPassErrorState) {
+                     
+                //     }
+               
+                //   return PrimaryButton(
+                //     title: "Submit",
+                //     onPressed: () {
+                //       if (_formKey.currentState!.validate()) {
+                //         context.read<ForgetPassCubit>().forgotPassword(
+                //               userNameController.text.trim(),
+                //             );
+                //       } else {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           SnackBar(
+                //             content: Text(MyStrings.enterusernamepass),
+                //           ),
+                //         );
+                //       }
+                //     },
+                //   );
+                //   }
+                // ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).clearSnackBars(); 
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        duration: Duration(seconds: 3), 
       ),
     );
   }

@@ -8,7 +8,7 @@ class MyColors {
   const MyColors._();
 
   static const Color sessiontext = Color(0xFF231F20);
-  static const Color customdataColor = Color(0xFF3E3E3E);
+  static  Color customdataColor = Color(0xFF070707).withOpacity(0.5);
   static const Color assignmentdateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
   static const Color searchbox = Color(0xFFF3F3F3);
@@ -18,6 +18,7 @@ class MyColors {
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
   static const Color addButtonColor = Color(0xFF0C0C0B);
+  static const Color forgotColor = Color(0xFF3E3E3E);
   static const Color pagenocolor = Color(0xFF606060);
   static const Color appColor1 = Color(0xFF0160AE);
   static const Color appColor2 = Color(0xFFA0CA7B);

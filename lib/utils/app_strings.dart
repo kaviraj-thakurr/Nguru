@@ -6,10 +6,10 @@ class MyStrings {
   static const String add = "+Add";
   static const String submit = "Submit";
   static const String needHelp = "Need help?";
-  static const String nickName = "Nickname";
+  static const String schoolname = "School Name";
   static const String subdomain = "Sub Domain";
   static const String customData =
-      "Lorem ipsum dolor sit amet consectetur. Eget enim vulputate porta diam diam. ";
+      "Please sign in to access your child’s school information.";
   static const String userName = "Username";
   static const String passWord = "Password";
   static const String signin = "Sign in";

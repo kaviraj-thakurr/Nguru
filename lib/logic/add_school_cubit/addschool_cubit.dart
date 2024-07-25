@@ -6,7 +6,7 @@ import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 class AddSchoolCubit extends Cubit<AddSchoolState> {
   final AuthRepo? authRepo;
 
-  AddSchoolCubit(this.authRepo) : super(AddSchoolLoadingState());
+  AddSchoolCubit(this.authRepo) : super(AddSchoolInitState());
 
   Future<void> addSchool(String schoolName,String subDomain) async {
     try {

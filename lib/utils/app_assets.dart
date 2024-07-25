@@ -26,6 +26,7 @@ static const String download = "assets/icons/download.svg";
   static const String bookz = "assets/images/bookz.png";
 
   //icons
+  static const String edit = "assets/icons/edit.svg";
   static const String seen = "assets/icons/eye_seen.svg";
   static const String drop_down_arrow = "assets/icons/drop_down_arrow.svg";
   static const String travel = "assets/icons/travel.svg";

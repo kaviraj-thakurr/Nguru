@@ -9,7 +9,7 @@ import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepo? authRepo;
 
-  LoginCubit(this.authRepo) : super(LoginLoadingState());
+  LoginCubit(this.authRepo) : super(LoginInitState());
 
   Future<void> logIn(String userName, String password) async {
     try {
