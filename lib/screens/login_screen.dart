@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
+import 'package:nguru/screens/forgot_password.dart';
 
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
@@ -22,7 +23,8 @@ final _formKey = GlobalKey<FormState>();
 
 class LoginScreen extends StatefulWidget {
   final String? title;
-  const LoginScreen({super.key, this.title});
+  final String ? schoolLogo;
+  const LoginScreen({super.key, this.title , this.schoolLogo});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color:  Colors.white,
-                              
+                              color: Colors.white,
                               border:
                                   Border.all(color: Colors.black, width: 3.0),
                             ),
@@ -83,7 +83,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         key: _formKey,
                         child: Column(
                           children: [
+
+                            
                             VxTextField(
+                              autofocus: true,
+                              controller: userNameController,
                               fillColor: Colors.transparent,
                               borderColor: MyColors.borderColor,
                               borderType: VxTextFieldBorderType.roundLine,
@@ -99,6 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             14.heightBox,
                             VxTextField(
+                              controller: passWordController,
                               isPassword: true,
                               obscureText: true,
                               suffixColor: MyColors.textcolors,
@@ -122,7 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              NavigationService.navigateTo(
+                                  ForgotPassword(), context);
+                            },
                             child: Text(
                               MyStrings.forgotpassword,
                               style: FontUtil.forgotpassword,
@@ -133,7 +141,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocListener<LoginCubit, LoginState>(
                         listener: (context, state) {
                           if (state is LoginSuccessState) {
-                            NavigationService.navigateTo(NguruDashboardScreen(), context);
+                            NavigationService.navigateTo(
+                                NguruDashboardScreen(), context);
                           } else if (state is LoginErrorState) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

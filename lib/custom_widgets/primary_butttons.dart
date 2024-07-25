@@ -7,18 +7,16 @@ import 'package:nguru/utils/app_colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PrimaryButton extends StatelessWidget {
-   final String title;
+  final String title;
   final VoidCallback onPressed;
   final bool? isLoading;
-  
+
   const PrimaryButton({
     super.key,
     required this.title,
     required this.onPressed,
     this.isLoading,
   });
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,10 @@ class PrimaryButton extends StatelessWidget {
             ? const CircularProgressIndicator(
                 color: MyColors.white,
               )
-            : Text(title,style: FontUtil.primaryButton,),
+            : Text(
+                title,
+                style: FontUtil.primaryButton,
+              ),
       ),
     );
   }

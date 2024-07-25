@@ -7,8 +7,11 @@ class Networking {
   //Api fun for post API
   Future<dynamic> networkPost(
       {dynamic data, String? token, required String url}) async {
-    final headers = {  'Content-Type': 'application/json',
-                       'Cookie': 'ApplicationGatewayAffinity=fd5afd7f96e90b728e72aecaa34c23d8; ApplicationGatewayAffinityCORS=fd5afd7f96e90b728e72aecaa34c23d8'};
+    final headers = {
+      'Content-Type': 'application/json',
+      'Cookie':
+          'ApplicationGatewayAffinity=fd5afd7f96e90b728e72aecaa34c23d8; ApplicationGatewayAffinityCORS=fd5afd7f96e90b728e72aecaa34c23d8'
+    };
 
     try {
       response = await _dio.post(
@@ -49,5 +52,4 @@ class Networking {
       }
     }
   }
- 
 }

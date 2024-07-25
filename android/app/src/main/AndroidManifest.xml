@@ -1,4 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+    <queries>
+         <intent>
+             <action android:name="android.intent.action.DIAL" />
+             <data android:scheme="tel" />
+         </intent>
+         <intent>
+              <action android:name="android.intent.action.SEND" />
+              <data android:mimeType="image/jpeg" />
+         </intent>
+
+    </queries>
+
+    
     <application
         android:label="nguru"
         android:name="${applicationName}"

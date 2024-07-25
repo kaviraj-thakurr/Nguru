@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nguru/custom_widgets/custom_attendence_footer_card.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_sizebox.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
@@ -22,10 +22,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
       width: double.infinity,
       child: Column(
         children: [
+         AppGapping.padding30,
           _buildMonthSelector(),
-          const SizedBox(
-            height: 20,
-          ),
+         AppGapping.padding20,
           TableCalendar(
             rowHeight: 45,
             
@@ -61,7 +60,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   textColor: MyColors.calendarDateColor),
               weekendTextStyle: FontUtil.customStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.w600,
                   textColor: MyColors.fadedTextColor),
               selectedTextStyle: FontUtil.customStyle(
                   fontSize: 13,
