@@ -19,6 +19,7 @@ class MyStrings {
   static const String enterusernamepass = "Enter Username and Password";
   static const String nicknamerequired = "Nickname required";
   static const String search = "Search";
+  static const String search = "Search";
   static const String timeTable = "Timetable";
   static const String examination = "Examination  ";
   static const String calender = "Calendar";
