@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +11,8 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
+import 'package:nguru/logic/fees/fees_cubit.dart';
+import 'package:nguru/logic/fees/fees_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/screens/attendence_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
@@ -38,6 +42,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
     context.read<NotificationCubit>().notificationCount();
+    context.read<FeesCubit>().getTotalFees();
 
     super.initState();
   }
@@ -113,12 +118,61 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 const Spacer(),
                                 Flexible(
                                   flex: 5,
-                                  child: attendenceAndFeeCard(
-                                    context,
-                                    headerText: "Paid 23k",
-                                    mainText: "41%",
-                                    footerText: "Fees Paid",
-                                    isFeeCard: true,
+                                  child: BlocBuilder<FeesCubit,FeesState>(
+                                    builder: (context,statee) {
+
+                                      if(statee is FeesLoadingState)
+                                      {
+                                        return const Center(child: CircularProgressIndicator(),);
+                                      }
+
+                                      else if (statee is FeesSuccessState)
+                                      {
+
+                                        var totalF =0;
+                                        var paidF =0;
+
+                                        for(int i =0; i<statee.totalFee.length; i++){
+
+                                           totalF=totalF+int.parse(statee.totalFee[i].amount!);
+                                           paidF =paidF + int.parse(statee.totalFee[i].paidAmount!);
+                                        }
+
+                                        var percetageOFFee= (paidF/totalF)*100;
+
+                                        log("$totalF $paidF");
+
+                                        return attendenceAndFeeCard(
+                                        context,
+                                        headerText: "ssss",
+                                        mainText: "${percetageOFFee.toStringAsFixed(2)}%",
+                                        footerText: "Fees Paid",
+                                        isFeeCard: true,
+                                      ); 
+
+                                      }
+
+                                      else if (statee is FeesErrorState)
+                                      {
+
+                                        return attendenceAndFeeCard(
+                                        context,
+                                        headerText: "__",
+                                        mainText: "_ _%",
+                                        footerText: "_ _",
+                                        isFeeCard: true,
+                                      );
+
+                                      }
+
+                                      return attendenceAndFeeCard(
+                                        context,
+                                        headerText: "Paid 23k",
+                                        mainText: "45%",
+                                        footerText: "Fees Paid",
+                                        isFeeCard: true,
+                                      );
+                                    }
                                   ),
                                 ),
                               ],

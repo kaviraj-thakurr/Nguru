@@ -44,6 +44,23 @@ class FontUtil {
        fontFamily: APP_FONT
       );
 
+  static TextStyle signInFieldText =   TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: Color(0xFF070707).withOpacity(0.7),
+
+      fontFamily: 'Effra_Trial'
+  );
+
+
+  static TextStyle schoolname =   TextStyle(
+      fontSize: 18.h,
+      fontWeight: FontWeight.w500,
+      color: Color(0xFF070707).withOpacity(0.7),
+
+      fontFamily: 'Effra_Trial'
+  );
+
   static TextStyle primaryButton = const TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w500,
@@ -122,6 +139,13 @@ class FontUtil {
       fontFamily: 'Effra_Trial'
       );
 
+  static TextStyle storyTitle = TextStyle(
+      fontSize: 15.h,
+      fontWeight: FontWeight.w500,
+      color: const Color(0x86231F20),
+      fontFamily: 'Effra_Trial'
+  );
+
        static TextStyle circularsubttile = TextStyle(
       fontSize: 12.h,
       fontWeight: FontWeight.w400,
@@ -140,7 +164,7 @@ class FontUtil {
      static TextStyle textfield = TextStyle(
       fontSize: 16.h,
       fontWeight: FontWeight.w500,
-      color: MyColors.textfieldColor,
+      color: MyColors.greyShade_3,
       fontFamily: 'Effra_Trial'
      )  ;
 

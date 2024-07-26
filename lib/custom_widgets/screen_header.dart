@@ -1,8 +1,6 @@
 
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 
@@ -16,6 +14,7 @@ Widget screenTitleHeader(String title,{ Function()? onPressed }) {
           style: FontUtil.customStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
+              fontFamily:"Effra_Trial",
               textColor: MyColors.boldTextColor)),
     ],
   );

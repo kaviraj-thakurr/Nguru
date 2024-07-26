@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/forgot_password.dart';
+import 'package:nguru/screens/reset_password_screen.dart';
 
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
@@ -17,7 +18,7 @@ import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
-import 'package:nguru/screens/addSchool_screen.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -40,8 +41,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-  widget.title??"";
-    // TODO: implement initState
     super.initState();
   }
 
@@ -119,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           5.widthBox,
-                          Text(widget.title ?? "")
+                          Text(widget.title ?? "",style: FontUtil.schoolname,)
                         ],
                       ),
                       17.heightBox,
@@ -159,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       BorderRadius.all(Radius.circular(9.0)),
                                 ),
                               ),
-                              style: FontUtil.textfield,
+                          style: FontUtil.signInFieldText,
                               validator: (url) {
                                 if (url == null || url.isEmpty) {
                                   return MyStrings.userName;
@@ -211,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       BorderRadius.all(Radius.circular(9.0)),
                                 ),
                               ),
-                              style: FontUtil.textfield,
+                              style: FontUtil.signInFieldText,
                               validator: (url) {
                                 if (url == null || url.isEmpty) {
                                   return MyStrings.passWord;
@@ -265,51 +264,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (state is LoginSuccessState) {
                           NavigationService.navigateTo(
                               const NguruDashboardScreen(), context);
-                        } else if (state is LoginErrorState) {
-                           _showSnackBar(context , state.message);
+                        } 
+
+                       else if (state is LoginForgetPasswordState) {
+                          NavigationService.navigateTo(
+                              const ResetPasswordScreen(), context);
+                        } 
+                        
+                        else if (state is LoginErrorState) {
+                          _showSnackBar(context, state.message);
                         }
                       }),
-
-                      // BlocListener<LoginCubit, LoginState>(
-                      //   listener: (context, state) {
-                      //     if (state is LoginSuccessState) {
-                      //       NavigationService.navigateTo(
-                      //           const NguruDashboardScreen(), context);
-                      //     } else if (state is LoginErrorState) {
-                      //       ScaffoldMessenger.of(context).showSnackBar(
-                      //         SnackBar(
-                      //           content: Text(
-                      //             state.message,
-                      //             style: const TextStyle(color: Colors.red),
-                      //           ),
-                      //         ),
-                      //       );
-                      //     }
-                      //   },
-                      //   child: PrimaryButton(
-                      //     title: MyStrings.signin,
-                      //     onPressed: () {
-                      //       if (_formKey.currentState!.validate()) {
-                      //         context.read<LoginCubit>().logIn(
-                      //             userNameController.text.trim(),
-                      //             passWordController.text.toString());
-                      //       } else {
-                      //         ScaffoldMessenger.of(context).showSnackBar(
-                      //           const SnackBar(
-                      //             content: Text(MyStrings.enterusernamepass),
-                      //           ),
-                      //         );
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
-                      // TextButton(
-                      //   onPressed: () {},
-                      //   child: Text(
-                      //     MyStrings.needHelp,
-                      //     style: FontUtil.needHelp,
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -321,18 +286,15 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
     );
-
-
-
   }
 
   void _showSnackBar(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).clearSnackBars(); 
+    ScaffoldMessenger.of(context).clearSnackBars();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
-        duration: Duration(seconds: 3), 
+        duration: Duration(seconds: 3),
       ),
     );
   }

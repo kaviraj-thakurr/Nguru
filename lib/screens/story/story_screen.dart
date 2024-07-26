@@ -5,7 +5,6 @@ import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
@@ -17,19 +16,17 @@ import 'package:nguru/logic/descipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
-import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/assignment_story_screen.dart';
 import 'package:nguru/screens/story/circular_story_screen.dart';
 import 'package:nguru/screens/story/discipline_story_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
-import 'package:nguru/utils/app_gapping.dart';
+import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/border_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:velocity_x/velocity_x.dart';
 
 class StoryScreen extends StatefulWidget {
@@ -347,7 +344,7 @@ class _StoryScreenState extends State<StoryScreen>
                     ),
                   ],
                 ),
-                Text(title),
+                Text(title,style: FontUtil.storyTitle,),
               ],
             ),
           );

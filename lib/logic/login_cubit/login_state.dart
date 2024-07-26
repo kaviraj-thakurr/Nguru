@@ -30,3 +30,9 @@ class LoginErrorState extends LoginState {
   final String message;
   LoginErrorState(this.message);
 }
+
+
+class LoginForgetPasswordState extends LoginState {
+  final bool comeFromForgetPassword;
+  LoginForgetPasswordState(this.comeFromForgetPassword);
+}

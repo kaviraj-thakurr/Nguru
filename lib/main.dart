@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
+import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
-import 'package:nguru/screens/contact_screen.dart';
-import 'package:nguru/screens/attendence_screen.dart';
-import 'package:nguru/screens/dashboard_screen.dart';
-import 'package:nguru/screens/setting_screen.dart';
-import 'package:nguru/theme/app_theme.dart';
-import 'screens/login_screen.dart';
+import 'logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
+import 'logic/assignment/assignments_list/asssignment_list_cubit.dart';
+import 'logic/circular/circular_cubit.dart';
+import 'logic/contact_us_cubit/contact_us_cubit.dart';
+import 'logic/dashboard/dashboard_cubit.dart';
+import 'logic/descipline/descipline_cubit.dart';
+import 'logic/forgot_password/forgot_password_cubit.dart';
+import 'logic/gallery_cubit/gallery_cubit.dart';
+import 'logic/notification/notification_cubit.dart';
+import 'logic/push_notification/push_notification_cubit.dart';
+import 'logic/reset_password/reset_password_cubit.dart';
+import 'logic/signout/signout_cubit.dart';
 
 
 void main() {
@@ -59,6 +66,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SignoutCubit(AuthRepo()),
         ),
+
+        BlocProvider(
+          create: (context) => FeesCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -78,7 +89,7 @@ class MyApp extends StatelessWidget {
                 //   CircularScreen()
                 //  CircularCalendar()
                 //AssignmentScreen()
-            const   NguruDashboardScreen()
+               AddSchool()
          //  const SettingScreen()
 
 

@@ -12,7 +12,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
     try {
       emit(AttendanceLoading());
       final data = await authRepo.fetchAttendanceData();
-      emit(AttendanceLoaded(data));
+      emit(AttendanceSuccess(data));
     } catch (e) {
       emit(AttendanceError("Failed to fetch data"));
     }

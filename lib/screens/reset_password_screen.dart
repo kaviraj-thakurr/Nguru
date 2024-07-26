@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
@@ -7,6 +8,7 @@ import 'package:nguru/logic/reset_password/reset_password_state.dart';
 import 'package:nguru/screens/login_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -50,37 +52,96 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 textColor: MyColors.fadedTextColor),
           ),
           14.heightBox,
-          VxTextField(
+          TextFormField(
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             controller: currentPasswordController,
-            fillColor: Colors.transparent,
-            borderColor: MyColors.boarderColor,
-            borderType: VxTextFieldBorderType.roundLine,
-            borderRadius: 9.0,
-            hint: "Current Password",
-            style: FontUtil.hintText,
-            isPassword: true,
+            // ignore: prefer_const_constructors
+            decoration: InputDecoration(
+              label: const Text(
+                MyStrings.currentpass,
+                style: TextStyle(
+                    fontSize: 15,
+                    // fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                    fontFamily: "Effra_Trial"),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: MyColors.borderColor,
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+            ),
+            style: FontUtil.signInFieldText,
           ),
           14.heightBox,
-          VxTextField(
+          TextFormField(
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             controller: newPasswordController,
-            fillColor: Colors.transparent,
-            borderColor: MyColors.boarderColor,
-            borderType: VxTextFieldBorderType.roundLine,
-            borderRadius: 9.0,
-            hint: "New Password",
-            style: FontUtil.hintText,
-            isPassword: true,
+            decoration: const InputDecoration(
+              label: Text(
+                MyStrings.newpass,
+                style: TextStyle(
+                    fontSize: 15,
+                    // fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                    fontFamily: "Effra_Trial"),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: MyColors.borderColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+            ),
+            style: FontUtil.signInFieldText,
           ),
           14.heightBox,
-          VxTextField(
+          TextFormField(
+            inputFormatters: [LengthLimitingTextInputFormatter(20)],
             controller: confiremNewPasswordController,
-            fillColor: Colors.transparent,
-            borderColor: MyColors.boarderColor,
-            borderType: VxTextFieldBorderType.roundLine,
-            borderRadius: 9.0,
-            hint: "Confirm New Password",
-            style: FontUtil.hintText,
-            isPassword: true,
+            // ignore: prefer_const_constructors
+            decoration: InputDecoration(
+              label: const Text(
+                MyStrings.confirmnewpass,
+                style: TextStyle(
+                    fontSize: 15,
+                    // fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                    fontFamily: "Effra_Trial"),
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: MyColors.borderColor,
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(9.0)),
+              ),
+            ),
+            style: FontUtil.signInFieldText,
           ),
           30.heightBox,
           BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
@@ -113,7 +174,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Your new password is reset successfully!")));
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) =>const LoginScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             } else if (state is ResetPasswordErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Something went wrong!")));

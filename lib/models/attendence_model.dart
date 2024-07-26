@@ -1,63 +1,109 @@
-class AttendanceData {
-  int studentID;
-  String studentName;
-  String enrollmentNo;
-  String studentPicture;
-  List<AttendanceBarChart> attendanceBarChart;
-  String responseCode;
-  String responseMessage;
+// To parse this JSON data, do
+//
+//     final attendenceModel = attendenceModelFromJson(jsonString);
 
-  AttendanceData({
-    required this.studentID,
-    required this.studentName,
-    required this.enrollmentNo,
-    required this.studentPicture,
-    required this.attendanceBarChart,
-    required this.responseCode,
-    required this.responseMessage,
-  });
+import 'dart:convert';
 
-  factory AttendanceData.fromJson(Map<String, dynamic> json) {
-    var list = json['attendanceBarChart'] as List;
-    List<AttendanceBarChart> attendanceBarChartList = list.map((i) => AttendanceBarChart.fromJson(i)).toList();
+AttendenceModel attendenceModelFromJson(String str) => AttendenceModel.fromJson(json.decode(str));
 
-    return AttendanceData(
-      studentID: json['studentID'],
-      studentName: json['studentName'],
-      enrollmentNo: json['enrollmentNo'],
-      studentPicture: json['studentPicture'],
-      attendanceBarChart: attendanceBarChartList,
-      responseCode: json['responseCode'],
-      responseMessage: json['responseMessage'],
+String attendenceModelToJson(AttendenceModel data) => json.encode(data.toJson());
+
+class AttendenceModel {
+    List<AttendanceCumulativeModel>? attendanceCumulativeModel;
+    String? responseCode;
+    String? responseMessage;
+
+    AttendenceModel({
+        this.attendanceCumulativeModel,
+        this.responseCode,
+        this.responseMessage,
+    });
+
+    AttendenceModel copyWith({
+        List<AttendanceCumulativeModel>? attendanceCumulativeModel,
+        String? responseCode,
+        String? responseMessage,
+    }) => 
+        AttendenceModel(
+            attendanceCumulativeModel: attendanceCumulativeModel ?? this.attendanceCumulativeModel,
+            responseCode: responseCode ?? this.responseCode,
+            responseMessage: responseMessage ?? this.responseMessage,
+        );
+
+    factory AttendenceModel.fromJson(Map<String, dynamic> json) => AttendenceModel(
+        attendanceCumulativeModel: json["attendanceCumulativeModel"] == null ? [] : List<AttendanceCumulativeModel>.from(json["attendanceCumulativeModel"]!.map((x) => AttendanceCumulativeModel.fromJson(x))),
+        responseCode: json["responseCode"],
+        responseMessage: json["responseMessage"],
     );
-  }
 
-  double getTotalAttendancePercentage() {
-    if (attendanceBarChart.isEmpty) return 0.0;
-    double total = attendanceBarChart.fold(0.0, (sum, item) => sum + double.parse(item.attendancePercent));
-    return total / attendanceBarChart.length;
-  }
+    Map<String, dynamic> toJson() => {
+        "attendanceCumulativeModel": attendanceCumulativeModel == null ? [] : List<dynamic>.from(attendanceCumulativeModel!.map((x) => x.toJson())),
+        "responseCode": responseCode,
+        "responseMessage": responseMessage,
+    };
 }
 
-class AttendanceBarChart {
-  int month;
-  String monthName;
-  String attendancePercent;
-  String date;
+class AttendanceCumulativeModel {
+    String? monthName;
+    String? hoidays;
+    String? presentDay;
+    String? absentDay;
+    String? leaveDay;
+    String? workingDays;
+    String? overAllPercentage;
+    String? monthWisePercentage;
 
-  AttendanceBarChart({
-    required this.month,
-    required this.monthName,
-    required this.attendancePercent,
-    required this.date,
-  });
+    AttendanceCumulativeModel({
+        this.monthName,
+        this.hoidays,
+        this.presentDay,
+        this.absentDay,
+        this.leaveDay,
+        this.workingDays,
+        this.overAllPercentage,
+        this.monthWisePercentage,
+    });
 
-  factory AttendanceBarChart.fromJson(Map<String, dynamic> json) {
-    return AttendanceBarChart(
-      month: json['month'],
-      monthName: json['monthName'],
-      attendancePercent: json['attendancePercent'],
-      date: json['date'],
+    AttendanceCumulativeModel copyWith({
+        String? monthName,
+        String? hoidays,
+        String? presentDay,
+        String? absentDay,
+        String? leaveDay,
+        String? workingDays,
+        String? overAllPercentage,
+        String? monthWisePercentage,
+    }) => 
+        AttendanceCumulativeModel(
+            monthName: monthName ?? this.monthName,
+            hoidays: hoidays ?? this.hoidays,
+            presentDay: presentDay ?? this.presentDay,
+            absentDay: absentDay ?? this.absentDay,
+            leaveDay: leaveDay ?? this.leaveDay,
+            workingDays: workingDays ?? this.workingDays,
+            overAllPercentage: overAllPercentage ?? this.overAllPercentage,
+            monthWisePercentage: monthWisePercentage ?? this.monthWisePercentage,
+        );
+
+    factory AttendanceCumulativeModel.fromJson(Map<String, dynamic> json) => AttendanceCumulativeModel(
+        monthName: json["monthName"],
+        hoidays: json["hoidays"],
+        presentDay: json["presentDay"],
+        absentDay: json["absentDay"],
+        leaveDay: json["leaveDay"],
+        workingDays: json["workingDays"],
+        overAllPercentage: json["overAllPercentage"],
+        monthWisePercentage: json["monthWisePercentage"],
     );
-  }
+
+    Map<String, dynamic> toJson() => {
+        "monthName": monthName,
+        "hoidays": hoidays,
+        "presentDay": presentDay,
+        "absentDay": absentDay,
+        "leaveDay": leaveDay,
+        "workingDays": workingDays,
+        "overAllPercentage": overAllPercentage,
+        "monthWisePercentage": monthWisePercentage,
+    };
 }

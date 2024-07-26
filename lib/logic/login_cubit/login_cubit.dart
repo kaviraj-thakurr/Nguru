@@ -27,4 +27,12 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginErrorState(e.toString()));
     }
   }
+
+
+void isComeFromForgetPasswordScreen(bool isComeFrom){
+
+  isComeFrom ? emit(LoginForgetPasswordState(true)) : null;
+}
+
+
 }

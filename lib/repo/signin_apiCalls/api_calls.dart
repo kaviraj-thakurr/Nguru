@@ -9,6 +9,7 @@ import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/contact_us_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
+import 'package:nguru/models/fees_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/notification_models.dart';
@@ -169,35 +170,24 @@ class AuthRepo {
     }
   }
 
-  Future<AttendanceData> fetchAttendanceData() async {
+  Future<AttendenceModel> fetchAttendanceData() async {
     try {
       final res = await _myService.networkPost(
         url:
-            "https://quickschool.niitnguru.com/mobileappservice/Api/Attendance/GetBarChart/",
+            "https://qsstg.niiteducation.com/mobileappservice/Api/Attendance/GetCumulativeAttendance",
         data: {
           {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
+            "userID": 118011,
             "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-            "sessionID": 107,
-            "studentID": 896,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
+            "studentID": 106045,
+            "sessionID": 178,
+            "schoolURL": "https://qsstg.iiteducation.com/tistnj",
+            "pageNumber": 0
           }
         },
       );
 
-      var result = AttendanceData.fromJson(json.decode(res.toString()));
+      var result = AttendenceModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
       print(e.toString());
@@ -502,28 +492,26 @@ class AuthRepo {
           url:
               "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
           data: {
-            
-              "appMessageID": 0,
-              "circularID": 0,
-              "contentType": 0,
-              "downloadAttachment": 0,
-              "isNotification": 0,
-              "messageTypeId": 0,
-              "month": 0,
-              "newPassword": "$newPassword",
-              "oldPassword": "$oldPassword",
-              "pageNumber": 0,
-              "pageSize": 0,
-              "schoolID": 1,
-              "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-              "sessionID": 107,
-              "studentID": 896,
-              "subjectID": 0,
-              "type": 0,
-              "userID": "6135",
-              "year": 0
-            }
-          );
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "downloadAttachment": 0,
+            "isNotification": 0,
+            "messageTypeId": 0,
+            "month": 0,
+            "newPassword": "$newPassword",
+            "oldPassword": "$oldPassword",
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "sessionID": 107,
+            "studentID": 896,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "6135",
+            "year": 0
+          });
       ResetPasswordModel resetResponse =
           resetPasswordModelFromJson(res.toString());
       return resetResponse;
@@ -544,28 +532,26 @@ class AuthRepo {
           url:
               "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
           data: {
-            {
-              "appMessageID": 0,
-              "circularID": 0,
-              "contentType": 0,
-              "deviceToken":
-                  "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-              "deviceType": "1",
-              "downloadAttachment": 0,
-              "isNotification": isNotification,
-              "messageTypeId": 0,
-              "month": 0,
-              "pageNumber": 0,
-              "pageSize": 0,
-              "schoolID": 1,
-              "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-              "sessionID": 107,
-              "studentID": 896,
-              "subjectID": 0,
-              "type": 0,
-              "userID": "6135",
-              "year": 0
-            }
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "deviceToken":
+                "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+            "deviceType": "1",
+            "downloadAttachment": 0,
+            "isNotification": isNotification,
+            "messageTypeId": 0,
+            "month": 0,
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "sessionID": 107,
+            "studentID": 896,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "6135",
+            "year": 0
           });
       PushNotificationModel pushNotificationResponse =
           pushNotificationModelFromJson(res.toString());
@@ -573,6 +559,42 @@ class AuthRepo {
     } catch (e) {
       print(e.toString());
       throw Exception("Failed to logout: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     FEES API      //////////////////////////////////////////////////////
+
+  Future<FeesModel> getTotalFees({
+    int? pageNumber,
+  }) async {
+    try {
+      final res = await _myService.networkPost(
+          url:
+              "https://quickschool.niitnguru.com/mobileappservice/Api/Fee/GetList/",
+          data: {
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "downloadAttachment": 0,
+            "isNotification": 0,
+            "messageTypeId": 0,
+            "month": 0,
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "sessionID": 107,
+            "studentID": 896,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "6135",
+            "year": 0
+          });
+      FeesModel feeResponse = feesModelFromJson(res.toString());
+      return feeResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
     }
   }
 }

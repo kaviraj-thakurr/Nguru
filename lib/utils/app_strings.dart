@@ -8,6 +8,9 @@ class MyStrings {
   static const String needHelp = "Need help?";
   static const String schoolname = "School Name";
   static const String subdomain = "Sub Domain";
+  static const String currentpass = "Current Password";
+  static const String newpass = "New Password";
+  static const String confirmnewpass = "Confirm New Password";
   static const String customData =
       "Please sign in to access your child’s school information.";
   static const String userName = "Username";
@@ -19,7 +22,7 @@ class MyStrings {
   static const String enterusernamepass = "Enter Username and Password";
   static const String nicknamerequired = "Nickname required";
   static const String search = "Search";
-  static const String search = "Search";
+
   static const String timeTable = "Timetable";
   static const String examination = "Examination  ";
   static const String calender = "Calendar";
@@ -29,14 +32,14 @@ class MyStrings {
   static const String gallery = "Gallery";
 
   static const String timeTablesub =
-      "Time to pack your bag!  Check your \n timetable first ️ to make sure you \n have everything ✏️.";
+      "Time to pack your bag!  Check your \ntimetable first ️ to make sure you \nhave everything ✏️.";
 
   static const String examinationsub = "Try better👍 next time !";
   static const String calendarsub = "🥳 Holidays are here !";
   static const String activitysub = "Your achievements 💯 are recorded.";
   static const String Librarysub =
-      "Issued books 📚 \n should be timely \n returned !";
+      "Issued books 📚 \nshould be timely \nreturned !";
   static const String infirmarysub =
-      "Regular medical \n checkups 🩺 are \n necessary.";
-  static const String gallerysub = "Your moments of\n happiness are here🖼️";
+      "Regular medical\ncheckups 🩺 are \nnecessary.";
+  static const String gallerysub = "Your moments of\nhappiness are here 🖼️";
 }

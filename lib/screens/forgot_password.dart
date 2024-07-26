@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,59 +48,54 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 10.heightBox,
                 Text(
                   "Enter your username to receive instructions on how to reset your password.",
-                  style: FontUtil.customStyle(fontSize: 17, fontWeight: FontWeight.w500, textColor: MyColors.forgotColor ,fontFamily: "Effra_Trial",
+                  style: FontUtil.customStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.forgotColor,
+                    fontFamily: "Effra_Trial",
+                  ),
                 ),
-                ),
-                 25.heightBox,
+                25.heightBox,
                 Form(
                   key: _formKey,
 
+                  child: TextFormField(
+                    inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                    controller: userNameController,
 
-                  
-                  child:
-                      TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(20)
-                              ],
-                              controller: userNameController,
-                              decoration: const InputDecoration(
-                                label: Text(
-                                  MyStrings.userName,
-                                  style: TextStyle(
-                                      //   fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontFamily: "Effra_Trial"),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15.0, horizontal: 20.0),
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(9.0)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: MyColors.borderColor,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(9.0)),
-                                ),
-                              ),
-                              style: FontUtil.textfield,
-                              validator: (url) {
-                                if (url == null || url.isEmpty) {
-                                  return MyStrings.userName;
-                                }
-                                return null;
-                              },
-                            ),
-                  
-                  
-                  
+                    decoration: const InputDecoration(
+                      label: Text(
+                        MyStrings.userName,
+                        style: TextStyle(
+                            //   fontStyle: FontStyle.italic,
+                            fontSize: 15,
+                            color: Colors.grey,
+                            fontFamily: "Effra_Trial"),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 20.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(9.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: MyColors.borderColor,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(9.0)),
+                      ),
+                    ),
+                    style: FontUtil.signInFieldText,
+                    validator: (url) {
+                      if (url == null || url.isEmpty) {
+                        return MyStrings.userName;
+                      }
+                      return null;
+                    },
+                  ),
+
                   //  VxTextField(
                   //   controller: userNameController,
                   //   fillColor: Colors.transparent,
@@ -128,70 +122,40 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       textColor: MyColors.needHelpColor),
                 ),
                 25.heightBox,
-BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
-              builder: (context, state) {
-            if (state is ForgetPassLoadingState) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return PrimaryButton(
-                  title: "Submit",
-                   onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<ForgetPassCubit>().forgotPassword(
-                              userNameController.text.trim(),
-                            );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(MyStrings.enterusernamepass),
-                          ),
-                        );
-                      }
-                    },
-                  );
-            }
-          }, listener: (context, state) {
-            if (state is ForgetPassSuccessState) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Password reset instruction has been sent to your registered Email/Phone")));
-                 Navigator.pop(context);
-            } else if (state is ForgetPassErrorState) {
-              _showSnackBar(context , state.message);
-            }
-          }),
-
-
-
-                // BlocBuilder<ForgetPassCubit, ForgetPasswordState>(
-                  
-                //   builder: (context, state) {
-                //     if (state is ForgetPassSuccessState) {
-                //       NavigationService.navigateTo(
-                //           const LoginScreen(), context);
-                //     } else if (state is ForgetPassErrorState) {
-                     
-                //     }
-               
-                //   return PrimaryButton(
-                //     title: "Submit",
-                //     onPressed: () {
-                //       if (_formKey.currentState!.validate()) {
-                //         context.read<ForgetPassCubit>().forgotPassword(
-                //               userNameController.text.trim(),
-                //             );
-                //       } else {
-                //         ScaffoldMessenger.of(context).showSnackBar(
-                //           SnackBar(
-                //             content: Text(MyStrings.enterusernamepass),
-                //           ),
-                //         );
-                //       }
-                //     },
-                //   );
-                //   }
-                // ),
+                BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
+                    builder: (context, state) {
+                  if (state is ForgetPassLoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return PrimaryButton(
+                      title: "Submit",
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<ForgetPassCubit>().forgotPassword(
+                                userNameController.text.trim(),
+                              );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(MyStrings.enterusernamepass),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }
+                }, listener: (context, state) {
+                  if (state is ForgetPassSuccessState) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(
+                            "Password reset instruction has been sent to your registered Email/Phone")));
+                    Navigator.pop(context);
+                  } else if (state is ForgetPassErrorState) {
+                    _showSnackBar(context, state.message);
+                  }
+                }),
               ],
             ),
           ),
@@ -201,12 +165,12 @@ BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
   }
 
   void _showSnackBar(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).clearSnackBars(); 
+    ScaffoldMessenger.of(context).clearSnackBars();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
-        duration: Duration(seconds: 3), 
+        duration: Duration(seconds: 3),
       ),
     );
   }

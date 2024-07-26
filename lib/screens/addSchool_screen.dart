@@ -39,10 +39,10 @@ class _AddSchoolState extends State<AddSchool> {
 
   String? _validateNickName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Nickname';
+      return 'Enter School Name';
     }
     if (value.length < 3) {
-      return 'Nickname must be at least 3 characters';
+      return 'School Name must be at least 3 characters';
     }
     return null;
   }
@@ -86,7 +86,7 @@ class _AddSchoolState extends State<AddSchool> {
                         focusNode: _schoolUrlFocusNode,
                         controller: schoolurlController,
                         decoration: InputDecoration(
-                          //   hintText: "kaviraj",hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                        
                           suffixIcon: IconButton(
                               onPressed: () {
                                 _schoolUrlFocusNode.requestFocus();
@@ -118,7 +118,7 @@ class _AddSchoolState extends State<AddSchool> {
                                 BorderRadius.all(Radius.circular(9.0)),
                           ),
                         ),
-                        style: FontUtil.textfield,
+                        style: FontUtil.signInFieldText,
                         validator: (url) {
                           if (url == null || url.isEmpty) {
                             return MyStrings.enterschoolurl;
@@ -158,7 +158,7 @@ class _AddSchoolState extends State<AddSchool> {
                                 BorderRadius.all(Radius.circular(9.0)),
                           ),
                         ),
-                        style: FontUtil.textfield,
+                          style: FontUtil.signInFieldText,
                         validator: (subdomain) {
                           if (subdomain == null || subdomain.isEmpty) {
                             return MyStrings.subdomainrequired;
@@ -169,8 +169,8 @@ class _AddSchoolState extends State<AddSchool> {
                       14.heightBox,
                       TextFormField(
                           controller: nickNameController,
-                          // ignore: prefer_const_constructors
                           decoration: InputDecoration(
+                            hintStyle:FontUtil.signInFieldText ,
                             label: const Text(
                               MyStrings.schoolname,
                               style: TextStyle(
@@ -197,7 +197,7 @@ class _AddSchoolState extends State<AddSchool> {
                                   BorderRadius.all(Radius.circular(9.0)),
                             ),
                           ),
-                          style: FontUtil.textfield,
+                          style: FontUtil.signInFieldText,
                           validator: _validateNickName),
                       14.heightBox,
                     ],
