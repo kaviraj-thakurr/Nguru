@@ -27,7 +27,7 @@ class CustomSearchBar extends StatelessWidget {
     return Container(
       
       // constraints: const BoxConstraints(maxHeight: 42),
-     padding: const EdgeInsets.symmetric(horizontal: 12.0),
+     padding: const EdgeInsets.symmetric(horizontal: 10.0),
       // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       decoration: BoxDecoration(
         

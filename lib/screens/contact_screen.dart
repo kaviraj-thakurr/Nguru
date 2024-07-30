@@ -8,6 +8,7 @@ import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_cubit.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_state.dart';
+import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -111,26 +112,35 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
           onTap: () => Navigator.pop(context),
           child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: BlocConsumer<ContactUsCubit, ContactUsState>(
-        listener: (BuildContext context, ContactUsState state) {},
-        builder: (context, state) {
-          if (state is ContactUsInitialState || state is ContactUsLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ContactUsSuccessState) {
-            return contactUsWidget(
-                screenHeight,
-                screenWidth,
-                state.contactUs.schoolPhoto ?? "",
-                state.contactUs.address ?? "",
-                state.contactUs.email ?? "",
-                state.contactUs.mobileNumber ?? "",
-                state.contactUs.landlineNumber ?? "");
-          } else if (state is ContactUsErrorState) {
-            return const Text("Error state");
-          } else {
-            return const Center(child: Text("Undefined state"));
-          }
-        },
+      body: Stack(
+        children: [
+          Positioned.fill(
+                  child: Image.asset(
+                MyAssets.bg,
+                fit: BoxFit.fill,
+              )),
+          BlocConsumer<ContactUsCubit, ContactUsState>(
+            listener: (BuildContext context, ContactUsState state) {},
+            builder: (context, state) {
+              if (state is ContactUsInitialState || state is ContactUsLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is ContactUsSuccessState) {
+                return contactUsWidget(
+                    screenHeight,
+                    screenWidth,
+                    state.contactUs.schoolPhoto ?? "",
+                    state.contactUs.address ?? "",
+                    state.contactUs.email ?? "",
+                    state.contactUs.mobileNumber ?? "",
+                    state.contactUs.landlineNumber ?? "");
+              } else if (state is ContactUsErrorState) {
+                return const Text("Error state");
+              } else {
+                return const Center(child: Text("Undefined state"));
+              }
+            },
+          ),
+        ],
       ),
     );
   }

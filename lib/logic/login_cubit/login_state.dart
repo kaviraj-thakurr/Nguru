@@ -33,6 +33,6 @@ class LoginErrorState extends LoginState {
 
 
 class LoginForgetPasswordState extends LoginState {
-  final bool comeFromForgetPassword;
-  LoginForgetPasswordState(this.comeFromForgetPassword);
+ 
+  LoginForgetPasswordState();
 }

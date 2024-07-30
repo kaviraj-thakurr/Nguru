@@ -8,11 +8,11 @@ class AttendanceCubit extends Cubit<AttendanceState> {
 
   AttendanceCubit(this.authRepo) : super(AttendanceInitial());
 
-  Future<void> loadAttendanceData() async {
+  Future<void> fetchAttendanceData() async {
     try {
       emit(AttendanceLoading());
       final data = await authRepo.fetchAttendanceData();
-      emit(AttendanceSuccess(data));
+      emit(AttendanceSuccess(data.attendanceCumulativeModel!.first.overAllPercentage??""));
     } catch (e) {
       emit(AttendanceError("Failed to fetch data"));
     }

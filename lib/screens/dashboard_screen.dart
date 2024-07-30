@@ -9,6 +9,8 @@ import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
+import 'package:nguru/logic/attendence/attendence_cubit.dart';
+import 'package:nguru/logic/attendence/attendence_state.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
@@ -43,6 +45,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
     context.read<DashboardCubit>().dashboardGetList();
     context.read<NotificationCubit>().notificationCount();
     context.read<FeesCubit>().getTotalFees();
+    context.read<AttendanceCubit>().fetchAttendanceData();
 
     super.initState();
   }
@@ -65,19 +68,20 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
           if (state is DashboardLoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is DashboardSuccessState) {
-            return Stack(
-              children: [
-                // Container(height:  MediaQuery.of(context).size.height,
-                // width: MediaQuery.of(context).size.width,color: Colors.white,child:Image.asset(MyAssets.bg,fit: BoxFit.fill,),),
-                 Positioned.fill(child: Image.asset(MyAssets.bg,fit: BoxFit.fill,)),
-                SingleChildScrollView(
+            return Stack(children: [
+              Positioned.fill(
+                  child: Image.asset(
+                MyAssets.bg,
+                fit: BoxFit.fill,
+              )),
+              SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(18.0),
                   child: Column(
                     children: [
                       dashboardAppBar(),
                       CustomSearchBar(controller: searchController),
-                      12.heightBox,
+                      10.heightBox,
                       Container(
                         margin: const EdgeInsets.only(top: 8.0),
                         constraints: BoxConstraints(
@@ -88,7 +92,11 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GestureDetector(
-                              onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingScreen())),
+                              // onTap: () => Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) =>
+                              //             const SettingScreen())),
                               child: personInfoCard(
                                 context,
                                 "${state.studentPicture}",
@@ -106,74 +114,90 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 Flexible(
                                   flex: 5,
                                   child: GestureDetector(
-                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen())),
-                                    child: attendenceAndFeeCard(
-                                      context,
-                                      mainText: "53%",
-                                      footerText: "Attendance",
-                                      isFeeCard: false,
+                                    // onTap: () => Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             const AttendenceScreen())),
+                                    child: BlocConsumer<AttendanceCubit,
+                                        AttendanceState>(
+                                      listener: (context, state) {
+                                        if (state is AttendanceError) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(state.message)),
+                                          );
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        if (state is AttendanceLoading) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (state is AttendanceSuccess) {
+                                          return attendenceAndFeeCard(
+                                            context,
+                                            mainText:
+                                                "${state.overAllPercentage}%",
+                                            footerText: "Attendance",
+                                            isFeeCard: false,
+                                          );
+                                        }
+                                        return const Text("");
+                                      },
                                     ),
                                   ),
                                 ),
                                 const Spacer(),
                                 Flexible(
                                   flex: 5,
-                                  child: BlocBuilder<FeesCubit,FeesState>(
-                                    builder: (context,statee) {
-
-                                      if(statee is FeesLoadingState)
-                                      {
-                                        return const Center(child: CircularProgressIndicator(),);
-                                      }
-
-                                      else if (statee is FeesSuccessState)
-                                      {
-
-                                        var totalF =0;
-                                        var paidF =0;
-
-                                        for(int i =0; i<statee.totalFee.length; i++){
-
-                                           totalF=totalF+int.parse(statee.totalFee[i].amount!);
-                                           paidF =paidF + int.parse(statee.totalFee[i].paidAmount!);
-                                        }
-
-                                        var percetageOFFee= (paidF/totalF)*100;
-
-                                        log("$totalF $paidF");
-
-                                        return attendenceAndFeeCard(
-                                        context,
-                                        headerText: "ssss",
-                                        mainText: "${percetageOFFee.toStringAsFixed(2)}%",
-                                        footerText: "Fees Paid",
-                                        isFeeCard: true,
-                                      ); 
-
-                                      }
-
-                                      else if (statee is FeesErrorState)
-                                      {
-
-                                        return attendenceAndFeeCard(
-                                        context,
-                                        headerText: "__",
-                                        mainText: "_ _%",
-                                        footerText: "_ _",
-                                        isFeeCard: true,
+                                  child: BlocBuilder<FeesCubit, FeesState>(
+                                      builder: (context, state) {
+                                    if (state is FeesLoadingState) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
                                       );
+                                    } else if (state is FeesSuccessState) {
+                                      var totalF = 0;
+                                      var paidF = 0;
 
+                                      for (int i = 0;
+                                          i < state.totalFee.length;
+                                          i++) {
+                                        totalF = totalF +
+                                            int.parse(
+                                                state.totalFee[i].amount!);
+                                        paidF = paidF +
+                                            int.parse(
+                                                state.totalFee[i].paidAmount!);
                                       }
+
+                                      var percetageOFFee =
+                                          (paidF / totalF) * 100;
+
+                                      log("$totalF $paidF");
 
                                       return attendenceAndFeeCard(
                                         context,
-                                        headerText: "Paid 23k",
-                                        mainText: "45%",
+                                        headerText: "ssss",
+                                        mainText:
+                                            "${percetageOFFee.toStringAsFixed(2)}%",
                                         footerText: "Fees Paid",
                                         isFeeCard: true,
                                       );
+                                    } else if (state is FeesErrorState) {
+                                      return attendenceAndFeeCard(
+                                        context,
+                                        headerText: "Error",
+                                        mainText: "Error",
+                                        footerText: "Error",
+                                        isFeeCard: true,
+                                      );
                                     }
-                                  ),
+
+                                    return const SizedBox();
+                                  }),
                                 ),
                               ],
                             ),
@@ -185,7 +209,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                           StoryScreen(),
+                          const StoryScreen(),
                           18.heightBox,
                           Container(
                             height: screenHeight * 0.17,
@@ -201,8 +225,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   isPngImage: false,
                                   icon: Icons.arrow_forward,
                                   onIconPressed: () {
-                                    NavigationService.navigateTo(
-                                        const TimetableScreen(), context);
+                                    // NavigationService.navigateTo(
+                                    //     const TimetableScreen(), context);
                                   },
                                   cardWidth: screenWidth * 0.5,
                                   cardHeight: double.maxFinite,
@@ -244,8 +268,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   cardHeight: double.maxFinite,
                                   cardWidth: screenWidth * 0.35,
                                   onIconPressed: () {
-                                    NavigationService.navigateTo(
-                                        CircularScreen(), context);
+                                    // NavigationService.navigateTo(
+                                    //     CircularScreen(), context);
                                   },
                                   image: MyAssets.calendar,
                                 ),
@@ -307,21 +331,23 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   ),
                                 ),
                                 15.widthBox,
-                                Expanded(
+                               Expanded(
                                   child: customCard(
                                     context: context,
                                     title: state.dashboardList?[13]
                                             ['dashboardItem'] ??
-                                        MyStrings.gallery,
+                                        MyStrings.infirmary,
                                     content: MyStrings.gallerysub,
-                                    icon: Icons.arrow_forward,
                                     isPngImage: false,
-                                    image: MyAssets.gallery,
-                                    onIconPressed: () => Navigator.push(
+                                    icon: Icons.arrow_forward,
+                                    onIconPressed: () {
+                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                GalleryScreen())),
+                                                const GalleryScreen()));
+                                    },
+                                    image: MyAssets.gallery,
                                   ),
                                 ),
                               ],
@@ -333,8 +359,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                   ),
                 ),
               ),
-              ]
-            );
+            ]);
           } else {
             return const Center(child: Text('Unknown state'));
           }
@@ -361,7 +386,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
         gradient: MyColors.cardColors,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: InkWell(
+      child: GestureDetector(
         onTap: onIconPressed,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -373,7 +398,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
               Text(content, maxLines: 3, style: FontUtil.cardsubTitle),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               // crossAxisAlignment: CrossAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
                     padding: EdgeInsets.zero,

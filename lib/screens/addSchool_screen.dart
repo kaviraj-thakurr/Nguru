@@ -1,13 +1,10 @@
-// ignore: unused_import
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -16,7 +13,6 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
-
 import 'package:nguru/screens/login_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -34,23 +30,17 @@ class _AddSchoolState extends State<AddSchool> {
   final FocusNode _schoolUrlFocusNode = FocusNode();
   TextEditingController schoolurlController = TextEditingController();
   TextEditingController subdomainController = TextEditingController();
-  TextEditingController nickNameController = TextEditingController();
+  TextEditingController schoolNameController = TextEditingController();
   bool _isButtonEnabled = false;
-
-  String? _validateNickName(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Enter School Name';
-    }
-    if (value.length < 3) {
-      return 'School Name must be at least 3 characters';
-    }
-    return null;
-  }
+  bool _autoValidateSchoolName = false;
+  bool _autoValidateSubdomain = false;
 
   @override
   void dispose() {
     _schoolUrlFocusNode.dispose();
-
+    schoolurlController.dispose();
+    subdomainController.dispose();
+    schoolNameController.dispose();
     super.dispose();
   }
 
@@ -58,6 +48,21 @@ class _AddSchoolState extends State<AddSchool> {
   void initState() {
     super.initState();
     schoolurlController.text = 'https://quickschool.niitnguru.com/';
+
+    schoolNameController.addListener(() {
+      if (!_autoValidateSchoolName) {
+        setState(() {
+          _autoValidateSchoolName = true;
+        });
+      }
+    });
+    subdomainController.addListener(() {
+      if (!_autoValidateSubdomain) {
+        setState(() {
+          _autoValidateSubdomain = true;
+        });
+      }
+    });
   }
 
   @override
@@ -66,12 +71,12 @@ class _AddSchoolState extends State<AddSchool> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 23),
+            padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
               children: [
-                169.heightBox,
+                150.heightBox,
                 SvgPicture.asset(MyAssets.signIN),
-                50.heightBox,
+                20.heightBox,
                 Text(
                   MyStrings.customData,
                   style: FontUtil.customData,
@@ -79,127 +84,36 @@ class _AddSchoolState extends State<AddSchool> {
                 ),
                 20.heightBox,
                 Form(
+                  // autovalidateMode: AutovalidateMode.onUserInteraction,
                   key: _formKey,
                   child: Column(
                     children: [
-                      TextFormField(
-                        focusNode: _schoolUrlFocusNode,
-                        controller: schoolurlController,
-                        decoration: InputDecoration(
-                        
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                _schoolUrlFocusNode.requestFocus();
-                              },
-                              icon: SvgPicture.asset(MyAssets.edit)),
-                          label: const Text(
-                            MyStrings.schoolurl,
-                            style: TextStyle(
-                                // fontStyle: FontStyle.italic,
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontFamily: "Effra_Trial"),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 20.0),
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: MyColors.borderColor,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
-                        ),
-                        style: FontUtil.signInFieldText,
-                        validator: (url) {
-                          if (url == null || url.isEmpty) {
-                            return MyStrings.enterschoolurl;
-                          }
-                          return null;
-                        },
+                      CustomTextFormField(
+                          controller: schoolurlController,
+                          focusNode: _schoolUrlFocusNode,
+                          labelText: MyStrings.schoolurl,
+                          suffixIconAsset: MyAssets.edit,
+                          validator: _validateSchoolUrl),
+                      14.heightBox,
+                      CustomTextFormField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20)
+                          ],
+                          controller: subdomainController,
+                          labelText: MyStrings.subdomain,
+                          autovalidateMode: _autoValidateSubdomain
+                              ? AutovalidateMode.onUserInteraction
+                              : AutovalidateMode.disabled,
+                          validator: _validateSubDomain),
+                      14.heightBox,
+                      CustomTextFormField(
+                        controller: schoolNameController,
+                        labelText: MyStrings.schoolname,
+                        validator: _validateSchoolName,
+                        autovalidateMode: _autoValidateSchoolName
+                            ? AutovalidateMode.onUserInteraction
+                            : AutovalidateMode.disabled,
                       ),
-                      14.heightBox,
-                      TextFormField(
-                        inputFormatters: [LengthLimitingTextInputFormatter(20)],
-                        controller: subdomainController,
-                        // ignore: prefer_const_constructors
-                        decoration: InputDecoration(
-                          label: const Text(
-                            MyStrings.subdomain,
-                            style: TextStyle(
-                                fontSize: 15,
-                                // fontStyle: FontStyle.italic,
-                                color: Colors.grey,
-                                fontFamily: "Effra_Trial"),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 20.0),
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: MyColors.borderColor,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
-                        ),
-                          style: FontUtil.signInFieldText,
-                        validator: (subdomain) {
-                          if (subdomain == null || subdomain.isEmpty) {
-                            return MyStrings.subdomainrequired;
-                          }
-                          return null;
-                        },
-                      ),
-                      14.heightBox,
-                      TextFormField(
-                          controller: nickNameController,
-                          decoration: InputDecoration(
-                            hintStyle:FontUtil.signInFieldText ,
-                            label: const Text(
-                              MyStrings.schoolname,
-                              style: TextStyle(
-                                  //fontStyle: FontStyle.italic,
-                                  fontSize: 15,
-                                  color: Colors.grey,
-                                  fontFamily: "Effra_Trial"),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 20.0),
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(9.0)),
-                            ),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: MyColors.borderColor,
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(9.0)),
-                            ),
-                          ),
-                          style: FontUtil.signInFieldText,
-                          validator: _validateNickName),
-                      14.heightBox,
                     ],
                   ),
                 ),
@@ -219,7 +133,7 @@ class _AddSchoolState extends State<AddSchool> {
                     );
                   } else {
                     return PrimaryButton(
-                      title: "Submit",
+                      title: MyStrings.submit,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           context.read<AddSchoolCubit>().addSchool(
@@ -231,13 +145,12 @@ class _AddSchoolState extends State<AddSchool> {
                             errorMessage = MyStrings.enterschoolurl;
                           } else if (subdomainController.text.isEmpty) {
                             errorMessage = MyStrings.enterschoolurl;
-                          } else if (_validateNickName(
-                                  nickNameController.text) !=
+                          } else if (_validateSchoolName(
+                                  schoolNameController.text) !=
                               null) {
-                            errorMessage = 'Nickname required';
+                            errorMessage = 'School Name required';
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
-
                             SnackBar(
                               content: Text(errorMessage),
                             ),
@@ -249,9 +162,9 @@ class _AddSchoolState extends State<AddSchool> {
                 }, listener: (context, state) {
                   if (state is AddSchoolSuccessState) {
                     NavigationService.navigateTo(
-                        LoginScreen(title: nickNameController.text), context);
+                        LoginScreen(title: schoolNameController.text), context);
                   } else if (state is AddSchoolErrorState) {
-                    _showSnackBar(context , state.message);
+                    _showSnackBar(context, state.message);
                   }
                 }),
                 20.heightBox,
@@ -262,15 +175,38 @@ class _AddSchoolState extends State<AddSchool> {
       ),
     );
   }
-    void _showSnackBar(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).clearSnackBars(); 
 
+  void _showSnackBar(BuildContext context, String errorMessage) {
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
-        duration: Duration(seconds: 3), 
+        duration: Duration(seconds: 3),
       ),
     );
   }
 
+  String? _validateSchoolName(String? value) {
+    if (value == null || value.isEmpty) {
+      return MyStrings.enterschoolName;
+    }
+    if (value.length < 3) {
+      return MyStrings.schoolNameLeastName;
+    }
+    return null;
+  }
+
+  String? _validateSchoolUrl(String? url) {
+    if (url == null || url.isEmpty) {
+      return MyStrings.enterschoolurl;
+    }
+    return null;
+  }
+
+  String? _validateSubDomain(String? subdomain) {
+    if (subdomain == null || subdomain.isEmpty) {
+      return MyStrings.subdomainrequired;
+    }
+    return null;
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
+import 'package:nguru/logic/attendence/attendence_cubit.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
@@ -69,6 +70,10 @@ class MyApp extends StatelessWidget {
 
         BlocProvider(
           create: (context) => FeesCubit(AuthRepo()),
+        ),
+
+          BlocProvider(
+          create: (context) => AttendanceCubit(AuthRepo()),
         ),
       ],
       child: ScreenUtilInit(

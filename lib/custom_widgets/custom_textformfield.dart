@@ -1,71 +1,90 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:nguru/utils/app_assets.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
 
-class PrimaryTextField extends StatefulWidget {
-  const PrimaryTextField({
-    super.key,
-    required FocusNode schoolUrlFocusNode,
-    required this.schoolurlController,
-  }) : _schoolUrlFocusNode = schoolUrlFocusNode;
+class CustomTextFormField extends StatelessWidget {
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final String? labelText;
+  final TextStyle? labelStyle;
+  final EdgeInsetsGeometry? contentPadding;
+  final InputBorder? border;
+  final InputBorder? enabledBorder;
+  final InputBorder? focusedBorder;
+  final TextStyle? style;
+  final String? Function(String?)? validator;
+  final String? suffixIconAsset;
+  final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
+  final AutovalidateMode? autovalidateMode;
+  final bool? obscureText; // Add this line
 
-  final FocusNode _schoolUrlFocusNode;
-  final TextEditingController schoolurlController;
+  const CustomTextFormField({
+    this.controller,
+    this.inputFormatters,
+    this.focusNode,
+    this.labelText,
+    this.labelStyle,
+    this.contentPadding,
+    this.border,
+    this.enabledBorder,
+    this.focusedBorder,
+    this.style,
+    this.validator,
+    this.suffixIconAsset,
+    this.suffixIcon,
+    this.autovalidateMode,
+    this.obscureText, // Add this line
+  });
 
-  @override
-  State<PrimaryTextField> createState() => _PrimaryTextFieldState();
-}
-
-class _PrimaryTextFieldState extends State<PrimaryTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      focusNode: widget._schoolUrlFocusNode,
-      controller: widget.schoolurlController,
+      inputFormatters: inputFormatters,
+      focusNode: focusNode,
+      controller: controller,
+      autovalidateMode: autovalidateMode,
+      obscureText: obscureText ?? false, // Add this line
       decoration: InputDecoration(
-        //   hintText: "kaviraj",hintStyle: TextStyle(fontStyle: FontStyle.italic),
-        suffixIcon: IconButton(
-            onPressed: () {
-              widget._schoolUrlFocusNode.requestFocus();
-            },
-            icon: SvgPicture.asset(MyAssets.edit)),
-        label: const Text(
-          MyStrings.schoolurl,
-          style: TextStyle(
-              // fontStyle: FontStyle.italic,
+        suffixIcon: suffixIcon ??
+            (suffixIconAsset != null
+                ? IconButton(
+                    onPressed: () {
+                      focusNode?.requestFocus();
+                    },
+                    icon: SvgPicture.asset(suffixIconAsset!),
+                  )
+                : null),
+        labelText: labelText,
+        labelStyle: labelStyle ??
+            const TextStyle(
               fontSize: 15,
               color: Colors.grey,
-              fontFamily: "Effra_Trial"),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-            vertical: 15.0, horizontal: 20.0),
-        border: const OutlineInputBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(9.0)),
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: MyColors.borderColor,
-          ),
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide:
-              BorderSide(color: Colors.grey, width: 1.0),
-          borderRadius:
-              BorderRadius.all(Radius.circular(9.0)),
-        ),
+              fontFamily: APP_FONT,
+            ),
+        contentPadding: contentPadding ??
+            const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+        border: border ??
+            const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(9.0)),
+            ),
+        enabledBorder: enabledBorder ??
+            const OutlineInputBorder(
+              borderSide: BorderSide(
+                color: MyColors.borderColor,
+              ),
+            ),
+        focusedBorder: focusedBorder ??
+            const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(9.0)),
+            ),
       ),
-      style: FontUtil.signInFieldText,
-      validator: (url) {
-        if (url == null || url.isEmpty) {
-          return MyStrings.enterschoolurl;
-        }
-        return null;
-      },
+      style: style ?? FontUtil.signInFieldText,
+      validator: validator,
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_cubit.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
+import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 
@@ -47,58 +48,67 @@ class _GalleryScreenState extends State<GalleryScreen> {
             child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            dashboardAppBar(),
-
-            CustomSearchBar(controller: _searchController),
-            screenTitleHeader("Photo Gallery",onPressed: ()=>Navigator.pop(context)),
-            Flexible(
-              child: BlocBuilder<GalleryPhotosCubit, GalleryPhotosState>(
-                builder: (context, state) {
-                  if (state is GalleryPhotosLoadingState) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is GalleryPhotosSuccessState) {
-                    return GridView.builder(
-                      itemCount:
-                          state.galleryPhotos.photogalleryList?.length ?? 0,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                      ),
-                      itemBuilder: (context, index) {
-                        final galleryItem =
-                            state.galleryPhotos.photogalleryList![index];
-                        final firstPhoto = galleryItem.photoList!.isNotEmpty
-                            ? galleryItem.photoList![0].photo
-                            : null;
-
-                        return GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => showStories(
-                                        screenHeight,
-                                        screenWidth,
-                                        galleryItem))),
-                            child: customPhotoWidget(screenHeight, screenWidth,
-                                firstPhoto, galleryItem.description ?? ""));
-                      },
-                    );
-                  } else if (state is GalleryPhotosErrorState) {
-                    return Center(child: Text(state.message));
-                  } else {
-                    return Center(child: Text("Unknown error occurred"));
-                  }
-                },
+      body: Stack(
+        children: [
+          Positioned.fill(
+                  child: Image.asset(
+                MyAssets.bg,
+                fit: BoxFit.fill,
+              )),
+          Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              dashboardAppBar(),
+        
+              CustomSearchBar(controller: _searchController),
+              screenTitleHeader("Photo Gallery",onPressed: ()=>Navigator.pop(context)),
+              Flexible(
+                child: BlocBuilder<GalleryPhotosCubit, GalleryPhotosState>(
+                  builder: (context, state) {
+                    if (state is GalleryPhotosLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is GalleryPhotosSuccessState) {
+                      return GridView.builder(
+                        itemCount:
+                            state.galleryPhotos.photogalleryList?.length ?? 0,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                        ),
+                        itemBuilder: (context, index) {
+                          final galleryItem =
+                              state.galleryPhotos.photogalleryList![index];
+                          final firstPhoto = galleryItem.photoList!.isNotEmpty
+                              ? galleryItem.photoList![0].photo
+                              : null;
+        
+                          return GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => showStories(
+                                          screenHeight,
+                                          screenWidth,
+                                          galleryItem))),
+                              child: customPhotoWidget(screenHeight, screenWidth,
+                                  firstPhoto, galleryItem.description ?? ""));
+                        },
+                      );
+                    } else if (state is GalleryPhotosErrorState) {
+                      return Center(child: Text(state.message));
+                    } else {
+                      return Center(child: Text("Unknown error occurred"));
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        ]
       ),
     );
   }

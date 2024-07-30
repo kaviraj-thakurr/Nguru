@@ -8,12 +8,13 @@ class MyColors {
   const MyColors._();
 
   static const Color sessiontext = Color(0xFF231F20);
-  static  Color customdataColor = Color(0xFF070707).withOpacity(0.5);
+  static  Color customdataColor = Color(0xFF070707).withOpacity(0.7);
   static const Color assignmentdateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
   static const Color searchbox = Color(0xFFF3F3F3);
   static const Color borderColor = Color(0xFFD7D7D7);
-  static const Color textcolors = Color(0xFF7A7A7A);
+  static  Color textcolors = Color(0xFF070707).withOpacity(0.7);
+  static Color storyfotter = Color(0xFF231F20).withOpacity(0.8);
   static const Color buttonColor = Color(0xFF7A7A7A);
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
@@ -79,6 +80,12 @@ class MyColors {
   static const Color greenShade_1 = Color(0xFFA0CA7B);
 
   static const Color greyShade_6 = Color(0xFFF3F3F3);
+
+  static Color assignmentColor = Color(0xFFABCC38).withOpacity(0.3);
+
+  static Color disciplineColor = Color(0xFFFECA0A).withOpacity(0.3);
+
+  static Color circularColor = Color(0xFFE20786).withOpacity(0.2);
 
 // gradients
   static const LinearGradient buttonColors = LinearGradient(

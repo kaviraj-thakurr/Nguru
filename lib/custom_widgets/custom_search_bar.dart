@@ -40,7 +40,7 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               style:const TextStyle(color: Colors.black),
               decoration: InputDecoration(
-                suffixIcon:const Icon(CupertinoIcons.search,color: MyColors.textcolors),
+                suffixIcon: Icon(CupertinoIcons.search,color: MyColors.textcolors),
                 hintText: MyStrings.search,
                 hintStyle: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w400, textColor: MyColors.search),
                 border: InputBorder.none,

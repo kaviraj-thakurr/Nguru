@@ -21,6 +21,7 @@ import 'package:nguru/screens/story/circular_story_screen.dart';
 import 'package:nguru/screens/story/discipline_story_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/border_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -225,7 +226,7 @@ class _StoryScreenState extends State<StoryScreen>
                   _assignmentAnimationController,
                   (list) =>
                       showAssignmentStory(screenHeight, screenWidth, list),
-                  'Assignment',
+                  'Assignments',
                 ),
                 15.widthBox,
                 _storyWidget<CircularCubit, CircularState, CircularList>(
@@ -328,13 +329,13 @@ class _StoryScreenState extends State<StoryScreen>
                         ),
                         colorStops: [-4, 8],
                       ),
-                      child: const SizedBox(width: 60, height: 60),
+                      child: const SizedBox(width: 55, height: 55),
                     ),
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 45,
+                      height: 45,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 241, 221, 240),
+                        color: title == "Assignments" ? MyColors.assignmentColor : title == "Circular" ? MyColors.circularColor : MyColors.disciplineColor,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Center(
@@ -344,6 +345,7 @@ class _StoryScreenState extends State<StoryScreen>
                     ),
                   ],
                 ),
+                AppGapping.padding3,
                 Text(title,style: FontUtil.storyTitle,),
               ],
             ),

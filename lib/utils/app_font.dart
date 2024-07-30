@@ -22,7 +22,7 @@ class FontUtil {
     );
   }
 
-  static TextStyle hintText = const TextStyle(
+  static TextStyle hintText =  TextStyle(
       fontSize: 14,
       fontStyle: FontStyle.italic,
       fontWeight: FontWeight.w600,
@@ -103,9 +103,9 @@ class FontUtil {
   //     fontFamily: 'QuickStand'
   //     );
 
-  static TextStyle cardsubTitle = const TextStyle(
+  static TextStyle cardsubTitle =  TextStyle(
       fontSize: 10,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: MyColors.textcolors,
         fontFamily: 'Effra_Trial');
   
@@ -119,7 +119,7 @@ class FontUtil {
       );
 
       static TextStyle cardTitle = TextStyle(
-      fontSize: 16.h,
+      fontSize: 14,
       fontWeight: FontWeight.w600,
       color: MyColors.cardTitle,
       fontFamily: 'Effra_Trial'
@@ -140,9 +140,9 @@ class FontUtil {
       );
 
   static TextStyle storyTitle = TextStyle(
-      fontSize: 15.h,
+      fontSize: 12.h,
       fontWeight: FontWeight.w500,
-      color: const Color(0x86231F20),
+      color: MyColors.storyfotter,
       fontFamily: 'Effra_Trial'
   );
 

@@ -22,6 +22,8 @@ class MyStrings {
   static const String enterusernamepass = "Enter Username and Password";
   static const String nicknamerequired = "Nickname required";
   static const String search = "Search";
+  static const String enterschoolName = "Enter School Name";
+  static const String schoolNameLeastName = 'School Name must be at least 3 characters';
 
   static const String timeTable = "Timetable";
   static const String examination = "Examination  ";
@@ -30,6 +32,7 @@ class MyStrings {
   static const String Library = "Library";
   static const String infirmary = "Infirmary";
   static const String gallery = "Gallery";
+  
 
   static const String timeTablesub =
       "Time to pack your bag!  Check your \ntimetable first ️ to make sure you \nhave everything ✏️.";
@@ -41,5 +44,5 @@ class MyStrings {
       "Issued books 📚 \nshould be timely \nreturned !";
   static const String infirmarysub =
       "Regular medical\ncheckups 🩺 are \nnecessary.";
-  static const String gallerysub = "Your moments of\nhappiness are here 🖼️";
+  static const String gallerysub = "Your moments of\nhappiness are\nhere";
 }

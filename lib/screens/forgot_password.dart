@@ -11,6 +11,7 @@ import 'package:nguru/screens/login_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
+import 'package:nguru/utils/app_utils.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -58,6 +59,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 25.heightBox,
                 Form(
                   key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
 
                   child: TextFormField(
                     inputFormatters: [LengthLimitingTextInputFormatter(20)],
@@ -133,6 +135,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       title: "Submit",
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          isFromForgotPassword=true;
                           context.read<ForgetPassCubit>().forgotPassword(
                                 userNameController.text.trim(),
                               );

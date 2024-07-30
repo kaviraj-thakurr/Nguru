@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/forgot_password.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
@@ -18,6 +19,7 @@ import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
+import 'package:nguru/utils/app_utils.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
@@ -38,6 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
+  bool _autoValidateUserName = false;
+  bool _autoValidatePassword = false;
 
   @override
   void initState() {
@@ -118,47 +122,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           5.widthBox,
-                          Text(widget.title ?? "",style: FontUtil.schoolname,)
+                          Text(
+                            widget.title ?? "",
+                            style: FontUtil.schoolname,
+                          )
                         ],
                       ),
                       17.heightBox,
                       Form(
                         key: _formKey,
+                        // autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
-                            TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(20)
-                              ],
+                            CustomTextFormField(
                               controller: userNameController,
-                              decoration: const InputDecoration(
-                                label: Text(
-                                  MyStrings.userName,
-                                  style: TextStyle(
-                                      //   fontStyle: FontStyle.italic,
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontFamily: "Effra_Trial"),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15.0, horizontal: 20.0),
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(9.0)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: MyColors.borderColor,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(9.0)),
-                                ),
-                              ),
-                          style: FontUtil.signInFieldText,
+                              // focusNode: _schoolUrlFocusNode,
+                              labelText: MyStrings.userName,
+                              //  suffixIconAsset: MyAssets.edit,
                               validator: (url) {
                                 if (url == null || url.isEmpty) {
                                   return MyStrings.userName;
@@ -167,6 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                             14.heightBox,
+
                             TextFormField(
                               obscureText: _obscureText,
                               controller: passWordController,
@@ -211,12 +192,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               style: FontUtil.signInFieldText,
-                              validator: (url) {
-                                if (url == null || url.isEmpty) {
-                                  return MyStrings.passWord;
-                                }
-                                return null;
-                              },
                             ),
                           ],
                         ),
@@ -247,6 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             title: "Sign in",
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
+
                                 context.read<LoginCubit>().logIn(
                                     userNameController.text.trim(),
                                     passWordController.text.toString());
@@ -264,14 +240,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (state is LoginSuccessState) {
                           NavigationService.navigateTo(
                               const NguruDashboardScreen(), context);
-                        } 
-
-                       else if (state is LoginForgetPasswordState) {
+                        } else if (state is LoginForgetPasswordState) {
+                          isFromForgotPassword=false;
                           NavigationService.navigateTo(
                               const ResetPasswordScreen(), context);
-                        } 
-                        
-                        else if (state is LoginErrorState) {
+                        } else if (state is LoginErrorState) {
                           _showSnackBar(context, state.message);
                         }
                       }),

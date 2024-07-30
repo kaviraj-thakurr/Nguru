@@ -22,6 +22,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confiremNewPasswordController = TextEditingController();
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -52,97 +53,254 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 textColor: MyColors.fadedTextColor),
           ),
           14.heightBox,
-          TextFormField(
-            inputFormatters: [LengthLimitingTextInputFormatter(20)],
-            controller: currentPasswordController,
-            // ignore: prefer_const_constructors
-            decoration: InputDecoration(
-              label: const Text(
-                MyStrings.currentpass,
-                style: TextStyle(
-                    fontSize: 15,
-                    // fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                    fontFamily: "Effra_Trial"),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: MyColors.borderColor,
-                ),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-            ),
-            style: FontUtil.signInFieldText,
-          ),
+
+              TextFormField(
+                              obscureText: _obscureText,
+                              controller: currentPasswordController,
+                              decoration: InputDecoration(
+                                label: const Text(
+                                  MyStrings.currentpass,
+                                  style: TextStyle(
+                                      // fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    color: MyColors.passIcon,
+                                    _obscureText
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.signInFieldText,
+                              validator: (url) {
+                                if (url == null || url.isEmpty) {
+                                  return MyStrings.passWord;
+                                }
+                                return null;
+                              },
+                            ),
+          // TextFormField(
+          //   inputFormatters: [LengthLimitingTextInputFormatter(20)],
+          //   controller: currentPasswordController,
+          //   // ignore: prefer_const_constructors
+          //   decoration: InputDecoration(
+          //     label: const Text(
+          //       MyStrings.currentpass,
+          //       style: TextStyle(
+          //           fontSize: 15,
+          //           // fontStyle: FontStyle.italic,
+          //           color: Colors.grey,
+          //           fontFamily: "Effra_Trial"),
+          //     ),
+          //     contentPadding:
+          //         const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+          //     border: const OutlineInputBorder(
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //     enabledBorder: const OutlineInputBorder(
+          //       borderSide: BorderSide(
+          //         color: MyColors.borderColor,
+          //       ),
+          //     ),
+          //     focusedBorder: const OutlineInputBorder(
+          //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //   ),
+          //   style: FontUtil.signInFieldText,
+          // ),
           14.heightBox,
+
           TextFormField(
-            inputFormatters: [LengthLimitingTextInputFormatter(20)],
-            controller: newPasswordController,
-            decoration: const InputDecoration(
-              label: Text(
-                MyStrings.newpass,
-                style: TextStyle(
-                    fontSize: 15,
-                    // fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                    fontFamily: "Effra_Trial"),
-              ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: MyColors.borderColor,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-            ),
-            style: FontUtil.signInFieldText,
-          ),
+                              obscureText: _obscureText,
+                              controller: newPasswordController,
+                              decoration: InputDecoration(
+                                label: const Text(
+                                  MyStrings.newpass,
+                                  style: TextStyle(
+                                      // fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    color: MyColors.passIcon,
+                                    _obscureText
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.signInFieldText,
+                              validator: (url) {
+                                if (url == null || url.isEmpty) {
+                                  return MyStrings.passWord;
+                                }
+                                return null;
+                              },
+                            ),
+          // TextFormField(
+          //   inputFormatters: [LengthLimitingTextInputFormatter(20)],
+          //   controller: newPasswordController,
+          //   decoration: const InputDecoration(
+          //     label: Text(
+          //       MyStrings.newpass,
+          //       style: TextStyle(
+          //           fontSize: 15,
+          //           // fontStyle: FontStyle.italic,
+          //           color: Colors.grey,
+          //           fontFamily: "Effra_Trial"),
+          //     ),
+          //     contentPadding:
+          //         EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //     enabledBorder: OutlineInputBorder(
+          //       borderSide: BorderSide(
+          //         color: MyColors.borderColor,
+          //       ),
+          //     ),
+          //     focusedBorder: OutlineInputBorder(
+          //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //   ),
+          //   style: FontUtil.signInFieldText,
+          // ),
           14.heightBox,
+
+
           TextFormField(
-            inputFormatters: [LengthLimitingTextInputFormatter(20)],
-            controller: confiremNewPasswordController,
-            // ignore: prefer_const_constructors
-            decoration: InputDecoration(
-              label: const Text(
-                MyStrings.confirmnewpass,
-                style: TextStyle(
-                    fontSize: 15,
-                    // fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                    fontFamily: "Effra_Trial"),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: MyColors.borderColor,
-                ),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.all(Radius.circular(9.0)),
-              ),
-            ),
-            style: FontUtil.signInFieldText,
-          ),
+                              obscureText: _obscureText,
+                              controller: confiremNewPasswordController,
+                              decoration: InputDecoration(
+                                label: const Text(
+                                  MyStrings.confirmnewpass,
+                                  style: TextStyle(
+                                      // fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontFamily: "Effra_Trial"),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    color: MyColors.passIcon,
+                                    _obscureText
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 15.0, horizontal: 20.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: MyColors.borderColor,
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.grey, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(9.0)),
+                                ),
+                              ),
+                              style: FontUtil.signInFieldText,
+                              validator: (url) {
+                                if (url == null || url.isEmpty) {
+                                  return MyStrings.passWord;
+                                }
+                                return null;
+                              },
+                            ),
+          // TextFormField(
+          //   inputFormatters: [LengthLimitingTextInputFormatter(20)],
+          //   controller: confiremNewPasswordController,
+          //   // ignore: prefer_const_constructors
+          //   decoration: InputDecoration(
+          //     label: const Text(
+          //       MyStrings.confirmnewpass,
+          //       style: TextStyle(
+          //           fontSize: 15,
+          //           // fontStyle: FontStyle.italic,
+          //           color: Colors.grey,
+          //           fontFamily: "Effra_Trial"),
+          //     ),
+          //     contentPadding:
+          //         const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+          //     border: const OutlineInputBorder(
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //     enabledBorder: const OutlineInputBorder(
+          //       borderSide: BorderSide(
+          //         color: MyColors.borderColor,
+          //       ),
+          //     ),
+          //     focusedBorder: const OutlineInputBorder(
+          //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+          //       borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          //     ),
+          //   ),
+          //   style: FontUtil.signInFieldText,
+          // ),
           30.heightBox,
           BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
               builder: (context, state) {
@@ -173,8 +331,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             if (state is ResetPasswordSuccessState) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Your new password is reset successfully!")));
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Navigator.pop(context);
             } else if (state is ResetPasswordErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Something went wrong!")));

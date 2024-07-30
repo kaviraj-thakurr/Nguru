@@ -176,14 +176,14 @@ class AuthRepo {
         url:
             "https://qsstg.niiteducation.com/mobileappservice/Api/Attendance/GetCumulativeAttendance",
         data: {
-          {
+          
             "userID": 118011,
             "schoolID": 1,
             "studentID": 106045,
             "sessionID": 178,
             "schoolURL": "https://qsstg.iiteducation.com/tistnj",
             "pageNumber": 0
-          }
+          
         },
       );
 

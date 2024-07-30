@@ -18,7 +18,7 @@ Widget attendenceAndFeeCard(BuildContext context,
       borderRadius: BorderRadius.circular(10.0),
       border: Border.all(
         color: MyColors.boarderColor,
-        width: 2.0,
+        width: 1.0,
       ),
     ),
     child: Row(
