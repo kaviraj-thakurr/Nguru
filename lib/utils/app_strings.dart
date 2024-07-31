@@ -38,4 +38,36 @@ class MyStrings {
   static const String infirmarysub =
       "Regular medical \n checkups 🩺 are \n necessary.";
   static const String gallerysub = "Your moments of\n happiness are here🖼️";
+
+
+  static const String notAvailable = "N/A";
+  static const String adddress = "Address";
+    static const String email = "Email";
+      static const String mobileNumber = "Mobile Number";
+        static const String landlineNumber = "Landline Number";
+
+
+
+
+
+
+
+
+
+
+      static const String error = "Some error occured!";
+      static const String undefinedState = "Some undefined state error!";
+      static const String asssignment = "Assignment";
+      static const String endDate = "End Date";
+      static const String date = "Date";
+      static const String circular = "Circular";
+      static const String discipline = "Discipline";
+      static const String teacherName = "Teacher Name";
+      static const String reason= "Reason";
+      static const String points= "Points";
+      static const String photoGallery= "Photo Gallery";
+      static const String noSchoolPhotoAvailable= "Sorry no school photo available!";
+      static const String unableTOOpenTheMail= "Unable to open the email";
+      static const String couldNotLaunch= "Could not launch";
+
 }

@@ -1,13 +1,12 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
+import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:story_view/controller/story_controller.dart';
 
@@ -21,12 +20,6 @@ class AssignmentStoryScreen extends StatefulWidget {
 }
 
 class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -37,7 +30,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
           floatingActionButton: GestureDetector(
               onTap: () => widget.storyController?.next(),
               child: SvgPicture.asset(
-                "assets/images/back.svg",
+                MyAssets.backArrow,
               )),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -47,7 +40,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Container(
+                  child: SizedBox(
                     width: screenWidth * 0.45,
                     height: screenHeight * 0.1,
                     child: Row(
@@ -55,7 +48,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SvgPicture.asset(
-                          "assets/icons/assignment_icon.svg",
+                          MyAssets.assignmentIcon,
                           width: 35,
                           height: 35,
                         ),
@@ -64,7 +57,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                         ),
                         Flexible(
                             child: Text(
-                          "Assignment",
+                          MyStrings.asssignment,
                           style: FontUtil.customStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
@@ -77,7 +70,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                 ),
                 Flexible(
                   flex: 3,
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     height: screenHeight * 0.9,
                     child: Column(
@@ -85,7 +78,10 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                     widget.subject?.assignments?.first.assignmentName !=null ?    "${widget.subject?.assignments?.first.assignmentName }" : "N/A",
+                          widget.subject?.assignments?.first.assignmentName !=
+                                  null
+                              ? "${widget.subject?.assignments?.first.assignmentName}"
+                              : MyStrings.notAvailable,
                           textAlign: TextAlign.center,
                           style: FontUtil.customStyle(
                               fontSize: 20,
@@ -93,28 +89,33 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                               textColor: Colors.black),
                         ),
                         Text(
-                    widget.subject?.assignments?.first.assignmentDetail !=null ?   removeHtmlTags("${widget.subject?.assignments?.first.assignmentDetail }") :  "N/A",
+                          widget.subject?.assignments?.first.assignmentDetail !=
+                                  null
+                              ? removeHtmlTags(
+                                  "${widget.subject?.assignments?.first.assignmentDetail}")
+                              : MyStrings.notAvailable,
                           textAlign: TextAlign.center,
                           style: FontUtil.customStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               textColor: MyColors.fadedTextColor),
                         ),
-                        Container(
+                        SizedBox(
                           height: screenHeight * 0.12,
                           width: screenWidth * 0.9,
                           child: Card(
                             elevation: 10,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(padding8),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Image.asset("assets/icons/assignment.png"),
+                                  Image.asset(MyAssets.assignmentImage),
                                   Flexible(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -123,11 +124,17 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                                         ),
                                         Flexible(
                                             child: Text(
-                                             widget.subject?.assignments?.first.assignmentDetail !=null ?  removeHtmlTags("${widget.subject?.assignments?.first.assignmentDetail }") :  "N/A",
+                                          widget.subject?.assignments?.first
+                                                      .assignmentDetail !=
+                                                  null
+                                              ? removeHtmlTags(
+                                                  "${widget.subject?.assignments?.first.assignmentDetail}")
+                                              : MyStrings.notAvailable,
                                           style: FontUtil.customStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
-                                              textColor: MyColors.boldTextColor),
+                                              textColor:
+                                                  MyColors.boldTextColor),
                                           overflow: TextOverflow.ellipsis,
                                         )),
                                         Row(
@@ -138,7 +145,11 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                                               color: MyColors.greyShade_3,
                                             ),
                                             Text(
-                                                 widget.subject?.assignments?.first.endDate !=null ?   " End Date: ${widget.subject?.assignments?.first.endDate }" :  "N/A",
+                                              widget.subject?.assignments?.first
+                                                          .endDate !=
+                                                      null
+                                                  ? " ${MyStrings.endDate}: ${widget.subject?.assignments?.first.endDate}"
+                                                  : MyStrings.notAvailable,
                                               style: FontUtil.customStyle(
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w400,
@@ -154,9 +165,9 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Spacer(),
+                                      const Spacer(),
                                       SvgPicture.asset(
-                                        "assets/icons/download.svg",
+                                        MyAssets.downloadIcon,
                                         height: 25,
                                         width: 25,
                                       ),

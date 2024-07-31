@@ -5,7 +5,7 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';

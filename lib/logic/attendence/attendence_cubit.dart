@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:nguru/logic/attendence/attendence_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 
 class AttendanceCubit extends Cubit<AttendanceState> {

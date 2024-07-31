@@ -10,7 +10,7 @@ import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
-import 'package:nguru/screens/attendence_screen.dart';
+import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';

@@ -35,5 +35,17 @@ class MyAssets {
 
 
 
+
+
+  static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+  static const String floatingActionBackIcon = "assets/icons/floating_action_button.svg";
+  static const String backArrow = "assets/images/back.svg";
+  static const String assignmentIcon = "assets/icons/assignment_icon.svg";
+  static const String assignmentImage = "assets/icons/assignment.png";
+  static const String downloadIcon = "assets/icons/download.svg";
+  static const String floatingActionDownloadButton= "assets/icons/floating_action_down_button.svg";
+  static const String callIcon= "assets/icons/call_icon.svg";
+  static const String messageIcon= "assets/icons/message_icon.svg";
+
   
 }

@@ -67,6 +67,7 @@ class _CircularScreenState extends State<CircularCalendar> {
                   fontWeight: FontWeight.w200,
                   textColor: MyColors.fadedTextColor),
               selectedTextStyle: FontUtil.customStyle(
+                  decoration: TextDecoration.underline,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   textColor: Colors.blue),

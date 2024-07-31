@@ -15,11 +15,15 @@ import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
+import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
+import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/screens/contact_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
+import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
+import 'package:nguru/screens/testing_story.dart';
 
 
 void main() {
@@ -82,16 +86,8 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             home:
-              //  ContactScreen()
-                //    TimetableScreen()
-                //   CircularScreen()
-                //  CircularCalendar()
-                //AssignmentScreen()
-            const   NguruDashboardScreen()
-         //  const SettingScreen()
-           
-
-        //  AddSchool(),
+            //  BarChartExample()
+           const NguruDashboardScreen()
             ),
       ),
     );

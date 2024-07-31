@@ -67,6 +67,8 @@ class FontUtil {
     required FontWeight fontWeight,
     required Color textColor,
     String? fontFamily,
+    TextDecoration? decoration, 
+    
     
   }) {
     return TextStyle(
@@ -74,6 +76,10 @@ class FontUtil {
       fontWeight: fontWeight,
       color: textColor,
       fontFamily: "Effra_Trial",
+      decoration: decoration,
+      decorationColor: Colors.blue, // Set the underline color
+                decorationThickness: 1, // Set the underline thickness
+               
     );
   }
 

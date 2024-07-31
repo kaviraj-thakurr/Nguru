@@ -9,7 +9,7 @@ import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.da
 import 'package:nguru/logic/login_cubit/login_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 class AssignmentListCubit extends Cubit<AssignmentListState> {
   final AuthRepo?  authRepo;

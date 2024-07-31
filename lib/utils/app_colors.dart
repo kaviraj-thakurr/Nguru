@@ -32,6 +32,26 @@ class MyColors {
   static const Color boarderColor = Color(0xFFEBEBEB);
   static const Color monthNameColor = Color(0xFF333333);
  
+ // discipline screen
+   static  const Color redShade_1 = Color(0xFFFF3D3D);
+    static  const Color yellowShade_1 = Color(0xFFF9AB43);
+
+
+// fee screen
+  static const Gradient arcGradient_1 = LinearGradient(
+    colors: <Color>[Color(0xFF0160AE), Color(0xFF8D449A)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+static const Color arc_1 = Color(0xFF0160AE);
+static const Color arc_2= Color(0xFF8D449A);
+static const Color arc_3= Color(0xFF0261AE);
+static const Color arc_4= Color(0xFFA0CB7C);
+static const Color arc_5= Color(0xFFFF7E00);
+static const Color arc_6= Color(0xFFFF4A45);
+static const Color blueShade_2= Color(0xFF0160AE);
+static const Color yellowShade_2= Color(0xFFF9AB43);
 
 //text colors
   static const Color boldTextColor = Color(0xFF242424);

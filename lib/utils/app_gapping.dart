@@ -75,6 +75,8 @@ const double paddingSize18 = 18;
 const double paddingSize20 = 20;
 const double paddingRegularLarge18 = 18;
 
+
+const double padding8 = 8.0;
 const double padding13 = 13;
 const double padding18 = 18;
 const double padding19 = 19;

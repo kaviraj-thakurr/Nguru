@@ -2,7 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/push_notification/push_notification_state.dart';
 import 'package:nguru/logic/reset_password/reset_password_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 class PushNotificationCubit extends Cubit<PushNotificationState>{
   final AuthRepo ? authRepo;

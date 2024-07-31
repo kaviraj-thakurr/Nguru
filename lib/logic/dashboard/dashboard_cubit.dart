@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/models/dashboard_model.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
