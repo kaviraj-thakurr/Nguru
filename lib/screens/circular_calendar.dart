@@ -208,7 +208,7 @@ class _CircularScreenState extends State<CircularCalendar> {
           style: FontUtil.customStyle(
               fontSize: 11,
               fontWeight: FontWeight.w400,
-              textColor: MyColors.textcolors),
+              textColor: MyColors.textColors),
         ),
       ],
     );

@@ -8,8 +8,8 @@ import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.da
 
 import 'package:nguru/logic/login_cubit/login_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
+import 'package:nguru/repo/api_calls.dart';
 
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 
 class AssignmentListCubit extends Cubit<AssignmentListState> {
   final AuthRepo?  authRepo;
@@ -26,13 +26,13 @@ class AssignmentListCubit extends Cubit<AssignmentListState> {
         if(result.responseCode == "200" ){
           emit(AssignmentListSuccessState(subjectList: result.subjectList ?? []));
         }else {
-emit(AssignmenListErrorState(result.responseMessage ?? "Error occured"));
+emit(AssignmentListErrorState(result.responseMessage ?? "Error occured"));
         }
         log("${result.subjectList}");
         
       }
     } catch (e) {
-      emit(AssignmenListErrorState(e.toString()));
+      emit(AssignmentListErrorState(e.toString()));
     }
   }
 }

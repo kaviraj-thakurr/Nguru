@@ -143,7 +143,7 @@ class _CircularStoryScreenState extends State<CircularStoryScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Spacer(),
+                                    const  Spacer(),
                                       SvgPicture.asset(
                                         "assets/icons/download.svg",
                                         height: 25,

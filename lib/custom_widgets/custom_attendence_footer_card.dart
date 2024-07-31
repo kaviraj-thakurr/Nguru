@@ -35,7 +35,7 @@ Widget customAttendenceFooterCard(BuildContext context,
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      textColor: MyColors.textcolors),
+                      textColor: MyColors.textColors),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,

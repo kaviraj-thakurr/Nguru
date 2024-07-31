@@ -11,6 +11,7 @@ import 'package:nguru/logic/contact_us_cubit/contact_us_state.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -110,7 +111,7 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
     return Scaffold(
       floatingActionButton: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
+          child: SvgPicture.asset(MyAssets.floatingActionIcon)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Stack(
         children: [
@@ -134,9 +135,9 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                     state.contactUs.mobileNumber ?? "",
                     state.contactUs.landlineNumber ?? "");
               } else if (state is ContactUsErrorState) {
-                return const Text("Error state");
+                return const Text(MyStrings.error);
               } else {
-                return const Center(child: Text("Undefined state"));
+                return const Center(child: Text(MyStrings.undefinedState));
               }
             },
           ),

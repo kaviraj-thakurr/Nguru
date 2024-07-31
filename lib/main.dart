@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/attendence/attendence_cubit.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
+import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
-import 'package:nguru/screens/addSchool_screen.dart';
+import 'package:nguru/repo/api_calls.dart';
+import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'logic/assignment/assignments_list/asssignment_list_cubit.dart';
 import 'logic/circular/circular_cubit.dart';
@@ -74,6 +75,10 @@ class MyApp extends StatelessWidget {
 
           BlocProvider(
           create: (context) => AttendanceCubit(AuthRepo()),
+        ),
+
+           BlocProvider(
+          create: (context) => FormValidationCubit(),
         ),
       ],
       child: ScreenUtilInit(

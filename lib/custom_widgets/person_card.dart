@@ -9,7 +9,7 @@ Widget personInfoCard(
     String personName,
     String classAndSection,
     String idNo,
-    Function(String) onNameChange,
+   // Function(String) onNameChange,
     ) {
  
 
@@ -95,13 +95,13 @@ Widget personInfoCard(
                   style: FontUtil.customStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
-                      textColor: MyColors.textcolors)),
+                      textColor: MyColors.textColors)),
               const Spacer(),
               Text(idNo,
                   style: FontUtil.customStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
-                      textColor: MyColors.textcolors)),
+                      textColor: MyColors.textColors)),
             ],
           ),
         ),

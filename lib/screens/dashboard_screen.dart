@@ -16,16 +16,16 @@ import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/fees/fees_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
-import 'package:nguru/screens/attendence_screen.dart';
+import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
-import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
-
 import 'package:nguru/screens/time_table_screen.dart';
+
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -76,7 +76,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
               )),
               SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.all(padding18),
                   child: Column(
                     children: [
                       dashboardAppBar(),
@@ -103,9 +103,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 "${state.studentName}",
                                 "${state.qualification} ${state.section}",
                                 "${state.admissionNumber}",
-                                (String newName) {
-                                  setState(() {});
-                                },
+                               
                               ),
                             ),
                             Column(
@@ -114,11 +112,11 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 Flexible(
                                   flex: 5,
                                   child: GestureDetector(
-                                    // onTap: () => Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) =>
-                                    //             const AttendenceScreen())),
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AttendenceScreen())),
                                     child: BlocConsumer<AttendanceCubit,
                                         AttendanceState>(
                                       listener: (context, state) {
@@ -140,7 +138,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                             context,
                                             mainText:
                                                 "${state.overAllPercentage}%",
-                                            footerText: "Attendance",
+                                            footerText: MyStrings.attendence,
                                             isFeeCard: false,
                                           );
                                         }
@@ -180,18 +178,18 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
 
                                       return attendenceAndFeeCard(
                                         context,
-                                        headerText: "ssss",
+                                        headerText: MyStrings.error,
                                         mainText:
                                             "${percetageOFFee.toStringAsFixed(2)}%",
-                                        footerText: "Fees Paid",
+                                        footerText: MyStrings.feePaid,
                                         isFeeCard: true,
                                       );
                                     } else if (state is FeesErrorState) {
                                       return attendenceAndFeeCard(
                                         context,
-                                        headerText: "Error",
-                                        mainText: "Error",
-                                        footerText: "Error",
+                                        headerText:MyStrings.error,
+                                        mainText: MyStrings.error,
+                                        footerText: MyStrings.error,
                                         isFeeCard: true,
                                       );
                                     }
@@ -211,7 +209,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                         children: [
                           const StoryScreen(),
                           18.heightBox,
-                          Container(
+                          SizedBox(
                             height: screenHeight * 0.17,
                             width: screenWidth,
                             child: Row(
@@ -225,8 +223,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   isPngImage: false,
                                   icon: Icons.arrow_forward,
                                   onIconPressed: () {
-                                    // NavigationService.navigateTo(
-                                    //     const TimetableScreen(), context);
+                                    NavigationService.navigateTo(
+                                        const TimetableScreen(), context);
                                   },
                                   cardWidth: screenWidth * 0.5,
                                   cardHeight: double.maxFinite,
@@ -238,7 +236,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   title: state.dashboardList?[6]
                                           ['dashboardItem'] ??
                                       "",
-                                  content: MyStrings.examinationsub,
+                                  content: MyStrings.examinationSub,
                                   isPngImage: true,
                                   icon: Icons.arrow_forward,
                                   cardHeight: double.maxFinite,
@@ -261,15 +259,15 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   context: context,
                                   title: state.dashboardList?[8]
                                           ['dashboardItem'] ??
-                                      "MyStrings.calender",
-                                  content: MyStrings.calendarsub,
+                                      MyStrings.calender,
+                                  content: MyStrings.calendarSub,
                                   isPngImage: false,
                                   icon: Icons.arrow_forward,
                                   cardHeight: double.maxFinite,
                                   cardWidth: screenWidth * 0.35,
                                   onIconPressed: () {
-                                    // NavigationService.navigateTo(
-                                    //     CircularScreen(), context);
+                                    NavigationService.navigateTo(
+                                        CircularScreen(), context);
                                   },
                                   image: MyAssets.calendar,
                                 ),
@@ -280,7 +278,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     title: state.dashboardList?[9]
                                             ['dashboardItem'] ??
                                         MyStrings.activity,
-                                    content: MyStrings.activitysub,
+                                    content: MyStrings.activitySub,
                                     isPngImage: false,
                                     icon: Icons.arrow_forward,
                                     onIconPressed: () {
@@ -305,7 +303,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     title: state.dashboardList?[10]
                                             ['dashboardItem'] ??
                                         MyStrings.Library,
-                                    content: MyStrings.Librarysub,
+                                    content: MyStrings.librarySub,
                                     isPngImage: false,
                                     icon: Icons.arrow_forward,
                                     onIconPressed: () {
@@ -337,7 +335,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     title: state.dashboardList?[13]
                                             ['dashboardItem'] ??
                                         MyStrings.infirmary,
-                                    content: MyStrings.gallerysub,
+                                    content: MyStrings.gallerySub,
                                     isPngImage: false,
                                     icon: Icons.arrow_forward,
                                     onIconPressed: () {
@@ -409,7 +407,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                       },
                       child: Icon(
                         icon,
-                        color: Colors.white,
+                        color: MyColors.white,
                       ),
                     ),
                     color: Colors.transparent,

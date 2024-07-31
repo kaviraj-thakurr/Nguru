@@ -82,7 +82,7 @@ Widget attendanceMonthCard(
               style: FontUtil.customStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  textColor: MyColors.textcolors),
+                  textColor: MyColors.textColors),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               softWrap: true,
@@ -92,7 +92,7 @@ Widget attendanceMonthCard(
               style: FontUtil.customStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
-                  textColor: MyColors.textcolors),
+                  textColor: MyColors.textColors),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               softWrap: true,

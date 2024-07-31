@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
@@ -14,6 +13,7 @@ import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_strings.dart';
 
 import 'package:story_view/story_view.dart';
 
@@ -42,27 +42,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      floatingActionButton:
-          GestureDetector(
-            onTap: ()=> Navigator.pop(context),
-            child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
+      floatingActionButton: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: SvgPicture.asset(MyAssets.storyDownload)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      
-      body: Stack(
-        children: [
-          Positioned.fill(
-                  child: Image.asset(
-                MyAssets.bg,
-                fit: BoxFit.fill,
-              )),
-          Padding(
+      body: Stack(children: [
+        Positioned.fill(
+            child: Image.asset(
+          MyAssets.bg,
+          fit: BoxFit.fill,
+        )),
+        Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               dashboardAppBar(),
-        
               CustomSearchBar(controller: _searchController),
-              screenTitleHeader("Photo Gallery",onPressed: ()=>Navigator.pop(context)),
+              screenTitleHeader(MyStrings.photogallery,
+                  onPressed: () => Navigator.pop(context)),
               Flexible(
                 child: BlocBuilder<GalleryPhotosCubit, GalleryPhotosState>(
                   builder: (context, state) {
@@ -84,7 +81,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           final firstPhoto = galleryItem.photoList!.isNotEmpty
                               ? galleryItem.photoList![0].photo
                               : null;
-        
+
                           return GestureDetector(
                               onTap: () => Navigator.push(
                                   context,
@@ -93,14 +90,18 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                           screenHeight,
                                           screenWidth,
                                           galleryItem))),
-                              child: customPhotoWidget(screenHeight, screenWidth,
-                                  firstPhoto, galleryItem.description ?? ""));
+                              child: customPhotoWidget(
+                                  screenHeight,
+                                  screenWidth,
+                                  firstPhoto,
+                                  galleryItem.description ?? ""));
                         },
                       );
                     } else if (state is GalleryPhotosErrorState) {
                       return Center(child: Text(state.message));
                     } else {
-                      return Center(child: Text("Unknown error occurred"));
+                      return const Center(
+                          child: Text(MyStrings.somethingWentWrong));
                     }
                   },
                 ),
@@ -108,8 +109,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ],
           ),
         ),
-        ]
-      ),
+      ]),
     );
   }
 
@@ -119,7 +119,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey,
+            color: MyColors.grey,
             borderRadius: BorderRadius.circular(12.0),
             border: Border.all(
               color: MyColors.borderColor,
@@ -160,11 +160,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
     log("perticular story count: ${photos.length}");
     return Scaffold(
-       floatingActionButton:
-          GestureDetector(
-            onTap: ()=> Navigator.pop(context),
-            child: SvgPicture.asset("assets/icons/floating_action_down_button.svg")),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: SvgPicture.asset(MyAssets.floatingActionDownloadButton)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: StoryView(
           indicatorForegroundColor: MyColors.appColorBlue,
           storyItems: stoyItems,

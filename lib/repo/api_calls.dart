@@ -15,6 +15,7 @@ import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/notification_models.dart';
 import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
+import 'package:nguru/services/end_url.dart';
 import 'package:nguru/services/networking.dart';
 import 'package:nguru/utils/app_const.dart';
 
@@ -33,7 +34,7 @@ class AuthRepo {
     try {
       final res = await _myService.networkPost(
         url:
-            "https://quickschool.niitnguru.com/mobileappservice/Api/School/GetDetail/",
+          EndUrl.addSchool,
         data: {
           "schoolURL": fullSchoolUrl,
         },

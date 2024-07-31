@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 class Networking {
   final _dio = Dio();
   late Response response;
+  final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
 
   //Api fun for post API
   Future<dynamic> networkPost(
@@ -15,7 +16,7 @@ class Networking {
 
     try {
       response = await _dio.post(
-        url,
+        baseUrl+url,
         data: data,
         options: Options(headers: headers),
       );
@@ -38,7 +39,7 @@ class Networking {
     final headers = {'Authorization': "$token"};
     try {
       response = await _dio.get(
-        url,
+        baseUrl+url,
         queryParameters: params,
         data: data,
         options: Options(headers: headers),

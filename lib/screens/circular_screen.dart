@@ -198,8 +198,8 @@ class _CircularScreenState extends State<CircularScreen> {
                     style: FontUtil.customStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        textColor: MyColors.pagenocolor,
-                        fontFamily: "Effra_Trial"),
+                        textColor: MyColors.pageNoColor,
+                        fontFamily: APP_FONT),
                   ),
                   IconButton(
                       onPressed: () {},
@@ -227,7 +227,7 @@ class _CircularScreenState extends State<CircularScreen> {
       // width: MediaQuery.sizeOf(context).width * 0.5,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: MyColors.searchbackgroundColor,
+        color: MyColors.searchBackGroundColor,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

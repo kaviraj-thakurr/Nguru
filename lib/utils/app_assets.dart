@@ -4,7 +4,8 @@ class MyAssets {
   const MyAssets._();
 
 //images
-static const String download = "assets/icons/download.svg";
+  static const String download = "assets/icons/download.svg";
+  static const String defaultUrl = "https://quickschool.niitnguru.com/";
   static const String signIN = "assets/images/signIn.svg";
   static const String schoolLogo = "assets/images/school.svg";
   static const String niitLogo = "assets/images/niitlogos.png";
@@ -35,4 +36,17 @@ static const String download = "assets/icons/download.svg";
   static const String school = "assets/icons/school.svg";
   static const String back_arrow = "assets/icons/back_arrow.svg";
   static const String front_arrow = "assets/icons/front_arrow.svg";
+  static const String storyDownload = "assets/icons/floating_action_button.svg";
+  static const String floatingActionDownloadButton = "assets/icons/floating_action_down_button.svg";
+      static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+
+
+
+
+
+
+
+      
+
+
 }

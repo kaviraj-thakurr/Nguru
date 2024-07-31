@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:nguru/logic/login_cubit/login_state.dart';
 import 'package:nguru/logic/reset_password/reset_password_state.dart';
-
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/app_utils.dart';
 
 class LoginCubit extends Cubit<LoginState> {

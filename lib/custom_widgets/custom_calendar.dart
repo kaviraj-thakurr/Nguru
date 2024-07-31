@@ -205,7 +205,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
           style: FontUtil.customStyle(
               fontSize: 11,
               fontWeight: FontWeight.w400,
-              textColor: MyColors.textcolors),
+              textColor: MyColors.textColors),
         ),
       ],
     );

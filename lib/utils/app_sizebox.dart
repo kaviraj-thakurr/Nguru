@@ -69,3 +69,5 @@ class AppGapping {
     height: 60.h,
   );
 }
+
+double padding18 = 18;

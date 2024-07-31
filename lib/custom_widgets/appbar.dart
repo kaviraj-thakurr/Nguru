@@ -47,7 +47,7 @@ class _CustomAppBarState extends State<Appbar> {
               Text("ANU DRAVID", style: FontUtil.customStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          textColor: MyColors.sessiontext),
+                          textColor: MyColors.sessionText),
                     ),
               8.widthBox,
              

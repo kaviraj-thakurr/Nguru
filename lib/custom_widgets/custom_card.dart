@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nguru/utils/app_colors.dart'; // Assuming this is where MyColors is imported from
+import 'package:nguru/utils/app_colors.dart';
+import 'package:nguru/utils/app_sizebox.dart'; // Assuming this is where MyColors is imported from
 
 Widget customCardssssss({
   required BuildContext context,
@@ -44,7 +45,8 @@ width: 19,
               ),
             ],
           ),
-          SizedBox(height: 8),
+        AppGapping.padding8,
+          //SizedBox(height: 8),
           Text(
             content,
             style: TextStyle(

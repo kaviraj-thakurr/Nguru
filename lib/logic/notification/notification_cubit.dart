@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 class NotificationCubit extends Cubit<NotificationState>{
   final AuthRepo ? authRepo;

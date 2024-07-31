@@ -22,6 +22,7 @@ import 'package:nguru/screens/story/discipline_story_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/border_painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,8 +51,8 @@ class _StoryScreenState extends State<StoryScreen>
   int todaysDate = DateTime.now().day;
   bool todayAssignmentAdded = false;
   static const _tempFileName = 'TempFile.pdf';
-  static const _testFileName = 'TestFile.pdf';
   static const _testWithDialogFileName = 'TestFileWithDialog.pdf';
+  bool _isNavigating = false;
 
   Future<void> requestPermissions() async {
     if (Platform.isAndroid) {
@@ -65,7 +66,7 @@ class _StoryScreenState extends State<StoryScreen>
         log("$dir");
         // file = File('${dir.path}/$fileName');
       } else
-        await Permission.storage.request();
+       { await Permission.storage.request();}
     }
   }
 
@@ -88,76 +89,77 @@ class _StoryScreenState extends State<StoryScreen>
 // }
 
   /// Create example file in temporary directory to work with
-  void _createTempPressed() async {
-    final folder = await getTemporaryDirectory();
-    final filePath = '${folder.path}/$_tempFileName';
-    final file = File(filePath);
-    final raf = await file.open(mode: FileMode.writeOnlyAppend);
-    await raf.writeString('string\n');
-    await raf.close();
+  
 
-    log('Created temp file: ${file.path}');
-    setState(() {});
-  }
+  // void _createTempPressed() async {
+  //   final folder = await getTemporaryDirectory();
+  //   final filePath = '${folder.path}/$_tempFileName';
+  //   final file = File(filePath);
+  //   final raf = await file.open(mode: FileMode.writeOnlyAppend);
+  //   await raf.writeString('string\n');
+  //   await raf.close();
 
-  /// Check permission and request it if needed
-  void _onCheckPermissionPressed() async {
-    final granted = await CRFileSaver.requestWriteExternalStoragePermission();
+  //   log('Created temp file: ${file.path}');
+  //   setState(() {});
+  // }
 
-    log('requestWriteExternalStoragePermission: $granted');
-  }
+ 
+  // void _onCheckPermissionPressed() async {
+  //   final granted = await CRFileSaver.requestWriteExternalStoragePermission();
 
-  /// Save created file from temporary directory to downloads folder on Android
-  /// or to Documents on IOS
-  void _onSaveFilePressed() async {
-    final folder = await getTemporaryDirectory();
-    final filePath = '${folder.path}/$_tempFileName';
-    try {
-      final file = await CRFileSaver.saveFile(
-        filePath,
-        destinationFileName: _testFileName,
-      );
-      log('Saved to $file');
-    } on PlatformException catch (e) {
-      log('file saving error: ${e.code}');
-    }
-  }
+  //   log('requestWriteExternalStoragePermission: $granted');
+  // }
+
+
+  // void _onSaveFilePressed() async {
+  //   final folder = await getTemporaryDirectory();
+  //   final filePath = '${folder.path}/$_tempFileName';
+  //   try {
+  //     final file = await CRFileSaver.saveFile(
+  //       filePath,
+  //       destinationFileName: _testFileName,
+  //     );
+  //     log('Saved to $file');
+  //   } on PlatformException catch (e) {
+  //     log('file saving error: ${e.code}');
+  //   }
+  // }
 
   /// Save created file from temporary directory to downloads folder on Android
   /// or to Documents on IOS with native dialog
-  void _onSaveWithDialogPressed() async {
-    final folder = await getTemporaryDirectory();
-    final filePath = '${folder.path}/$_tempFileName';
-    String? file;
+//   void _onSaveWithDialogPressed() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     String? file;
 
-    //   final pdf = pw.Document();
+//     //   final pdf = pw.Document();
 
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) => pw.Center(
-//         child: pw.Text(textContent),
-//       ),
-//     ),
-//   );
+// //   pdf.addPage(
+// //     pw.Page(
+// //       build: (pw.Context context) => pw.Center(
+// //         child: pw.Text(textContent),
+// //       ),
+// //     ),
+// //   );
 
-    try {
-      file = await CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
-        sourceFilePath: filePath,
-        destinationFileName: _testWithDialogFileName,
-      ));
-      log('Saved to $file');
-    } catch (error) {
-      log('Error: $error');
-    }
-  }
+//     try {
+//       file = await CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
+//         sourceFilePath: filePath,
+//         destinationFileName: _testWithDialogFileName,
+//       ));
+//       log('Saved to $file');
+//     } catch (error) {
+//       log('Error: $error');
+//     }
+//   }
 
-  Future<bool> _checkIsTempFileExists() async {
-    final folder = await getTemporaryDirectory();
-    final filePath = '${folder.path}/$_tempFileName';
-    final file = File(filePath);
+//   Future<bool> _checkIsTempFileExists() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     final file = File(filePath);
 
-    return file.exists();
-  }
+//     return file.exists();
+//   }
 
   @override
   void initState() {
@@ -252,9 +254,9 @@ class _StoryScreenState extends State<StoryScreen>
               ],
             );
           } else if (state is AssignmentMonthListErrorState) {
-            return const Center(child: Text("Error state"));
+            return const Center(child: Text(MyStrings.error));
           } else {
-            return const Center(child: Text("Undefined state"));
+            return const Center(child: Text(MyStrings.undefinedState));
           }
         },
       ),
@@ -292,7 +294,8 @@ class _StoryScreenState extends State<StoryScreen>
 
           return GestureDetector(
             onTap: () {
-              if (listData.isNotEmpty) {
+              if (listData.isNotEmpty && !_isNavigating) {
+                _isNavigating = true;
                 if (animationController.isAnimating) {
                   animationController.stop();
                 } else {
@@ -304,7 +307,9 @@ class _StoryScreenState extends State<StoryScreen>
                     context,
                     MaterialPageRoute(
                         builder: (context) => showStoryScreen(listData)),
-                  );
+                  ).then((_) {
+                    _isNavigating = false;
+                  });
                   animationController.stop();
                 });
               }
@@ -335,7 +340,11 @@ class _StoryScreenState extends State<StoryScreen>
                       width: 45,
                       height: 45,
                       decoration: BoxDecoration(
-                        color: title == "Assignments" ? MyColors.assignmentColor : title == "Circular" ? MyColors.circularColor : MyColors.disciplineColor,
+                        color: title == "Assignments"
+                            ? MyColors.assignmentColor
+                            : title == "Circular"
+                                ? MyColors.circularColor
+                                : MyColors.disciplineColor,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Center(
@@ -346,16 +355,19 @@ class _StoryScreenState extends State<StoryScreen>
                   ],
                 ),
                 AppGapping.padding3,
-                Text(title,style: FontUtil.storyTitle,),
+                Text(
+                  title,
+                  style: FontUtil.storyTitle,
+                ),
               ],
             ),
           );
-        } else if (state is AssignmenListErrorState ||
+        } else if (state is AssignmentListErrorState ||
             state is CircularErrorState ||
             state is DisciplineErrorState) {
-          return const Center(child: Text("Error state"));
+          return const Center(child: Text(MyStrings.error));
         } else {
-          return const Center(child: Text("Undefined state"));
+          return const Center(child: Text(MyStrings.undefinedState));
         }
       },
     );
@@ -391,7 +403,7 @@ class _StoryScreenState extends State<StoryScreen>
         //     child: GestureDetector(
         //       onTap: ()=> _onSaveWithDialogPressed(),
         //       child: SvgPicture.asset(
-                
+
         //         "assets/icons/download.svg",
         //         height: 25,
         //         width: 25,)),),

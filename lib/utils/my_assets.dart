@@ -28,6 +28,8 @@ class MyAssets {
   static const String bookz = "assets/images/bookz.png";
 
   //icons
+    static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+
   static const String edit = "assets/icons/edit.svg";
   static const String seen = "assets/icons/eye_seen.svg";
   static const String drop_down_arrow = "assets/icons/drop_down_arrow.svg";
@@ -41,5 +43,5 @@ class MyAssets {
 
   //icons
   static const String homeIcon = "assets/icons/home.svg";
-  static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+  
 }

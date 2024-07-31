@@ -1,20 +1,18 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class MyColors {
   const MyColors._();
 
-  static const Color sessiontext = Color(0xFF231F20);
-  static  Color customdataColor = Color(0xFF070707).withOpacity(0.7);
-  static const Color assignmentdateColor = Color(0xFF0160AE);
+  static const Color sessionText = Color(0xFF231F20);
+  static const Color grey = Colors.grey;
+  static  Color customDataColor = Color(0xFF070707).withOpacity(0.7);
+  static const Color assignmentDateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
-  static const Color searchbox = Color(0xFFF3F3F3);
+  static const Color searchBox = Color(0xFFF3F3F3);
   static const Color borderColor = Color(0xFFD7D7D7);
-  static  Color textcolors = Color(0xFF070707).withOpacity(0.7);
-  static Color storyfotter = Color(0xFF231F20).withOpacity(0.8);
+  static  Color textColors = Color(0xFF070707).withOpacity(0.7);
+  static Color storyFotter = Color(0xFF231F20).withOpacity(0.8);
   static const Color buttonColor = Color(0xFF7A7A7A);
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
@@ -23,13 +21,14 @@ class MyColors {
   static const Color appColorBlue = Color(0xFF0160AE);
   static const Color appColor1 = Color(0xFF0160AE);
   static const Color appColor2 = Color(0xFFA0CA7B);
-  static const Color cardsubTitle = Color(0xFF323232);
+  static const Color cardSubTitle = Color(0xFF323232);
   static const Color cardTitle = Color(0xFF111111);
   static const Color circular = Color(0xFF333333);
-  static const Color circularsubttile = Color(0xFF242424);
+  static const Color circularSubTittle = Color(0xFF242424);
+  
 
   static const Color search = Color(0xFFA1A1A1);
-  static const Color searchbackgroundColor = Color(0xFFF3F3F3);
+  static const Color searchBackGroundColor = Color(0xFFF3F3F3);
 
   //calendar screen colors
    static const Color calendarFooterCard = Color(0xFFF4F4F4);
@@ -53,11 +52,11 @@ class MyColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color greyShade_3 = Color(0xFFAAAAAA);
   static const Color forgotColor = Color(0xFF3E3E3E);
-  static const Color pagenocolor = Color(0xFF606060);
+  static const Color pageNoColor = Color(0xFF606060);
 
   //calendar screen colors
 
-  static const Color forgetpassword = Color(0xFF0160AE);
+  static const Color forgetPassword = Color(0xFF0160AE);
   static const Color passIcon = Color(0xFF858585);
 
   //container boarder color

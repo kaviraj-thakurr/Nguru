@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
+import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/forgot_password.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
@@ -11,6 +11,7 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
+import 'package:nguru/utils/app_gapping.dart';
 
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
@@ -23,8 +24,6 @@ import 'package:nguru/utils/app_utils.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
-final _formKey = GlobalKey<FormState>();
-
 class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
@@ -36,42 +35,42 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passWordController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController passWordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  bool _autoValidateUserName = false;
-  bool _autoValidatePassword = false;
 
   @override
   void initState() {
     super.initState();
+      userNameController.addListener(() {
+      context.read<FormValidationCubit>().validateUserName(userNameController.text);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AddSchoolCubit, AddSchoolState>(
-      listener: (context, state) {},
+    return BlocBuilder<AddSchoolCubit, AddSchoolState>(
       builder: (context, state) {
         if (state is AddSchoolSuccessState) {
           return Scaffold(
             body: SingleChildScrollView(
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23),
+                  padding: const EdgeInsets.symmetric(horizontal: padding23),
                   child: Column(
                     children: [
                       169.heightBox,
                       SvgPicture.asset(MyAssets.schoolLogo),
                       15.heightBox,
                       Text(
-                        state.schoolName ?? 'School Name',
+                        state.schoolName ?? MyStrings.schoolName,
                         style: const TextStyle(color: Colors.black),
                       ),
                       8.heightBox,
                       const GradientDivider(
                         gradient: MyColors.divider,
-                        height: 1.0,
+                        height: height1,
                       ),
                       20.heightBox,
                       Row(
@@ -85,17 +84,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .createShader(bounds);
                                 },
                                 child: Container(
-                                  height: 18,
-                                  width: 18,
+                                  height: height18,
+                                  width: width18,
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 10.0),
+                                      vertical: paddingVertical6, horizontal: paddingHorizontal10),
                                   decoration: BoxDecoration(
                                     // color: Colors.white,
                                     borderRadius: BorderRadius.circular(20.0),
                                     border: Border.all(
                                       color: Colors
                                           .white, // This color is not visible
-                                      width: 1.0,
+                                      width: width1,
                                     ),
                                   ),
                                 ),
@@ -104,17 +103,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: 3,
                                 left: 3,
                                 child: Container(
-                                  height: 12,
-                                  width: 12,
+                                  height: height12,
+                                  width: width12,
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 10.0),
+                                      vertical: paddingVertical6, horizontal: paddingHorizontal10),
                                   decoration: BoxDecoration(
                                     gradient: MyColors.buttonColors,
                                     borderRadius: BorderRadius.circular(20.0),
                                     border: Border.all(
                                       color: Colors
                                           .white, // This color is not visible
-                                      width: 1.0,
+                                      width: width1,
                                     ),
                                   ),
                                 ),
@@ -124,30 +123,33 @@ class _LoginScreenState extends State<LoginScreen> {
                           5.widthBox,
                           Text(
                             widget.title ?? "",
-                            style: FontUtil.schoolname,
+                            style: FontUtil.schoolName,
                           )
                         ],
                       ),
                       17.heightBox,
                       Form(
                         key: _formKey,
-                        // autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           children: [
-                            CustomTextFormField(
-                              controller: userNameController,
-                              // focusNode: _schoolUrlFocusNode,
-                              labelText: MyStrings.userName,
-                              //  suffixIconAsset: MyAssets.edit,
-                              validator: (url) {
-                                if (url == null || url.isEmpty) {
-                                  return MyStrings.userName;
-                                }
-                                return null;
-                              },
+                            BlocBuilder<FormValidationCubit, FormValidationState>(
+                              builder: (context,state) {
+                                return CustomTextFormField(
+                                  controller: userNameController,
+                                  labelText: MyStrings.userName,
+                                  validator: (url) {
+                                    if (url == null || url.isEmpty) {
+                                      return MyStrings.userNameReq;
+                                    }
+                                    return null;
+                                  },
+                                 autoValidateMode: state.autoValidateUserName
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
+                                );
+                              }
                             ),
                             14.heightBox,
-
                             TextFormField(
                               obscureText: _obscureText,
                               controller: passWordController,
@@ -155,10 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 label: const Text(
                                   MyStrings.passWord,
                                   style: TextStyle(
-                                      // fontStyle: FontStyle.italic,
                                       fontSize: 15,
-                                      color: Colors.grey,
-                                      fontFamily: "Effra_Trial"),
+                                      color: MyColors.grey,
+                                      fontFamily: APP_FONT),
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -174,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15.0, horizontal: 20.0),
+                                    vertical: paddingVertical15, horizontal: paddingHorizontal20),
                                 border: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(9.0)),
@@ -186,12 +187,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: Colors.grey, width: 1.0),
+                                      color: Colors.grey, width: width1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(9.0)),
                                 ),
                               ),
                               style: FontUtil.signInFieldText,
+                              validator: (pass) {
+                                if (pass == null || pass.isEmpty) {
+                                  return MyStrings.passWordReq;
+                                }
+                                return null;
+                              },
                             ),
                           ],
                         ),
@@ -205,8 +212,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   const ForgotPassword(), context);
                             },
                             child: Text(
-                              MyStrings.forgotpassword,
-                              style: FontUtil.forgotpassword,
+                              MyStrings.forgotPassword,
+                              style: FontUtil.forgotPassword,
                             ),
                           ),
                         ],
@@ -219,17 +226,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         } else {
                           return PrimaryButton(
-                            title: "Sign in",
+                            title: MyStrings.signIn,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-
                                 context.read<LoginCubit>().logIn(
                                     userNameController.text.trim(),
                                     passWordController.text.toString());
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text(MyStrings.enterusernamepass),
+                                    content: Text(MyStrings.enterUserNamePass),
                                   ),
                                 );
                               }
@@ -241,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           NavigationService.navigateTo(
                               const NguruDashboardScreen(), context);
                         } else if (state is LoginForgetPasswordState) {
-                          isFromForgotPassword=false;
+                          isFromForgotPassword = false;
                           NavigationService.navigateTo(
                               const ResetPasswordScreen(), context);
                         } else if (state is LoginErrorState) {
@@ -267,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }

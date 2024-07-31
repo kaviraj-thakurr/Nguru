@@ -92,7 +92,7 @@ Widget CardDesign(BuildContext context) {
     height: MediaQuery.of(context).size.height * 0.14,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(8),
-      color: MyColors.searchbackgroundColor,
+      color: MyColors.searchBackGroundColor,
     ),
     child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -209,7 +209,7 @@ class Date extends StatelessWidget {
               child: Text(
                 'July 14,2024',
                 style: TextStyle(
-                  color: MyColors.assignmentdateColor,
+                  color: MyColors.assignmentDateColor,
                   fontSize: 12,
                 ),
               ),

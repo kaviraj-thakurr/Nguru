@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
-import 'package:nguru/screens/login_screen.dart';
+import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
@@ -33,14 +34,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       child: Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 30.heightBox,
                 Text(
-                  "Forgot Password?",
+                  MyStrings.forgotPassword,
                   style: FontUtil.customStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w600,
@@ -48,12 +49,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 10.heightBox,
                 Text(
-                  "Enter your username to receive instructions on how to reset your password.",
+                  MyStrings.forgotPasswordTittle,
                   style: FontUtil.customStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.forgotColor,
-                    fontFamily: "Effra_Trial",
+                    fontFamily: APP_FONT,
                   ),
                 ),
                 25.heightBox,
@@ -61,38 +62,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   key: _formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
 
-                  child: TextFormField(
-                    inputFormatters: [LengthLimitingTextInputFormatter(20)],
+                  child: CustomTextFormField(
                     controller: userNameController,
-
-                    decoration: const InputDecoration(
-                      label: Text(
-                        MyStrings.userName,
-                        style: TextStyle(
-                            //   fontStyle: FontStyle.italic,
-                            fontSize: 15,
-                            color: Colors.grey,
-                            fontFamily: "Effra_Trial"),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 20.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: MyColors.borderColor,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(9.0)),
-                      ),
-                    ),
-                    style: FontUtil.signInFieldText,
+                    labelText: MyStrings.userName,
                     validator: (url) {
                       if (url == null || url.isEmpty) {
-                        return MyStrings.userName;
+                        return MyStrings.userNameReq;
                       }
                       return null;
                     },
@@ -115,14 +90,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   // ),
                 ),
                 10.heightBox,
-                Text(
-                  "Lorem ipsum dolor sit amet consectetur. Eget enim vulputate porta diam diam.",
-                  style: FontUtil.customStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Effra_Trial",
-                      textColor: MyColors.needHelpColor),
-                ),
+                
                 25.heightBox,
                 BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
                     builder: (context, state) {
@@ -135,14 +103,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       title: "Submit",
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          isFromForgotPassword=true;
+                          isFromForgotPassword = true;
                           context.read<ForgetPassCubit>().forgotPassword(
                                 userNameController.text.trim(),
                               );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(MyStrings.enterusernamepass),
+                            const SnackBar(
+                              content: Text(MyStrings.enterUserNamePass),
                             ),
                           );
                         }
@@ -152,8 +120,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 }, listener: (context, state) {
                   if (state is ForgetPassSuccessState) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text(
-                            "Password reset instruction has been sent to your registered Email/Phone")));
+                        content: Text(MyStrings.forgotPassInstruction)));
                     Navigator.pop(context);
                   } else if (state is ForgetPassErrorState) {
                     _showSnackBar(context, state.message);
@@ -173,7 +140,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ),
     );
   }

@@ -53,7 +53,7 @@ Widget attendenceAndFeeCard(BuildContext context,
                     style: FontUtil.customStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w300,
-                        textColor: MyColors.textcolors)),
+                        textColor: MyColors.textColors)),
               ),
             ],
           ),

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/descipline/descipline_state.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 class DisciplineCubit extends Cubit<DisciplineState> {
   final AuthRepo? authRepo;

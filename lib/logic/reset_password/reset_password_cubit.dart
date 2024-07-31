@@ -1,7 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/reset_password/reset_password_state.dart';
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
+import 'package:nguru/repo/api_calls.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState>{
   final AuthRepo ? authRepo;

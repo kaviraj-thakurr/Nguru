@@ -75,7 +75,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       style: FontUtil.customStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          textColor: MyColors.sessiontext),
+                          textColor: MyColors.sessionText),
                     ),
                   );
                 }).toList(),

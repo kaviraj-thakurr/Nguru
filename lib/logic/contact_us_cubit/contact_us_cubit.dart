@@ -7,8 +7,8 @@ import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_li
 import 'package:nguru/logic/contact_us_cubit/contact_us_state.dart';
 
 import 'package:nguru/logic/login_cubit/login_state.dart';
+import 'package:nguru/repo/api_calls.dart';
 
-import 'package:nguru/repo/signin_apiCalls/api_calls.dart';
 
 class ContactUsCubit extends Cubit<ContactUsState> {
   final AuthRepo?  authRepo;

@@ -74,7 +74,7 @@ Future<void> generateAndSavePDF(String textContent) async {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Container(
+                  child: SizedBox(
                     width: screenWidth * 0.45,
                     height: screenHeight * 0.1,
                     child: Row(

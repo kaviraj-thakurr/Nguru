@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
-import 'package:nguru/utils/app_strings.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
@@ -19,7 +18,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? suffixIconAsset;
   final Widget? suffixIcon;
   final List<TextInputFormatter>? inputFormatters;
-  final AutovalidateMode? autovalidateMode;
+  final AutovalidateMode? autoValidateMode;
   final bool? obscureText; // Add this line
 
   const CustomTextFormField({
@@ -36,7 +35,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.suffixIconAsset,
     this.suffixIcon,
-    this.autovalidateMode,
+    this.autoValidateMode,
     this.obscureText, // Add this line
   });
 
@@ -46,7 +45,7 @@ class CustomTextFormField extends StatelessWidget {
       inputFormatters: inputFormatters,
       focusNode: focusNode,
       controller: controller,
-      autovalidateMode: autovalidateMode,
+      autovalidateMode: autoValidateMode,
       obscureText: obscureText ?? false, // Add this line
       decoration: InputDecoration(
         suffixIcon: suffixIcon ??

@@ -96,7 +96,7 @@ class _TimeTableScreenState extends State<TimetableScreen> {
       height: MediaQuery.sizeOf(context).height * 0.11,
       width: double.maxFinite,
       decoration: BoxDecoration(
-          color: MyColors.searchbox, borderRadius: BorderRadius.circular(6)),
+          color: MyColors.searchBox, borderRadius: BorderRadius.circular(6)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
