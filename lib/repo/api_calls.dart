@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:core';
 
-import 'package:flutter/material.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendence_model.dart';
@@ -17,7 +16,6 @@ import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/services/end_url.dart';
 import 'package:nguru/services/networking.dart';
-import 'package:nguru/utils/app_const.dart';
 
 import 'package:nguru/models/add_school_model.dart';
 import 'package:nguru/models/login_model.dart';
@@ -25,6 +23,8 @@ import 'package:nguru/models/login_model.dart';
 class AuthRepo {
   final _myService = Networking();
   var userToken = "";
+
+  String schoolUrl =  "https://quickschool.niitnguru.com/demoschool";
 
   //------------------------------------this api method for add school screen---------> //
 
@@ -58,9 +58,9 @@ class AuthRepo {
     try {
       final res = await _myService.networkPost(
         url:
-            "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/Login/",
+            EndUrl.logIn,
         data: {
-          "schoolURL": "https://quickschool.niitnguru.com/demoschool",
+          "schoolURL":  "https://quickschool.niitnguru.com/demoschool",
           "deviceToken":
               "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
           "deviceType": "1",
@@ -82,13 +82,13 @@ class AuthRepo {
     try {
       final res = await _myService.networkPost(
           url:
-              "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/ForgetPassword",
+              EndUrl.forgetPassword,
           data: {
             "deviceToken":
                 "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
             "deviceType": "1",
             "password": "",
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "schoolUrl":"https://quickschool.niitnguru.com/demoschool",
             "userName": userName
           });
       var result = ForgetPassWordModel.fromJson(json.decode(res.toString()));
@@ -117,7 +117,7 @@ class AuthRepo {
             "pageNumber": 0,
             "pageSize": 0,
             "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "schoolUrl": schoolUrl,
             "sessionID": 107,
             "studentID": 896,
             "subjectID": 0,
@@ -154,7 +154,7 @@ class AuthRepo {
           "pageNumber": 0,
           "pageSize": 0,
           "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+          "schoolUrl": schoolUrl,
           "sessionID": 107,
           "studentID": 896,
           "subjectID": 0,

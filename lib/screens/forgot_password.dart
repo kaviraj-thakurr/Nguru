@@ -100,7 +100,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     );
                   } else {
                     return PrimaryButton(
-                      title: "Submit",
+                      title: MyStrings.submit,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           isFromForgotPassword = true;
