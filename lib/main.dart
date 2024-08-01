@@ -22,6 +22,7 @@ import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/screens/contact_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
+import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/testing_story.dart';
 
@@ -87,7 +88,8 @@ class MyApp extends StatelessWidget {
             ),
             home:
             //  BarChartExample()
-           const NguruDashboardScreen()
+          // const NguruDashboardScreen()
+          const FeesMainScreen()
             ),
       ),
     );

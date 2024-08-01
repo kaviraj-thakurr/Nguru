@@ -135,4 +135,19 @@ static const Color yellowShade_2= Color(0xFFF9AB43);
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+
+
+
+
+/////////////////////////////////// FEE SCREEN //////////////////////////////
+
+static const Color blueShade = Color(0xFF0160AE);
+static const Color blueShade_3 = Color(0xFF0160AE);
+static const Color yellowShade_3 = Color(0xFFF9AB43);
+static const Color greenShade_2 = Color(0xFF128F36);
+
+
+
+
 }
