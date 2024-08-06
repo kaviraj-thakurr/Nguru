@@ -69,5 +69,29 @@ class MyStrings {
       static const String noSchoolPhotoAvailable= "Sorry no school photo available!";
       static const String unableTOOpenTheMail= "Unable to open the email";
       static const String couldNotLaunch= "Could not launch";
+      static const String totalFee= "Total Fee";
+      static const String dueFee= "Total Due";
+      static const String paidFee= "Paid Fee";
+      static const String feeHistory= "Fee History";
+      static const String receipt= "Receipt";
+      static const String pay= "Pay";
+      static const String paymentStatus= "Payment Status";
+      static const String feeDetail= "Fee detail";
+      static const String proceedToPay = "Proceed to pay";
+      static const String fee = "Fees";
+      static const String totalWorkingDays = "Total Working Days";
+      static const String absent = "Absent";
+      static const String present = "Present";
+      static const String unknownOption = 'Unknown option';
+      static const String attendanceDetails = "Attendance Details";
+      static const String disciplineGroup = "Discipline Group";
+      static const String noData = "no data";
+      static const String positivePoints = "Positive Points";
+      static const String negativePoints = "Negative Points";
+      static const String eventDate = "event data";
+
+
+
+
 
 }

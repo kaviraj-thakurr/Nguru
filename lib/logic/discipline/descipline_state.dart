@@ -14,6 +14,12 @@ class DisciplineSuccessState extends DisciplineState {
    DisciplineSuccessState({  required this.disciplineList});
 }
 
+class DisciplineFilteredState extends DisciplineState {
+  final List<DisciplineList> filteredList;
+  DisciplineFilteredState({required this.filteredList});
+}
+
+
 class DisciplineErrorState extends DisciplineState {
   final String message;
   DisciplineErrorState(this.message);

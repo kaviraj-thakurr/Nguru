@@ -34,7 +34,7 @@ class MyColors {
  
  // discipline screen
    static  const Color redShade_1 = Color(0xFFFF3D3D);
-    static  const Color yellowShade_1 = Color(0xFFF9AB43);
+    static  const Color yellowShade_1 = Color(0xFFF9AB43); 
 
 
 // fee screen
@@ -145,9 +145,37 @@ static const Color yellowShade_2= Color(0xFFF9AB43);
 static const Color blueShade = Color(0xFF0160AE);
 static const Color blueShade_3 = Color(0xFF0160AE);
 static const Color yellowShade_3 = Color(0xFFF9AB43);
+static const Color yellowShade_4 = Color(0xFFFECA0A);
 static const Color greenShade_2 = Color(0xFF128F36);
+static const Color redShade_2 = Color(0xFFBF1F26);
+  static LinearGradient blueYellowGradient =const LinearGradient(
+    colors: [
+      Color(0xFF0160AE),
+      Color(0xFFFECA0A)
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+    static LinearGradient blueGreenGradient =const LinearGradient(
+    colors: [
+      Color(0xFF0160AE),
+      Color(0xFF128F36)
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
 
 
+// calendar event screen
+static const Color pinkShade_1 = Color(0xFFE20786);
+static const Color greyShade_7 = Color(0xFF767676);
+
+
+//library screen
+static const Color greenShade_3 = Color(0xFF05B637);
+static const Color yellowShade_5 = Color(0xFFF9AB43);
+static const Color redShade_3 = Color(0xFFF94343);
+static const Color greenShade_4 = Color(0xFFA0CA7B);
 
 }

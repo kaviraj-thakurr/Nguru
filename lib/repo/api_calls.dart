@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
+import 'package:nguru/models/attendance_bar_chart_model.dart';
 import 'package:nguru/models/attendence_model.dart';
+import 'package:nguru/models/calendar_event_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/contact_us_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
+import 'package:nguru/models/get_fee_model.dart';
 import 'package:nguru/models/notification_models.dart';
+import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/repo/end_urls.dart';
@@ -321,12 +325,15 @@ class AuthRepo {
   ////////////////////////////////////////////////     Dicipline STORY ON TAP      //////////////////////////////////////////////////////
 
   Future<DisciplineModel> getCurrentDicipline({
+    int? type,
     String? deviceToken,
     String? deviceType,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
+    // type =1 for fetching all the discipline liist
+
     try {
       final res = await _myService.networkPost(
         url: EndUrl.currentDisciplineList,
@@ -345,7 +352,7 @@ class AuthRepo {
           "sessionID": 107,
           "studentID": 896,
           "subjectID": 0,
-          "type": 0,
+          "type": type ?? 0,
           "userID": "6135",
           "year": 0
         },
@@ -551,6 +558,182 @@ class AuthRepo {
     } catch (e) {
       log(e.toString());
       throw Exception("Failed to change push notification status: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET ATTENDANCE BAR CHART DATA      //////////////////////////////////////////////////////
+
+  Future<AttendanceBarChartModel> getAttendanceBarGraph({
+    int? pageNumber,
+    int? isNotification,
+  }) async {
+    try {
+      final res = await _myService
+          .networkPost(url: EndUrl.attendanceGetBarChart, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 1,
+        "userID": "6135",
+        "year": 0
+      });
+      AttendanceBarChartModel attendanceBarChartDataResponse =
+          attendanceBarChartModelFromJson(res.toString());
+      return attendanceBarChartDataResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to get attendance bar chart data: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET PARTICULAR MONTH DATA      //////////////////////////////////////////////////////
+
+  Future<ParticularMonthAttendanceModel> getParticularMonthAttendance({
+    int? monthNumber,
+  }) async {
+    try {
+      final res = await _myService
+          .networkPost(url: EndUrl.attendanceGetMonthWise, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": monthNumber,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 2024
+      });
+      ParticularMonthAttendanceModel particularMonthAttendanceDataResponse =
+          particularMonthAttendanceModelFromJson(res.toString());
+      return particularMonthAttendanceDataResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch particular moonth attendance data: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET FEE LIST DATA      //////////////////////////////////////////////////////
+
+  Future<GetFeeListModel> getFeeList() async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.feeGetList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      GetFeeListModel getFeeListModelResponse =
+          getFeeListModelFromJson(res.toString());
+      return getFeeListModelResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch fee list: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET FEE LIST DATA      //////////////////////////////////////////////////////
+
+  Future<DisciplineModel> getDisciplineList({int? type}) async {
+    // type = 1 for fetching all the discipline
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.diciplineGetList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 7,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": type ?? 1,
+        "userID": "6135",
+        "year": 0
+      });
+      DisciplineModel disciplineModelResponse =
+          disciplineModelFromJson(res.toString());
+      return disciplineModelResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch discipline list: $e");
+    }
+  }
+
+
+
+
+
+
+    ////////////////////////////////////////////////     GET CALENDAR EVENT LIST DATA      //////////////////////////////////////////////////////
+
+  Future<CalendarEventModel> getCalendarEventList({int? monthNumber}) async {
+    // type = 1 for fetching all the discipline
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.calendarEventGetList, data: {
+	"appMessageID":0,
+	"circularID":0,
+	"contentType":0,
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":monthNumber,
+	"pageNumber":0,
+	"pageSize":0,
+	"schoolID":1,
+	"schoolUrl":"https://quickschool.niitnguru.com/demoschool",
+	"sessionID":107,
+	"studentID":896,
+	"subjectID":0,
+	"type":0,
+	"userID":"6135",
+	"year":0
+});
+      CalendarEventModel calendarEventModelResponse =
+          calendarEventModelFromJson(res.toString());
+      return calendarEventModelResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch calendar events list: $e");
     }
   }
 }

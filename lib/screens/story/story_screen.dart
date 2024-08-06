@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
@@ -7,8 +6,8 @@ import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.da
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
 import 'package:nguru/logic/circular/circular_cubit.dart';
 import 'package:nguru/logic/circular/circular_state.dart';
-import 'package:nguru/logic/descipline/descipline_cubit.dart';
-import 'package:nguru/logic/descipline/descipline_state.dart';
+import 'package:nguru/logic/discipline/descipline_cubit.dart';
+import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';

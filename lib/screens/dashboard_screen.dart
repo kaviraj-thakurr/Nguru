@@ -10,9 +10,13 @@ import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
+import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
 import 'package:nguru/screens/attendance/attendence_screen.dart';
+import 'package:nguru/screens/calendar_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
+import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/library_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
 
@@ -101,7 +105,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 Flexible(
                                   flex: 5,
                                   child: GestureDetector(
-                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen())),
+                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> BarChartExample())),
                                     child: attendenceAndFeeCard(
                                       context,
                                       mainText: "53%",
@@ -113,12 +117,15 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 const Spacer(),
                                 Flexible(
                                   flex: 5,
-                                  child: attendenceAndFeeCard(
-                                    context,
-                                    headerText: "Paid 23k",
-                                    mainText: "41%",
-                                    footerText: "Fees Paid",
-                                    isFeeCard: true,
+                                  child: GestureDetector(
+                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> FeesMainScreen())),
+                                    child: attendenceAndFeeCard(
+                                      context,
+                                      headerText: "Paid 23k",
+                                      mainText: "41%",
+                                      footerText: "Fees Paid",
+                                      isFeeCard: true,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -192,9 +199,10 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   cardWidth: screenWidth * 0.35,
                                   onIconPressed: () {
                                     NavigationService.navigateTo(
-                                        CircularScreen(), context);
+                                        CalendarScreen(), context);
                                   },
                                   image: MyAssets.calendar,
+                                  
                                 ),
                                 14.widthBox,
                                 Expanded(
@@ -232,7 +240,9 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     isPngImage: false,
                                     icon: Icons.arrow_forward,
                                     onIconPressed: () {
-                                      print("forward");
+
+                                       NavigationService.navigateTo(
+                                        LibraryScreen(), context);
                                     },
                                     image: MyAssets.library,
                                   ),
