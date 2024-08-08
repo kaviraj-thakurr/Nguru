@@ -26,9 +26,10 @@ class MyAssets {
   static const String searchIcon = "assets/images/search.svg";
   static const String books = "assets/images/books.svg";
   static const String bookz = "assets/images/bookz.png";
+  static const String noDataFound = "assets/images/noDataFound.svg";
 
   //icons
-    static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+
 
   static const String edit = "assets/icons/edit.svg";
   static const String seen = "assets/icons/eye_seen.svg";
@@ -43,5 +44,7 @@ class MyAssets {
 
   //icons
   static const String homeIcon = "assets/icons/home.svg";
+  static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
+  static const String backArrow= "assets/images/back.svg";
   
 }

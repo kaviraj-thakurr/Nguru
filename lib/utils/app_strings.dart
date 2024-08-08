@@ -3,8 +3,12 @@ class MyStrings {
 
   static const String schoolUrl = "School URL";
   static const String defaultUrl = "https://quickschool.niitnguru.com/";
-
+  static const String period = "Period";
+  static const String noDescription = "No Description";
+  static const String noTeacher = "No teacher available";
+  static const String holiday = "Holiday!";
   static const String appName = "Nguru";
+  static const String transport = "Transport";
   static const String schoolNameRequired = "School Name required";
   static const String add = "+Add";
   static const String submit = "Submit";
@@ -13,6 +17,7 @@ class MyStrings {
   static const String subdomain = "Sub Domain";
   static const String currentpass = "Current Password";
   static const String newpass = "New Password";
+  static const String timetable = "TimeTable";
   static const String confirmnewpass = "Confirm New Password";
   static const String customData =
       "Please sign in to access your child’s school information.";
@@ -20,10 +25,12 @@ class MyStrings {
   static const String userNameReq = "Username Required";
   static const String passWord = "Password";
   static const String passWordReq = "Password Required";
-  static const String resetPassInstruction1 =  "Please fill out the proper and correct details!!";
-  static const String resetPassInstruction2= "Your new password is reset successfully!";
-  static const String somethingWentWrong="Something went wrong!";
-  static const String resetPassword ="Reset Password ?";
+  static const String resetPassInstruction1 =
+      "Please fill out the proper and correct details!!";
+  static const String resetPassInstruction2 =
+      "Your new password is reset successfully!";
+  static const String somethingWentWrong = "Something went wrong!";
+  static const String resetPassword = "Reset Password ?";
   static const String signIn = "Sign in";
   static const String forgotPassword = "Forgot password?";
   static const String enterSchoolUrl = "Enter School URL";
@@ -32,9 +39,15 @@ class MyStrings {
   static const String nicknamerequired = "Nickname required";
   static const String search = "Search";
   static const String enterSchoolName = "Enter School Name";
-  static const String schoolNameLeastName = 'School Name must be at least 3 characters';
+  static const String schoolNameLeastName =
+      'School Name must be at least 3 characters';
+  static const String circularTitle = "No Circular Today!";
+  static const String circularSubTittle =
+      "Check previous or upcoming months for assignments.";
+  static const String noSubject = "No Subject";
 
   static const String timeTable = "Timetable";
+  static const String notification = "Notification";
   static const String examination = "Examination  ";
   static const String calender = "Calendar";
   static const String activity = "Activity";
@@ -43,13 +56,12 @@ class MyStrings {
   static const String gallery = "Gallery";
   static const String photogallery = "Photo Gallery";
   static const String attendence = "Attendance";
-  static const String error = "Error";
+
   static const String feePaid = "Fee Paid";
-  static const String forgotPassInstruction= "Password reset instruction has been sent to your registered Email/Phone";
-  static const String forgotPasswordTittle ="Enter your username to receive instructions on how to reset your password.";
-
-
-  
+  static const String forgotPassInstruction =
+      "Password reset instruction has been sent to your registered Email/Phone";
+  static const String forgotPasswordTittle =
+      "Enter your username to receive instructions on how to reset your password.";
 
   static const String timeTablesub =
       "Time to pack your bag!  Check your \ntimetable first ️ to make sure you \nhave everything ✏️.";
@@ -63,5 +75,30 @@ class MyStrings {
       "Regular medical\ncheckups 🩺 are \nnecessary.";
   static const String gallerySub = "Your moments of\nhappiness are\nhere";
 
-  static const String undefinedState = "Undefined state";
+  static const String gallerysub = "Your moments of\n happiness are here🖼️";
+
+  static const String notAvailable = "N/A";
+  static const String adddress = "Address";
+  static const String email = "Email";
+  static const String mobileNumber = "Mobile Number";
+  static const String landlineNumber = "Landline Number";
+  static const String writeYourMessage = "Write your Message";
+
+
+  static const String error = "Some error occured!";
+  static const String undefinedState = "Some undefined state error!";
+  static const String assignment = "Assignment";
+  static const String endDate = "End Date";
+  static const String date = "Date";
+  static const String chat = "Chat";
+  static const String circular = "Circular";
+  static const String discipline = "Discipline";
+  static const String teacherName = "Teacher Name";
+  static const String reason = "Reason";
+  static const String points = "Points";
+  static const String photoGallery = "Photo Gallery";
+  static const String noSchoolPhotoAvailable =
+      "Sorry no school photo available!";
+  static const String unableTOOpenTheMail = "Unable to open the email";
+  static const String couldNotLaunch = "Could not launch";
 }

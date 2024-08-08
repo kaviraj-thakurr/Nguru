@@ -311,7 +311,7 @@ Widget parentDetailsCard(
                 Row(
                   children: [
                      const CircleAvatar(
-              backgroundImage: NetworkImage("https://via.placeholder.com/150"),
+              backgroundImage: NetworkImage("https://via..com/150"),
               radius: 14,
             ),
             5.widthBox,

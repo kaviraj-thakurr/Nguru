@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       169.heightBox,
-                      SvgPicture.asset(MyAssets.schoolLogo),
+                      SvgPicture.asset(state.schoolPhoto??MyAssets.schoolLogo),
                       15.heightBox,
                       Text(
                         state.schoolName ?? MyStrings.schoolName,

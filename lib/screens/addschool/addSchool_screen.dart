@@ -44,6 +44,8 @@ class _AddSchoolState extends State<AddSchool> {
   void initState() {
     super.initState();
     schoolUrlController.text = MyStrings.defaultUrl;
+   
+
 
     schoolNameController.addListener(() {
       context.read<FormValidationCubit>().validateSchoolName(schoolNameController.text);
@@ -80,7 +82,8 @@ class _AddSchoolState extends State<AddSchool> {
                           focusNode: _schoolUrlFocusNode,
                           labelText: MyStrings.schoolUrl,
                           suffixIconAsset: MyAssets.edit,
-                          validator: _validateSchoolUrl),
+                          validator: _validateSchoolUrl,
+                           onChanged: (value)=> schoolUrlController.text,),
                       14.heightBox,
                       BlocBuilder<FormValidationCubit, FormValidationState>(
                         builder: (context, state) {
@@ -94,6 +97,8 @@ class _AddSchoolState extends State<AddSchool> {
                                 ? AutovalidateMode.onUserInteraction
                                 : AutovalidateMode.disabled,
                             validator: _validateSubDomain,
+                            onChanged: (value)=> subdomainController.text,
+                            
                           );
                         },
                       ),

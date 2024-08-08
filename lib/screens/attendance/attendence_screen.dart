@@ -7,6 +7,7 @@ import 'package:nguru/custom_widgets/custom_calendar.dart';
 import 'package:nguru/custom_widgets/custom_search_bar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/utils/app_colors.dart';
+import 'package:nguru/utils/app_font.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 

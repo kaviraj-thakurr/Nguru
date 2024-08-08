@@ -4,7 +4,9 @@ import 'dart:core';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendence_model.dart';
+import 'package:nguru/models/chatsend_button_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
+import 'package:nguru/models/communication_models.dart';
 import 'package:nguru/models/contact_us_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
@@ -12,8 +14,11 @@ import 'package:nguru/models/fees_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/notification_models.dart';
+import 'package:nguru/models/notificationlist_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
+import 'package:nguru/models/timetable_model.dart';
+import 'package:nguru/models/transport_detail_model.dart';
 import 'package:nguru/services/end_url.dart';
 import 'package:nguru/services/networking.dart';
 
@@ -24,7 +29,7 @@ class AuthRepo {
   final _myService = Networking();
   var userToken = "";
 
-  String schoolUrl =  "https://quickschool.niitnguru.com/demoschool";
+  String schoolUrl = "https://quickschool.niitnguru.com/demoschool";
 
   //------------------------------------this api method for add school screen---------> //
 
@@ -33,8 +38,7 @@ class AuthRepo {
 
     try {
       final res = await _myService.networkPost(
-        url:
-          EndUrl.addSchool,
+        url: EndUrl.addSchool,
         data: {
           "schoolURL": fullSchoolUrl,
         },
@@ -47,7 +51,7 @@ class AuthRepo {
     }
   }
 
-  //--------------------------------this api method for login screen------------->//
+  //  --------------------------------this api method for login screen------------->  //
 
   Future<LoginModel> logIn(
       {String? deviceToken,
@@ -56,17 +60,17 @@ class AuthRepo {
       String? schoolUrl,
       required String userName}) async {
     try {
-      final res = await _myService.networkPost(
-        url:
-            EndUrl.logIn,
-        data: {
-          "schoolURL":  "https://quickschool.niitnguru.com/demoschool",
-          "deviceToken":
-              "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-          "deviceType": "1",
-          "password": password,
-          "userName": userName
-        },
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.signInStaging, 
+            isStagingLink: true,
+            data: {
+	"deviceToken":"d-heVocKSLGvRSHs40ChbR:APA91bEAtQi2kgxkBaoVTwjGFAJP0Fl0HVry6Dg41FWLweAvjEpTNBbIzaTrMM41bmtCQv5TzVq5XirmCYImYFPwhVRUxZKtwis_n254uEQIDNFkS5oaD7SuBLDP12AfGuLAY-QKgzkl",
+	"deviceType":"1",
+	"password":password,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"userName":userName
+}
       );
       LoginModel logInData = loginModelFromJson(res.toString());
       return logInData;
@@ -80,17 +84,15 @@ class AuthRepo {
 
   Future<ForgetPassWordModel> forgotPassword(String userName) async {
     try {
-      final res = await _myService.networkPost(
-          url:
-              EndUrl.forgetPassword,
-          data: {
-            "deviceToken":
-                "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-            "deviceType": "1",
-            "password": "",
-            "schoolUrl":"https://quickschool.niitnguru.com/demoschool",
-            "userName": userName
-          });
+      final res =
+          await _myService.networkPost(url: EndUrl.forgetPassword, data: {
+        "deviceToken":
+            "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+        "deviceType": "1",
+        "password": "",
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "userName": userName
+      });
       var result = ForgetPassWordModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
@@ -102,29 +104,27 @@ class AuthRepo {
 
   Future<DashboardModel> dashboardGetList() async {
     try {
-      final res = await _myService.networkPost(
-          url:
-              "https://quickschool.niitnguru.com/mobileappservice/Api/Dashboard/GetList/",
-          data: {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "deviceType": "1",
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": schoolUrl,
-            "sessionID": 107,
-            "studentID": 896,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
-          });
+      final res =
+          await _myService.networkPost(url: EndUrl.dashboardList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "deviceType": "1",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       var result = DashboardModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
@@ -138,8 +138,7 @@ class AuthRepo {
   Future<NotificationModel> notificationCount() async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com/mobileappservice/Api/Notification/Count/",
+        url: EndUrl.notificationCount,
         data: {
           "appMessageID": 0,
           "circularID": 0,
@@ -174,17 +173,15 @@ class AuthRepo {
   Future<AttendenceModel> fetchAttendanceData() async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://qsstg.niiteducation.com/mobileappservice/Api/Attendance/GetCumulativeAttendance",
+        isStagingLink: true,
+        url: EndUrl.attendance,
         data: {
-          
-            "userID": 118011,
-            "schoolID": 1,
-            "studentID": 106045,
-            "sessionID": 178,
-            "schoolURL": "https://qsstg.iiteducation.com/tistnj",
-            "pageNumber": 0
-          
+          "userID": 118011,
+          "schoolID": 1,
+          "studentID": 106045,
+          "sessionID": 178,
+          "schoolURL": "https://qsstg.iiteducation.com/tistnj",
+          "pageNumber": 0
         },
       );
 
@@ -201,14 +198,14 @@ class AuthRepo {
   Future<AssignmentsMonthList> getAssignementMonthList({
     String? deviceToken,
     String? deviceType,
+    int? month,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com:443/mobileappservice/Api/Assignment/GetCalenderList/",
+        url: EndUrl.assignmentCalendarList,
         data: {
           "appMessageID": 0,
           "circularID": 0,
@@ -216,7 +213,7 @@ class AuthRepo {
           "downloadAttachment": 0,
           "isNotification": 0,
           "messageTypeId": 0,
-          "month": 7,
+          "month": month,
           "pageNumber": 0,
           "pageSize": 0,
           "schoolID": 1,
@@ -243,23 +240,24 @@ class AuthRepo {
   Future<AssignmentList> getAssignementList({
     String? deviceToken,
     String? deviceType,
+    int? month,
+    String? assignmentOnParticularDate,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com:443/mobileappservice/Api/Assignment/GetAssignmentList/",
+        url: EndUrl.assignmentList,
         data: {
           "appMessageID": 0,
-          "assignmentDate": "2024-07-17T00:00:00",
+          "assignmentDate": "$assignmentOnParticularDate",
           "circularID": 0,
           "contentType": 0,
           "downloadAttachment": 0,
           "isNotification": 0,
           "messageTypeId": 0,
-          "month": 0,
+          "month": month,
           "pageNumber": 0,
           "pageSize": 0,
           "schoolID": 1,
@@ -285,35 +283,29 @@ class AuthRepo {
 
   Future<CircularModel> getCurrentCircular({
     String? deviceToken,
+    int? month,
     String? deviceType,
+    String? page,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com:443/mobileappservice/Api/Circular/GetMainList/",
-        data: {
-          "appMessageID": 0,
-          "circularID": 0,
-          "contentType": 0,
-          "downloadAttachment": 0,
-          "isNotification": 0,
-          "messageTypeId": 0,
-          "month": 0,
-          "pageNumber": 1,
-          "pageSize": 10,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
-          "type": 0,
-          "userID": "6135",
-          "year": 0
-        },
-      );
+          isStagingLink: true,
+          url: EndUrl.currentCircularList,
+          data: {
+            "circularID": 1,
+            "month": month,
+            "type": 1,
+            "pageSize": 4,
+            "pageNumber": 2,
+            "userID": 118011,
+            "schoolID": 1,
+            "studentID": 106045,
+            "sessionID": 178,
+            "schoolURL": "https://qsstg.iiteducation.com/tistnj",
+          });
       CircularModel currentCircularList = circularModelFromJson(res.toString());
       return currentCircularList;
     } catch (e) {
@@ -333,8 +325,7 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com:443/mobileappservice/Api/Discipline/GetList/",
+        url: EndUrl.currentDisciplineList,
         data: {
           "appMessageID": 0,
           "circularID": 0,
@@ -375,8 +366,7 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService.networkPost(
-        url:
-            "https://quickschool.niitnguru.com:443/mobileappservice/Api/ContactUs/GetContact/",
+        url: EndUrl.contactUs,
         data: {
           "appMessageID": 0,
           "circularID": 0,
@@ -412,8 +402,8 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService.networkPost(
-          url:
-              "https://qsstg.niiteducation.com/mobileappservice/Api/PhotoGallery/GetList/",
+          isStagingLink: true,
+          url: EndUrl.photoGalleryList,
           data: {
             "appMessageID": 0,
             "circularID": 0,
@@ -448,31 +438,28 @@ class AuthRepo {
     int? pageNumber,
   }) async {
     try {
-      final res = await _myService.networkPost(
-          url:
-              "https://quickschool.niitnguru.com/mobileappservice/Api/SignIn/Logout/",
-          data: {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "deviceToken":
-                "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-            "deviceType": "1",
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-            "sessionID": 58,
-            "studentID": 888,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
-          });
+      final res = await _myService.networkPost(url: EndUrl.signInLogIn, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "deviceToken":
+            "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+        "deviceType": "1",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 58,
+        "studentID": 888,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       Map<String, String> signoutResponse = res;
       return signoutResponse;
     } catch (e) {
@@ -489,30 +476,28 @@ class AuthRepo {
     required String? oldPassword,
   }) async {
     try {
-      final res = await _myService.networkPost(
-          url:
-              "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
-          data: {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "newPassword": "$newPassword",
-            "oldPassword": "$oldPassword",
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-            "sessionID": 107,
-            "studentID": 896,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
-          });
+      final res =
+          await _myService.networkPost(url: EndUrl.changeUpdatePassword, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "newPassword": "$newPassword",
+        "oldPassword": "$oldPassword",
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       ResetPasswordModel resetResponse =
           resetPasswordModelFromJson(res.toString());
       return resetResponse;
@@ -565,34 +550,192 @@ class AuthRepo {
 
   ////////////////////////////////////////////////     FEES API      //////////////////////////////////////////////////////
 
-  Future<FeesModel> getTotalFees({
-    int? pageNumber,
-  }) async {
+  Future<FeesModel> getTotalFees(
+      // int? pageNumber,
+      ) async {
     try {
-      final res = await _myService.networkPost(
-          url:
-              "https://quickschool.niitnguru.com/mobileappservice/Api/Fee/GetList/",
-          data: {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-            "sessionID": 107,
-            "studentID": 896,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
-          });
+      final res = await _myService.networkPost(url: EndUrl.fees, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       FeesModel feeResponse = feesModelFromJson(res.toString());
       return feeResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  ///////////////////////TIMETABEL SCREEEN API////////////////////////////////////////////
+  Future<TimeTableModel> getTimeTableList() async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.timeTable, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      TimeTableModel timeTableModel = timeTableModelFromJson(res.toString());
+      return timeTableModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  //////////////////////////////////////////////NOTIFICATION SCREEN LIST ///////////////////////////////////
+  Future<NotificationListModel> getNotificationList() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.notificationList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "deviceToken":
+            "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+        "deviceType": "1",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      NotificationListModel notificationListModel =
+          notificationListModelFromJson(res.toString());
+      return notificationListModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  //////////////////////////////////////////////////TRANSPORT DETAILS ///////////////////////////////////////////////////////
+  Future<TransportDetails> getTransportDetails() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.transportDetails, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      TransportDetails transportDetails =
+          transportDetailsFromJson(res.toString());
+      return transportDetails;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  Future<CommunicationModel> getCommunicationDetails() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.communicationDetails, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 8,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      CommunicationModel communicationModel =
+          communicationModelFromJson(res.toString());
+      return communicationModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  Future<ChatSendButton> sendMessageButton(String ? message) async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.sendMessage, data: {
+        "appMessageID": 20,
+        "circularID": 0,
+        "content": message,
+        "contentType": 0,
+        "createdForUserId": "4771",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      ChatSendButton chatSendButton =
+          chatSendButtonFromJson(res.toString());
+      return chatSendButton;
     } catch (e) {
       print(e.toString());
       throw Exception("Failed to get total fee: $e");

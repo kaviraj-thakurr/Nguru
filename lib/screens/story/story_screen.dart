@@ -1,10 +1,10 @@
+
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
@@ -24,7 +24,6 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/border_painter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
@@ -48,7 +47,7 @@ class _StoryScreenState extends State<StoryScreen>
   List<CircularList> circularList = [];
   List<DisciplineList> disciplineList = [];
 
-  int todaysDate = DateTime.now().day;
+  DateTime todaysDate = DateTime.now();
   bool todayAssignmentAdded = false;
   static const _tempFileName = 'TempFile.pdf';
   static const _testWithDialogFileName = 'TestFileWithDialog.pdf';
@@ -70,23 +69,38 @@ class _StoryScreenState extends State<StoryScreen>
     }
   }
 
-// Future<void> generateAndSavePDF(String textContent) async {
-//   final pdf = pw.Document();
+  /////////////////////////////////////   DOWNLOAD SECTION IS ON PROGRESS ////////////////////////////
 
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) => pw.Center(
-//         child: pw.Text(textContent),
-//       ),
-//     ),
-//   );
+  // static const _tempFileName = 'TempFile.pdf';
+  // static const _testFileName = 'TestFile.pdf';
+  // static const _testWithDialogFileName = 'TestFileWithDialog.pdf';
 
-//   final output = await getExternalStorageDirectory();
-//   final file = File('${output!.path}/example.pdf');
+//   Future<void> requestPermissions() async {
+//     if (Platform.isAndroid) {
+//       var status = await Permission.storage.status;
+//       if (status != PermissionStatus.granted) {
+//         status = await Permission.storage.request();
+//       }
+//       if (status.isGranted) {
+//         const downloadsFolderPath = '/storage/emulated/0/Download/';
+//         Directory dir = Directory(downloadsFolderPath);
+//         log("$dir");
+//         // file = File('${dir.path}/$fileName');
+//       } else
+//         await Permission.storage.request();
+//     }
+//   }
 
-//   await file.writeAsBytes(await pdf.save());
-//   log('PDF saved to ${file.path}');
-// }
+// // Future<void> generateAndSavePDF(String textContent) async {
+// //   final pdf = pw.Document();
+
+// //   pdf.addPage(
+// //     pw.Page(
+// //       build: (pw.Context context) => pw.Center(
+// //         child: pw.Text(textContent),
+// //       ),
+// //     ),
+// //   );
 
   /// Create example file in temporary directory to work with
   
@@ -158,13 +172,89 @@ class _StoryScreenState extends State<StoryScreen>
 //     final filePath = '${folder.path}/$_tempFileName';
 //     final file = File(filePath);
 
+// //   final output = await getExternalStorageDirectory();
+// //   final file = File('${output!.path}/example.pdf');
+
+// //   await file.writeAsBytes(await pdf.save());
+// //   log('PDF saved to ${file.path}');
+// // }
+
+//   /// Create example file in temporary directory to work with
+//   void _createTempPressed() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     final file = File(filePath);
+//     final raf = await file.open(mode: FileMode.writeOnlyAppend);
+//     await raf.writeString('string\n');
+//     await raf.close();
+
+//     log('Created temp file: ${file.path}');
+//     setState(() {});
+//   }
+
+//   /// Check permission and request it if needed
+//   void _onCheckPermissionPressed() async {
+//     final granted = await CRFileSaver.requestWriteExternalStoragePermission();
+
+//     log('requestWriteExternalStoragePermission: $granted');
+//   }
+
+//   /// Save created file from temporary directory to downloads folder on Android
+//   /// or to Documents on IOS
+//   void _onSaveFilePressed() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     try {
+//       final file = await CRFileSaver.saveFile(
+//         filePath,
+//         destinationFileName: _testFileName,
+//       );
+//       log('Saved to $file');
+//     } on PlatformException catch (e) {
+//       log('file saving error: ${e.code}');
+//     }
+//   }
+
+//   /// Save created file from temporary directory to downloads folder on Android
+//   /// or to Documents on IOS with native dialog
+//   void _onSaveWithDialogPressed() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     String? file;
+
+//     //   final pdf = pw.Document();
+
+// //   pdf.addPage(
+// //     pw.Page(
+// //       build: (pw.Context context) => pw.Center(
+// //         child: pw.Text(textContent),
+// //       ),
+// //     ),
+// //   );
+
+//     try {
+//       file = await CRFileSaver.saveFileWithDialog(SaveFileDialogParams(
+//         sourceFilePath: filePath,
+//         destinationFileName: _testWithDialogFileName,
+//       ));
+//       log('Saved to $file');
+//     } catch (error) {
+//       log('Error: $error');
+//     }
+//   }
+
+//   Future<bool> _checkIsTempFileExists() async {
+//     final folder = await getTemporaryDirectory();
+//     final filePath = '${folder.path}/$_tempFileName';
+//     final file = File(filePath);
+
 //     return file.exists();
 //   }
 
   @override
   void initState() {
     super.initState();
-    context.read<AssignmentMonthListCubit>().getAssignmentMonthList();
+    context.read<AssignmentMonthListCubit>().getAssignmentMonthList(todaysDate.month);
 
     _assignmentAnimationController = AnimationController(
       vsync: this,
@@ -182,8 +272,8 @@ class _StoryScreenState extends State<StoryScreen>
     );
 
     // Trigger fetching the lists
-    context.read<AssignmentListCubit>().getAssignmentList();
-    context.read<CircularCubit>().getCircular();
+    context.read<AssignmentListCubit>().getAssignmentList(todaysDate.month,DateFormat('yyyy-MM-ddTHH:mm:ss').format(todaysDate).toString());
+    context.read<CircularCubit>().getCurrentCircular();
     context.read<DisciplineCubit>().getDiscipline();
   }
 
@@ -200,7 +290,7 @@ class _StoryScreenState extends State<StoryScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: screenHeight * 0.1,
       child: BlocConsumer<AssignmentMonthListCubit, AssignmentMonthListState>(
@@ -228,7 +318,8 @@ class _StoryScreenState extends State<StoryScreen>
                   _assignmentAnimationController,
                   (list) =>
                       showAssignmentStory(screenHeight, screenWidth, list),
-                  'Assignments',
+                  
+                  MyStrings.assignment,
                 ),
                 15.widthBox,
                 _storyWidget<CircularCubit, CircularState, CircularList>(
@@ -238,7 +329,7 @@ class _StoryScreenState extends State<StoryScreen>
                   context.read<CircularCubit>(),
                   _circularAnimationController,
                   (list) => showCircularStory(screenHeight, screenWidth, list),
-                  'Circular',
+                  MyStrings.circular,
                 ),
                 15.widthBox,
                 _storyWidget<DisciplineCubit, DisciplineState, DisciplineList>(
@@ -249,7 +340,7 @@ class _StoryScreenState extends State<StoryScreen>
                   _disciplineAnimationController,
                   (list) =>
                       showDisciplineStory(screenHeight, screenWidth, list),
-                  'Discipline',
+                  MyStrings.discipline,
                 ),
               ],
             );
@@ -396,6 +487,9 @@ class _StoryScreenState extends State<StoryScreen>
             }
           },
         ),
+
+        // download section on progress
+
         // Positioned(
         //   top: 480,
         //   left: 300,
@@ -409,6 +503,19 @@ class _StoryScreenState extends State<StoryScreen>
         //         width: 25,)),),
       ],
     );
+
+    // TRIED TO USE SOME OTHER PACAKGE WHICH MIGHT WORK ON IT
+
+    //   return  StoryPageView(
+    //   itemBuilder: (context, pageIndex, storyIndex) {
+    //     return IconButton(onPressed: ()=>log("qwerty"), icon: Icon(Icons.add));
+    //   },
+    //   storyLength: (pageIndex) {
+    //     return 3;
+    //   },
+    //   pageLength: 4,
+
+    // );
   }
 
   Widget showCircularStory(double screenHeight, double screenWidth,

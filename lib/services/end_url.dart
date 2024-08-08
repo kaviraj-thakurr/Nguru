@@ -1,4 +1,13 @@
 class EndUrl{
+  static const String sendMessage= "Communication/SaveMessageDetail/";
+  static const String transportDetails = "Transport/GetDetail/";
+  static const String communicationDetails = "Communication/GetMessageHeader/";
+ static const String notificationList ="Notification/GetList/";
+  static const String timeTable ="TimeTable/TimeTableList/";
+  static const String signInStaging = "SignIn/Login";
+  static const String signIn ="SignIn/Login/";
+  static const String fees = "Fee/GetList/";
+  static const String attendance = "Attendance/GetCumulativeAttendance";
   static const String addSchool = "School/GetDetail/";
    static const String logIn = "SignIn/Login/";
    static const String forgetPassword = "SignIn/ForgetPassword";
@@ -8,6 +17,7 @@ class EndUrl{
    static const String assignmentCalendarList = "Assignment/GetCalenderList/";
    static const String assignmentList = "Assignment/GetAssignmentList/";
    static const String currentCircularList = "Circular/GetMainList/";
+   
    static const String currentDisciplineList = "Discipline/GetList/";
    static const String contactUs = "ContactUs/GetContact/";
    static const String photoGalleryList = "PhotoGallery/GetList/";

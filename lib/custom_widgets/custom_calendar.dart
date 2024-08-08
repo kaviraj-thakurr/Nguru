@@ -26,8 +26,34 @@ class _CustomCalendarState extends State<CustomCalendar> {
           _buildMonthSelector(),
          AppGapping.padding20,
           TableCalendar(
-            rowHeight: 45,
-            
+
+            calendarBuilders: CalendarBuilders(
+         defaultBuilder : (context, day, focusedDay) {
+            // Determine the index of the day in the month
+            final dayIndex = day.day - 1; // 0-based index
+
+            // Apply different styling based on the day index
+            Color textColor;
+            if (dayIndex % 2 == 0) {
+              textColor = Colors.red; // Example: red for even days
+            } else {
+           //   textColor = Colors.blue; // Example: blue for odd days
+           textColor= MyColors.calendarDateColor;
+            }
+
+            return Center(
+              child: Text(
+                '${day.day}',
+                style: TextStyle(color: textColor, fontSize: 16),
+              ),
+            );
+          },
+        ),
+
+
+
+
+            rowHeight: 45, 
             daysOfWeekHeight: 20,
             daysOfWeekStyle: DaysOfWeekStyle(
               weekdayStyle: FontUtil.customStyle(

@@ -11,12 +11,20 @@ class FontUtil {
     required FontWeight fontWeight,
     required Color textColor,
     String? fontFamily,
+    TextDecoration? decoration, 
+    
+    
   }) {
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: textColor,
       fontFamily: APP_FONT,
+    
+      decoration: decoration,
+      decorationColor: Colors.blue, // Set the underline color
+                decorationThickness: 1, // Set the underline thickness
+               
     );
   }
 
@@ -130,10 +138,10 @@ class FontUtil {
       color: MyColors.storyFotter,
       fontFamily: APP_FONT);
 
-  static TextStyle circularsubttile = TextStyle(
+  static TextStyle circularSubtitle = TextStyle(
       fontSize: 12.h,
       fontWeight: FontWeight.w400,
-      color: MyColors.circularSubTittle,
+      color: MyColors.circularSubTittles,
       fontFamily: APP_FONT);
 
   static TextStyle circularTitle = TextStyle(
@@ -147,4 +155,18 @@ class FontUtil {
       fontWeight: FontWeight.w500,
       color: MyColors.greyShade_3,
       fontFamily: APP_FONT);
+
+static TextStyle notificationTitle = TextStyle(
+      fontSize: 17.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.teacherNameColor,
+      fontFamily: APP_FONT);
+
+
+      static TextStyle notificationSubtitle = TextStyle(
+      fontSize: 14.h,
+      fontWeight: FontWeight.w400,
+      color: MyColors.notificationSubtitle,
+      fontFamily: APP_FONT);
+  
 }

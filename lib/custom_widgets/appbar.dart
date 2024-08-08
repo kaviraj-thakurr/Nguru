@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/screens/contact_screen.dart';
+import 'package:nguru/screens/notification_screen.dart';
+import 'package:nguru/screens/transport/transport_screen.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -13,7 +16,7 @@ import 'package:nguru/utils/app_font.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
-Appbar customappbar() {
+Appbar customAppBar() {
   return Appbar();
 }
 
@@ -87,6 +90,8 @@ class _CustomAppBarState extends State<Appbar> {
                     color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
+                    NavigationService.navigateTo(
+                        const TransportScreen(), context);
                     setState(() {
                       selectedIcon = 'travel';
                     });
@@ -155,6 +160,8 @@ class _CustomAppBarState extends State<Appbar> {
                                 : null,
                           ),
                           onPressed: () {
+                        NavigationService.navigateTo(
+                        const NotificationScreen(), context);
                             setState(() {
                               selectedIcon = 'notifications';
                             });

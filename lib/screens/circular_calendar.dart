@@ -1,4 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:nguru/logic/circular/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/models/circular_model/circular_model.dart';
 
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -6,7 +13,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 
 CircularCalendar circularCalendar() {
-  return CircularCalendar();
+  return const CircularCalendar();
 }
 
 class CircularCalendar extends StatefulWidget {
@@ -21,6 +28,11 @@ class _CircularScreenState extends State<CircularCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+
+  String dateString = "03-Jun-2024";
+  DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
+ // DateTime dateTime = DateFormat("dd-MMM-yyyy").parse(dateString);
+
   @override
   Widget build(BuildContext context) {
     return  Column(
@@ -29,66 +41,152 @@ class _CircularScreenState extends State<CircularCalendar> {
           const SizedBox(
             height: 20,
           ),
-          TableCalendar(
-            rowHeight: 55,
+          // BlocBuilder<CircularCubit,CircularState>(
+          //   builder: (context,state) {
+          //     if(state is CircularSuccessState){
+
+          //        List<CircularList> circularList= state.circularList;
+          //        return TableCalendar(
+          //       rowHeight: 55,
+                
+          //       daysOfWeekHeight: 20,
+          //       daysOfWeekStyle: DaysOfWeekStyle(
+          //         weekdayStyle: FontUtil.customStyle(
+          //             fontSize: 11,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: MyColors.calendarDateColor),
+          //         weekendStyle: FontUtil.customStyle(
+          //             fontSize: 11,
+          //             fontWeight: FontWeight.w200,
+          //             textColor: MyColors.calendarDateColor),
+          //       ),
+          //       firstDay: DateTime.utc(2010, 10, 16),
+          //       lastDay: DateTime.utc(2030, 3, 14),
+          //       focusedDay: _focusedDay,
+          //       selectedDayPredicate: (day) {
+          //         return isSameDay(_selectedDay, day);
+          //       },
+          //       onDaySelected: (selectedDay, focusedDay) {
+          //         setState(() {
+
+          //           _selectedDay = selectedDay;
+          //           _focusedDay = focusedDay;
+                          
+          //         });
+          //         state.circularList.map((e) {
+          //            DateFormat("dd-MMM-yyyy").parse(e.circularDate!) ==  _focusedDay ? circularList.add(e) : null;
+          //             });
+          //         log("$circularList");
+
             
-            daysOfWeekHeight: 20,
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: FontUtil.customStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  textColor: MyColors.calendarDateColor),
-              weekendStyle: FontUtil.customStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w200,
-                  textColor: MyColors.calendarDateColor),
-            ),
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
-            calendarFormat: CalendarFormat.week,
-            calendarStyle: CalendarStyle(
-              
-              defaultTextStyle: FontUtil.customStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  textColor: MyColors.calendarDateColor),
-              weekendTextStyle: FontUtil.customStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w200,
-                  textColor: MyColors.fadedTextColor),
-              selectedTextStyle: FontUtil.customStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  textColor: Colors.blue),
-              todayTextStyle: FontUtil.customStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  textColor: Colors.pink),
-              todayDecoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(width: 2, color: Colors.white),
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(width: 2, color: Colors.white),
-              ),
-            ),
-            headerVisible: false,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-          ),
-          const SizedBox(height: 10),
+                      
+
+          //       },
+          //       calendarFormat: CalendarFormat.week,
+          //       calendarStyle: CalendarStyle(
+                  
+          //         defaultTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w600,
+          //             textColor: MyColors.calendarDateColor),
+          //         weekendTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w200,
+          //             textColor: MyColors.fadedTextColor),
+          //         selectedTextStyle: FontUtil.customStyle(
+          //             decoration: TextDecoration.underline,
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: Colors.blue),
+          //         todayTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: Colors.pink),
+          //         todayDecoration: BoxDecoration(
+          //           color: Colors.white,
+          //           shape: BoxShape.circle,
+          //           border: Border.all(width: 2, color: Colors.white),
+          //         ),
+          //         selectedDecoration: BoxDecoration(
+          //           color: Colors.white,
+          //           shape: BoxShape.circle,
+          //           border: Border.all(width: 2, color: Colors.white),
+          //         ),
+          //       ),
+          //       headerVisible: false,
+          //       startingDayOfWeek: StartingDayOfWeek.monday,
+          //     );
+
+          //     }
+
+          //     else if(state is CircularInitialState){
+          //        return TableCalendar(
+          //       rowHeight: 55,
+                
+          //       daysOfWeekHeight: 20,
+          //       daysOfWeekStyle: DaysOfWeekStyle(
+          //         weekdayStyle: FontUtil.customStyle(
+          //             fontSize: 11,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: MyColors.calendarDateColor),
+          //         weekendStyle: FontUtil.customStyle(
+          //             fontSize: 11,
+          //             fontWeight: FontWeight.w200,
+          //             textColor: MyColors.calendarDateColor),
+          //       ),
+          //       firstDay: DateTime.utc(2010, 10, 16),
+          //       lastDay: DateTime.utc(2030, 3, 14),
+          //       focusedDay: _focusedDay,
+          //       selectedDayPredicate: (day) {
+          //         return isSameDay(_selectedDay, day);
+          //       },
+          //       onDaySelected: (selectedDay, focusedDay) {
+          //         setState(() {
+          //           _selectedDay = selectedDay;
+          //           _focusedDay = focusedDay;
+          //         });
+          //       },
+          //       calendarFormat: CalendarFormat.week,
+          //       calendarStyle: CalendarStyle(
+                  
+          //         defaultTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w600,
+          //             textColor: MyColors.calendarDateColor),
+          //         weekendTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w200,
+          //             textColor: MyColors.fadedTextColor),
+          //         selectedTextStyle: FontUtil.customStyle(
+          //             decoration: TextDecoration.underline,
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: Colors.blue),
+          //         todayTextStyle: FontUtil.customStyle(
+          //             fontSize: 13,
+          //             fontWeight: FontWeight.w700,
+          //             textColor: Colors.pink),
+          //         todayDecoration: BoxDecoration(
+          //           color: Colors.white,
+          //           shape: BoxShape.circle,
+          //           border: Border.all(width: 2, color: Colors.white),
+          //         ),
+          //         selectedDecoration: BoxDecoration(
+          //           color: Colors.white,
+          //           shape: BoxShape.circle,
+          //           border: Border.all(width: 2, color: Colors.white),
+          //         ),
+          //       ),
+          //       headerVisible: false,
+          //       startingDayOfWeek: StartingDayOfWeek.monday,
+          //     );
+
+          //     }
+          //     return SizedBox();
+             
+          //   }
+          // ),
+          // const SizedBox(height: 10),
        //   _buildLegend(),
           //  const SizedBox(height: 10,),
           //    customAttendenceFooterCard(context),
@@ -129,6 +227,7 @@ class _CircularScreenState extends State<CircularCalendar> {
                     months.indexOf(month) + 1,
                   );
                 });
+                  context.read<CircularCubit>().getCurrentCircular(month: _focusedDay.month);
               },
               child: isSelected
                   ? ShaderMask(

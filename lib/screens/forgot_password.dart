@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
-import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_state.dart';
 import 'package:nguru/repo/api_calls.dart';
-import 'package:nguru/screens/dashboard_screen.dart';
-import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
@@ -73,21 +70,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     },
                   ),
 
-                  //  VxTextField(
-                  //   controller: userNameController,
-                  //   fillColor: Colors.transparent,
-                  //   borderColor: MyColors.borderColor,
-                  //   borderType: VxTextFieldBorderType.roundLine,
-                  //   hint: MyStrings.userName,
-                  //   style: FontUtil.hintText,
-                  //   borderRadius: 9,
-                  //   validator: (username) {
-                  //     if (username == null || username.isEmpty) {
-                  //       return MyStrings.userName;
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
+                
                 ),
                 10.heightBox,
                 

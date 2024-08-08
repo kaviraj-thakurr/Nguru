@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +11,7 @@ import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:nguru/utils/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ContactScreen extends StatefulWidget {
@@ -22,7 +21,8 @@ class ContactScreen extends StatefulWidget {
   State<ContactScreen> createState() => _ContactScreenState();
 }
 
-class _ContactScreenState extends State<ContactScreen> with TickerProviderStateMixin {
+class _ContactScreenState extends State<ContactScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _searchConroller = TextEditingController();
   late AnimationController _phoneIconController;
   late Animation<double> _phoneIconAnimation;
@@ -39,7 +39,8 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
 
     // Phone Icon Animation initialization
     _phoneIconController = AnimationController(
-      duration: const Duration(milliseconds: 400), // Custom duration for phone icon
+      duration:
+          const Duration(milliseconds: 400), // Custom duration for phone icon
       vsync: this,
     );
 
@@ -52,7 +53,8 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
 
     // Email Icon Animation Initialization
     _messageIconController = AnimationController(
-      duration: const Duration(milliseconds: 600), // Custom duration for message icon
+      duration:
+          const Duration(milliseconds: 600), // Custom duration for message icon
       vsync: this,
     );
 
@@ -86,23 +88,6 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
     });
   }
 
-  Future<void> _makePhoneCall(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> sendEmail({String? email, String subject = "", String body = ""}) async {
-    String mail = "mailto:$email?subject=$subject&body=${Uri.encodeFull(body)}";
-    if (await canLaunch(mail)) {
-      await launch(mail);
-    } else {
-      throw Exception("Unable to open the email");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -113,35 +98,40 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
           onTap: () => Navigator.pop(context),
           child: SvgPicture.asset(MyAssets.floatingActionIcon)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Stack(
-        children: [
-          Positioned.fill(
-                  child: Image.asset(
-                MyAssets.bg,
-                fit: BoxFit.fill,
-              )),
-          BlocConsumer<ContactUsCubit, ContactUsState>(
-            listener: (BuildContext context, ContactUsState state) {},
-            builder: (context, state) {
-              if (state is ContactUsInitialState || state is ContactUsLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is ContactUsSuccessState) {
-                return contactUsWidget(
+      body: BlocConsumer<ContactUsCubit, ContactUsState>(
+        listener: (BuildContext context, ContactUsState state) {},
+        builder: (context, state) {
+          if (state is ContactUsInitialState ||
+              state is ContactUsLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ContactUsSuccessState) {
+            return Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: MyColors.white,
+                  child: SvgPicture.asset(
+                    MyAssets.background,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                contactUsWidget(
                     screenHeight,
                     screenWidth,
                     state.contactUs.schoolPhoto ?? "",
                     state.contactUs.address ?? "",
                     state.contactUs.email ?? "",
                     state.contactUs.mobileNumber ?? "",
-                    state.contactUs.landlineNumber ?? "");
-              } else if (state is ContactUsErrorState) {
-                return const Text(MyStrings.error);
-              } else {
-                return const Center(child: Text(MyStrings.undefinedState));
-              }
-            },
-          ),
-        ],
+                    state.contactUs.landlineNumber ?? ""),
+              ],
+            );
+          } else if (state is ContactUsErrorState) {
+            return const Text(MyStrings.error);
+          } else {
+            return const Center(child: Text(MyStrings.undefinedState));
+          }
+        },
       ),
     );
   }
@@ -181,68 +171,72 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                   height: screenHeight * 0.43,
                   width: screenWidth * 0.85,
                   child: schoolPhotoBytes == ""
-                      ? Image.network(
-                          "https://via.placeholder.com/600",
-                          fit: BoxFit.cover,
+                      ? Text(
+                          MyStrings.noSchoolPhotoAvailable,
+                          textAlign: TextAlign.center,
+                          style: FontUtil.customStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              textColor: MyColors.fadedTextColor),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
                         )
-                      : Image.memory(base64Decode(schoolPhotoBytes)),
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: Image.memory(
+                            base64Decode(schoolPhotoBytes),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                 ),
                 10.heightBox,
-                Flexible(
-                  child: Text(
-                    "Address: $address" ?? "N/A",
-                    textAlign: TextAlign.center,
-                    style: FontUtil.customStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        textColor: Colors.black),
-                  ),
+                Text(
+                  "${MyStrings.adddress}: $address",
+                  textAlign: TextAlign.center,
+                  style: FontUtil.customStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      textColor: Colors.black),
                 ),
-                Flexible(
-                  child: Text(
-                    "Email: $email" ?? "N/A",
-                    textAlign: TextAlign.center,
-                    style: FontUtil.customStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        textColor: MyColors.fadedTextColor),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  ),
+                Text(
+                  "${MyStrings.email}: $email",
+                  textAlign: TextAlign.center,
+                  style: FontUtil.customStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      textColor: MyColors.fadedTextColor),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                 ),
-                Flexible(
-                  child: Text(
-                    "Mobile Number: $mobileNumber" ?? "N/A",
-                    textAlign: TextAlign.center,
-                    style: FontUtil.customStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        textColor: MyColors.fadedTextColor),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  ),
+                Text(
+                  "${MyStrings.mobileNumber}: $mobileNumber",
+                  textAlign: TextAlign.center,
+                  style: FontUtil.customStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      textColor: MyColors.fadedTextColor),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                 ),
-                Flexible(
-                  child: Text(
-                    "Landline Number: $landlineNumber" ?? "N/A",
-                    textAlign: TextAlign.center,
-                    style: FontUtil.customStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        textColor: MyColors.fadedTextColor),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  ),
+                Text(
+                  "${MyStrings.landlineNumber}: $landlineNumber",
+                  textAlign: TextAlign.center,
+                  style: FontUtil.customStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      textColor: MyColors.fadedTextColor),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                 ),
-                Spacer(),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onVerticalDragUpdate: (details) {
                         double delta = details.primaryDelta!;
-                        double newValue =
-                            (_phoneIconAnimation.value - delta).clamp(-100.0, 0.0);
+                        double newValue = (_phoneIconAnimation.value - delta)
+                            .clamp(-100.0, 0.0);
                         _phoneIconController.value = -newValue / 100.0;
                       },
                       onVerticalDragEnd: (details) {
@@ -251,9 +245,11 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                           _phoneIconController
                               .forward()
                               .then(
-                                (_) => _makePhoneCall('tel:$landlineNumber'),
+                                (_) => CustomUrlLauncher.makePhoneCall(
+                                    'tel:$landlineNumber'),
                               )
-                              .then((value) => _phoneIconController.value = 0.0);
+                              .then(
+                                  (value) => _phoneIconController.value = 0.0);
                         } else {
                           _phoneIconController.reverse();
                         }
@@ -268,8 +264,9 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                           },
                           child: Stack(
                             children: [
-                              const CircleAvatar(backgroundColor: Colors.white, radius: 30),
-                              SvgPicture.asset("assets/icons/call_icon.svg"),
+                              const CircleAvatar(
+                                  backgroundColor: Colors.white, radius: 30),
+                              SvgPicture.asset(MyAssets.callIcon),
                             ],
                           )),
                     ),
@@ -279,8 +276,8 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                     GestureDetector(
                       onVerticalDragUpdate: (details) {
                         double delta = details.primaryDelta!;
-                        double newValue =
-                            (_messageIconAnimation.value - delta).clamp(-100.0, 0.0);
+                        double newValue = (_messageIconAnimation.value - delta)
+                            .clamp(-100.0, 0.0);
                         _messageIconController.value = -newValue / 100.0;
                       },
                       onVerticalDragEnd: (details) {
@@ -289,9 +286,11 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                           _messageIconController
                               .forward()
                               .then(
-                                (_) => sendEmail(email: "$email", subject: "", body: ""),
+                                (_) => CustomUrlLauncher.sendEmail(
+                                    email: email, subject: "", body: ""),
                               )
-                              .then((value) => _messageIconController.value = 0.0);
+                              .then((value) =>
+                                  _messageIconController.value = 0.0);
                         } else {
                           _messageIconController.reverse();
                         }
@@ -306,8 +305,9 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
                           },
                           child: Stack(
                             children: [
-                              const CircleAvatar(backgroundColor: Colors.white, radius: 30),
-                              SvgPicture.asset("assets/icons/message_icon.svg"),
+                              const CircleAvatar(
+                                  backgroundColor: MyColors.white, radius: 30),
+                              SvgPicture.asset(MyAssets.messageIcon),
                             ],
                           )),
                     ),
@@ -322,6 +322,8 @@ class _ContactScreenState extends State<ContactScreen> with TickerProviderStateM
   }
 }
 
+
+//////////////  FOR MAKING THE PLATEFORM SPACIFIC IF REQUIRED
 
 // if (Platform.isAndroid) {
 //    final AndroidIntent intent = AndroidIntent(

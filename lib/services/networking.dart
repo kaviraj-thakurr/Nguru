@@ -5,9 +5,11 @@ class Networking {
   late Response response;
   final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
 
+  
+  final stagingLink = "https://qsstg.niiteducation.com/mobileappservice/Api/";
   //Api fun for post API
   Future<dynamic> networkPost(
-      {dynamic data, String? token, required String url}) async {
+      {dynamic data, String? token, required String url,bool isStagingLink=false}) async {
     final headers = {
       'Content-Type': 'application/json',
       'Cookie':
@@ -16,7 +18,8 @@ class Networking {
 
     try {
       response = await _dio.post(
-        baseUrl+url,
+       
+      isStagingLink ? stagingLink+url :   baseUrl+url,
         data: data,
         options: Options(headers: headers),
       );

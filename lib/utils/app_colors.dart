@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 
 class MyColors {
   const MyColors._();
-
+static const Color notificationSubtitle = Color(0xFF6A6A6A);
   static const Color sessionText = Color(0xFF231F20);
   static const Color grey = Colors.grey;
-  static  Color customDataColor = Color(0xFF070707).withOpacity(0.7);
+  static  Color customDataColor = const Color(0xFF070707).withOpacity(0.7);
   static const Color assignmentDateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
   static const Color searchBox = Color(0xFFF3F3F3);
   static const Color borderColor = Color(0xFFD7D7D7);
-  static  Color textColors = Color(0xFF070707).withOpacity(0.7);
-  static Color storyFotter = Color(0xFF231F20).withOpacity(0.8);
+  static  Color textColors = const Color(0xFF070707).withOpacity(0.7);
+  static Color storyFotter = const Color(0xFF231F20).withOpacity(0.8);
+  static Color periodOrTimeColor = const Color (0xFF333333).withOpacity(0.8);
   static const Color buttonColor = Color(0xFF7A7A7A);
   static const Color secondaryColor = Colors.green;
   static const Color needHelpColor = Color(0xFF999999);
   static const Color addButtonColor = Color(0xFF0C0C0B);
+  static const Color teacherNameColor = Color (0xFF333333);
+  static const Color busStop = Color (0x80333333);
   static const Color appColorGreen =  Color(0xFFA0CA7B);
   static const Color appColorBlue = Color(0xFF0160AE);
   static const Color appColor1 = Color(0xFF0160AE);
@@ -25,8 +28,9 @@ class MyColors {
   static const Color cardTitle = Color(0xFF111111);
   static const Color circular = Color(0xFF333333);
   static const Color circularSubTittle = Color(0xFF242424);
+    static const Color circularSubTittles = Color(0x80242424);
   
-
+static const Color chatTextField = Color(0x10000000);
   static const Color search = Color(0xFFA1A1A1);
   static const Color searchBackGroundColor = Color(0xFFF3F3F3);
 
@@ -45,8 +49,32 @@ class MyColors {
   static const Color boarderColor = Color(0xFFEBEBEB);
   static const Color monthNameColor = Color(0xFF333333);
 
+ 
+ // discipline screen
+   static  const Color redShade_1 = Color(0xFFFF3D3D);
+    static  const Color yellowShade_1 = Color(0xFFF9AB43);
+
+
+// fee screen
+  static const Gradient arcGradient_1 = LinearGradient(
+    colors: <Color>[Color(0xFF0160AE), Color(0xFF8D449A)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+static const Color arc_1 = Color(0xFF0160AE);
+static const Color arc_2= Color(0xFF8D449A);
+static const Color arc_3= Color(0xFF0261AE);
+static const Color arc_4= Color(0xFFA0CB7C);
+static const Color arc_5= Color(0xFFFF7E00);
+static const Color arc_6= Color(0xFFFF4A45);
+static const Color blueShade_2= Color(0xFF0160AE);
+static const Color yellowShade_2= Color(0xFFF9AB43);
 
 //text colors
+static  Color noDataFoundTitle = const Color(0xFF333333).withOpacity(0.7);
+static const  Color noDataFoundSubtitle = Color(0x41333333);
+
   static const Color boldTextColor = Color(0xFF000000);
   static const Color fadedTextColor = Color(0xFF434343);
   static const Color white = Color(0xFFFFFFFF);
@@ -80,13 +108,20 @@ class MyColors {
 
   static const Color greyShade_6 = Color(0xFFF3F3F3);
 
-  static Color assignmentColor = Color(0xFFABCC38).withOpacity(0.3);
+  static Color assignmentColor = const Color(0xFFABCC38).withOpacity(0.3);
 
-  static Color disciplineColor = Color(0xFFFECA0A).withOpacity(0.3);
+  static Color disciplineColor = const Color(0xFFFECA0A).withOpacity(0.3);
 
-  static Color circularColor = Color(0xFFE20786).withOpacity(0.2);
+  static Color circularColor = const Color(0xFFE20786).withOpacity(0.2);
 
 // gradients
+
+ static const Gradient buttonBackground = LinearGradient(
+    colors: <Color>[Color.fromARGB(255, 125, 249, 98), Color(0xFFFFFFFF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   static const LinearGradient buttonColors = LinearGradient(
     colors: [Color(0xFF0160AE), Color(0xFFA0CA7B)],
     begin: Alignment.topLeft,
@@ -107,8 +142,8 @@ class MyColors {
 //cards colors
   static LinearGradient cardColors = LinearGradient(
     colors: [
-      Color(0xFF0261AE).withOpacity(0.10),
-      Color(0xFFA0CB7C).withOpacity(0.10)
+      const Color(0xFF0261AE).withOpacity(0.10),
+      const Color(0xFFA0CB7C).withOpacity(0.10)
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -127,12 +162,22 @@ class MyColors {
     end: Alignment.bottomRight,
   );
 
+
+    static const Gradient bgDateColor = LinearGradient(
+    colors: <Color>[Color.fromARGB(255, 64, 145, 212), Color.fromARGB(255, 187, 227, 154)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   static const Gradient assignmentDate = LinearGradient(
     colors: <Color>[
-      Color(0xFF90CDFF),
+      Color(0xFFC9E6FF),
       Color(0xFFC9E6FF),
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+
+  
 }

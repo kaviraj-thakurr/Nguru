@@ -52,7 +52,7 @@ Widget customAttendenceFooterCard(BuildContext context,
               style: FontUtil.customStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
-                  textColor: footerColor!),
+                  textColor:MyColors.addButtonColor),
             )
           ],
         )
