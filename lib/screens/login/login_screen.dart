@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -27,8 +29,9 @@ import 'package:velocity_x/velocity_x.dart';
 class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
+  final String ?schoolUrl;
 
-  const LoginScreen({super.key, this.title, this.schoolLogo});
+  const LoginScreen({super.key, this.title, this.schoolLogo,this.schoolUrl});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -61,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       169.heightBox,
-                      SvgPicture.asset(state.schoolPhoto??MyAssets.schoolLogo),
+                   Image.memory(
+          base64Decode(state.schoolPhoto??""),
+          height: height150,
+        ),
                       15.heightBox,
                       Text(
                         state.schoolName ?? MyStrings.schoolName,
@@ -231,7 +237,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (_formKey.currentState!.validate()) {
                                 context.read<LoginCubit>().logIn(
                                     userNameController.text.trim(),
-                                    passWordController.text.toString());
+                                    passWordController.text.toString(),
+                                    widget.schoolUrl ?? "",
+                                    
+                                    
+                                    );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

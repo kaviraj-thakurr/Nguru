@@ -3,6 +3,7 @@ class MyStrings {
 
   static const String schoolUrl = "School URL";
   static const String defaultUrl = "https://quickschool.niitnguru.com/";
+  static const String defaultSchoolUrl = "https://qsstg.niiteducation.com/";
   static const String period = "Period";
   static const String noDescription = "No Description";
   static const String noTeacher = "No teacher available";

@@ -10,6 +10,7 @@ class AddSchoolSuccessState extends AddSchoolState {
   final String? schoolName;
   final String ? schoolPhoto;
   final String  ? nickName;
+  
   AddSchoolSuccessState({required this.schoolName, required this.schoolPhoto,  this.nickName});
 }
 

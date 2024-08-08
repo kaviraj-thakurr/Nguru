@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
+import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_sizebox.dart';
@@ -43,7 +44,7 @@ class _AddSchoolState extends State<AddSchool> {
   @override
   void initState() {
     super.initState();
-    schoolUrlController.text = MyStrings.defaultUrl;
+    schoolUrlController.text = MyStrings.defaultSchoolUrl;
    
 
 
@@ -139,6 +140,10 @@ class _AddSchoolState extends State<AddSchool> {
                     return PrimaryButton(
                       title: MyStrings.submit,
                       onPressed: () {
+                        setState(() {
+                          
+                        schoolUrl= schoolUrlController.text+subdomainController.text;
+                        });
                         if (_formKey.currentState!.validate()) {
                           context.read<AddSchoolCubit>().addSchool(
                               schoolUrlController.text.trim(),
@@ -166,7 +171,7 @@ class _AddSchoolState extends State<AddSchool> {
                 }, listener: (context, state) {
                   if (state is AddSchoolSuccessState) {
                     NavigationService.navigateTo(
-                        LoginScreen(title: schoolNameController.text), context);
+                        LoginScreen(title: schoolNameController.text,schoolLogo: state.schoolPhoto,  schoolUrl: schoolUrlController.text+subdomainController.text,), context);
                   } else if (state is AddSchoolErrorState) {
                     _showSnackBar(context, state.message);
                   }

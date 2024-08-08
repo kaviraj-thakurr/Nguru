@@ -25,6 +25,9 @@ import 'package:nguru/services/networking.dart';
 import 'package:nguru/models/add_school_model.dart';
 import 'package:nguru/models/login_model.dart';
 
+
+var schoolUrl = "";
+
 class AuthRepo {
   final _myService = Networking();
   var userToken = "";
@@ -68,7 +71,7 @@ class AuthRepo {
 	"deviceToken":"d-heVocKSLGvRSHs40ChbR:APA91bEAtQi2kgxkBaoVTwjGFAJP0Fl0HVry6Dg41FWLweAvjEpTNBbIzaTrMM41bmtCQv5TzVq5XirmCYImYFPwhVRUxZKtwis_n254uEQIDNFkS5oaD7SuBLDP12AfGuLAY-QKgzkl",
 	"deviceType":"1",
 	"password":password,
-	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"schoolUrl":schoolUrl,
 	"userName":userName
 }
       );
@@ -105,7 +108,8 @@ class AuthRepo {
   Future<DashboardModel> dashboardGetList() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.dashboardList, data: {
+          await _myService.networkPost(url: EndUrl.dashboardList, data:
+           {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -124,7 +128,8 @@ class AuthRepo {
         "type": 0,
         "userID": "6135",
         "year": 0
-      });
+      }
+      );
       var result = DashboardModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {

@@ -14,11 +14,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this.authRepo) : super(LoginInitState());
 
-  Future<void> logIn(String userName, String password) async {
+  Future<void> logIn(String userName, String password ,String schoolUrl) async {
     try {
       emit(LoginLoadingState());
       final result =
-          await authRepo?.logIn(userName: userName, password: password);
+          await authRepo?.logIn(userName: userName, password: password,schoolUrl: schoolUrl) ;
       if (result != null) {
         if (result.responseCode == "200") {
           if (isFromForgotPassword) {

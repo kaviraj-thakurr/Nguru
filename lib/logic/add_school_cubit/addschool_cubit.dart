@@ -8,7 +8,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
 
   AddSchoolCubit(this.authRepo) : super(AddSchoolInitState());
 
-  Future<void> addSchool(String schoolName,String subDomain) async {
+  Future<void> addSchool(String schoolName,String subDomain,) async {
     try {
       emit(AddSchoolLoadingState());
       final result = await authRepo?.addSchool(
