@@ -114,7 +114,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget footer(int index, BuildContext context,
       List<CalendarEventList> calendarEventList) {
-    log("${MyStrings.eventDate}: ${calendarEventList.length}");
+   // log("${MyStrings.eventDate}: ${calendarEventList.length}");
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.08,

@@ -12,6 +12,9 @@ import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/get_fee_model.dart';
+import 'package:nguru/models/library_book_search_model.dart';
+import 'package:nguru/models/library_history_model.dart';
+import 'package:nguru/models/library_issued_book_model.dart';
 import 'package:nguru/models/notification_models.dart';
 import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
@@ -698,42 +701,140 @@ class AuthRepo {
     }
   }
 
-
-
-
-
-
-    ////////////////////////////////////////////////     GET CALENDAR EVENT LIST DATA      //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////     GET CALENDAR EVENT LIST DATA      //////////////////////////////////////////////////////
 
   Future<CalendarEventModel> getCalendarEventList({int? monthNumber}) async {
     // type = 1 for fetching all the discipline
     try {
       final res =
           await _myService.networkPost(url: EndUrl.calendarEventGetList, data: {
-	"appMessageID":0,
-	"circularID":0,
-	"contentType":0,
-	"downloadAttachment":0,
-	"isNotification":0,
-	"messageTypeId":0,
-	"month":monthNumber,
-	"pageNumber":0,
-	"pageSize":0,
-	"schoolID":1,
-	"schoolUrl":"https://quickschool.niitnguru.com/demoschool",
-	"sessionID":107,
-	"studentID":896,
-	"subjectID":0,
-	"type":0,
-	"userID":"6135",
-	"year":0
-});
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": monthNumber,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       CalendarEventModel calendarEventModelResponse =
           calendarEventModelFromJson(res.toString());
       return calendarEventModelResponse;
     } catch (e) {
       log(e.toString());
       throw Exception("Failed to fetch calendar events list: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+
+  Future<LibraryIssuedBookModel> getLibraryIssuedBook() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.libraryGetIssuedList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      LibraryIssuedBookModel libraryIssuedBookListResponse =
+          libraryIssuedBookModelFromJson(res.toString());
+      return libraryIssuedBookListResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library issued books list: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+
+  Future<LibraryHistoryModel> getLibraryHistory({int? monthNumber}) async {
+    try {
+      final res = await _myService
+          .networkPost(url: EndUrl.libraryGetHistoryList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      LibraryHistoryModel libraryHistoyListResponse =
+          libraryHistoryModelFromJson(res.toString());
+      return libraryHistoyListResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library histoy list: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+
+  Future<LibrarySearchBookModel> getLibrarySearchList(
+      {String? searchQuery}) async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.libraryGetSearchList, data: {
+        "appMessageID": 0,
+        "authorName": "",
+        "bookName": "$searchQuery",
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "keyword": "",
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      LibrarySearchBookModel libraryHistoyListResponse =
+          librarySearchBookModelFromJson(res.toString());
+      return libraryHistoyListResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library book search list: $e");
     }
   }
 }

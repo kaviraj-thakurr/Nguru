@@ -6,28 +6,35 @@ import 'package:nguru/repo/api_calls.dart';
 class CalendarEventCubit extends Cubit<CalendarEventState> {
   final AuthRepo? authRepo;
 
-  CalendarEventCubit(this.authRepo) : super(CalendarEventInitialState());
+  CalendarEventCubit(this.authRepo) : super(const CalendarEventInitialState());
 
   Future<void> getCalendarEvent(int monthNumber) async {
     try {
-      emit(CalendarEventInitialState());
+      emit(const CalendarEventLoadingState());
       final result = await authRepo?.getCalendarEventList(monthNumber: monthNumber);
       if (result != null) {
         if (result.responseCode == "200") {
           emit(CalendarEventSuccessState(
-              calendarEventList: result.calendarEventList ?? [],calendarEventListData: []));
+              calendarEventList: result.calendarEventList ?? [], myVariable: state.myVariable, calendarEventListData: []));
         } else {
-          emit(CalendarEventErrorState(result.responseMessage ?? "Error occured"));
+          emit(CalendarEventErrorState(result.responseMessage ?? "Error occurred", myVariable: state.myVariable));
         }
-      //  log("${result.CalendarEventList?.first.toString()}");
       }
     } catch (e) {
-      emit(CalendarEventErrorState(e.toString()));
+      emit(CalendarEventErrorState(e.toString(), myVariable: state.myVariable));
     }
   }
 
-  Future<void> getCalendarEventData(List<CalendarEventList> calendarEventList) async{
-    emit(CalendarEventSuccessState(calendarEventListData: calendarEventList)) ;
+  // Future<void> getCalendarEventData(List<CalendarEventList> calendarEventList) async {
+  //   emit(CalendarEventSuccessState(calendarEventList: calendarEventList, myVariable: state.myVariable, calendarEventListData: []));
+  // }
+
+  void setMyVariable(List<CalendarEventList> value) {
+    emit(state.copyWith(myVariable: value));
   }
+
+  List<CalendarEventList> getMyVariable() {
+    return state.myVariable ?? [];
+}
 
 }

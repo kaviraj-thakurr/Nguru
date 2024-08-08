@@ -12,6 +12,7 @@ class CustomSearchBar extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final Function(String)? onChange;
+  final void Function(String)? onSubmitted;
 
   const CustomSearchBar({
     super.key,
@@ -20,6 +21,7 @@ class CustomSearchBar extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.onChange,
+    this.onSubmitted,
   });
 
   @override
@@ -59,6 +61,7 @@ class CustomSearchBar extends StatelessWidget {
                 hintStyle: FontUtil.search,
                 border: InputBorder.none,
               ),
+              onSubmitted: onSubmitted,
             ),
           ),
         ],

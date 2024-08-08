@@ -50,7 +50,9 @@ class MyAssets {
   static const String circularArc = "assets/images/circular_graph/circular_arc.png";
   static const String circularGradient = "assets/images/circular_graph/circular_gradient.png";
   static const String next = "assets/icons/next.svg";
-    static const String pay = "assets/images/pay.svg";
+  static const String pay = "assets/images/pay.svg";
+  static const String bookCover = "assets/images/book_cover_2.png";
+
 
 
   

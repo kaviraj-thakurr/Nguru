@@ -1,13 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_state.dart';
-import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
-import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
 import 'package:nguru/models/calendar_event_model.dart';
-import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
@@ -26,6 +21,7 @@ class EventCalendar extends StatefulWidget {
 class _EventCalendarState extends State<EventCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  
 
   @override
   void initState() {
@@ -122,8 +118,8 @@ class _EventCalendarState extends State<EventCalendar> {
 
 
                         int attendanceStatus =
-                            state.calendarEventList![dayIndex].status!;
-                            log("${attendanceStatus} ");
+                           state.calendarEventList?[dayIndex].status?? 0;
+                          //  log("${attendanceStatus} ");
 
                             // status == 3 not showing anything even in quick school app
 
@@ -142,8 +138,6 @@ class _EventCalendarState extends State<EventCalendar> {
                           fontWeight: FontWeight.w600,
                           textColor: MyColors.buildLegendColor_5);
                           textColor =MyColors.buildLegendColor_5;
-                          calendarEventList.add(state.calendarEventList![dayIndex]);
-                          context.read<CalendarEventCubit>().getCalendarEventData(calendarEventList);
 
                         } else if (attendanceStatus == 1) {
                           defaultStyle=FontUtil.customStyle(
@@ -151,7 +145,12 @@ class _EventCalendarState extends State<EventCalendar> {
                           fontWeight: FontWeight.w600,
                           textColor: MyColors.pinkShade_1);
                           textColor =  MyColors.pinkShade_1;
-                        } 
+                            calendarEventList.add(state.calendarEventList![dayIndex]);
+                        //  context.read<CalendarEventCubit>().setMyVariable(calendarEventList);
+                         // log('Variable Value: ${state.myVariable?.length}');
+
+                         
+                        }
                          else if (attendanceStatus == 0) {
                           defaultStyle= FontUtil.customStyle(
                           fontSize: 13,
@@ -169,7 +168,7 @@ class _EventCalendarState extends State<EventCalendar> {
                         return Center(
                           child: Text(
                             '${day.day}',
-                            style: defaultStyle,
+                            style: defaultStyle ?? TextStyle(color: Colors.black, fontSize: 13),
                           ),
                         );
                       },

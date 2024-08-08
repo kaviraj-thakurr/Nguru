@@ -19,6 +19,9 @@ class EndUrl{
    static const String feeGetList = "Fee/GetList/";
    static const String diciplineGetList = "Discipline/GetList/";
    static const String calendarEventGetList = "CalendarEvent/GetList/";
+   static const String libraryGetIssuedList = "Library/GetIssuedList/";
+   static const String libraryGetHistoryList = "Library/GetHistoryList/";
+   static const String libraryGetSearchList = "Library/GetSearchList/";
 
 
 }

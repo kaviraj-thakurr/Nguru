@@ -13,6 +13,9 @@ import 'package:nguru/logic/discipline/descipline_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_cubit.dart';
+import 'package:nguru/logic/library/history/library_history_cubit.dart';
+import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
+import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
@@ -93,6 +96,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => CalendarEventCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => LibraryIssueBookCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => LibraryHistoryCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => LibrarySearchBookCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -106,7 +118,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const LibraryScreen()
+            home: const CalendarScreen()
             // const NguruDashboardScreen()
             //   const BarChartExample()
             ),
