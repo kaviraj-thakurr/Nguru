@@ -18,8 +18,11 @@ import 'package:nguru/logic/fees/fees_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendance/attendence_screen.dart';
+import 'package:nguru/screens/calendar_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
+import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/library_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
@@ -151,52 +154,16 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                 const Spacer(),
                                 Flexible(
                                   flex: 5,
-                                  child: BlocBuilder<FeesCubit, FeesState>(
-                                      builder: (context, state) {
-                                    if (state is FeesLoadingState) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    } else if (state is FeesSuccessState) {
-                                      var totalF = 0;
-                                      var paidF = 0;
-
-                                      for (int i = 0;
-                                          i < state.totalFee.length;
-                                          i++) {
-                                        totalF = totalF +
-                                            int.parse(
-                                                state.totalFee[i].amount!);
-                                        paidF = paidF +
-                                            int.parse(
-                                                state.totalFee[i].paidAmount!);
-                                      }
-
-                                      var percetageOFFee =
-                                          (paidF / totalF) * 100;
-
-                                      log("$totalF $paidF");
-
-                                      return attendenceAndFeeCard(
-                                        context,
-                                        headerText: MyStrings.error,
-                                        mainText:
-                                            "${percetageOFFee.toStringAsFixed(2)}%",
-                                        footerText: MyStrings.feePaid,
-                                        isFeeCard: true,
-                                      );
-                                    } else if (state is FeesErrorState) {
-                                      return attendenceAndFeeCard(
-                                        context,
-                                        headerText: MyStrings.error,
-                                        mainText: MyStrings.error,
-                                        footerText: MyStrings.error,
-                                        isFeeCard: true,
-                                      );
-                                    }
-
-                                    return const SizedBox();
-                                  }),
+                                  child: GestureDetector(
+                                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> FeesMainScreen())),
+                                    child: attendenceAndFeeCard(
+                                      context,
+                                      headerText: "Paid 23k",
+                                      mainText: "41%",
+                                      footerText: "Fees Paid",
+                                      isFeeCard: true,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -272,6 +239,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                         const AssignmentScreen(), context);
                                   },
                                   image: MyAssets.calendar,
+
                                 ),
                                 14.widthBox,
                                 Expanded(
@@ -309,7 +277,9 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     isPngImage: false,
                                     icon: Icons.arrow_forward,
                                     onIconPressed: () {
-                                      print("forward");
+
+                                       NavigationService.navigateTo(
+                                        LibraryScreen(), context);
                                     },
                                     image: MyAssets.library,
                                   ),
