@@ -27,6 +27,7 @@ import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/transport/transport_screen.dart';
+import 'package:nguru/test.dart';
 
 
 void main() {
@@ -132,7 +133,7 @@ class MyApp extends StatelessWidget {
         // const  NguruDashboardScreen()
          //  const SettingScreen()
     //   const    TransportScreen(),
-
+//RadioButtonExample()
        const AddSchool(),
             ),
       ),

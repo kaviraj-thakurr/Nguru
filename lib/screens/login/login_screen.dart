@@ -29,9 +29,9 @@ import 'package:velocity_x/velocity_x.dart';
 class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
-  final String ?schoolUrl;
+  final String? schoolUrl;
 
-  const LoginScreen({super.key, this.title, this.schoolLogo,this.schoolUrl});
+  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -46,8 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-      userNameController.addListener(() {
-      context.read<FormValidationCubit>().validateUserName(userNameController.text);
+    userNameController.addListener(() {
+      context
+          .read<FormValidationCubit>()
+          .validateUserName(userNameController.text);
     });
   }
 
@@ -64,10 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children: [
                       169.heightBox,
-                   Image.memory(
-          base64Decode(state.schoolPhoto??""),
-          height: height150,
-        ),
+                      Image.memory(
+                        base64Decode(state.schoolPhoto ?? ""),
+                        height: height150,
+                      ),
                       15.heightBox,
                       Text(
                         state.schoolName ?? MyStrings.schoolName,
@@ -79,82 +81,95 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: height1,
                       ),
                       20.heightBox,
+
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Stack(
-                            children: [
-                              ShaderMask(
-                                shaderCallback: (Rect bounds) {
-                                  return MyColors.buttonColors
-                                      .createShader(bounds);
-                                },
-                                child: Container(
-                                  height: height18,
-                                  width: width18,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: paddingVertical6, horizontal: paddingHorizontal10),
-                                  decoration: BoxDecoration(
-                                    // color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: Border.all(
-                                      color: Colors
-                                          .white, // This color is not visible
-                                      width: width1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 3,
-                                left: 3,
-                                child: Container(
-                                  height: height12,
-                                  width: width12,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: paddingVertical6, horizontal: paddingHorizontal10),
-                                  decoration: BoxDecoration(
-                                    gradient: MyColors.buttonColors,
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: Border.all(
-                                      color: Colors
-                                          .white, // This color is not visible
-                                      width: width1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Radio(
+                            activeColor: Color.fromARGB(255, 67, 225, 181),
+                           // hoverColor: Colors.blue,
+                            value: 1,
+                            groupValue: 1,
+                            onChanged: (value) {},
                           ),
-                          5.widthBox,
-                          Text(
-                            widget.title ?? "",
-                            style: FontUtil.schoolName,
-                          )
+                          Text(widget.title ?? ""),
                         ],
                       ),
-                      17.heightBox,
+
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.start,
+                      //   children: [
+                      //     Stack(
+                      //       children: [
+                      //         ShaderMask(
+                      //           shaderCallback: (Rect bounds) {
+                      //             return MyColors.buttonColors
+                      //                 .createShader(bounds);
+                      //           },
+                      //           child: Container(
+                      //             height: height18,
+                      //             width: width18,
+                      //             padding: const EdgeInsets.symmetric(
+                      //                 vertical: paddingVertical6, horizontal: paddingHorizontal10),
+                      //             decoration: BoxDecoration(
+                      //               // color: Colors.white,
+                      //               borderRadius: BorderRadius.circular(20.0),
+                      //               border: Border.all(
+                      //                 color: Colors
+                      //                     .white, // This color is not visible
+                      //                 width: width1,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Positioned(
+                      //           top: 3,
+                      //           left: 3,
+                      //           child: Container(
+                      //             height: height12,
+                      //             width: width12,
+                      //             padding: const EdgeInsets.symmetric(
+                      //                 vertical: paddingVertical6, horizontal: paddingHorizontal10),
+                      //             decoration: BoxDecoration(
+                      //               gradient: MyColors.buttonColors,
+                      //               borderRadius: BorderRadius.circular(20.0),
+                      //               border: Border.all(
+                      //                 color: Colors
+                      //                     .white, // This color is not visible
+                      //                 width: width1,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     5.widthBox,
+                      //     Text(
+                      //       widget.title ?? "",
+                      //       style: FontUtil.schoolName,
+                      //     )
+                      //   ],
+                      // ),
+                      5.heightBox,
                       Form(
                         key: _formKey,
                         child: Column(
                           children: [
-                            BlocBuilder<FormValidationCubit, FormValidationState>(
-                              builder: (context,state) {
-                                return CustomTextFormField(
-                                  controller: userNameController,
-                                  labelText: MyStrings.userName,
-                                  validator: (url) {
-                                    if (url == null || url.isEmpty) {
-                                      return MyStrings.userNameReq;
-                                    }
-                                    return null;
-                                  },
-                                 autoValidateMode: state.autoValidateUserName
-                                ? AutovalidateMode.onUserInteraction
-                                : AutovalidateMode.disabled,
-                                );
-                              }
-                            ),
+                            BlocBuilder<FormValidationCubit,
+                                FormValidationState>(builder: (context, state) {
+                              return CustomTextFormField(
+                                controller: userNameController,
+                                labelText: MyStrings.userName,
+                                validator: (url) {
+                                  if (url == null || url.isEmpty) {
+                                    return MyStrings.userNameReq;
+                                  }
+                                  return null;
+                                },
+                                autoValidateMode: state.autoValidateUserName
+                                    ? AutovalidateMode.onUserInteraction
+                                    : AutovalidateMode.disabled,
+                              );
+                            }),
                             14.heightBox,
                             TextFormField(
                               obscureText: _obscureText,
@@ -181,7 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
-                                    vertical: paddingVertical15, horizontal: paddingHorizontal20),
+                                    vertical: paddingVertical15,
+                                    horizontal: paddingHorizontal20),
                                 border: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(9.0)),
@@ -236,11 +252,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<LoginCubit>().logIn(
-                                    userNameController.text.trim(),
-                                    passWordController.text.toString(),
-                                    widget.schoolUrl ?? "",
-                                    
-                                    
+                                      userNameController.text.trim(),
+                                      passWordController.text.toString(),
+                                      widget.schoolUrl ?? "",
                                     );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
