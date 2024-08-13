@@ -25,11 +25,17 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   final TextEditingController searchBarController = TextEditingController();
   final DateTime _focusedDay = DateTime.now();
+  late CalendarEventCubit cubit;
+
+  void initCubit() {
+  cubit = BlocProvider.of<CalendarEventCubit>(context);
+  cubit.getCalendarEvent(_focusedDay.month);
+}
 
   @override
   void initState() {
     super.initState();
-    context.read<CalendarEventCubit>().getCalendarEvent(_focusedDay.month);
+    initCubit();
   }
 
   @override
@@ -57,14 +63,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   20.heightBox,
                   Container(
                       constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.12,
+                          maxHeight: MediaQuery.of(context).size.height * 0.2,
                           maxWidth: double.infinity),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          return BlocConsumer<CalendarEventCubit,
+                      child:  BlocConsumer<CalendarEventCubit,
                                   CalendarEventState>(
                               listener: (context, state) {},
                               builder: (context, state) {
@@ -72,16 +73,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   return const Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                } else if (state is CalendarEventSuccessState) {
+                                } else if (state is CalendarEventSuccessState &&  cubit.calendarEventList.isNotEmpty) {
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: footer(index, context,
-                                        state.calendarEventListData!),
+                                    child: ListView.builder(
+                                      itemCount: cubit.calendarEventList.length ,
+                                      itemBuilder: (context,index) {
+                                        return footer(index, context,
+                                            cubit.calendarEventList);
+                                      }
+                                    ),
                                   );
                                 } else if (state is CalendarEventErrorState) {
                                   return Center(
                                     child: Text(
-                                      state.message,
+                                     "error"+ state.message ?? "",
                                       style: FontUtil.customStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
@@ -99,9 +105,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ),
                                   );
                                 }
-                              });
-                        },
-                      )),
+                              })
+                       ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
@@ -114,14 +119,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget footer(int index, BuildContext context,
       List<CalendarEventList> calendarEventList) {
-   // log("${MyStrings.eventDate}: ${calendarEventList.length}");
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.08,
       child: ListView.builder(
           itemCount: calendarEventList.length,
           itemBuilder: (context, index) {
-            return customAttendenceFooterCard(context);
+            return customCalendarEventFooterCard(context,headerText: calendarEventList[index].eventName.name,footerText: calendarEventList[index].calendarDate.toString(),footerColor: Colors.red );
           }),
     );
   }
@@ -132,7 +136,7 @@ Widget customCalendarEventFooterCard(BuildContext context,
   return Container(
     padding: const EdgeInsets.all(5.0),
     constraints: BoxConstraints(
-      maxHeight: MediaQuery.of(context).size.height * 0.1,
+      maxHeight: MediaQuery.of(context).size.height * 0.07,
       maxWidth: MediaQuery.of(context).size.width * 0.28,
     ),
     decoration: BoxDecoration(

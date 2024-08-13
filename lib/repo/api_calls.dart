@@ -12,6 +12,7 @@ import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
 import 'package:nguru/models/get_fee_model.dart';
+import 'package:nguru/models/infirmary_model.dart';
 import 'package:nguru/models/library_book_search_model.dart';
 import 'package:nguru/models/library_history_model.dart';
 import 'package:nguru/models/library_issued_book_model.dart';
@@ -835,6 +836,38 @@ class AuthRepo {
     } catch (e) {
       log(e.toString());
       throw Exception("Failed to fetch library book search list: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET INFIRMARY LIST DATA      //////////////////////////////////////////////////////
+
+  Future<InfirmaryModel> getInfirmaryList() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.infirmaryGetList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 8,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      InfirmaryModel infirmaryResponse = infirmaryModelFromJson(res.toString());
+      return infirmaryResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch infirmary list: $e");
     }
   }
 }

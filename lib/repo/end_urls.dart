@@ -22,6 +22,7 @@ class EndUrl{
    static const String libraryGetIssuedList = "Library/GetIssuedList/";
    static const String libraryGetHistoryList = "Library/GetHistoryList/";
    static const String libraryGetSearchList = "Library/GetSearchList/";
+   static const String infirmaryGetList = "Infirmary/GetIllnessList/";
 
 
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
@@ -21,7 +23,6 @@ class EventCalendar extends StatefulWidget {
 class _EventCalendarState extends State<EventCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _EventCalendarState extends State<EventCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    List<CalendarEventList> calendarEventList = [];
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -39,7 +41,17 @@ class _EventCalendarState extends State<EventCalendar> {
           _buildMonthSelector(),
           AppGapping.padding20,
           BlocConsumer<CalendarEventCubit, CalendarEventState>(
-              listener: (context, state) {},
+              // listenWhen: (previous, current) =>
+              //     previous != current, // Trigger only on state change
+              listener: (context, state) {
+                // Set myVariable only once when transitioning to CalendarEventSuccessState
+                // if (state is CalendarEventSuccessState &&
+                //     state.myVariable == null) {
+                //   context
+                //       .read<CalendarEventCubit>()
+                //       .setMyVariable(calendarEventList);
+                // }
+              },
               builder: (context, state) {
                 if (state is CalendarEventInitialState) {
                   return TableCalendar(
@@ -102,7 +114,6 @@ class _EventCalendarState extends State<EventCalendar> {
                 }
 
                 if (state is CalendarEventSuccessState) {
-                  List<CalendarEventList> calendarEventList=[];
                   return TableCalendar(
                     calendarBuilders: CalendarBuilders(
                       defaultBuilder: (context, day, focusedDay) {
@@ -112,63 +123,54 @@ class _EventCalendarState extends State<EventCalendar> {
                         //  Apply different styling based on the day index
                         Color textColor = Colors.black;
                         TextStyle defaultStyle = FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.calendarDateColor);
-
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            textColor: MyColors.calendarDateColor);
 
                         int attendanceStatus =
-                           state.calendarEventList?[dayIndex].status?? 0;
-                          //  log("${attendanceStatus} ");
+                            state.calendarEventList?[dayIndex].status ?? 0;
+                        //  log("${attendanceStatus} ");
 
-                            // status == 3 not showing anything even in quick school app
+                        // status == 3 not showing anything even in quick school app
 
-                              if (attendanceStatus == 3) {
-                          defaultStyle= FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.buildLegendColor_1);
-                          textColor =  MyColors.buildLegendColor_1;
-                        }
-
-
-                      else  if (attendanceStatus == 2) {
-                          defaultStyle=FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.buildLegendColor_5);
-                          textColor =MyColors.buildLegendColor_5;
-
+                        if (attendanceStatus == 3) {
+                          defaultStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.buildLegendColor_1);
+                          textColor = MyColors.buildLegendColor_1;
+                        } else if (attendanceStatus == 2) {
+                          defaultStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.buildLegendColor_5);
+                          textColor = MyColors.buildLegendColor_5;
                         } else if (attendanceStatus == 1) {
-                          defaultStyle=FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.pinkShade_1);
-                          textColor =  MyColors.pinkShade_1;
-                            calendarEventList.add(state.calendarEventList![dayIndex]);
-                        //  context.read<CalendarEventCubit>().setMyVariable(calendarEventList);
-                         // log('Variable Value: ${state.myVariable?.length}');
-
-                         
-                        }
-                         else if (attendanceStatus == 0) {
-                          defaultStyle= FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.buildLegendColor_1);
-                          textColor =  MyColors.buildLegendColor_1;
-                        } 
-                        else {
-                          defaultStyle= FontUtil.customStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          textColor: MyColors.greyShade_7);
-                          textColor =  MyColors.greyShade_7;
+                          defaultStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.pinkShade_1);
+                          textColor = MyColors.pinkShade_1;
+                          calendarEventList
+                              .add(state.calendarEventList![dayIndex]);
+                        } else if (attendanceStatus == 0) {
+                          defaultStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.buildLegendColor_1);
+                          textColor = MyColors.buildLegendColor_1;
+                        } else {
+                          defaultStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.greyShade_7);
+                          textColor = MyColors.greyShade_7;
                         }
                         return Center(
                           child: Text(
                             '${day.day}',
-                            style: defaultStyle ?? TextStyle(color: Colors.black, fontSize: 13),
+                            style: defaultStyle ??
+                                TextStyle(color: Colors.black, fontSize: 13),
                           ),
                         );
                       },
@@ -232,7 +234,7 @@ class _EventCalendarState extends State<EventCalendar> {
                 } else if (state is CalendarEventErrorState) {
                   return Center(
                     child: Text(
-                      state.message,
+                      state.message?? "",
                       style: FontUtil.customStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -355,10 +357,8 @@ class _EventCalendarState extends State<EventCalendar> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildLegendItem("Holiday", MyColors.pinkShade_1),
-            _buildLegendItem("Week Offs", MyColors.greyShade_7),
+        _buildLegendItem("Week Offs", MyColors.greyShade_7),
         _buildLegendItem("Events", MyColors.buildLegendColor_5),
- 
-    
       ],
     );
   }

@@ -231,14 +231,15 @@ class _SettingScreenState extends State<SettingScreen> {
 }
 
 Widget customSettingProfileWidget(
-    BuildContext context, double screenWidth, double screenHeight, String name, String classAndSession, String admissionNumber) {
+    BuildContext context, double screenWidth, double screenHeight, String name, String classAndSession, String admissionNumber,{String? bloodGroup,String? gender}) {
   return Container(
     alignment: Alignment.center,
-    width: screenWidth * 0.9,
+    width: double.infinity,
     height: screenHeight * 0.1,
     child: Card(
       //  color: Color.fromARGB(255, 255, 242, 202),
-      elevation: 0.3,
+      elevation: 0.1,
+      color: MyColors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -265,7 +266,17 @@ Widget customSettingProfileWidget(
                     customTags(
                         "$admissionNumber",
                         const Color.fromARGB(255, 251, 225, 218),
-                        MyColors.orangeShades_1)
+                        MyColors.orangeShades_1),
+                         5.widthBox,
+                        customTags(
+                        "$bloodGroup",
+                        MyColors.yellowShade_5.withOpacity(0.2),
+                        MyColors.yellowShade_5),
+                         5.widthBox,
+                        customTags(
+                        "$gender",
+                       MyColors.greenShade_3.withOpacity(0.2),
+                        MyColors.greenShade_3)
                   ],
                 ),
               ],

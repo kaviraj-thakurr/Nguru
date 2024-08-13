@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
 
 import 'package:nguru/repo/api_calls.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepo? authRepo;
@@ -18,6 +19,7 @@ class LoginCubit extends Cubit<LoginState> {
           await authRepo?.logIn(userName: userName, password: password);
       if (result != null) {
         if (result.responseCode == "200") {
+          
           emit(LoginSuccessState());
         } else {
           emit(LoginErrorState(result.responseMessage ?? "Error occured"));

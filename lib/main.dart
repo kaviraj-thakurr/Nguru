@@ -13,6 +13,7 @@ import 'package:nguru/logic/discipline/descipline_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_cubit.dart';
+import 'package:nguru/logic/infirmary/infirmary_cubit.dart';
 import 'package:nguru/logic/library/history/library_history_cubit.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
 import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
@@ -23,6 +24,7 @@ import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/repo/api_calls.dart';
+import 'package:nguru/screens/activity_screen.dart';
 import 'package:nguru/screens/addSchool_screen.dart';
 import 'package:nguru/screens/attendance/attendace_card_screen.dart';
 import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
@@ -34,6 +36,7 @@ import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/event_calendar.dart';
 import 'package:nguru/screens/fees/fee_detail_screen.dart';
 import 'package:nguru/screens/fees/fee_main_screen.dart';
+import 'package:nguru/screens/infirmary_screen.dart';
 import 'package:nguru/screens/library_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/testing_story.dart';
@@ -105,6 +108,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LibrarySearchBookCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => InfirmaryCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -118,7 +124,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const CalendarScreen()
+            home: const InfirmaryScreen()
             // const NguruDashboardScreen()
             //   const BarChartExample()
             ),

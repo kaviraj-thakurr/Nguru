@@ -178,4 +178,9 @@ static const Color yellowShade_5 = Color(0xFFF9AB43);
 static const Color redShade_3 = Color(0xFFF94343);
 static const Color greenShade_4 = Color(0xFFA0CA7B);
 
+
+// activity screen
+static const Color blueShade_4 = Color(0xFF0261AE);
+
+
 }
