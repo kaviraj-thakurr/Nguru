@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendance_bar_chart_model.dart';
 import 'package:nguru/models/attendence_model.dart';
 import 'package:nguru/models/calendar_event_model.dart';
+import 'package:nguru/models/chatMessagesList.dart';
+import 'package:nguru/models/chatsend_button_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/communication_models.dart';
 import 'package:nguru/models/contact_us_model.dart';
@@ -19,6 +22,7 @@ import 'package:nguru/models/library_book_search_model.dart';
 import 'package:nguru/models/library_history_model.dart';
 import 'package:nguru/models/library_issued_book_model.dart';
 import 'package:nguru/models/notification_models.dart';
+import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/models/timetable_model.dart';
@@ -28,9 +32,12 @@ import 'package:nguru/services/networking.dart';
 
 import 'package:nguru/models/add_school_model.dart';
 import 'package:nguru/models/login_model.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
+
+import '../models/notificationlist_model.dart';
 
 
-var schoolUrl = "";
+//var schoolUrl = "";
 
 class AuthRepo {
   final _myService = Networking();
@@ -44,6 +51,7 @@ class AuthRepo {
     String fullSchoolUrl = "$schoolurl$subDomain";
 
     try {
+      await SharedPref.saveSchoolUrl(fullSchoolUrl);
       final res = await _myService.networkPost(
         url: EndUrl.addSchool,
         data: {
@@ -71,13 +79,15 @@ class AuthRepo {
           await _myService.networkPost(
             url: EndUrl.signInStaging,
             isStagingLink: true,
-            data: {
-	"deviceToken":"d-heVocKSLGvRSHs40ChbR:APA91bEAtQi2kgxkBaoVTwjGFAJP0Fl0HVry6Dg41FWLweAvjEpTNBbIzaTrMM41bmtCQv5TzVq5XirmCYImYFPwhVRUxZKtwis_n254uEQIDNFkS5oaD7SuBLDP12AfGuLAY-QKgzkl",
-	"deviceType":"1",
-	"password":password,
-	"schoolUrl":schoolUrl,
-	"userName":userName
-}
+            data:
+     {
+          "schoolURL":schoolUrl,
+          // "deviceToken":
+          //     "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+          "deviceType": "1",
+          "password": password,
+          "userName": userName
+        }
       );
       LoginModel logInData = loginModelFromJson(res.toString());
       return logInData;
@@ -114,24 +124,24 @@ class AuthRepo {
       final res =
           await _myService.networkPost(url: EndUrl.dashboardList, data:
            {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "deviceType": "1",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
+       "appMessageID": 0,
+       "circularID": 0,
+       "contentType": 0,
+       "deviceType": "1",
+       "downloadAttachment": 0,
+       "isNotification": 0,
+       "messageTypeId": 0,
+       "month": 0,
+       "pageNumber": 0,
+       "pageSize": 0,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+       "sessionID": await SharedPref.getSessionId(),
+       "studentID": await SharedPref.getStudentID(),
+       "subjectID": 0,
+       "type": 0,
+        "userID": await SharedPref.getUserID(),
+       "year": 0
       }
       );
       var result = DashboardModel.fromJson(json.decode(res.toString()));
@@ -161,13 +171,13 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": schoolUrl,
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getSchoolID(),
+          "subjectID":0,
           "type": 0,
-          "userID": "6135",
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -185,11 +195,11 @@ class AuthRepo {
         isStagingLink: true,
         url: EndUrl.attendance,
         data: {
-          "userID": 118011,
-          "schoolID": 1,
-          "studentID": 106045,
-          "sessionID": 178,
-          "schoolURL": "https://qsstg.iiteducation.com/tistnj",
+          "userID": await SharedPref.getUserID(),
+          "schoolID": await SharedPref.getSchoolID(),
+          "studentID":  await SharedPref.getStudentID(),
+          "sessionID": await SharedPref.getSessionId(),
+          "schoolURL": await SharedPref.getSchoolUrl(),
           "pageNumber": 0
         },
       );
@@ -225,13 +235,13 @@ class AuthRepo {
           "month": month,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl":await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID":  await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": 0,
-          "userID": "6135",
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -269,13 +279,13 @@ class AuthRepo {
           "month": month,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID":  await SharedPref.getSchoolID(),
+          "schoolUrl":  await SharedPref.getSchoolUrl(),
+          "sessionID":  await SharedPref.getSessionId(),
+          "studentID":  await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": 0,
-          "userID": "6135",
+          "userID":  await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -309,11 +319,11 @@ class AuthRepo {
             "type": 1,
             "pageSize": 4,
             "pageNumber": 2,
-            "userID": 118011,
-            "schoolID": 1,
-            "studentID": 106045,
-            "sessionID": 178,
-            "schoolURL": "https://qsstg.iiteducation.com/tistnj",
+            "userID":  await SharedPref.getUserID(),
+            "schoolID":  await SharedPref.getSchoolID(),
+            "studentID":  await SharedPref.getStudentID(),
+            "sessionID":  await SharedPref.getSessionId(),
+            "schoolURL":  await SharedPref.getSchoolUrl(),
           });
       CircularModel currentCircularList = circularModelFromJson(res.toString());
       return currentCircularList;
@@ -348,13 +358,13 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID":  await SharedPref.getSchoolID(),
+          "schoolUrl":  await SharedPref.getSchoolUrl(),
+          "sessionID":  await SharedPref.getSessionId(),
+          "studentID":  await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": type ?? 0,
-          "userID": "6135",
+          "userID":  await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -774,13 +784,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 1,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       AttendanceBarChartModel attendanceBarChartDataResponse =
@@ -809,13 +819,13 @@ class AuthRepo {
         "month": monthNumber,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 2024
       });
       ParticularMonthAttendanceModel particularMonthAttendanceDataResponse =
@@ -1029,4 +1039,41 @@ class AuthRepo {
       throw Exception("Failed to fetch library book search list: $e");
     }
   }
+
+ Future<ListCommunicationModel> getCommunicationList() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.chatList, data:
+    {
+	"appMessageID":20,
+	"circularID":0,
+	"contentType":0,
+	"createdForUserId":"4771",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":1,
+	"pageSize":20,
+	"schoolID":1,
+	"schoolUrl":"https://quickschool.niitnguru.com/demoschool",
+	"sessionID":107,
+	"studentID":896,
+	"subjectID":0,
+	"type":0,
+	"userID":"6135",
+	"year":0
+}
+      
+      );
+      ListCommunicationModel listCommunicationModel =
+          listCommunicationModelFromJson(res.toString());
+      return listCommunicationModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library book search list: $e");
+    }
+  }
+
+
 }

@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
-import 'package:nguru/custom_widgets/custom_appbar.dart';
-import 'package:nguru/custom_widgets/custom_progress_bar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
@@ -52,7 +50,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding8),
+            padding: const EdgeInsets.all(padding20),
             child: SafeArea(
               child: Column(
                 children: [
@@ -70,15 +68,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           return const Center(child: CircularProgressIndicator());
                         } else if (state is AssignmentListSuccessState) {
                             if (state.subjectList.isEmpty ) {
-                            return  Center(child: SvgPicture.asset(MyAssets.noDataFound));
+                            return  Center(
+                                child: Column(
+                                children: [
+                                  160.heightBox,
+                                  SvgPicture.asset(
+                                    MyAssets.noDataFound,
+                                    height: height150,
+                                  ),
+                                  5.heightBox,
+                                  Text(
+                                    MyStrings.assignmentTitle,
+                                    style: FontUtil.customStyle(
+                                        fontSize: 14.h,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: APP_FONT,
+                                        textColor: MyColors.noDataFoundTitle),
+                                  ),
+                                  Text(
+                                    MyStrings.assignmentSub,
+                                    style: FontUtil.customStyle(
+                                        fontSize: 10.h,
+                                        fontWeight: FontWeight.w400,
+                                        textColor:
+                                            MyColors.noDataFoundSubtitle),
+                                  )
+                                ],
+                              ));
                           }
                           return PageView.builder(
                             controller: _pageController,
                             itemCount: state.subjectList.length,
                             onPageChanged: (index) {
-                              setState(() {
-                                _currentPage = index;
-                              });
                             },
                             itemBuilder: (context, index) {
                               final subject = state.subjectList[index];
@@ -109,39 +130,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                       },
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (_currentPage > 0) {
-                            _pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
-                          }
-                        },
-                        icon: SvgPicture.asset(MyAssets.back_arrow),
-                      ),
-                      Text("Page ${_currentPage + 1}/3"),
-                      IconButton(
-                        onPressed: () {
-                          if (_currentPage < 2) {
-                            _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
-                          }
-                        },
-                        icon: SvgPicture.asset(MyAssets.front_arrow),
-                      ),
-                    ],
-                  ),
-                  CustomProgressBar(
-                    progress: (_currentPage + 1) / 3,
-                    dotCount: 0,
-                  ),
-                ],
+                ]
+                
               ),
             ),
           ),

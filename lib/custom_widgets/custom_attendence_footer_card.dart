@@ -8,8 +8,8 @@ Widget customAttendenceFooterCard(BuildContext context,
   return Container(
     padding: const EdgeInsets.all(5.0),
     constraints: BoxConstraints(
-      maxHeight: MediaQuery.of(context).size.height * 0.1,
-      maxWidth: MediaQuery.of(context).size.width * 0.28,
+      maxHeight: MediaQuery.of(context).size.height * 0.06,
+      maxWidth: MediaQuery.of(context).size.width * 0.26,
     ),
     decoration: BoxDecoration(
       color: MyColors.calendarFooterCard,
@@ -32,8 +32,9 @@ Widget customAttendenceFooterCard(BuildContext context,
                 height: MediaQuery.of(context).size.height * 0.3,
                 child: Text(
                   headerText ?? "Total Working Days",
+                  
                   style: FontUtil.customStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.textColors),
                   maxLines: 2,
@@ -52,7 +53,7 @@ Widget customAttendenceFooterCard(BuildContext context,
               style: FontUtil.customStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
-                  textColor:MyColors.addButtonColor),
+                  textColor:footerColor!),
             )
           ],
         )

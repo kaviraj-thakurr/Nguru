@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/repo/api_calls.dart';
 
@@ -8,15 +12,74 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
 
   AddSchoolCubit(this.authRepo) : super(AddSchoolInitState());
 
-  Future<void> addSchool(String schoolName,String subDomain,) async {
+  Box<UserModel>? box;
+  List<UserModel>? addSchoolList;
+
+  Future<void> openAddSchoolBox() async {
+    box = await Hive.openBox<UserModel>('listItems');
+
+    addSchoolList = box?.values.toSet().toList() ?? [];
+    removeDuplicateSchools(addSchoolList);
+    log("length: ${addSchoolList?.length}");
+  }
+
+  void removeDuplicateSchools(List<UserModel>? addSchoolList) {
+    if (addSchoolList == null) return;
+
+    // Set to track unique subDomains
+    final uniqueSubDomains = <String>{};
+
+    // Retain only the first occurrence of each unique subDomain
+    addSchoolList.retainWhere((user) => uniqueSubDomains.add(user.subDomain));
+  }
+
+  Future<void> addSchool(
+      String schoolName, String subDomain, String schoolNickName,
+      {bool isNavigating = true}) async {
     try {
-      emit(AddSchoolLoadingState());
+      if (isNavigating) {
+        emit(AddSchoolLoadingState());
+      }
+
       final result = await authRepo?.addSchool(
-        schoolName,subDomain,
+        schoolName,
+        subDomain,
       );
+
+      openAddSchoolBox();
       if (result != null) {
-        if (result.responseCode == "200" || result.schoolName != null || result.schoolPhoto !=null) {
-          emit(AddSchoolSuccessState(schoolName: result.schoolName,schoolPhoto: result.schoolPhoto,));
+        if (result.responseCode == "200" ||
+            result.schoolName != null ||
+            result.schoolPhoto != null) {
+          // if (addSchoolList == null) {
+          //   Hive.box<UserModel>('listItems').add(UserModel(
+          //     schoolUrl: "$schoolName",
+          //     subDomain: "$subDomain",
+          //     schoolNickName: "$schoolNickName",
+          //   ));
+          // }
+          // bool exists = addSchoolList!.any(
+          //     (e) => e.schoolUrl == schoolName && e.subDomain == subDomain);
+
+          // if (!exists) {
+          //   Hive.box<UserModel>('listItems').add(UserModel(
+          //     schoolUrl: "$schoolName",
+          //     subDomain: "$subDomain",
+          //     schoolNickName: "$schoolNickName",
+          //   ));
+          // }
+          if (isNavigating) {
+            emit(AddSchoolSuccessState(
+              schoolName: result.schoolName,
+              schoolPhoto: result.schoolPhoto,
+            ));
+          }else{
+            emit(AddSchoolSuccessUpdated(
+              schoolName: result.schoolName,
+              schoolPhoto: result.schoolPhoto,
+            ));
+            
+          }
         } else {
           emit(AddSchoolErrorState(result.responseMessage ?? "Error occured"));
         }
@@ -24,5 +87,22 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
     } catch (e) {
       emit(AddSchoolErrorState(e.toString()));
     }
+  }
+
+  saveToHive(String schoolUrl, String subDomain, String schoolNickName) {
+    final box = Hive.box<UserModel>('listItems');
+    final user = UserModel(
+      schoolUrl: schoolUrl,
+      subDomain: subDomain,
+      schoolNickName: schoolNickName,
+    );
+    box.add(user).then((value) async {
+      debugPrint("Success");
+      var box = await Hive.openBox<UserModel>('listItems');
+      var userModel = box.values.toList();
+      debugPrint("fetching: $userModel");
+    }).onError((error, stackTrace) {
+      debugPrint("Faileddd!!!");
+    });
   }
 }

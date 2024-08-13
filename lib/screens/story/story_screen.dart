@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
@@ -16,6 +17,9 @@ import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
+import 'package:nguru/screens/assignment_screen.dart';
+import 'package:nguru/screens/circular_screen.dart';
+import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/story/assignment_story_screen.dart';
 import 'package:nguru/screens/story/circular_story_screen.dart';
 import 'package:nguru/screens/story/discipline_story_screen.dart';
@@ -274,7 +278,7 @@ class _StoryScreenState extends State<StoryScreen>
     // Trigger fetching the lists
     context.read<AssignmentListCubit>().getAssignmentList(todaysDate.month,DateFormat('yyyy-MM-ddTHH:mm:ss').format(todaysDate).toString());
     context.read<CircularCubit>().getCurrentCircular();
-    context.read<DisciplineCubit>().getDiscipline();
+    context.read<DisciplineCubit>().getDiscipline(type: 0);
   }
 
   @override
@@ -309,27 +313,38 @@ class _StoryScreenState extends State<StoryScreen>
             return Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _storyWidget<AssignmentListCubit, AssignmentListState,
-                    SubjectList>(
-                  screenHeight,
-                  screenWidth,
-                  todayAssignmentAdded,
-                  context.read<AssignmentListCubit>(),
-                  _assignmentAnimationController,
-                  (list) =>
-                      showAssignmentStory(screenHeight, screenWidth, list),
-
-                  MyStrings.assignment,
+                GestureDetector(
+                  onTap: (){
+                    NavigationService.navigateTo(const AssignmentScreen(), context);
+                  },
+                  child: _storyWidget<AssignmentListCubit, AssignmentListState,
+                      SubjectList>(
+                    screenHeight,
+                    screenWidth,
+                    todayAssignmentAdded,
+                    context.read<AssignmentListCubit>(),
+                    _assignmentAnimationController,
+                    (list) =>
+                        showAssignmentStory(screenHeight, screenWidth, list),
+                  
+                    MyStrings.assignment,context
+                  ),
                 ),
                 15.widthBox,
-                _storyWidget<CircularCubit, CircularState, CircularList>(
-                  screenHeight,
-                  screenWidth,
-                  todayAssignmentAdded,
-                  context.read<CircularCubit>(),
-                  _circularAnimationController,
-                  (list) => showCircularStory(screenHeight, screenWidth, list),
-                  MyStrings.circular,
+                GestureDetector
+                (
+                  onTap: (){
+                    NavigationService.navigateTo(const CircularScreen(), context);
+                  },
+                  child: _storyWidget<CircularCubit, CircularState, CircularList>(
+                    screenHeight,
+                    screenWidth,
+                    todayAssignmentAdded,
+                    context.read<CircularCubit>(),
+                    _circularAnimationController,
+                    (list) => showCircularStory(screenHeight, screenWidth, list),
+                    MyStrings.circular,context
+                  ),
                 ),
                 15.widthBox,
                 _storyWidget<DisciplineCubit, DisciplineState, DisciplineList>(
@@ -340,14 +355,15 @@ class _StoryScreenState extends State<StoryScreen>
                   _disciplineAnimationController,
                   (list) =>
                       showDisciplineStory(screenHeight, screenWidth, list),
-                  MyStrings.discipline,
+                  MyStrings.discipline,context
                 ),
               ],
             );
           } else if (state is AssignmentMonthListErrorState) {
             return const Center(child: Text(MyStrings.error));
           } else {
-            return const Center(child: Text(MyStrings.undefinedState));
+            return const SizedBox();
+            // Center(child: Text(MyStrings.undefinedState));
           }
         },
       ),
@@ -362,6 +378,8 @@ class _StoryScreenState extends State<StoryScreen>
     AnimationController animationController,
     Widget Function(List<T>) showStoryScreen,
     String title,
+    context,
+    
   ) {
     return BlocBuilder<C, S>(
       bloc: cubit,
@@ -446,9 +464,16 @@ class _StoryScreenState extends State<StoryScreen>
                   ],
                 ),
                 AppGapping.padding3,
-                Text(
-                  title,
-                  style: FontUtil.storyTitle,
+                InkWell(
+                  onTap: () {
+                 title =="Assignment"?   NavigationService.navigateTo(AssignmentScreen(), context) 
+                 : title == "Circular" ?  NavigationService.navigateTo(CircularScreen(), context)
+                 :  NavigationService.navigateTo(DisciplineScreen(), context)  ;
+                  },
+                  child: Text(
+                    title,
+                    style: FontUtil.storyTitle,
+                  ),
                 ),
               ],
             ),
@@ -458,7 +483,8 @@ class _StoryScreenState extends State<StoryScreen>
             state is DisciplineErrorState) {
           return const Center(child: Text(MyStrings.error));
         } else {
-          return const Center(child: Text(MyStrings.undefinedState));
+          return SizedBox();
+          // const Center(child: Text(MyStrings.undefinedState));
         }
       },
     );

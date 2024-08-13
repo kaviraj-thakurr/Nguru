@@ -4,9 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final bool read;
   final String? labelText;
   final TextStyle? labelStyle;
   final EdgeInsetsGeometry? contentPadding;
@@ -20,7 +21,7 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final AutovalidateMode? autoValidateMode;
   final bool? obscureText;
-  final InputDecoration? decoration; // Add this line
+  final InputDecoration? decoration;
   final void Function(String)? onChanged;
 
   const CustomTextFormField({
@@ -34,47 +35,53 @@ class CustomTextFormField extends StatelessWidget {
     this.enabledBorder,
     this.focusedBorder,
     this.style,
+    this.read = false,
     this.validator,
     this.suffixIconAsset,
     this.suffixIcon,
     this.autoValidateMode,
     this.obscureText,
-    this.decoration, // Add this line
+    this.decoration,
     this.onChanged,
   });
 
   @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  @override
   Widget build(BuildContext context) {
     final defaultDecoration = InputDecoration(
-      suffixIcon: suffixIcon ??
-          (suffixIconAsset != null
+      suffixIcon: widget.suffixIcon ??
+          (widget.suffixIconAsset != null
               ? IconButton(
                   onPressed: () {
-                    focusNode?.requestFocus();
+                    widget.focusNode?.requestFocus();
                   },
-                  icon: SvgPicture.asset(suffixIconAsset!),
+                  icon: SvgPicture.asset(widget.suffixIconAsset!),
                 )
               : null),
-      labelText: labelText,
-      labelStyle: labelStyle ??
+      labelText: widget.labelText,
+      labelStyle: widget.labelStyle ??
           const TextStyle(
             fontSize: 15,
             color: Colors.grey,
             fontFamily: APP_FONT,
           ),
-      contentPadding: contentPadding ??
+      contentPadding: widget.contentPadding ??
           const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-      border: border ??
+      border: widget.border ??
           const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(9.0)),
           ),
-      enabledBorder: enabledBorder ??
+      enabledBorder: widget.enabledBorder ??
           const OutlineInputBorder(
             borderSide: BorderSide(
               color: MyColors.borderColor,
             ),
           ),
-      focusedBorder: focusedBorder ??
+      focusedBorder: widget.focusedBorder ??
           const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 1.0),
             borderRadius: BorderRadius.all(Radius.circular(9.0)),
@@ -82,15 +89,16 @@ class CustomTextFormField extends StatelessWidget {
     );
 
     return TextFormField(
-      inputFormatters: inputFormatters,
-      focusNode: focusNode,
-      controller: controller,
-      autovalidateMode: autoValidateMode,
-      obscureText: obscureText ?? false,
-      decoration: decoration ?? defaultDecoration, // Add this line
-      style: style ?? FontUtil.signInFieldText,
-      validator: validator,
-      onChanged: onChanged,
+      inputFormatters: widget.inputFormatters,
+      focusNode: widget.focusNode,
+      readOnly: widget.read,
+      controller: widget.controller,
+      autovalidateMode: widget.autoValidateMode,
+      obscureText: widget.obscureText ?? false,
+      decoration: widget.decoration ?? defaultDecoration,
+      style: widget.style ?? FontUtil.signInFieldText,
+      validator: widget.validator,
+      onChanged: widget.onChanged,
     );
   }
 }

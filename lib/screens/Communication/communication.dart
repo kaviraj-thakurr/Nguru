@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
+import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/communication/communication_cubit.dart';
 import 'package:nguru/logic/communication/communication_state.dart';
@@ -46,6 +47,7 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
          Padding(padding: 
       const EdgeInsets.all(padding20),
       child: SafeArea(child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           customAppBar(),
            CustomSearchBar(controller: searchController),
@@ -68,7 +70,7 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
                                   InkWell(
                                     onTap: (){
                                     NavigationService.navigateTo(
-                        const ChatScreen(), context);
+                         ChatScreen(), context);
                                     },
                                     child: cardDesign(context: context,
                                     image: "image",
@@ -85,10 +87,14 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
                          
                         }
                       ),
-                    )
+                    ),
+                 PrimaryButton(title: "New Chat", onPressed: ()=>NavigationService.navigateTo(ChatScreen(), context))   
 
         ],
-      )),)
+        
+      )
+      ),
+      )
 
         ],
       ),

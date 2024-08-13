@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 
 class MyColors {
   const MyColors._();
+  static const Color textcolors = Color(0xFF7A7A7A);
+
 static const Color notificationSubtitle = Color(0xFF6A6A6A);
   static const Color sessionText = Color(0xFF231F20);
   static const Color grey = Colors.grey;
   static  Color customDataColor = const Color(0xFF070707).withOpacity(0.7);
   static const Color assignmentDateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);
+  
   static const Color searchBox = Color(0xFFF3F3F3);
   static const Color borderColor = Color(0xFFD7D7D7);
   static  Color textColors = const Color(0xFF070707).withOpacity(0.7);
@@ -222,5 +225,22 @@ static const Color greenShade_3 = Color(0xFF05B637);
 static const Color yellowShade_5 = Color(0xFFF9AB43);
 static const Color redShade_3 = Color(0xFFF94343);
 static const Color greenShade_4 = Color(0xFFA0CA7B);
+
+
+// discipline screen
+
+//arrow color
+
+
+
+
+
+/////////////////////////////////// FEE SCREEN //////////////////////////////
+
+
+  
+
+
+
 
 }

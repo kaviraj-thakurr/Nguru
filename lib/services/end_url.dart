@@ -23,4 +23,14 @@ class EndUrl{
    static const String photoGalleryList = "PhotoGallery/GetList/";
    static const String signInLogIn = "SignIn/Logout/";
    static const String changeUpdatePassword = "ChangePassword/Update";
+
+   static const String attendanceGetBarChart = "Attendance/GetBarChart/";
+   static const String attendanceGetMonthWise = "Attendance/GetMonthwise/";
+   static const String feeGetList = "Fee/GetList/";
+   static const String diciplineGetList = "Discipline/GetList/";
+   static const String calendarEventGetList = "CalendarEvent/GetList/";
+   static const String libraryGetIssuedList = "Library/GetIssuedList/";
+   static const String libraryGetHistoryList = "Library/GetHistoryList/";
+   static const String libraryGetSearchList = "Library/GetSearchList/";
+   static const String chatList = "Communication/GetMessageDetail/";
 }

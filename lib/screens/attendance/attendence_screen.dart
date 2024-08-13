@@ -9,6 +9,7 @@ import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
 import 'package:nguru/models/particular_month_attendance_model.dart';
+import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
@@ -36,79 +37,90 @@ class _AttendenceScreenState extends State<AttendenceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 1,
-              width: double.infinity,
-              child: Column(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CustomAppBar(),
-                  CustomSearchBar(
-                    controller: searchBarController,
-                    hintText: MyStrings.search,
-                  ),
-                  screenTitleHeader(MyStrings.attendanceDetails,
-                      onPressed: () => Navigator.pop(context)),
-                  const CustomCalendar(),
-                  20.heightBox,
-                  Container(
-                      constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.12,
-                          maxWidth: double.infinity),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          return BlocConsumer<ParticularMonthAttendanceCubit,
-                                  ParticularMonthAttendanceState>(
-                              listener: (context, state) {},
-                              builder: (context, state) {
-                                if (state
-                                    is ParticularMonthAttendanceLoadingState) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state
-                                    is ParticularMonthAttendanceSuccessState) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: footer(index, context,
-                                        state.particularMonthAttendanceModel),
-                                  );
-                                } else if (state
-                                    is ParticularMonthAttendanceErrorState) {
-                                  return Center(
-                                    child: Text(
-                                      state.message,
-                                      style: FontUtil.customStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: MyColors.boldTextColor),
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text(
-                                      MyStrings.undefinedState,
-                                      style: FontUtil.customStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: MyColors.boldTextColor),
-                                    ),
-                                  );
-                                }
-                              });
-                        },
-                      )),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                ],
-              ),
-            )));
+        body: Stack(
+          children: [
+             Positioned.fill(
+            child: Image.asset(
+          MyAssets.bg,
+          fit: BoxFit.fill,
+        )),
+            
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 1,
+                width: double.infinity,
+                child: Column(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CustomAppBar(),
+                    CustomSearchBar(
+                      controller: searchBarController,
+                      hintText: MyStrings.search,
+                    ),
+                    screenTitleHeader(MyStrings.attendanceDetails,
+                        onPressed: () => Navigator.pop(context)),
+                    const CustomCalendar(),
+                    20.heightBox,
+                    Container(
+                        constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height * 0.12,
+                            maxWidth: double.infinity),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          itemBuilder: (BuildContext context, int index) {
+                            return BlocConsumer<ParticularMonthAttendanceCubit,
+                                    ParticularMonthAttendanceState>(
+                                listener: (context, state) {},
+                                builder: (context, state) {
+                                  if (state
+                                      is ParticularMonthAttendanceLoadingState) {
+                                    return const Center(
+                                      child: SizedBox.shrink(),
+                                    );
+                                  } else if (state
+                                      is ParticularMonthAttendanceSuccessState) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: footer(index, context,
+                                          state.particularMonthAttendanceModel),
+                                    );
+                                  } else if (state
+                                      is ParticularMonthAttendanceErrorState) {
+                                    return Center(
+                                      child: Text(
+                                        state.message,
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: MyColors.boldTextColor),
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: Text(
+                                        MyStrings.undefinedState,
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: MyColors.boldTextColor),
+                                      ),
+                                    );
+                                  }
+                                });
+                          },
+                        )),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
+                    ),
+                  ],
+                ),
+              )),
+          ]
+        )
+        );
   }
 
   Widget footer(int index, BuildContext context,

@@ -16,6 +16,7 @@ import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -54,7 +55,7 @@ class _BarChartExampleState extends State<BarChartExample> {
         children: [
           Image.asset(MyAssets.background_2),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(padding20),
               child: Column(
                 children: [
                   CustomAppBar(),
@@ -103,11 +104,11 @@ class _BarChartExampleState extends State<BarChartExample> {
                     builder: (context,state) {
                       if(state is ParticularMonthAttendanceLoadingState)
                       {
-                     return  const Center(child:  CircularProgressIndicator(),);
+                     return  const Center(child:  SizedBox.shrink(),);
                       }
 
                      else if(state is ParticularMonthAttendanceSuccessState){
-                        return attendanceStatusTopGraph(state.particularMonthAttendanceModel);
+                        return attendanceStatusTopGraph(context, state.particularMonthAttendanceModel);
                       }
                       else if(state  is ParticularMonthAttendanceErrorState)
                       {
@@ -133,7 +134,7 @@ class _BarChartExampleState extends State<BarChartExample> {
                   10.heightBox,
                   GestureDetector(
                     onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>AttendenceScreen())),
-                    child: attendanceVerticalBarChartGraph())
+                    child: attendanceVerticalBarChartGraph(context))
                 ],
               )),
         ],
@@ -231,9 +232,9 @@ class _BarChartExampleState extends State<BarChartExample> {
   }
 }
 
-Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAttendanceModel) {
+Widget attendanceStatusTopGraph(BuildContext context, ParticularMonthAttendanceModel particularMonthAttendanceModel) {
   return SizedBox(
-    height: 200,
+    height: MediaQuery.sizeOf(context).height*0.24,
     width: double.infinity,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -548,12 +549,12 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
   );
 }
 
-Widget attendanceVerticalBarChartGraph() {
+Widget attendanceVerticalBarChartGraph(BuildContext context) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: SizedBox(
       width: 700,
-      height: 330,
+      height: MediaQuery.sizeOf(context).height*0.35,
       child: BlocConsumer<AttendanceBarChartCubit,AttendanceBarChartState>(
         listener: (context, state) {
 
@@ -561,7 +562,7 @@ Widget attendanceVerticalBarChartGraph() {
         builder: (context,state) {
 
           if(state is AttendanceBarChartLoadingState){
-            return const Center(child: CircularProgressIndicator(),);
+            return const Center(child: SizedBox.shrink(),);
           }
 
         else  if(state is AttendanceBarChartSuccessState){

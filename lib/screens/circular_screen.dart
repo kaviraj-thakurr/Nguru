@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
-import 'package:nguru/custom_widgets/custom_progress_bar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/circular/circular_cubit.dart';
@@ -29,7 +28,7 @@ class _CircularScreenState extends State<CircularScreen> {
  final TextEditingController searchController = TextEditingController();
   List<CircularList> filteredCirculars = [];
 
-  int currentDate = DateTime.now().month;
+ final int currentDate = DateTime.now().month;
 
   @override
   void initState() {
@@ -70,7 +69,7 @@ class _CircularScreenState extends State<CircularScreen> {
           fit: BoxFit.fill,
         )),
         Padding(
-          padding: const EdgeInsets.all(padding12),
+          padding: const EdgeInsets.all(padding20),
           child: SafeArea(
             child: Column(
               children: [
@@ -157,34 +156,7 @@ class _CircularScreenState extends State<CircularScreen> {
                     },
                   ),
                 ),
-                BlocBuilder<CircularCubit, CircularState>(
-                  builder: (context, state) {
-                    final cubit = context.read<CircularCubit>();
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: cubit.previousPage,
-                            icon: SvgPicture.asset(MyAssets.back_arrow)),
-                        Text(
-                          "Page ${cubit.currentPage} of ${(cubit.totalRecords / cubit.itemsPerPage).ceil()}",
-                          style: FontUtil.customStyle(
-                              fontSize: 12.h,
-                              fontWeight: FontWeight.w500,
-                              textColor: MyColors.pageNoColor,
-                              fontFamily: APP_FONT),
-                        ),
-                        IconButton(
-                            onPressed: cubit.nextPage,
-                            icon: SvgPicture.asset(MyAssets.front_arrow)),
-                      ],
-                    );
-                  },
-                ),
-                const CustomProgressBar(
-                  progress: 0.3,
-                  dotCount: 0,
-                )
+                
               ],
             ),
           ),

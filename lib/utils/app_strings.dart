@@ -43,8 +43,15 @@ class MyStrings {
   static const String schoolNameLeastName =
       'School Name must be at least 3 characters';
   static const String circularTitle = "No Circular Today!";
+  static const String assignmentTitle = "No Assignment Today!";
+   static const String noDisciplineToday = "No Discipline Today!";
   static const String circularSubTittle =
       "Check previous or upcoming months for assignments.";
+       static const String disciplineSub =
+      "Check previous or upcoming months for discipline.";
+
+         static const String assignmentSub =
+      "Check previous or upcoming months for assignment.";
   static const String noSubject = "No Subject";
 
   static const String timeTable = "Timetable";
@@ -68,7 +75,7 @@ class MyStrings {
       "Time to pack your bag!  Check your \ntimetable first ️ to make sure you \nhave everything ✏️.";
 
   static const String examinationSub = "Try better👍 next time !";
-  static const String calendarSub = "🥳 Holidays are here !";
+  static const String calendarSub = " Holidays are here !";
   static const String activitySub = "Your achievements 💯 are recorded.";
   static const String librarySub =
       "Issued books 📚 \nshould be timely \nreturned !";
@@ -102,4 +109,54 @@ class MyStrings {
       "Sorry no school photo available!";
   static const String unableTOOpenTheMail = "Unable to open the email";
   static const String couldNotLaunch = "Could not launch";
+
+  // static const String notAvailable = "N/A";
+  // static const String adddress = "Address";
+  //   static const String email = "Email";
+  //     static const String mobileNumber = "Mobile Number";
+  //       static const String landlineNumber = "Landline Number";
+
+
+
+
+
+
+
+
+
+
+      // static const String error = "Some error occured!";
+      // static const String undefinedState = "Some undefined state error!";
+      // static const String asssignment = "Assignment";
+      // static const String endDate = "End Date";
+      // static const String date = "Date";
+      // static const String circular = "Circular";
+      // static const String discipline = "Discipline";
+      // static const String teacherName = "Teacher Name";
+      // static const String reason= "Reason";
+      // static const String points= "Points";
+      // static const String photoGallery= "Photo Gallery";
+      // static const String noSchoolPhotoAvailable= "Sorry no school photo available!";
+      // static const String unableTOOpenTheMail= "Unable to open the email";
+      // static const String couldNotLaunch= "Could not launch";
+      static const String totalFee= "Total Fee";
+      static const String dueFee= "Total Due";
+      static const String paidFee= "Paid Fee";
+      static const String feeHistory= "Fee History";
+      static const String receipt= "Receipt";
+      static const String pay= "Pay";
+      static const String paymentStatus= "Payment Status";
+      static const String feeDetail= "Fee detail";
+      static const String proceedToPay = "Proceed to pay";
+      static const String fee = "Fees";
+      static const String totalWorkingDays = "Total Working Days";
+      static const String absent = "Absent";
+      static const String present = "Present";
+      static const String unknownOption = 'Unknown option';
+      static const String attendanceDetails = "Attendance Details";
+      static const String disciplineGroup = "Discipline Group";
+      static const String noData = "no data";
+      static const String positivePoints = "Positive Points";
+      static const String negativePoints = "Negative Points";
+      static const String eventDate = "event data";
 }

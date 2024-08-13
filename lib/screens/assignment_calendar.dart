@@ -51,7 +51,7 @@ class _CircularScreenState extends State<AssignmentCalendar> {
             builder: (context, state) {
           if (state is AssignmentMonthListLoadingState) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: SizedBox.shrink()
             );
           } else if (state is AssignmentMonthListErrorState) {
             return Center(

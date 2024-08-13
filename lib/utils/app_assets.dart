@@ -4,8 +4,8 @@ class MyAssets {
   const MyAssets._();
 
 //images
-
-static const String noData = "assets/images/nodata.png";
+  static const String arrowIcon = "assets/icons/arrow_button.svg";
+  static const String noData = "assets/images/nodata.png";
   static const String download = "assets/icons/download.svg";
   static const String defaultUrl = "https://quickschool.niitnguru.com/";
   static const String signIN = "assets/images/signIn.svg";
@@ -25,7 +25,7 @@ static const String noData = "assets/images/nodata.png";
   static const String bg = "assets/images/bg.png";
 
   static const String searchIcon = "assets/images/search.svg";
- // static const String books = "assets/images/books.svg";
+  // static const String books = "assets/images/books.svg";
   static const String books = "assets/images/bookz.png";
   static const String noDataFound = "assets/images/noDataFound.svg";
 
@@ -43,25 +43,32 @@ static const String noData = "assets/images/nodata.png";
   static const String front_arrow = "assets/icons/front_arrow.svg";
   static const String storyDownload = "assets/icons/floating_action_button.svg";
 
-///this is for sahil Strings ---------------------------------------------------->
+  //icons
 
-  static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
-  static const String floatingActionBackIcon = "assets/icons/floating_action_button.svg";
+  //icons
+  static const String homeIcon = "assets/icons/home.svg";
+  static const String floatingActionIcon =
+      "assets/icons/floating_action_button.svg";
   static const String backArrow = "assets/images/back.svg";
+
+  ///this is for sahil Strings ---------------------------------------------------->
+
+  static const String floatingActionBackIcon =
+      "assets/icons/floating_action_button.svg";
+
   static const String assignmentIcon = "assets/icons/assignment_icon.svg";
   static const String assignmentImage = "assets/icons/assignment.png";
   static const String downloadIcon = "assets/icons/download.svg";
-  static const String floatingActionDownloadButton= "assets/icons/floating_action_down_button.svg";
-  static const String callIcon= "assets/icons/call_icon.svg";
-  static const String messageIcon= "assets/icons/message_icon.svg";
+  static const String floatingActionDownloadButton =
+      "assets/icons/floating_action_down_button.svg";
+  static const String callIcon = "assets/icons/call_icon.svg";
+  static const String messageIcon = "assets/icons/message_icon.svg";
   static const String background_2 = "assets/images/background.png";
-  static const String circularArc = "assets/images/circular_graph/circular_arc.png";
-  static const String circularGradient = "assets/images/circular_graph/circular_gradient.png";
+  static const String circularArc =
+      "assets/images/circular_graph/circular_arc.png";
+  static const String circularGradient =
+      "assets/images/circular_graph/circular_gradient.png";
   static const String next = "assets/icons/next.svg";
   static const String pay = "assets/images/pay.svg";
   static const String bookCover = "assets/images/book_cover_2.png";
-
-
-
-  
 }
