@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:nguru/models/activity_model.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendance_bar_chart_model.dart';
@@ -674,23 +675,26 @@ class AuthRepo {
     // type = 1 for fetching all the discipline
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.diciplineGetList, data: {
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.diciplineGetList,
+             data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
         "downloadAttachment": 0,
         "isNotification": 0,
         "messageTypeId": 0,
-        "month": 7,
+        "month": 8,
         "pageNumber": 1,
         "pageSize": 10,
         "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
+        "sessionID": 178,
+        "studentID": 106045,
         "subjectID": 0,
-        "type": type ?? 1,
-        "userID": "6135",
+        "type":type ?? 0,
+        "userID": "118011",
         "year": 0
       });
       DisciplineModel disciplineModelResponse =
@@ -864,6 +868,44 @@ class AuthRepo {
         "year": 0
       });
       InfirmaryModel infirmaryResponse = infirmaryModelFromJson(res.toString());
+      return infirmaryResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch infirmary list: $e");
+    }
+  }
+
+
+
+
+    ////////////////////////////////////////////////     GET ACTIVITY LIST DATA      //////////////////////////////////////////////////////
+
+  Future<ActivityModel> getActivityList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.activityGetList,
+            isStagingLink: true,
+             data: {
+	"appMessageID":0,
+	"circularID":0,
+	"contentType":0,
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":1,
+	"pageSize":8,
+	"schoolID":1,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"sessionID":178,
+	"studentID":108416,
+	"subjectID":0,
+	"type":0,
+	"userID":"118011",
+	"year":0
+});
+      ActivityModel infirmaryResponse = activityModelFromJson(res.toString());
       return infirmaryResponse;
     } catch (e) {
       log(e.toString());

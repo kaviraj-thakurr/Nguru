@@ -610,20 +610,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget buildMonthSelector() {
-    List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
+    // List<String> months = [
+    //   "Jan",
+    //   "Feb",
+    //   "Mar",
+    //   "Apr",
+    //   "May",
+    //   "Jun",
+    //   "Jul",
+    //   "Aug",
+    //   "Sep",
+    //   "Oct",
+    //   "Nov",
+    //   "Dec"
+    // ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

@@ -35,7 +35,64 @@ class _CustomCalendarState extends State<CustomCalendar> {
             builder: (context,state) {
               if(state is ParticularMonthAttendanceLoadingState)
                       {
-                     return  const Center(child:  CircularProgressIndicator(),);
+                     return  
+                      TableCalendar(
+                rowHeight: 45,
+                daysOfWeekHeight: 20,
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: FontUtil.customStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      textColor: MyColors.calendarDateColor),
+                  weekendStyle: FontUtil.customStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w200,
+                      textColor: MyColors.calendarDateColor),
+                ),
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2030, 3, 14),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                calendarFormat: CalendarFormat.month,
+                calendarStyle: CalendarStyle(
+                  defaultTextStyle: FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.calendarDateColor),
+                  weekendTextStyle: FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.fadedTextColor),
+                  selectedTextStyle: FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      textColor: Colors.blue),
+                  todayTextStyle: FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      textColor: Colors.pink),
+                  todayDecoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 2, color: Colors.white),
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 2, color: Colors.white),
+                  ),
+                ),
+                headerVisible: false,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+              );
                       }
 
                       if(state is ParticularMonthAttendanceSuccessState)
@@ -51,20 +108,29 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.calendarDateColor);
 
-                    int attendanceStatus = state.particularMonthAttendanceModel
+                    int attendanceStatus =state.particularMonthAttendanceModel
+                        .attendanceMonth!.isEmpty ? 4:  state.particularMonthAttendanceModel
                         .attendanceMonth![dayIndex].status!;
                     if (attendanceStatus == 0) {
                       defaultDatesStyle =FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.greenShade_3);
-                    } else if (attendanceStatus == 3) {
+                    } 
+                    else if (attendanceStatus == 3) {
 
                       defaultDatesStyle =FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.redShade_3);
-                    } else {
+                    } 
+
+                    else if (attendanceStatus == 4) {
+
+                       defaultDatesStyle =defaultDatesStyle;
+                    } 
+                    
+                    else {
                       defaultDatesStyle =defaultDatesStyle;
                     }
                     return Center(

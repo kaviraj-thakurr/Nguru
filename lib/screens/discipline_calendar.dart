@@ -142,7 +142,7 @@ class _DisciplineCalendarState extends State<DisciplineCalendar> {
                     months.indexOf(month) + 1,
                   );
                 });
-
+                context.read<DisciplineCubit>().getDiscipline(type: 1);
                  context.read<DisciplineCubit>().filterDisciplineListByDate(_focusedDay,true);
               },
               child: isSelected

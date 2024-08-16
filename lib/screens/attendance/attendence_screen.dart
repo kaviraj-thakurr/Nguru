@@ -41,7 +41,6 @@ class _AttendenceScreenState extends State<AttendenceScreen> {
               height: MediaQuery.of(context).size.height * 1,
               width: double.infinity,
               child: Column(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   CustomAppBar(),
                   CustomSearchBar(
@@ -68,7 +67,7 @@ class _AttendenceScreenState extends State<AttendenceScreen> {
                                 if (state
                                     is ParticularMonthAttendanceLoadingState) {
                                   return const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: SizedBox.shrink(),
                                   );
                                 } else if (state
                                     is ParticularMonthAttendanceSuccessState) {

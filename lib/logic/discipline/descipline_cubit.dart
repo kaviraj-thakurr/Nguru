@@ -15,10 +15,11 @@ class DisciplineCubit extends Cubit<DisciplineState> {
 
 List<DisciplineList> disciplineList=[];
   Future<void> getDiscipline({int? type}) async {
+    disciplineList.clear();
     // type = 1 for fetching all the discipline 
     try {
       emit(DisciplineLoadingState());
-      final result = await authRepo?.getCurrentDicipline(type: type ?? 0);
+      final result = await authRepo?.getDisciplineList(type: type ?? 0);
       if (result != null) {
         if (result.responseCode == "200") {
           emit(DisciplineSuccessState(
@@ -40,6 +41,7 @@ List<DisciplineList> disciplineList=[];
     void filterDisciplineListByDate(DateTime selectedDate, bool IsOnlyMonthSelected) {
  //   if (state is DisciplineSuccessState) {
     //  final disciplineList = (state as DisciplineSuccessState).disciplineList;
+    disciplineList.clear();
       final filteredList =
       IsOnlyMonthSelected ? 
       disciplineList

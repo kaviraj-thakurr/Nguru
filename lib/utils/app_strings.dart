@@ -89,7 +89,7 @@ class MyStrings {
       static const String positivePoints = "Positive Points";
       static const String negativePoints = "Negative Points";
       static const String eventDate = "event data";
-
+      static const String all = "All";
 
 
 

@@ -1,6 +1,4 @@
 import 'package:nguru/models/circular_model/circular_model.dart';
-import 'package:nguru/models/contact_us_model.dart';
-import 'package:nguru/models/gallery/gallery_model.dart';
 
 abstract class CircularState {}
 

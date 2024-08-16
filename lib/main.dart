@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nguru/logic/activity/activity_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
@@ -111,6 +112,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => InfirmaryCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => ActivityCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -124,9 +128,14 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const InfirmaryScreen()
+            home:  
+         //   NguruDashboardScreen()
+            //AddSchool()
             // const NguruDashboardScreen()
             //   const BarChartExample()
+          //  const ActivityScreen()
+        //   const AttendenceScreen()
+        const DisciplineScreen()
             ),
       ),
     );

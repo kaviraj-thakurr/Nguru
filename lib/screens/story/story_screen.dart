@@ -223,7 +223,7 @@ class _StoryScreenState extends State<StoryScreen>
                   _assignmentAnimationController,
                   (list) =>
                       showAssignmentStory(screenHeight, screenWidth, list),
-                  MyStrings.asssignment,
+                  MyStrings.asssignment,context
                 ),
                 15.widthBox,
                 _storyWidget<CircularCubit, CircularState, CircularList>(
@@ -233,7 +233,7 @@ class _StoryScreenState extends State<StoryScreen>
                   context.read<CircularCubit>(),
                   _circularAnimationController,
                   (list) => showCircularStory(screenHeight, screenWidth, list),
-                  MyStrings.circular,
+                  MyStrings.circular,context
                 ),
                 15.widthBox,
                 _storyWidget<DisciplineCubit, DisciplineState, DisciplineList>(
@@ -244,7 +244,7 @@ class _StoryScreenState extends State<StoryScreen>
                   _disciplineAnimationController,
                   (list) =>
                       showDisciplineStory(screenHeight, screenWidth, list),
-                  MyStrings.discipline,
+                  MyStrings.discipline,context
                 ),
               ],
             );
@@ -266,6 +266,7 @@ class _StoryScreenState extends State<StoryScreen>
     AnimationController animationController,
     Widget Function(List<T>) showStoryScreen,
     String title,
+    context
   ) {
     return BlocBuilder<C, S>(
       bloc: cubit,
