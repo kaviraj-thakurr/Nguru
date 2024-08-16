@@ -171,7 +171,7 @@ class _CircularScreenState extends State<CircularScreen> {
   final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      height: screenHeight*0.11,
+      height: screenHeight*0.12,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius8),
         color: MyColors.searchBackGroundColor,

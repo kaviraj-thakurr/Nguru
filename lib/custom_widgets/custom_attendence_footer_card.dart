@@ -9,7 +9,7 @@ Widget customAttendenceFooterCard(BuildContext context,
     padding: const EdgeInsets.all(5.0),
     constraints: BoxConstraints(
       maxHeight: MediaQuery.of(context).size.height * 0.06,
-      maxWidth: MediaQuery.of(context).size.width * 0.26,
+      maxWidth: MediaQuery.of(context).size.width * 0.27,
     ),
     decoration: BoxDecoration(
       color: MyColors.calendarFooterCard,

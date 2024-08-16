@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final assignmentList = assignmentListFromJson(jsonString);
+
 import 'dart:convert';
 
 AssignmentList assignmentListFromJson(String str) => AssignmentList.fromJson(json.decode(str));
@@ -5,9 +9,9 @@ AssignmentList assignmentListFromJson(String str) => AssignmentList.fromJson(jso
 String assignmentListToJson(AssignmentList data) => json.encode(data.toJson());
 
 class AssignmentList {
-    List<SubjectList>? subjectList;
-    String? responseCode;
-    String? responseMessage;
+    final List<SubjectList>? subjectList;
+    final String? responseCode;
+    final String? responseMessage;
 
     AssignmentList({
         this.subjectList,
@@ -40,9 +44,9 @@ class AssignmentList {
 }
 
 class SubjectList {
-    int? subjectId;
-    String? subjectName;
-    List<Assignment>? assignments;
+    final int? subjectId;
+    final String? subjectName;
+    final List<Assignment>? assignments;
 
     SubjectList({
         this.subjectId,
@@ -75,18 +79,18 @@ class SubjectList {
 }
 
 class Assignment {
-    String? assignmentName;
-    String? assignmentDetail;
-    String? assignmentPicture;
-    int? subjectId;
-    String? assignmentDate;
-    String? fileName;
-    String? fileDescription;
-    String? fileType;
-    String? fileContent;
-    int? totalRecords;
-    String? startDate;
-    String? endDate;
+    final String? assignmentName;
+    final String? assignmentDetail;
+    final String? assignmentPicture;
+    final int? subjectId;
+    final String? assignmentDate;
+    final String? fileName;
+    final String? fileDescription;
+    final String? fileType;
+    final String? fileContent;
+    final int? totalRecords;
+    final String? startDate;
+    final String? endDate;
 
     Assignment({
         this.assignmentName,

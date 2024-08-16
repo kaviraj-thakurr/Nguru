@@ -4,6 +4,7 @@ class MyAssets {
   const MyAssets._();
 
 //images
+static const String examDown = "assets/icons/exam_download.svg";
   static const String arrowIcon = "assets/icons/arrow_button.svg";
   static const String noData = "assets/images/nodata.png";
   static const String download = "assets/icons/download.svg";

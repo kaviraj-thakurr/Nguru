@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendance_bar_chart_model.dart';
@@ -35,7 +36,6 @@ import 'package:nguru/models/login_model.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
 import '../models/notificationlist_model.dart';
-
 
 //var schoolUrl = "";
 
@@ -75,20 +75,15 @@ class AuthRepo {
       String? schoolUrl,
       required String userName}) async {
     try {
-      final res =
-          await _myService.networkPost(
-            url: EndUrl.signInStaging,
-            isStagingLink: true,
-            data:
-     {
-          "schoolURL":schoolUrl,
-          // "deviceToken":
-          //     "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-          "deviceType": "1",
-          "password": password,
-          "userName": userName
-        }
-      );
+      final res = await _myService
+          .networkPost(url: EndUrl.signInStaging, isStagingLink: true, data: {
+        "schoolURL": schoolUrl,
+        // "deviceToken":
+        //     "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+        "deviceType": "1",
+        "password": password,
+        "userName": userName
+      });
       LoginModel logInData = loginModelFromJson(res.toString());
       return logInData;
     } catch (e) {
@@ -107,7 +102,7 @@ class AuthRepo {
             "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
         "deviceType": "1",
         "password": "",
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "schoolUrl": await SharedPref.getSchoolUrl(),
         "userName": userName
       });
       var result = ForgetPassWordModel.fromJson(json.decode(res.toString()));
@@ -122,28 +117,26 @@ class AuthRepo {
   Future<DashboardModel> dashboardGetList() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.dashboardList, data:
-           {
-       "appMessageID": 0,
-       "circularID": 0,
-       "contentType": 0,
-       "deviceType": "1",
-       "downloadAttachment": 0,
-       "isNotification": 0,
-       "messageTypeId": 0,
-       "month": 0,
-       "pageNumber": 0,
-       "pageSize": 0,
+          await _myService.networkPost(url: EndUrl.dashboardList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "deviceType": "1",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
         "schoolID": await SharedPref.getSchoolID(),
         "schoolUrl": await SharedPref.getSchoolUrl(),
-       "sessionID": await SharedPref.getSessionId(),
-       "studentID": await SharedPref.getStudentID(),
-       "subjectID": 0,
-       "type": 0,
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 0,
         "userID": await SharedPref.getUserID(),
-       "year": 0
-      }
-      );
+        "year": 0
+      });
       var result = DashboardModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
@@ -175,7 +168,7 @@ class AuthRepo {
           "schoolUrl": await SharedPref.getSchoolUrl(),
           "sessionID": await SharedPref.getSessionId(),
           "studentID": await SharedPref.getSchoolID(),
-          "subjectID":0,
+          "subjectID": 0,
           "type": 0,
           "userID": await SharedPref.getUserID(),
           "year": 0
@@ -197,7 +190,7 @@ class AuthRepo {
         data: {
           "userID": await SharedPref.getUserID(),
           "schoolID": await SharedPref.getSchoolID(),
-          "studentID":  await SharedPref.getStudentID(),
+          "studentID": await SharedPref.getStudentID(),
           "sessionID": await SharedPref.getSessionId(),
           "schoolURL": await SharedPref.getSchoolUrl(),
           "pageNumber": 0
@@ -223,33 +216,32 @@ class AuthRepo {
     // required String userName
   }) async {
     try {
-      final res = await _myService.networkPost(
-        url: EndUrl.assignmentCalendarList,
-        data: {
-          "appMessageID": 0,
-          "circularID": 0,
-          "contentType": 0,
-          "downloadAttachment": 0,
-          "isNotification": 0,
-          "messageTypeId": 0,
-          "month": month,
-          "pageNumber": 0,
-          "pageSize": 0,
-          "schoolID": await SharedPref.getSchoolID(),
-          "schoolUrl":await SharedPref.getSchoolUrl(),
-          "sessionID": await SharedPref.getSessionId(),
-          "studentID":  await SharedPref.getStudentID(),
-          "subjectID": 0,
-          "type": 0,
-          "userID": await SharedPref.getUserID(),
-          "year": 0
-        },
-      );
+      final res = await _myService
+          .networkPost(url: EndUrl.assignmentCalendarList, data: {
+        "appMessageID": 0,
+        "assignmentDate": month,
+        //"2024-08-14T00:00:00",
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
+        "sessionID": 178,
+        "studentID": 108416,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "118011",
+        "year": 0
+      });
       AssignmentsMonthList assignmentsMonthList =
           assignmentsMonthListFromJson(res.toString());
       return assignmentsMonthList;
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       throw Exception("Failed to login: $e");
     }
   }
@@ -279,13 +271,13 @@ class AuthRepo {
           "month": month,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID":  await SharedPref.getSchoolID(),
-          "schoolUrl":  await SharedPref.getSchoolUrl(),
-          "sessionID":  await SharedPref.getSessionId(),
-          "studentID":  await SharedPref.getStudentID(),
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": 0,
-          "userID":  await SharedPref.getUserID(),
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -319,11 +311,11 @@ class AuthRepo {
             "type": 1,
             "pageSize": 4,
             "pageNumber": 2,
-            "userID":  await SharedPref.getUserID(),
-            "schoolID":  await SharedPref.getSchoolID(),
-            "studentID":  await SharedPref.getStudentID(),
-            "sessionID":  await SharedPref.getSessionId(),
-            "schoolURL":  await SharedPref.getSchoolUrl(),
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
           });
       CircularModel currentCircularList = circularModelFromJson(res.toString());
       return currentCircularList;
@@ -358,13 +350,13 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID":  await SharedPref.getSchoolID(),
-          "schoolUrl":  await SharedPref.getSchoolUrl(),
-          "sessionID":  await SharedPref.getSessionId(),
-          "studentID":  await SharedPref.getStudentID(),
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": type ?? 0,
-          "userID":  await SharedPref.getUserID(),
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -588,13 +580,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       FeesModel feeResponse = feesModelFromJson(res.toString());
@@ -606,6 +598,7 @@ class AuthRepo {
   }
 
   ///////////////////////TIMETABEL SCREEEN API////////////////////////////////////////////
+
   Future<TimeTableModel> getTimeTableList() async {
     try {
       final res = await _myService.networkPost(url: EndUrl.timeTable, data: {
@@ -618,13 +611,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       TimeTableModel timeTableModel = timeTableModelFromJson(res.toString());
@@ -733,10 +726,9 @@ class AuthRepo {
     }
   }
 
-  Future<ChatSendButton> sendMessageButton(String ? message) async {
+  Future<ChatSendButton> sendMessageButton(String? message) async {
     try {
-      final res =
-          await _myService.networkPost(url: EndUrl.sendMessage, data: {
+      final res = await _myService.networkPost(url: EndUrl.sendMessage, data: {
         "appMessageID": 20,
         "circularID": 0,
         "content": message,
@@ -757,8 +749,7 @@ class AuthRepo {
         "userID": "6135",
         "year": 0
       });
-      ChatSendButton chatSendButton =
-          chatSendButtonFromJson(res.toString());
+      ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
       return chatSendButton;
     } catch (e) {
       print(e.toString());
@@ -1040,32 +1031,28 @@ class AuthRepo {
     }
   }
 
- Future<ListCommunicationModel> getCommunicationList() async {
+  Future<ListCommunicationModel> getCommunicationList() async {
     try {
-      final res =
-          await _myService.networkPost(url: EndUrl.chatList, data:
-    {
-	"appMessageID":20,
-	"circularID":0,
-	"contentType":0,
-	"createdForUserId":"4771",
-	"downloadAttachment":0,
-	"isNotification":0,
-	"messageTypeId":0,
-	"month":0,
-	"pageNumber":1,
-	"pageSize":20,
-	"schoolID":1,
-	"schoolUrl":"https://quickschool.niitnguru.com/demoschool",
-	"sessionID":107,
-	"studentID":896,
-	"subjectID":0,
-	"type":0,
-	"userID":"6135",
-	"year":0
-}
-      
-      );
+      final res = await _myService.networkPost(url: EndUrl.chatList, data: {
+        "appMessageID": 20,
+        "circularID": 0,
+        "contentType": 0,
+        "createdForUserId": "4771",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 20,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
       ListCommunicationModel listCommunicationModel =
           listCommunicationModelFromJson(res.toString());
       return listCommunicationModel;
@@ -1074,6 +1061,4 @@ class AuthRepo {
       throw Exception("Failed to fetch library book search list: $e");
     }
   }
-
-
 }

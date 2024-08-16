@@ -140,20 +140,21 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             home:
+            
 
                 //  const    NotificationScreen()
                 //  ContactScreen()
                 //    const TimetableScreen()
                 //  const CircularScreen()
                 //  CircularCalendar()
-                //  const   AssignmentScreen()
-        //    const NguruDashboardScreen()
+              //  const   AssignmentScreen()
+       //   const NguruDashboardScreen()
             //  const SettingScreen()
             //   const    TransportScreen(),
 //RadioButtonExample()
 //const DisciplineScreen()
 //const BarChartExample()
-             const AddSchool(isAddSchoolScreen: false,),
+           const AddSchool(isAddSchoolScreen: false,),
             ),
       ),
     );

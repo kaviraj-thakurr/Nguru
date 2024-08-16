@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 class Networking {
@@ -23,6 +25,7 @@ class Networking {
         data: data,
         options: Options(headers: headers),
       );
+      log(" qwertyyuiuytrre:  $data");
       return response;
     } catch (e) {
       if (e is DioError) {

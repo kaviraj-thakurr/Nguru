@@ -16,6 +16,7 @@ import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/models/dashboard_model.dart';
+import 'package:nguru/screens/Examination/examination_screen.dart';
 import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
@@ -253,8 +254,8 @@ DateTime? _lastBackPressedTime;
                                     cardWidth: screenWidth * 0.35,
                                     image: MyAssets.exams,
                                     onIconPressed: () {
-                                      // NavigationService.navigateTo(
-                                      //     const AssignmentScreen(), context);
+                                      NavigationService.navigateTo(
+                                          const ExaminationScreen(), context);
                                     },
                                   ),
                                 ],

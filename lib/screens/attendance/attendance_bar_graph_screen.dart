@@ -234,7 +234,7 @@ class _BarChartExampleState extends State<BarChartExample> {
 
 Widget attendanceStatusTopGraph(BuildContext context, ParticularMonthAttendanceModel particularMonthAttendanceModel) {
   return SizedBox(
-    height: MediaQuery.sizeOf(context).height*0.24,
+    height: MediaQuery.sizeOf(context).height*0.23,
     width: double.infinity,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
