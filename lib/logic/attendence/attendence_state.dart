@@ -6,10 +6,10 @@ class AttendanceInitial extends AttendanceState {}
 
 class AttendanceLoading extends AttendanceState {}
 
-class AttendanceLoaded extends AttendanceState {
-  final AttendanceData attendanceData;
+class AttendanceSuccess extends AttendanceState {
+  final String overAllPercentage;
 
-  AttendanceLoaded(this.attendanceData);
+  AttendanceSuccess(this.overAllPercentage);
 }
 
 class AttendanceError extends AttendanceState {

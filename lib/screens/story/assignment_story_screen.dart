@@ -57,7 +57,7 @@ class _AssignmentStoryScreenState extends State<AssignmentStoryScreen> {
                         ),
                         Flexible(
                             child: Text(
-                          MyStrings.asssignment,
+                          MyStrings.assignment,
                           style: FontUtil.customStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,

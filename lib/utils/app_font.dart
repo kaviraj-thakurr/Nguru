@@ -1,66 +1,10 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:nguru/utils/app_colors.dart';
-
-
-// class FontUtil {
-//       static TextStyle hintText =const TextStyle(
-//       fontSize: 14,
-//       fontWeight: FontWeight.w500,
-//       color: MyColors.textcolors,
-//       fontFamily: 'FontMain');
-
-//        static TextStyle sessionchanged =const TextStyle(
-//       fontSize: 16,
-//       fontWeight: FontWeight.w400,
-//       color: MyColors.addButtonColor,
-//       fontFamily: 'FontMain');
-
-//       static TextStyle customData =const TextStyle(
-//       fontSize: 17,
-//       fontWeight: FontWeight.w400,
-//       color: MyColors.textcolors,
-//       fontFamily: 'FontMain');
-       
-       
-//        static TextStyle primaryButton =const TextStyle(
-//       fontSize: 16,
-//       fontWeight: FontWeight.w500,
-//       color: MyColors.white,
-//       fontFamily: 'FontMain');
-
-//       static TextStyle needHelp =const TextStyle(
-//       fontSize: 17,
-//       fontWeight: FontWeight.w400,
-//       color: MyColors.needHelpColor,
-//       fontFamily: 'FontMain');
-
-
-
-//       static TextStyle addButton =const TextStyle(
-//       fontSize: 18,
-//       fontWeight: FontWeight.w500,
-//       color: MyColors.addButtonColor,
-//       fontFamily: 'FontMain');
-
-//       static TextStyle forgotpassword =const TextStyle(
-//       fontSize: 12,
-//       fontWeight: FontWeight.w500,
-//       color: Colors.red,
-//       fontFamily: 'FontMain');
-//   }
-
-
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/utils/app_colors.dart';
 
+const String APP_FONT = "Effra_Trial";
 
-
-const  String  APP_FONT = "Effra_Trial";
 class FontUtil {
   static TextStyle customStyle({
     required double fontSize,
@@ -75,7 +19,8 @@ class FontUtil {
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: textColor,
-      fontFamily: "Effra_Trial",
+      fontFamily: APP_FONT,
+    
       decoration: decoration,
       decorationColor: Colors.blue, // Set the underline color
                 decorationThickness: 1, // Set the underline thickness
@@ -83,54 +28,72 @@ class FontUtil {
     );
   }
 
-  static TextStyle hintText = const TextStyle(
+  static TextStyle hintText = TextStyle(
       fontSize: 14,
+      fontStyle: FontStyle.italic,
       fontWeight: FontWeight.w600,
-      color: MyColors.textcolors,
-       fontFamily: 'Effra_Trial'
-      );
+      color: MyColors.textColors,
+      fontFamily: APP_FONT);
 
   static TextStyle sessionchanged = const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
       color: MyColors.addButtonColor,
-       fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-  static TextStyle customData = const TextStyle(
+  static TextStyle customData = TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w400,
-      color: MyColors.customdataColor,
-       fontFamily: APP_FONT
-      );
+      color: MyColors.customDataColor,
+      fontFamily: APP_FONT);
+
+  static TextStyle password = const TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 15,
+      color: MyColors.grey,
+      fontFamily: APP_FONT);
+
+  static TextStyle signInFieldText = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: Color(0xFF070707).withOpacity(0.7),
+      fontFamily: APP_FONT);
+
+  static TextStyle schoolName = TextStyle(
+      fontSize: 18.h,
+      fontWeight: FontWeight.w500,
+      color: Color(0xFF070707).withOpacity(0.7),
+      fontFamily: APP_FONT);
 
   static TextStyle primaryButton = const TextStyle(
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
       color: MyColors.white,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
   static TextStyle needHelp = const TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w400,
       color: MyColors.needHelpColor,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
   static TextStyle addButton = const TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w500,
       color: MyColors.addButtonColor,
-       fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-  static TextStyle forgotpassword = const TextStyle(
+  static TextStyle forgotPassword = const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w500,
-      color: Colors.red,
-       fontFamily: 'Effra_Trial'
-      );
+      color: MyColors.forgetPassword,
+      fontFamily: APP_FONT);
+
+  static TextStyle add = const TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: MyColors.forgetPassword,
+      fontFamily: APP_FONT);
 
   // static TextStyle cardTitle = TextStyle(
   //     fontSize: 14,
@@ -139,55 +102,71 @@ class FontUtil {
   //     fontFamily: 'QuickStand'
   //     );
 
-  static TextStyle cardsubTitle = const TextStyle(
+  static TextStyle cardsubTitle = TextStyle(
       fontSize: 10,
-      fontWeight: FontWeight.w400,
-      color: MyColors.textcolors,
-        fontFamily: 'Effra_Trial');
-  
-    
+      fontWeight: FontWeight.w500,
+      color: MyColors.textColors,
+      fontFamily: APP_FONT);
 
   static TextStyle search = TextStyle(
       fontSize: 14.h,
       fontWeight: FontWeight.w500,
       color: MyColors.search,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-      static TextStyle cardTitle = TextStyle(
-      fontSize: 16.h,
+  static TextStyle cardTitle = const TextStyle(
+      fontSize: 14,
       fontWeight: FontWeight.w600,
       color: MyColors.cardTitle,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-       static TextStyle noCircular = TextStyle(
+  static TextStyle noCircular = TextStyle(
       fontSize: 14.h,
       fontWeight: FontWeight.w400,
       color: MyColors.circular,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-      static TextStyle noCircularcommets = TextStyle(
+  static TextStyle noCircularcommets = TextStyle(
       fontSize: 12.h,
       fontWeight: FontWeight.w400,
       color: MyColors.circular,
-      fontFamily: 'Effra_Trial'
-      );
+      fontFamily: APP_FONT);
 
-       static TextStyle circularsubttile = TextStyle(
+  static TextStyle storyTitle = TextStyle(
+      fontSize: 12.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.storyFotter,
+      fontFamily: APP_FONT);
+
+  static TextStyle circularSubtitle = TextStyle(
       fontSize: 12.h,
       fontWeight: FontWeight.w400,
-      color: MyColors.circularsubttile,
-      fontFamily: 'Effra_Trial'
-      );
+      color: MyColors.circularSubTittles,
+      fontFamily: APP_FONT);
 
-
-      static TextStyle circularTitle = TextStyle(
+  static TextStyle circularTitle = TextStyle(
       fontSize: 14.h,
       fontWeight: FontWeight.w500,
-      color: MyColors.circularsubttile,
-        fontFamily: 'Effra_Trial');
+      color: MyColors.circularSubTittle,
+      fontFamily: APP_FONT);
 
-      
+  static TextStyle textfield = TextStyle(
+      fontSize: 16.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.greyShade_3,
+      fontFamily: APP_FONT);
+
+static TextStyle notificationTitle = TextStyle(
+      fontSize: 17.h,
+      fontWeight: FontWeight.w500,
+      color: MyColors.teacherNameColor,
+      fontFamily: APP_FONT);
+
+
+      static TextStyle notificationSubtitle = TextStyle(
+      fontSize: 14.h,
+      fontWeight: FontWeight.w400,
+      color: MyColors.notificationSubtitle,
+      fontFamily: APP_FONT);
+  
 }

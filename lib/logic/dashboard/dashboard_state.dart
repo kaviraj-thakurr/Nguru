@@ -12,7 +12,7 @@ class DashboardSuccessState extends DashboardState {
   final String? admissionNumber;
   final String? section;
   final String ? dashboardItem;
- final List<Map<String, String>> ? dashboardList;
+ final List<DashboardList>? dashboardList;
 
   DashboardSuccessState({
     this.studentName,

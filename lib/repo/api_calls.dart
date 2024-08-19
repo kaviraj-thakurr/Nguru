@@ -1,17 +1,25 @@
 import 'dart:convert';
+import 'dart:core';
 import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:nguru/models/activity_model.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/assignment_models/assignment_month_list_model.dart';
 import 'package:nguru/models/attendance_bar_chart_model.dart';
 import 'package:nguru/models/attendence_model.dart';
 import 'package:nguru/models/calendar_event_model.dart';
+import 'package:nguru/models/chatMessagesList.dart';
+import 'package:nguru/models/chatsend_button_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
+import 'package:nguru/models/communication_models.dart';
 import 'package:nguru/models/contact_us_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
+import 'package:nguru/models/fees_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
+import 'package:nguru/models/gallery/get_gallery_list_model.dart';
 import 'package:nguru/models/get_fee_model.dart';
 import 'package:nguru/models/infirmary_model.dart';
 import 'package:nguru/models/library_book_search_model.dart';
@@ -21,14 +29,24 @@ import 'package:nguru/models/notification_models.dart';
 import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
-import 'package:nguru/repo/end_urls.dart';
+import 'package:nguru/models/timetable_model.dart';
+import 'package:nguru/models/transport_detail_model.dart';
+import 'package:nguru/services/end_url.dart';
 import 'package:nguru/services/networking.dart';
+
 import 'package:nguru/models/add_school_model.dart';
 import 'package:nguru/models/login_model.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
+
+import '../models/notificationlist_model.dart';
+
+//var schoolUrl = "";
 
 class AuthRepo {
   final _myService = Networking();
   var userToken = "";
+
+  String schoolUrl = "https://quickschool.niitnguru.com/demoschool";
 
   //------------------------------------this api method for add school screen---------> //
 
@@ -36,6 +54,7 @@ class AuthRepo {
     String fullSchoolUrl = "$schoolurl$subDomain";
 
     try {
+      await SharedPref.saveSchoolUrl(fullSchoolUrl);
       final res = await _myService.networkPost(
         url: EndUrl.addSchool,
         data: {
@@ -45,12 +64,12 @@ class AuthRepo {
       AddSchoolModel addSchool = addSchoolFromJson(res.toString());
       return addSchool;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to add school: $e");
     }
   }
 
-  //--------------------------------this api method for login screen------------->//
+  //  --------------------------------this api method for login screen------------->  //
 
   Future<LoginModel> logIn(
       {String? deviceToken,
@@ -59,21 +78,19 @@ class AuthRepo {
       String? schoolUrl,
       required String userName}) async {
     try {
-      final res = await _myService.networkPost(
-        url: EndUrl.logIn,
-        data: {
-          "schoolURL": "https://quickschool.niitnguru.com/demoschool",
-          "deviceToken":
-              "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-          "deviceType": "1",
-          "password": password,
-          "userName": userName
-        },
-      );
+      final res = await _myService
+          .networkPost(url: EndUrl.signInStaging, isStagingLink: true, data: {
+        "schoolURL": schoolUrl,
+        // "deviceToken":
+        //     "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+        "deviceType": "1",
+        "password": password,
+        "userName": userName
+      });
       LoginModel logInData = loginModelFromJson(res.toString());
       return logInData;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to login: $e");
     }
   }
@@ -88,13 +105,13 @@ class AuthRepo {
             "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
         "deviceType": "1",
         "password": "",
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "schoolUrl": await SharedPref.getSchoolUrl(),
         "userName": userName
       });
       var result = ForgetPassWordModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to login: $e");
     }
   }
@@ -114,19 +131,19 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       var result = DashboardModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to fetch dashboard data: $e");
     }
   }
@@ -150,55 +167,43 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getSchoolID(),
           "subjectID": 0,
           "type": 0,
-          "userID": "6135",
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
       var result = NotificationModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to fetch dashboard data: $e");
     }
   }
 
-  Future<AttendanceData> fetchAttendanceData() async {
+  Future<AttendenceModel> fetchAttendanceData() async {
     try {
       final res = await _myService.networkPost(
-        url: EndUrl.attendanceBarData,
+        isStagingLink: true,
+        url: EndUrl.attendance,
         data: {
-          {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-            "sessionID": 107,
-            "studentID": 896,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "6135",
-            "year": 0
-          }
+          "userID": await SharedPref.getUserID(),
+          "schoolID": await SharedPref.getSchoolID(),
+          "studentID": await SharedPref.getStudentID(),
+          "sessionID": await SharedPref.getSessionId(),
+          "schoolURL": await SharedPref.getSchoolUrl(),
+          "pageNumber": 0
         },
       );
 
-      var result = AttendanceData.fromJson(json.decode(res.toString()));
+      var result = AttendenceModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to fetch dashboard data: $e");
     }
   }
@@ -208,40 +213,39 @@ class AuthRepo {
   Future<AssignmentsMonthList> getAssignementMonthList({
     String? deviceToken,
     String? deviceType,
+    int? month,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
     try {
-      final res = await _myService.networkPost(
-        url: EndUrl.assignmentCalendarList,
-        data: {
-          "appMessageID": 0,
-          "circularID": 0,
-          "contentType": 0,
-          "downloadAttachment": 0,
-          "isNotification": 0,
-          "messageTypeId": 0,
-          "month": 7,
-          "pageNumber": 0,
-          "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
-          "type": 0,
-          "userID": "6135",
-          "year": 0
-        },
-      );
+      final res = await _myService
+          .networkPost(url: EndUrl.assignmentCalendarList, data: {
+        "appMessageID": 0,
+        "assignmentDate": month,
+        //"2024-08-14T00:00:00",
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
+        "sessionID": 178,
+        "studentID": 108416,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "118011",
+        "year": 0
+      });
       AssignmentsMonthList assignmentsMonthList =
           assignmentsMonthListFromJson(res.toString());
       return assignmentsMonthList;
     } catch (e) {
-      log(e.toString());
-      throw Exception(
-          "Failed to get calender list on specific month to get the assignment status on perticular date: $e");
+      debugPrint(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
@@ -250,40 +254,41 @@ class AuthRepo {
   Future<AssignmentList> getAssignementList({
     String? deviceToken,
     String? deviceType,
+    int? month,
+    String? assignmentOnParticularDate,
     //  required String password,
     String? schoolUrl,
-    // required String userName
+    // required String userName  "2024-08-14T00:00:00"  "2024-08-14T00:00:00"
   }) async {
     try {
       final res = await _myService.networkPost(
-        url: EndUrl.assignmentList,
-        data: {
-          "appMessageID": 0,
-          "assignmentDate": "2024-07-17T00:00:00",
-          "circularID": 0,
-          "contentType": 0,
-          "downloadAttachment": 0,
-          "isNotification": 0,
-          "messageTypeId": 0,
-          "month": 0,
-          "pageNumber": 0,
-          "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
-          "type": 0,
-          "userID": "6135",
-          "year": 0
-        },
-      );
+        isStagingLink: true,
+        url: EndUrl.assignmentList, data:
+       {
+        "appMessageID": 0,
+        "assignmentDate":  "$assignmentOnParticularDate",
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID":  await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 0,
+        "userID": await SharedPref.getUserID(),
+        "year": 0
+      });
       AssignmentList assignmentsMonthList =
           assignmentListFromJson(res.toString());
       return assignmentsMonthList;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to get current assignment list: $e");
+      print(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
@@ -291,39 +296,34 @@ class AuthRepo {
 
   Future<CircularModel> getCurrentCircular({
     String? deviceToken,
+    int? month,
     String? deviceType,
+    String? page,
     //  required String password,
     String? schoolUrl,
     // required String userName
   }) async {
     try {
       final res = await _myService.networkPost(
-        url: EndUrl.currentCircularList,
-        data: {
-          "appMessageID": 0,
-          "circularID": 0,
-          "contentType": 0,
-          "downloadAttachment": 0,
-          "isNotification": 0,
-          "messageTypeId": 0,
-          "month": 0,
-          "pageNumber": 1,
-          "pageSize": 10,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
-          "type": 0,
-          "userID": "6135",
-          "year": 0
-        },
-      );
+          isStagingLink: true,
+          url: EndUrl.currentCircularList,
+          data: {
+            "circularID": 1,
+            "month": month,
+            "type": 1,
+            "pageSize": 4,
+            "pageNumber": 2,
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
+          });
       CircularModel currentCircularList = circularModelFromJson(res.toString());
       return currentCircularList;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to get current discipline list: $e");
+      print(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
@@ -352,13 +352,13 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": type ?? 0,
-          "userID": "6135",
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -366,8 +366,8 @@ class AuthRepo {
           disciplineModelFromJson(res.toString());
       return currentDiciplineList;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to get current discipline list: $e");
+      print(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
@@ -406,47 +406,69 @@ class AuthRepo {
       ContactUs contactUsResponse = contactUsFromJson(res.toString());
       return contactUsResponse;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to get contact us info: $e");
+      print(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
-  ////////////////////////////////////////////////     Gallery API      //////////////////////////////////////////////////////
 
-  ///  staging url: https://qsstg.niiteducation.com/mobileappservice/Api/PhotoGallery/GetList/
 
-  Future<GalleryPhotosModel> getGalleryPhotoList({
+
+
+    ////////////////////////////////////////////////      GALLERY ITEMS LIST API      //////////////////////////////////////////////////////
+
+  Future<GalleryItemListModel> getGalleryItemList({
     int? pageNumber,
   }) async {
     try {
       final res = await _myService.networkPost(
           isStagingLink: true,
           url: EndUrl.photoGalleryList,
-          data: {
-            "appMessageID": 0,
-            "circularID": 0,
-            "contentType": 0,
-            "downloadAttachment": 0,
-            "isNotification": 0,
-            "messageTypeId": 0,
-            "month": 0,
-            "pageNumber": 0,
-            "pageSize": 0,
-            "schoolID": 1,
-            "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-            "sessionID": 178,
-            "studentID": 106045,
-            "subjectID": 0,
-            "type": 0,
-            "userID": "112968",
-            "year": 0
-          });
+          data: 
+          {
+            "schoolID":  await SharedPref.getSchoolID(),
+            "schoolUrl": await SharedPref.getSchoolUrl(),
+            "sessionID": await SharedPref.getSessionId(),
+            "studentID": await SharedPref.getStudentID(),
+            "userID": await SharedPref.getUserID(),
+            "pageNumber": 0
+           }
+          );
+      GalleryItemListModel galleryPhotoResponse =
+          galleryItemListModelFromJson(res.toString());
+      return galleryPhotoResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to fetch gallery items list: $e");
+    }
+  }
+
+
+
+
+
+  ////////////////////////////////////////////////     PARTICULAR GALLERY ITEM PHOTOS API      //////////////////////////////////////////////////////
+
+  Future<GalleryPhotosModel> getGalleryPhotoList({
+    int? dashPictureGalleryId,
+  }) async {
+    try {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.photoGalleryGetDetList,
+          data:
+          {
+         "schoolID": await SharedPref.getSchoolID(),
+         "dashPictureGalleryId": dashPictureGalleryId,
+         "schoolURL": await SharedPref.getSchoolUrl(),
+}
+          );
       GalleryPhotosModel galleryPhotoResponse =
           galleryPhotosModelFromJson(res.toString());
       return galleryPhotoResponse;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to fetch gallery items: $e");
+      print(e.toString());
+      throw Exception("Failed to login: $e");
     }
   }
 
@@ -481,7 +503,7 @@ class AuthRepo {
       Map<String, String> signoutResponse = res;
       return signoutResponse;
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
       throw Exception("Failed to logout: $e");
     }
   }
@@ -520,8 +542,8 @@ class AuthRepo {
           resetPasswordModelFromJson(res.toString());
       return resetResponse;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to reset password: $e");
+      print(e.toString());
+      throw Exception("Failed to logout: $e");
     }
   }
 
@@ -532,49 +554,144 @@ class AuthRepo {
     required int? isNotification,
   }) async {
     try {
-      final res =
-          await _myService.networkPost(url: EndUrl.changeUpdatePassword, data: {
-        {
-          "appMessageID": 0,
-          "circularID": 0,
-          "contentType": 0,
-          "deviceToken":
-              "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-          "deviceType": "1",
-          "downloadAttachment": 0,
-          "isNotification": isNotification,
-          "messageTypeId": 0,
-          "month": 0,
-          "pageNumber": 0,
-          "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
-          "subjectID": 0,
-          "type": 0,
-          "userID": "6135",
-          "year": 0
-        }
-      });
+      final res = await _myService.networkPost(
+          url:
+              "https://quickschool.niitnguru.com:443/mobileappservice/Api/ChangePassword/Update",
+          data: {
+            "appMessageID": 0,
+            "circularID": 0,
+            "contentType": 0,
+            "deviceToken":
+                "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+            "deviceType": "1",
+            "downloadAttachment": 0,
+            "isNotification": isNotification,
+            "messageTypeId": 0,
+            "month": 0,
+            "pageNumber": 0,
+            "pageSize": 0,
+            "schoolID": 1,
+            "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+            "sessionID": 107,
+            "studentID": 896,
+            "subjectID": 0,
+            "type": 0,
+            "userID": "6135",
+            "year": 0
+          });
       PushNotificationModel pushNotificationResponse =
           pushNotificationModelFromJson(res.toString());
       return pushNotificationResponse;
     } catch (e) {
-      log(e.toString());
-      throw Exception("Failed to change push notification status: $e");
+      print(e.toString());
+      throw Exception("Failed to logout: $e");
     }
   }
 
-  ////////////////////////////////////////////////     GET ATTENDANCE BAR CHART DATA      //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////     FEES API      //////////////////////////////////////////////////////
 
-  Future<AttendanceBarChartModel> getAttendanceBarGraph({
-    int? pageNumber,
-    int? isNotification,
-  }) async {
+  Future<FeesModel> getTotalFees(
+      // int? pageNumber,
+      ) async {
     try {
-      final res = await _myService
-          .networkPost(url: EndUrl.attendanceGetBarChart, data: {
+      final res = await _myService.networkPost(url: EndUrl.fees, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 0,
+        "userID": await SharedPref.getUserID(),
+        "year": 0
+      });
+      FeesModel feeResponse = feesModelFromJson(res.toString());
+      return feeResponse;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  ///////////////////////TIMETABEL SCREEEN API////////////////////////////////////////////
+
+  Future<TimeTableModel> getTimeTableList() async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.timeTable, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 0,
+        "userID": await SharedPref.getUserID(),
+        "year": 0
+      });
+      TimeTableModel timeTableModel = timeTableModelFromJson(res.toString());
+      return timeTableModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  //////////////////////////////////////////////NOTIFICATION SCREEN LIST ///////////////////////////////////
+  Future<NotificationListModel> getNotificationList() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.notificationList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "deviceToken":
+            "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+        "deviceType": "1",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      NotificationListModel notificationListModel =
+          notificationListModelFromJson(res.toString());
+      return notificationListModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  //////////////////////////////////////////////////TRANSPORT DETAILS ///////////////////////////////////////////////////////
+  Future<TransportDetails> getTransportDetails() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.transportDetails, data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -589,8 +706,110 @@ class AuthRepo {
         "sessionID": 107,
         "studentID": 896,
         "subjectID": 0,
-        "type": 1,
+        "type": 0,
         "userID": "6135",
+        "year": 0
+      });
+      TransportDetails transportDetails =
+          transportDetailsFromJson(res.toString());
+      return transportDetails;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  Future<CommunicationModel> getCommunicationDetails() async {
+    try {
+      final res =
+          await _myService.networkPost(url: EndUrl.communicationDetails, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 8,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      CommunicationModel communicationModel =
+          communicationModelFromJson(res.toString());
+      return communicationModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  Future<ChatSendButton> sendMessageButton(String? message) async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.sendMessage, data: {
+        "appMessageID": 20,
+        "circularID": 0,
+        "content": message,
+        "contentType": 0,
+        "createdForUserId": "4771",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
+      return chatSendButton;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to get total fee: $e");
+    }
+  }
+
+  ////////////////////////////////////////////////     GET ATTENDANCE BAR CHART DATA      //////////////////////////////////////////////////////
+
+  Future<AttendanceBarChartModel> getAttendanceBarGraph({
+    int? pageNumber,
+    int? isNotification,
+  }) async {
+    try {
+      
+      final res = await _myService
+          .networkPost(
+            isStagingLink: true,
+            url: EndUrl.attendanceGetBarChart,
+             data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 1,
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       AttendanceBarChartModel attendanceBarChartDataResponse =
@@ -609,7 +828,10 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService
-          .networkPost(url: EndUrl.attendanceGetMonthWise, data: {
+          .networkPost(
+            isStagingLink: true,
+            url: EndUrl.attendanceGetMonthWise,
+             data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -619,13 +841,13 @@ class AuthRepo {
         "month": monthNumber,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 2024
       });
       ParticularMonthAttendanceModel particularMonthAttendanceDataResponse =
@@ -674,29 +896,32 @@ class AuthRepo {
   Future<DisciplineModel> getDisciplineList({int? type}) async {
     // type = 1 for fetching all the discipline
     try {
-      final res =
-          await _myService.networkPost(
-            isStagingLink: true,
-            url: EndUrl.diciplineGetList,
-             data: {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.diciplineGetList,
+          data: 
+
+          {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
         "downloadAttachment": 0,
         "isNotification": 0,
         "messageTypeId": 0,
-        "month": 8,
+        "month": 4,
         "pageNumber": 1,
         "pageSize": 10,
-        "schoolID": 1,
-        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-        "sessionID": 178,
-        "studentID": 106045,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl":  await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
-        "type":type ?? 0,
+        "type":0,
         "userID": "118011",
         "year": 0
-      });
+      }
+          
+          );
       DisciplineModel disciplineModelResponse =
           disciplineModelFromJson(res.toString());
       return disciplineModelResponse;
@@ -843,6 +1068,37 @@ class AuthRepo {
     }
   }
 
+  Future<ListCommunicationModel> getCommunicationList() async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.chatList, data: {
+        "appMessageID": 20,
+        "circularID": 0,
+        "contentType": 0,
+        "createdForUserId": "4771",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 20,
+        "schoolID": 1,
+        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
+        "sessionID": 107,
+        "studentID": 896,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "6135",
+        "year": 0
+      });
+      ListCommunicationModel listCommunicationModel =
+          listCommunicationModelFromJson(res.toString());
+      return listCommunicationModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library book search list: $e");
+    }
+  }
+
   ////////////////////////////////////////////////     GET INFIRMARY LIST DATA      //////////////////////////////////////////////////////
 
   Future<InfirmaryModel> getInfirmaryList() async {
@@ -875,36 +1131,30 @@ class AuthRepo {
     }
   }
 
-
-
-
-    ////////////////////////////////////////////////     GET ACTIVITY LIST DATA      //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////     GET ACTIVITY LIST DATA      //////////////////////////////////////////////////////
 
   Future<ActivityModel> getActivityList() async {
     try {
-      final res =
-          await _myService.networkPost(
-            url: EndUrl.activityGetList,
-            isStagingLink: true,
-             data: {
-	"appMessageID":0,
-	"circularID":0,
-	"contentType":0,
-	"downloadAttachment":0,
-	"isNotification":0,
-	"messageTypeId":0,
-	"month":0,
-	"pageNumber":1,
-	"pageSize":8,
-	"schoolID":1,
-	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
-	"sessionID":178,
-	"studentID":108416,
-	"subjectID":0,
-	"type":0,
-	"userID":"118011",
-	"year":0
-});
+      final res = await _myService
+          .networkPost(url: EndUrl.activityGetList, isStagingLink: true, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 8,
+        "schoolID": 1,
+        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
+        "sessionID": 178,
+        "studentID": 108416,
+        "subjectID": 0,
+        "type": 0,
+        "userID": "118011",
+        "year": 0
+      });
       ActivityModel infirmaryResponse = activityModelFromJson(res.toString());
       return infirmaryResponse;
     } catch (e) {

@@ -16,6 +16,7 @@ import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -30,19 +31,14 @@ class _BarChartExampleState extends State<BarChartExample> {
   final TextEditingController _searchController = TextEditingController();
   DateTime _focusedDay = DateTime.now();
 
-
-
-
- @override
+  @override
   void initState() {
     super.initState();
     context.read<AttendanceBarChartCubit>().getAttendanceBarChart();
-    context.read<ParticularMonthAttendanceCubit>().getParticularMonthAttendance(_focusedDay.month);
+    context
+        .read<ParticularMonthAttendanceCubit>()
+        .getParticularMonthAttendance(_focusedDay.month);
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +50,7 @@ class _BarChartExampleState extends State<BarChartExample> {
         children: [
           Image.asset(MyAssets.background_2),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(padding20),
               child: Column(
                 children: [
                   CustomAppBar(),
@@ -63,7 +59,7 @@ class _BarChartExampleState extends State<BarChartExample> {
                     child: CustomSearchBar(controller: _searchController),
                   ),
                   screenTitleHeader("Attendance",
-                      onPressed: ()=> Navigator.pop(context)),
+                      onPressed: () => Navigator.pop(context)),
                   Container(
                     padding: const EdgeInsets.all(8),
                     width: double.infinity,
@@ -98,26 +94,41 @@ class _BarChartExampleState extends State<BarChartExample> {
                   ),
                   15.heightBox,
                   _buildMonthSelector(),
-                  BlocConsumer<ParticularMonthAttendanceCubit,ParticularMonthAttendanceState>(
-                    listener: (context, state) {},
-                    builder: (context,state) {
-                      if(state is ParticularMonthAttendanceLoadingState)
-                      {
-                     return  const Center(child:  CircularProgressIndicator(),);
-                      }
-
-                     else if(state is ParticularMonthAttendanceSuccessState){
-                        return attendanceStatusTopGraph(state.particularMonthAttendanceModel);
-                      }
-                      else if(state  is ParticularMonthAttendanceErrorState)
-                      {
-                        return  Center( child:  Text(state.message, style:  FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-                      }
-                      else {
-                      return   Center(child:  Text(MyStrings.undefinedState, style:  FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-                      }
-                    }
-                  ),
+                  BlocConsumer<ParticularMonthAttendanceCubit,
+                          ParticularMonthAttendanceState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state is ParticularMonthAttendanceLoadingState) {
+                          return const Center(
+                            child: SizedBox.shrink(),
+                          );
+                        } else if (state
+                            is ParticularMonthAttendanceSuccessState) {
+                          return attendanceStatusTopGraph(
+                              context, state.particularMonthAttendanceModel);
+                        } else if (state
+                            is ParticularMonthAttendanceErrorState) {
+                          return Center(
+                            child: Text(
+                              state.message,
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: MyColors.boldTextColor),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: Text(
+                              MyStrings.undefinedState,
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: MyColors.boldTextColor),
+                            ),
+                          );
+                        }
+                      }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -131,9 +142,13 @@ class _BarChartExampleState extends State<BarChartExample> {
                     ],
                   ),
                   10.heightBox,
-                  GestureDetector(
-                    onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>AttendenceScreen())),
-                    child: attendanceVerticalBarChartGraph())
+                  // GestureDetector(
+                  //     onTap: () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => AttendenceScreen())),
+                  //     child: attendanceVerticalBarChartGraph(context))
+                  attendanceVerticalBarChartGraph(context,_focusedDay),
                 ],
               )),
         ],
@@ -164,7 +179,7 @@ class _BarChartExampleState extends State<BarChartExample> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
           bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
-          int selectdIndex=0;
+          int selectdIndex = 0;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
@@ -175,7 +190,9 @@ class _BarChartExampleState extends State<BarChartExample> {
                     months.indexOf(month) + 1,
                   );
                 });
-                context.read<ParticularMonthAttendanceCubit>().getParticularMonthAttendance(_focusedDay.month);
+                context
+                    .read<ParticularMonthAttendanceCubit>()
+                    .getParticularMonthAttendance(_focusedDay.month);
               },
               child: isSelected
                   ? ShaderMask(
@@ -231,9 +248,10 @@ class _BarChartExampleState extends State<BarChartExample> {
   }
 }
 
-Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAttendanceModel) {
+Widget attendanceStatusTopGraph(BuildContext context,
+    ParticularMonthAttendanceModel particularMonthAttendanceModel) {
   return SizedBox(
-    height: 200,
+    height: MediaQuery.sizeOf(context).height * 0.23,
     width: double.infinity,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -344,13 +362,11 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
                             angle: 270 * 3.1415927 / 180,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
-                              child:
-                               Text(
-                               value.toInt() == 0 ?
-                                "${particularMonthAttendanceModel.presentCount} Days" 
-                                : value.toInt() == 1 ? "${particularMonthAttendanceModel.absentCount} Days" 
-                                : "${particularMonthAttendanceModel.holidayCount} Days"
-                                ),
+                              child: Text(value.toInt() == 0
+                                  ? "${particularMonthAttendanceModel.presentCount} Days"
+                                  : value.toInt() == 1
+                                      ? "${particularMonthAttendanceModel.absentCount} Days"
+                                      : "${particularMonthAttendanceModel.holidayCount} Days"),
                             ));
                       },
                     ),
@@ -478,7 +494,6 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
                 ),
                 borderData: FlBorderData(show: false),
                 gridData: const FlGridData(show: false),
-                
 
                 barGroups: [
                   BarChartGroupData(
@@ -486,7 +501,9 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
                     barRods: [
                       BarChartRodData(
                         color: MyColors.greenShade_2,
-                        toY: double.parse(particularMonthAttendanceModel.presentCount.toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(particularMonthAttendanceModel
+                            .presentCount
+                            .toString()), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 15, Colors.green),
@@ -505,7 +522,9 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
                     barRods: [
                       BarChartRodData(
                         color: MyColors.redShade_1,
-                        toY: double.parse(particularMonthAttendanceModel.absentCount.toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(particularMonthAttendanceModel
+                            .absentCount
+                            .toString()), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 5, Colors.red),
@@ -524,7 +543,9 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
                     barRods: [
                       BarChartRodData(
                         color: MyColors.appColor1,
-                        toY: double.parse(particularMonthAttendanceModel.holidayCount.toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(particularMonthAttendanceModel
+                            .holidayCount
+                            .toString()), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 2, Colors.blue),
@@ -548,132 +569,157 @@ Widget attendanceStatusTopGraph(ParticularMonthAttendanceModel particularMonthAt
   );
 }
 
-Widget attendanceVerticalBarChartGraph() {
+Widget attendanceVerticalBarChartGraph(BuildContext context,DateTime? _focusedDay) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: SizedBox(
       width: 700,
-      height: 330,
-      child: BlocConsumer<AttendanceBarChartCubit,AttendanceBarChartState>(
-        listener: (context, state) {
+      height: MediaQuery.sizeOf(context).height * 0.35,
+      child: BlocConsumer<AttendanceBarChartCubit, AttendanceBarChartState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is AttendanceBarChartLoadingState) {
+              return const Center(
+                child: SizedBox.shrink(),
+              );
+            } else if (state is AttendanceBarChartSuccessState) {
+              return BarChart(
+                BarChartData(
+                    maxY: 100,
+                    alignment: BarChartAlignment.spaceAround,
+                    barTouchData: BarTouchData(
+                      enabled: true,
+                      touchCallback: (event, response) {
+                        if (response != null &&
+                            response.spot != null &&
+                            event is FlTapUpEvent) {
+                          final tappedIndex =
+                              response.spot!.touchedBarGroupIndex;
+                          final tappedBarData =
+                              state.attendanceBarChart[tappedIndex].month;
 
-        },
-        builder: (context,state) {
+                              context
+                    .read<ParticularMonthAttendanceCubit>()
+                    .getParticularMonthAttendance(tappedBarData?? _focusedDay!.month).then((value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>  AttendenceScreen(month: tappedBarData,),
+                            ),
+                          ));
 
-          if(state is AttendanceBarChartLoadingState){
-            return const Center(child: CircularProgressIndicator(),);
-          }
-
-        else  if(state is AttendanceBarChartSuccessState){
-
-          return BarChart(
-            BarChartData(
-              maxY: 100,
-              alignment: BarChartAlignment.spaceAround,
-              barTouchData: BarTouchData(enabled: false),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    reservedSize: 30,
-                    showTitles: true,
-                    getTitlesWidget: (double value, TitleMeta meta) {
-                      return SideTitleWidget(
-                        axisSide: meta.axisSide,
-                        child: Text(
-                          [
-                            'Jan',
-                            'Feb',
-                            'Mar',
-                            'Apr',
-                            'May',
-                            'Jun',
-                            'Jul',
-                            'Aug',
-                            'Sep',
-                            'Oct',
-                            'Nov',
-                            'Dec'
-                          ][value.toInt()],
-                          style: FontUtil.customStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              textColor: MyColors.boldTextColor.withOpacity(0.5)),
+                          
+                        }
+                      },
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          reservedSize: 30,
+                          showTitles: true,
+                          getTitlesWidget: (double value, TitleMeta meta) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                [
+                                  'Jan',
+                                  'Feb',
+                                  'Mar',
+                                  'Apr',
+                                  'May',
+                                  'Jun',
+                                  'Jul',
+                                  'Aug',
+                                  'Sep',
+                                  'Oct',
+                                  'Nov',
+                                  'Dec'
+                                ][value.toInt()],
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor
+                                        .withOpacity(0.5)),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    reservedSize: 40,
-                    showTitles: true,
-                    getTitlesWidget: (double value, TitleMeta meta) {
-                      return SideTitleWidget(
-                        axisSide: meta.axisSide,
-                        child: Text(
-                          "${value.toInt()} %",
-                          style: FontUtil.customStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              textColor: MyColors.boldTextColor.withOpacity(0.5)),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          reservedSize: 40,
+                          showTitles: true,
+                          getTitlesWidget: (double value, TitleMeta meta) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                "${value.toInt()} %",
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor
+                                        .withOpacity(0.5)),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    gridData: const FlGridData(show: true),
+                    borderData: FlBorderData(
+                      show: false,
+                      border: Border.all(color: Colors.blue, width: 1),
+                    ),
+                    barGroups: barChartGroupData(state.attendanceBarChart)),
+              );
+            } else if (state is AttendanceBarChartErrorState) {
+              return Center(
+                child: Text(
+                  state.message,
+                  style: FontUtil.customStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: MyColors.boldTextColor),
                 ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
+              );
+            } else {
+              return Center(
+                child: Text(
+                  MyStrings.error,
+                  style: FontUtil.customStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: MyColors.boldTextColor),
                 ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
-              gridData: const FlGridData(show: true),
-              borderData: FlBorderData(
-                show: false,
-                border: Border.all(color: Colors.blue, width: 1),
-              ),
-              barGroups: barChartGroupData(state.attendanceBarChart)
-            ),
-          );
-          }
-         else if(state is AttendanceBarChartErrorState){
-            return Center( 
-              child:Text(state.message,
-              style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-          }
-          else {
-            return  Center( 
-              child:Text(MyStrings.error,
-              style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-         }
-
-        }
-      ),
+              );
+            }
+          }),
     ),
   );
 }
 
-List<BarChartGroupData> barChartGroupData(List<AttendanceBarChart> attendanceBarChart){
-
+List<BarChartGroupData> barChartGroupData(
+    List<AttendanceBarChart> attendanceBarChart) {
   List<BarChartGroupData> barChartGroupDataList = [];
-  for(int i=0;i<attendanceBarChart.length;i++){
-                  barChartGroupDataList.add(
-                    BarChartGroupData(
-                  x: attendanceBarChart[i].month! -1,
-                  barRods: [
-                    BarChartRodData(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            topRight: Radius.circular(5)),
-                        gradient: MyColors.buttonColors,
-                        width: 39,
-                        toY: double.parse(attendanceBarChart[i].attendancePercent!)),
-                  ],
-                )
-                    );
-                }
-  
+  for (int i = 0; i < attendanceBarChart.length; i++) {
+    barChartGroupDataList.add(BarChartGroupData(
+      x: attendanceBarChart[i].month! - 1,
+      barRods: [
+        BarChartRodData(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+            gradient: MyColors.buttonColors,
+            width: 39,
+            toY: double.parse(attendanceBarChart[i].attendancePercent!)),
+      ],
+    ));
+  }
+
   return barChartGroupDataList;
 }

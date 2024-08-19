@@ -1,181 +1,219 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:nguru/custom_widgets/custom_appbar.dart';
-import 'package:nguru/custom_widgets/custom_progress_bar.dart';
+import 'package:nguru/custom_widgets/appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
+import 'package:nguru/logic/circular/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/screens/circular_calendar.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_sizebox.dart';
-import 'package:nguru/utils/app_utils.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CircularScreen extends StatefulWidget {
+  const CircularScreen({super.key});
+
   @override
   State<CircularScreen> createState() => _CircularScreenState();
 }
 
 class _CircularScreenState extends State<CircularScreen> {
-  TextEditingController searchController = TextEditingController();
+ final TextEditingController searchController = TextEditingController();
+  List<CircularList> filteredCirculars = [];
+
+ final int currentDate = DateTime.now().month;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CircularCubit>().getCurrentCircular(month: currentDate);
+    searchController.addListener(_filterCirculars);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_filterCirculars);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterCirculars() {
+    setState(() {
+      final query = searchController.text.toLowerCase();
+      final circularCubit = context.read<CircularCubit>();
+      final currentState = circularCubit.state;
+      if (currentState is CircularSuccessState) {
+        filteredCirculars = currentState.circularList.where((circular) {
+          final subject = circular.subject?.toLowerCase() ?? '';
+          return subject.contains(query);
+        }).toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            dashboardAppBar(),
-            CustomSearchBar(controller: searchController),
-
-            screenTitleHeader("Circular"),
-
-            5.widthBox,
-            Row(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-
-              children: [
-                animatedbutton(),
-                10.widthBox,
-                animatedbutton(),
-                10.widthBox,
-                animatedbutton(),
-              ],
-            ),
-            15.heightBox,
-
-            circularCalendar(),
-
-            Flexible(
-              child: PageView.builder(
-                itemCount: 6,
-                itemBuilder: (context, index) => ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return CardDesign(context);
-                  },
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(MyAssets.back_arrow)),
-                IconButton(
-                    onPressed: () {},
-                    icon: SvgPicture.asset(MyAssets.front_arrow)),
-              ],
-            ),
-            // Text('asdasdas')
-            CustomProgressBar(
-              progress: 0.3,
-              dotCount: 0,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-Widget CardDesign(BuildContext context) {
-  return Container(
-    height: MediaQuery.sizeOf(context).height * 0.10,
-    // width: MediaQuery.sizeOf(context).width * 0.5,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: MyColors.searchbackgroundColor,
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
+      body: Stack(
         children: [
-          Image.asset(MyAssets.bookz),
-          10.widthBox,
-          Flexible(
+        Positioned.fill(
+            child: Image.asset(
+          MyAssets.bg,
+          fit: BoxFit.fill,
+        )),
+        Padding(
+          padding: const EdgeInsets.all(padding20),
+          child: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Important Reminders for Students..",
-                  style: FontUtil.circularTitle,
+                customAppBar(),
+                CustomSearchBar(controller: searchController,
+                
+              
+                onTap: () {
+                   context.read<CircularCubit>().getCurrentCircular(month: currentDate);
+                },),
+                screenTitleHeader(MyStrings.circular,
+                    onPressed: () => Navigator.pop(context)),
+                5.heightBox,
+                circularCalendar(),
+                Expanded(
+                  child: BlocBuilder<CircularCubit, CircularState>(
+                    builder: (context, state) {
+                      if (state is CircularLoadingState) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is CircularSuccessState) {
+                        final circularsToShow = searchController.text.isEmpty
+                            ? state.circularList
+                            : filteredCirculars;
+                        return circularsToShow.isEmpty
+                            ? Center(
+                                child: Column(
+                                children: [
+                                  160.heightBox,
+                                  SvgPicture.asset(
+                                    MyAssets.noDataFound,
+                                    height: height150,
+                                  ),
+                                  5.heightBox,
+                                  Text(
+                                    MyStrings.circularTitle,
+                                    style: FontUtil.customStyle(
+                                        fontSize: 14.h,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: APP_FONT,
+                                        textColor: MyColors.noDataFoundTitle),
+                                  ),
+                                  Text(
+                                    MyStrings.circularSubTittle,
+                                    style: FontUtil.customStyle(
+                                        fontSize: 10.h,
+                                        fontWeight: FontWeight.w400,
+                                        textColor:
+                                            MyColors.noDataFoundSubtitle),
+                                  )
+                                ],
+                              ))
+                            : PageView.builder(
+                                itemCount: (circularsToShow.length / 11).ceil(),
+                                itemBuilder: (context, pageIndex) {
+                                  final startIndex = pageIndex * 11;
+                                  final endIndex =
+                                      (startIndex + 11) > circularsToShow.length
+                                          ? circularsToShow.length
+                                          : (startIndex + 11);
+                                  final circulars = circularsToShow.sublist(
+                                      startIndex, endIndex);
+
+                                  return ListView.builder(
+                                    itemCount: circulars.length,
+                                    itemBuilder: (context, index) {
+                                      final circular = circulars[index];
+                                      return Column(
+                                        children: [
+                                          cardDesign(
+                                            context: context,
+                                            circular: circular,
+                                          ),
+                                          AppGapping.padding10
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                      } else if (state is CircularErrorState) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Lorem ipsum dolor sit amet consectetur.\n Eros eget posuere faucibus lectus congue.",
-                      style: FontUtil.circularsubttile,
-                    ),
-                    IconButton(
-                        onPressed: () {}, icon: SvgPicture.asset(MyAssets.seen))
-                  ],
-                ),
+                
               ],
             ),
           ),
-        ],
-      ),
-    ),
-  );
-}
+        ),
+      ]),
+    );
+  }
 
-GradientBorderButton animatedbutton() {
-  return GradientBorderButton();
-}
-
-class GradientBorderButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Get the screen width and height
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // Calculate the button width and height based on screen size
-    final buttonWidth = screenWidth * 0.12;
-    final buttonHeight = screenHeight * 0.03;
+  Widget cardDesign(
+      {required BuildContext context, required CircularList circular}) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
-      width: buttonWidth,
-      height: buttonHeight,
-      padding: EdgeInsets.all(1), // Border width
+      height: screenHeight*0.12,
       decoration: BoxDecoration(
-        gradient: MyColors.arrowColor,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(borderRadius8),
+        color: MyColors.searchBackGroundColor,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(padding8),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'All',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12,
+            Image.asset(MyAssets.books),
+            12.widthBox,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    circular.subject ?? MyStrings.noSubject,
+                    style: FontUtil.circularTitle,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        circular.description ?? MyStrings.noDescription,
+                        style: FontUtil.circularSubtitle,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          
+                        },
+                        icon: SvgPicture.asset(MyAssets.download),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            SizedBox(width: 8),
-            Icon(
-              Icons.close,
-              color: Colors.black,
-              size: 12,
             ),
           ],
         ),
       ),
     );
   }
+
+  
 }

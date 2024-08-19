@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
+import 'package:nguru/screens/Communication/communication.dart';
 import 'package:nguru/screens/contact_screen.dart';
+import 'package:nguru/screens/notification_screen.dart';
+import 'package:nguru/screens/transport/transport_screen.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -18,6 +22,7 @@ CustomAppBar dashboardAppBar() {
 }
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 
@@ -75,7 +80,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       style: FontUtil.customStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          textColor: MyColors.sessiontext),
+                          textColor: MyColors.sessionText),
                     ),
                   );
                 }).toList(),
@@ -98,7 +103,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ContactScreen()))
+                                builder: (context) =>const  ContactScreen()))
                         .then((value) => setState(() {
                               selectedIcon = 'school';
                             }));
@@ -116,6 +121,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
+NavigationService.navigateTo(
+                        const TransportScreen(), context);
                     setState(() {
                       selectedIcon = 'travel';
                     });
@@ -134,6 +141,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         selectedIcon == 'message' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
+                      NavigationService.navigateTo(
+                        const CommunicationScreen(), context);
                     setState(() {
                       selectedIcon = 'message';
                     });
@@ -184,6 +193,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 : null,
                           ),
                           onPressed: () {
+                            NavigationService.navigateTo(
+                        const NotificationScreen(), context);
                             setState(() {
                               selectedIcon = 'notifications';
                             });

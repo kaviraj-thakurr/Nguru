@@ -11,7 +11,7 @@ class AssignmentListSuccessState extends AssignmentListState {
    AssignmentListSuccessState({  required this.subjectList});
 }
 
-class AssignmenListErrorState extends AssignmentListState {
+class AssignmentListErrorState extends AssignmentListState {
   final String message;
-  AssignmenListErrorState(this.message);
+  AssignmentListErrorState(this.message);
 }

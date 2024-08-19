@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
-import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
@@ -10,7 +9,14 @@ import 'package:nguru/utils/app_strings.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar( {super.key, });
+
+
+final int? month;
+
+
+  const CustomCalendar( {super.key, this.month, });
+
+  
 
 
   @override
@@ -22,7 +28,16 @@ class _CustomCalendarState extends State<CustomCalendar> {
   DateTime? _selectedDay;
 
   @override
+  void initState() {
+    _focusedDay=
+    DateTime(_focusedDay.year, widget.month?? _focusedDay.month, _focusedDay.day);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -109,14 +124,16 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       textColor: MyColors.calendarDateColor);
 
                     int attendanceStatus =state.particularMonthAttendanceModel
-                        .attendanceMonth!.isEmpty ? 4:  state.particularMonthAttendanceModel
+                        .attendanceMonth!.isEmpty ? 99:  state.particularMonthAttendanceModel
                         .attendanceMonth![dayIndex].status!;
+
                     if (attendanceStatus == 0) {
                       defaultDatesStyle =FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.greenShade_3);
                     } 
+
                     else if (attendanceStatus == 3) {
 
                       defaultDatesStyle =FontUtil.customStyle(
@@ -125,7 +142,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       textColor: MyColors.redShade_3);
                     } 
 
-                    else if (attendanceStatus == 4) {
+                    else if (attendanceStatus == 99) {
 
                        defaultDatesStyle =defaultDatesStyle;
                     } 
@@ -240,7 +257,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
+          bool isSelected  = _focusedDay.month == months.indexOf(month) + 1;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
@@ -250,6 +267,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     _focusedDay.year,
                     months.indexOf(month) + 1,
                   );
+                  
                 });
                 context
                     .read<ParticularMonthAttendanceCubit>()

@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
@@ -15,7 +12,6 @@ import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/url_launcher.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ContactScreen extends StatefulWidget {

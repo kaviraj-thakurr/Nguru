@@ -1,41 +1,30 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
-
-import 'package:nguru/logic/login_cubit/login_state.dart';
-import 'package:nguru/models/assignment_models/assignment_list_model.dart';
-
 import 'package:nguru/repo/api_calls.dart';
 
 class AssignmentListCubit extends Cubit<AssignmentListState> {
-  final AuthRepo?  authRepo;
-
+  final AuthRepo? authRepo;
 
   AssignmentListCubit(this.authRepo) : super(AssignmentListLoadingState());
 
-
-  Future<void> getAssignmentList() async {
+  Future<void> getAssignmentList(int? month, String ?assignmentOnParticularDate) async {
     try {
       emit(AssignmentListLoadingState());
-      final result = await authRepo?.getAssignementList();
+      final result = await authRepo?.getAssignementList(month: month, assignmentOnParticularDate: assignmentOnParticularDate);
       if (result != null) {
-        if(result.responseCode == "200" ){
+        if (result.responseCode == "200") {
           emit(AssignmentListSuccessState(subjectList: result.subjectList ?? []));
-        }else {
-emit(AssignmenListErrorState(result.responseMessage ?? "Error occured"));
+        } else {
+          emit(AssignmentListErrorState(result.responseMessage ?? "Error occurred"));
         }
         log("${result.subjectList}");
-        
+      } else {
+        emit(AssignmentListErrorState("No result received from API"));
       }
     } catch (e) {
-      emit(AssignmenListErrorState(e.toString()));
+      emit(AssignmentListErrorState(e.toString()));
     }
   }
 }
-
-
-

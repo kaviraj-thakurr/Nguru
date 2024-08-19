@@ -18,3 +18,6 @@ class AppUtils{
     );
   }
   }
+
+
+  bool isFromForgotPassword=false;

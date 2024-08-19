@@ -1,6 +1,7 @@
 import 'package:nguru/models/login_model.dart';
 
 abstract class LoginState {}
+class LoginInitState extends LoginState {}
 
 class LoginLoadingState extends LoginState {}
 
@@ -28,4 +29,10 @@ class LoginSuccessState extends LoginState {
 class LoginErrorState extends LoginState {
   final String message;
   LoginErrorState(this.message);
+}
+
+
+class LoginForgetPasswordState extends LoginState {
+ 
+  LoginForgetPasswordState();
 }

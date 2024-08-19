@@ -28,7 +28,7 @@ class CustomSearchBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4), color: MyColors.searchbackgroundColor),
+          borderRadius: BorderRadius.circular(4), color: MyColors.searchBackGroundColor),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -40,7 +40,7 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               style:const TextStyle(color: Colors.black),
               decoration: InputDecoration(
-                suffixIcon:const Icon(CupertinoIcons.search,color: MyColors.textcolors),
+                suffixIcon: Icon(CupertinoIcons.search,color: MyColors.textColors),
                 hintText: MyStrings.search,
                 hintStyle: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w400, textColor: MyColors.search),
                 border: InputBorder.none,

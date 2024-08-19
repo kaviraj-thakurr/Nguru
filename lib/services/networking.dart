@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 class Networking {
   final _dio = Dio();
   late Response response;
+  final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
 
-  final baseUrl= "https://quickschool.niitnguru.com/mobileappservice/Api/";
+  
   final stagingLink = "https://qsstg.niiteducation.com/mobileappservice/Api/";
   //Api fun for post API
   Future<dynamic> networkPost(
@@ -17,10 +20,13 @@ class Networking {
 
     try {
       response = await _dio.post(
+       
       isStagingLink ? stagingLink+url :   baseUrl+url,
         data: data,
         options: Options(headers: headers),
+       
       );
+       log("request body: $data");
       return response;
     } catch (e) {
       if (e is DioError) {

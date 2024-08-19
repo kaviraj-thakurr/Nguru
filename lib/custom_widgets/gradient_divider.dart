@@ -15,6 +15,7 @@ class GradientDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
+      width: MediaQuery.of(context).size.width*0.40,
       decoration: BoxDecoration(
         gradient: gradient,
       ),

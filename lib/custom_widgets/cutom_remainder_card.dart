@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nguru/utils/app_sizebox.dart';
 
 class CustomReminderCard extends StatelessWidget {
   final String title;
@@ -42,7 +43,8 @@ class CustomReminderCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8.0),
+                AppGapping.padding8,
+              //  const SizedBox(height: 8.0),
                 Text(
                   subtitle,
                   style: const TextStyle(

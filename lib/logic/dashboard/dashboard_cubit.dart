@@ -20,12 +20,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             qualification: result.qualification,
             admissionNumber: result.admissionNumber,
             section: result.section,
-            dashboardList: result.dashboardList
-                ?.map<Map<String, String>>((item) => {
-                      'dashboardItem': item.dashboardItem ?? '',
-                      'dashboardValue': item.dashboardValue ?? ''
-                    })
-                .toList(),
+          dashboardList: result.dashboardList,
           ));
         } else {
           emit(DashboardErrorState(result.responseMessage ?? "Error occurred"));

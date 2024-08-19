@@ -11,6 +11,7 @@ import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
+import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/custom_flutter_switch.dart';
@@ -58,103 +59,112 @@ class _SettingScreenState extends State<SettingScreen> {
           onTap: () => Navigator.pop(context),
           child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(children: [
-          CustomAppBar(),
-          BlocBuilder<DashboardCubit,DashboardState>(
-            builder: (context,state) {
-             if(state is DashboardLoadingState){
-                return const Center(child:  CircularProgressIndicator(),);
-              }
-             else if(state is DashboardSuccessState)
-              {return customSettingProfileWidget(context, screenWidth, screenHeight,state.studentName!,"${state.qualification} ${state.section!}",state.admissionNumber!);}
-           
-            else if(state is DashboardErrorState){
-              return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
-            }
-            else {
-              return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
-            }
-            }
-          ),
-          Container(
-            height: screenHeight * 0.58,
-            width: double.infinity,
-            child: ListView.builder(
-                itemCount: settingitems.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: settingItemsListTile(
-                        context, "${settingitems[index]}", isTapped: isTap,
-                        onToggleChanged: (bool value) {
-                      setState(() {
-                        isTap = !isTap;
-                        log("istap $isTap");
-                      });
-                      return isTap;
-                    },
-
-                        // () => {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => StoryScreen()))
-                        //     },
-                        isNotificationTile: false),
-                  );
-                }),
-          ),
-          20.heightBox,
+      body: Stack(
+        children: [
+          Positioned.fill(
+                  child: Image.asset(
+                MyAssets.bg,
+                fit: BoxFit.fill,
+              )),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(children: [
+              CustomAppBar(),
+              BlocBuilder<DashboardCubit,DashboardState>(
+                builder: (context,state) {
+                 if(state is DashboardLoadingState){
+                    return const Center(child:  CircularProgressIndicator(),);
+                  }
+                 else if(state is DashboardSuccessState)
+                  {return customSettingProfileWidget(context, screenWidth, screenHeight,state.studentName!,"${state.qualification} ${state.section!}",state.admissionNumber!);}
+               
+                else if(state is DashboardErrorState){
+                  return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
+                }
+                else {
+                  return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
+                }
+                }
+              ),
+              Container(
+                height: screenHeight * 0.58,
+                width: double.infinity,
+                child: ListView.builder(
+                    itemCount: settingitems.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: settingItemsListTile(
+                            context, "${settingitems[index]}", isTapped: isTap,
+                            onToggleChanged: (bool value) {
+                          setState(() {
+                            isTap = !isTap;
+                            log("istap $isTap");
+                          });
+                          return isTap;
+                        },
           
-
-               Center(
-                 child: ShaderMask(
-                   blendMode: BlendMode.srcIn,
-                   shaderCallback: (Rect bounds) {
-                     return MyColors.buttonColors.createShader(bounds);
-                   },
-                   child: Builder(
-                     builder: (context) {
-                       return GestureDetector(
-                        onTap: ()=> context.read<SignoutCubit>().signout(),
-                         child: Text(
-                           "Sign out",
-                           style: FontUtil.customStyle(
-                               fontSize: 18,
-                               fontWeight: FontWeight.w500,
-                               textColor: MyColors.boldTextColor),
-                         ),
-                       );
-                     }
-                   ),
-                 ),
-               ),
-
-              //  BlocConsumer<SignoutCubit,SignoutState>(
-              //   builder: (context,state){
-              //        if(state is SignoutErrorState){
-              //  return   Center(child: Text("${state.message}",style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w400, textColor: MyColors.textcolors),),);
-              // }
-
-              // else if(state is SignoutLoadingState){
-              // return const  Center(child: CircularProgressIndicator(),);
-              // }
-              // else{ return const  SizedBox();}
-              //   },
-              //    listener: (context,state){
-              //     if(state is SignoutSuccessState){
-              //       return Navigator.of(context).popUntil((route) => route.isFirst);
-              //     }
-              //    else  if(state is SignoutErrorState){
-              //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message) ));
-              //     }
-
-              //    })
+                            // () => {
+                            //       Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //               builder: (context) => StoryScreen()))
+                            //     },
+                            isNotificationTile: false),
+                      );
+                    }),
+              ),
+              20.heightBox,
               
           
-        ]),
+                   Center(
+                     child: ShaderMask(
+                       blendMode: BlendMode.srcIn,
+                       shaderCallback: (Rect bounds) {
+                         return MyColors.buttonColors.createShader(bounds);
+                       },
+                       child: Builder(
+                         builder: (context) {
+                           return GestureDetector(
+                            onTap: ()=> context.read<SignoutCubit>().signout(),
+                             child: Text(
+                               "Sign out",
+                               style: FontUtil.customStyle(
+                                   fontSize: 18,
+                                   fontWeight: FontWeight.w500,
+                                   textColor: MyColors.boldTextColor),
+                             ),
+                           );
+                         }
+                       ),
+                     ),
+                   ),
+          
+                  //  BlocConsumer<SignoutCubit,SignoutState>(
+                  //   builder: (context,state){
+                  //        if(state is SignoutErrorState){
+                  //  return   Center(child: Text("${state.message}",style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w400, textColor: MyColors.textcolors),),);
+                  // }
+          
+                  // else if(state is SignoutLoadingState){
+                  // return const  Center(child: CircularProgressIndicator(),);
+                  // }
+                  // else{ return const  SizedBox();}
+                  //   },
+                  //    listener: (context,state){
+                  //     if(state is SignoutSuccessState){
+                  //       return Navigator.of(context).popUntil((route) => route.isFirst);
+                  //     }
+                  //    else  if(state is SignoutErrorState){
+                  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message) ));
+                  //     }
+          
+                  //    })
+                  
+              
+            ]),
+          ),
+        ],
       ),
     );
   }

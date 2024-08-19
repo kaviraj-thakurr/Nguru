@@ -10,17 +10,18 @@ class GalleryPhotosCubit extends Cubit<GalleryPhotosState> {
   GalleryPhotosCubit(this.authRepo) : super(GalleryPhotosLoadingState());
 
 
-  Future<void> getGalleryPhotos() async {
+  Future<void> getGalleryPhotos(int? dashPictureGalleryId) async {
     try {
       emit(GalleryPhotosLoadingState());
-      final result = await authRepo?.getGalleryPhotoList();
+      final result = await authRepo?.getGalleryPhotoList(dashPictureGalleryId: dashPictureGalleryId);
       if (result != null) {
         if(result.responseCode == "200" ){
-          emit(GalleryPhotosSuccessState(galleryPhotos: result));
+          emit(
+            GalleryPhotosSuccessState(galleryPhotos: result));
         }else {
 emit(GalleryPhotosErrorState(result.responseMessage ?? "Error occured"));
         }
-        log("${result.photogalleryList}");
+        log("${result.photoList}");
         
       }
     } catch (e) {

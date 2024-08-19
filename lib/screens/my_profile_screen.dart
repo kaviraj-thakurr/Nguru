@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_gradient_border_button.dart';
@@ -210,13 +208,13 @@ Widget personInfoCard(
                           style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                       const Spacer(),
                       Text("1234 4567 7890",
                           style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                     ],
                   ),
                 ),
@@ -228,13 +226,13 @@ Widget personInfoCard(
                           style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                       const Spacer(),
                       Text("anshulsh@gmail.com",
                           style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                     ],
                   ),
                 ),
@@ -322,7 +320,7 @@ Widget parentDetailsCard(
                      style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors),
+                              textColor: MyColors.textColors),
                     ),
                   ],
                 ),
@@ -340,7 +338,7 @@ Widget parentDetailsCard(
                                  style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                     
                      Text("+91-123-4567-891",
                             maxLines: 2,
@@ -348,7 +346,7 @@ Widget parentDetailsCard(
                              style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
 
                                  Text("digvijays123@gmail.com",
                             maxLines: 2,
@@ -356,7 +354,7 @@ Widget parentDetailsCard(
                             style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
 
 
                   ],
@@ -384,7 +382,7 @@ Widget parentDetailsCard(
                   style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors),
+                              textColor: MyColors.textColors),
                 ),
                 8.widthBox,
                 Flexible(
@@ -395,7 +393,7 @@ Widget parentDetailsCard(
                       style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                 ),
               ],
             ),
@@ -415,7 +413,6 @@ Widget transportDetailsCard(
   Function(String) onNameChange,
 ) {
   List<String> names = ['Anshul Goswami', 'Name Surname'];
-  bool isSelected = false;
 
   // Ensure the personName is a valid value
   if (!names.contains(personName)) {
@@ -468,7 +465,7 @@ Widget transportDetailsCard(
                   style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors),
+                              textColor: MyColors.textColors),
                 ),
                
 
@@ -486,7 +483,7 @@ Widget transportDetailsCard(
                            style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                         SvgPicture.asset("assets/icons/route.svg"),
                         Text(" Tuglakabaad",
                             maxLines: 2,
@@ -494,7 +491,7 @@ Widget transportDetailsCard(
                              style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
                       ],
                     ),
                      Text("Devendar Pal",
@@ -503,7 +500,7 @@ Widget transportDetailsCard(
                             style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
 
                                  Text("+91-123-4569-781",
                             maxLines: 2,
@@ -511,7 +508,7 @@ Widget transportDetailsCard(
                            style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
 
                                  Text("Tuglakabaad",
                             maxLines: 2,
@@ -519,7 +516,7 @@ Widget transportDetailsCard(
                             style: FontUtil.customStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              textColor: MyColors.textcolors)),
+                              textColor: MyColors.textColors)),
 
                   ],
                 ),
@@ -603,7 +600,7 @@ Widget teacherDetailsCard(
                   style: FontUtil.customStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              textColor: MyColors.textcolors),
+                              textColor: MyColors.textColors),
                 ),
                
 

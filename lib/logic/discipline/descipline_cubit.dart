@@ -41,19 +41,19 @@ List<DisciplineList> disciplineList=[];
     void filterDisciplineListByDate(DateTime selectedDate, bool IsOnlyMonthSelected) {
  //   if (state is DisciplineSuccessState) {
     //  final disciplineList = (state as DisciplineSuccessState).disciplineList;
-    disciplineList.clear();
+   // disciplineList.clear();
       final filteredList =
       IsOnlyMonthSelected ? 
       disciplineList
           .where((item) =>
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year &&
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year ||
               DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month)
           .toList()
           :
        disciplineList
           .where((item) =>
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year &&
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month &&
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year ||
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month ||
               DateFormat("dd/MM/yyyy").parse(item.actionDate!).day == selectedDate.day)
           .toList();
       emit(DisciplineFilteredState(filteredList: filteredList));
