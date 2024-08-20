@@ -7,11 +7,14 @@ import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/screens/assignment_calendar.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
+import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
 import 'package:nguru/utils/custom_download_file.dart';
@@ -51,15 +54,30 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding20),
+            padding: const EdgeInsets.all(padding15),
             child: SafeArea(
               child: Column(children: [
                 customAppBar(),
                 CustomSearchBar(controller: searchController),
-                screenTitleHeader(
-                  MyStrings.assignment,
-                  onPressed: () => Navigator.pop(context),
+                5.heightBox,
+                BlocBuilder<DashboardCubit, DashboardState>(
+                  builder: (context,state) {
+                     if (state is DashboardLoadingState) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if(state is DashboardSuccessState){
+
+                    return screenTitleHeader(
+                      MyStrings.assignment,
+                      onPressed: () => Navigator.pop(context),
+                    );
+                      }
+                      else {
+                        return const SizedBox();
+                      }
+
+                  }
                 ),
+                10.heightBox,
                 assignmentCalendar(),
                 Expanded(
                   child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
@@ -113,7 +131,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       context,
                                       assignment.assignmentName,
                                       subject.subjectName,
-                                      assignment.assignmentDetail,
+                                      removeHtmlTags("${assignment.assignmentDetail}"),
                                       assignment.assignmentDate,
                                       assignment.fileContent),
                                 );
@@ -136,6 +154,11 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       ),
     );
   }
+}
+
+String removeHtmlTags(String htmlString) {
+  final RegExp htmlTagRegExp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: false);
+  return htmlString.replaceAll(htmlTagRegExp, '');
 }
 
 Widget cardDesign(BuildContext context, String? title, String? subject,
@@ -175,6 +198,7 @@ Widget cardDesign(BuildContext context, String? title, String? subject,
                   style: FontUtil.circularSubtitle,
                   maxLines: 1,
                 ),
+                5.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -190,6 +214,8 @@ Widget cardDesign(BuildContext context, String? title, String? subject,
                           gradient: MyColors.assignmentDate,
                           borderRadius: BorderRadius.circular(borderRadius5),
                         ),
+                        
+                       
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,

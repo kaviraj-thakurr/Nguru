@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
+import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/screens/contact_screen.dart';
@@ -33,6 +35,7 @@ class _CustomAppBarState extends State<Appbar> {
   String selectedIcon = '';
   @override
   void initState() {
+      context.read<DashboardCubit>().dashboardGetList();
     context.read<NotificationCubit>().notificationCount();
     // TODO: implement initState
     super.initState();
@@ -40,144 +43,157 @@ class _CustomAppBarState extends State<Appbar> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Row(
-            
+    return BlocBuilder<DashboardCubit,DashboardState>(
+      builder: (context,state) {
+        if(state is DashboardLoadingState){
+          return const SizedBox();
+        } else if(state is DashboardSuccessState){
+            return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              Text("ANU DRAVID", style: FontUtil.customStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          textColor: MyColors.sessionText),
+              Row(
+                
+                children: [
+                  Text(state.studentName??"", style: FontUtil.customStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.sessionText),
+                        ),
+                  8.widthBox,
+                 
+                ],
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        MyAssets.school,
+                        color: selectedIcon == 'school' ? MyColors.appColor1 : null,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ContactScreen()))
+                            .then((value) => setState(() {
+                                  selectedIcon = 'school';
+                                }));
+                      },
                     ),
-              8.widthBox,
-             
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              SizedBox(
-                height: 25,
-                width: 25,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: SvgPicture.asset(
-                    MyAssets.school,
-                    color: selectedIcon == 'school' ? MyColors.appColor1 : null,
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContactScreen()))
-                        .then((value) => setState(() {
-                              selectedIcon = 'school';
-                            }));
-                  },
-                ),
-              ),
-              12.widthBox,
-              SizedBox(
-                height: 25,
-                width: 25,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: SvgPicture.asset(
-                    MyAssets.travel,
-                    color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
-                  ),
-                  onPressed: () {
-                    NavigationService.navigateTo(
-                        const TransportScreen(), context);
-                    setState(() {
-                      selectedIcon = 'travel';
-                    });
-                  },
-                ),
-              ),
-              12.widthBox,
-              SizedBox(
-                height: 25,
-                width: 25,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: SvgPicture.asset(
-                    MyAssets.message,
-                    color:
-                        selectedIcon == 'message' ? MyColors.appColor1 : null,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      selectedIcon = 'message';
-                    });
-                  },
-                ),
-              ),
-              12.widthBox,
-              BlocConsumer<NotificationCubit, NotificationState>(
-                listener: (context, state) {
-                  if (state is NotificationErrorState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if (state is NotificationLoadingState) {
-                    return const Center(child: SizedBox());
-                  } else if (state is NotificationErrorState) {
-                    return const Center(child: Text("error"));
-                  } else if (state is NotificationSuccessState) {
-                    return Stack(children: [
-                      Positioned(
-                        bottom: 15,
-                        right: 0,
-                        child: Container(
-                          height: 12,
-                          width: 12,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: const Color.fromARGB(255, 124, 232, 127)),
-                          child: Center(
-                              child: Text(
-                            "${state.notificationCount ?? ""}",
-                            style: TextStyle(fontSize: 10, color: Colors.white),
-                          )),
-                        ),
+                  12.widthBox,
+                  SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        MyAssets.travel,
+                        color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                       ),
-                      SizedBox(
-                        height: 28,
-                        width: 25,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: SvgPicture.asset(
-                            MyAssets.notifications,
-                            color: selectedIcon == 'notifications'
-                                ? MyColors.appColor1
-                                : null,
-                          ),
-                          onPressed: () {
+                      onPressed: () {
                         NavigationService.navigateTo(
-                        const NotificationScreen(), context);
-                            setState(() {
-                              selectedIcon = 'notifications';
-                            });
-                          },
-                        ),
+                            const TransportScreen(), context);
+                        setState(() {
+                          selectedIcon = 'travel';
+                        });
+                      },
+                    ),
+                  ),
+                  12.widthBox,
+                  SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: SvgPicture.asset(
+                        MyAssets.message,
+                        color:
+                            selectedIcon == 'message' ? MyColors.appColor1 : null,
                       ),
-                    ]);
-                  } else {
-                    return const Text("qwerty");
-                  }
-                },
+                      onPressed: () {
+                        setState(() {
+                          selectedIcon = 'message';
+                        });
+                      },
+                    ),
+                  ),
+                  12.widthBox,
+                  BlocConsumer<NotificationCubit, NotificationState>(
+                    listener: (context, state) {
+                      if (state is NotificationErrorState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.message)),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is NotificationLoadingState) {
+                        return const Center(child: SizedBox());
+                      } else if (state is NotificationErrorState) {
+                        return const Center(child: Text("error"));
+                      } else if (state is NotificationSuccessState) {
+                        return Stack(children: [
+                          Positioned(
+                            bottom: 15,
+                            right: 0,
+                            child: Container(
+                              height: 12,
+                              width: 12,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: const Color.fromARGB(255, 124, 232, 127)),
+                              child: Center(
+                                  child: Text(
+                                "${state.notificationCount ?? ""}",
+                                style: TextStyle(fontSize: 10, color: Colors.white),
+                              )),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 28,
+                            width: 25,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: SvgPicture.asset(
+                                MyAssets.notifications,
+                                color: selectedIcon == 'notifications'
+                                    ? MyColors.appColor1
+                                    : null,
+                              ),
+                              onPressed: () {
+                            NavigationService.navigateTo(
+                            const NotificationScreen(), context);
+                                setState(() {
+                                  selectedIcon = 'notifications';
+                                });
+                              },
+                            ),
+                          ),
+                        ]);
+                      } else {
+                        return const Text("qwerty");
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+
+        }
+        else {
+        return const SizedBox();
+      }
+     
+      } 
     );
   }
 }
