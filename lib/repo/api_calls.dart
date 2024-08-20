@@ -220,26 +220,19 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService
-          .networkPost(url: EndUrl.assignmentCalendarList, data: {
-        "appMessageID": 0,
-        "assignmentDate": month,
-        //"2024-08-14T00:00:00",
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-        "sessionID": 178,
-        "studentID": 108416,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "118011",
-        "year": 0
-      });
+          .networkPost(
+            url: EndUrl.assignmentCalendarList,
+            isStagingLink: true, data: 
+        {
+  "month": month,
+  "userID": await SharedPref.getUserID(),
+  "schoolID": await SharedPref.getSchoolID(),
+  "studentID":await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL": await SharedPref.getSchoolUrl(),
+  "pageNumber": 1
+}
+      );
       AssignmentsMonthList assignmentsMonthList =
           assignmentsMonthListFromJson(res.toString());
       return assignmentsMonthList;

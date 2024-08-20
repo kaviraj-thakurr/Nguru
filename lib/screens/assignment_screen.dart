@@ -14,6 +14,7 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
+import 'package:nguru/utils/custom_download_file.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
@@ -28,14 +29,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  DateTime currentDate=DateTime.now();
- 
-
+  DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    context.read<AssignmentMonthListCubit>().getAssignmentMonthList(currentDate.month);
+    context
+        .read<AssignmentMonthListCubit>()
+        .getAssignmentMonthList(currentDate.month);
   }
 
   @override
@@ -52,87 +53,83 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           Padding(
             padding: const EdgeInsets.all(padding20),
             child: SafeArea(
-              child: Column(
-                children: [
-                  customAppBar(),
-                  CustomSearchBar(controller: searchController),
-                  screenTitleHeader(
-                    MyStrings.assignment,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  assignmentCalendar(),
-                  Expanded(
-                    child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
-                      builder: (context, state) {
-                        if (state is AssignmentListLoadingState) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (state is AssignmentListSuccessState) {
-                            if (state.subjectList.isEmpty ) {
-                            return  Center(
-                                child: Column(
-                                children: [
-                                  160.heightBox,
-                                  SvgPicture.asset(
-                                    MyAssets.noDataFound,
-                                    height: height150,
-                                  ),
-                                  5.heightBox,
-                                  Text(
-                                    MyStrings.assignmentTitle,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14.h,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: APP_FONT,
-                                        textColor: MyColors.noDataFoundTitle),
-                                  ),
-                                  Text(
-                                    MyStrings.assignmentSub,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 10.h,
-                                        fontWeight: FontWeight.w400,
-                                        textColor:
-                                            MyColors.noDataFoundSubtitle),
-                                  )
-                                ],
-                              ));
-                          }
-                          return PageView.builder(
-                            controller: _pageController,
-                            itemCount: state.subjectList.length,
-                            onPageChanged: (index) {
-                            },
-                            itemBuilder: (context, index) {
-                              final subject = state.subjectList[index];
-                              return ListView.builder(
-                                itemCount: subject.assignments?.length ?? 0,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  final assignment = subject.assignments![index];
-                                  return Padding(
-                                    padding: const EdgeInsets.all(padding3),
-                                    child: cardDesign(
+              child: Column(children: [
+                customAppBar(),
+                CustomSearchBar(controller: searchController),
+                screenTitleHeader(
+                  MyStrings.assignment,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                assignmentCalendar(),
+                Expanded(
+                  child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
+                    builder: (context, state) {
+                      if (state is AssignmentListLoadingState) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is AssignmentListSuccessState) {
+                        if (state.subjectList.isEmpty) {
+                          return Center(
+                              child: Column(
+                            children: [
+                              160.heightBox,
+                              SvgPicture.asset(
+                                MyAssets.noDataFound,
+                                height: height150,
+                              ),
+                              5.heightBox,
+                              Text(
+                                MyStrings.assignmentTitle,
+                                style: FontUtil.customStyle(
+                                    fontSize: 14.h,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: APP_FONT,
+                                    textColor: MyColors.noDataFoundTitle),
+                              ),
+                              Text(
+                                MyStrings.assignmentSub,
+                                style: FontUtil.customStyle(
+                                    fontSize: 10.h,
+                                    fontWeight: FontWeight.w400,
+                                    textColor: MyColors.noDataFoundSubtitle),
+                              )
+                            ],
+                          ));
+                        }
+                        return PageView.builder(
+                          controller: _pageController,
+                          itemCount: state.subjectList.length,
+                          onPageChanged: (index) {},
+                          itemBuilder: (context, index) {
+                            final subject = state.subjectList[index];
+                            return ListView.builder(
+                              itemCount: subject.assignments?.length ?? 0,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final assignment = subject.assignments![index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(padding3),
+                                  child: cardDesign(
                                       context,
                                       assignment.assignmentName,
                                       subject.subjectName,
                                       assignment.assignmentDetail,
-                                      assignment.assignmentDate
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        } else if (state is AssignmentListErrorState) {
-                          return Center(child: Text(state.message));
-                        }
-                        return const Center(child: Text(MyStrings.undefinedState));
-                      },
-                    ),
+                                      assignment.assignmentDate,
+                                      assignment.fileContent),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      } else if (state is AssignmentListErrorState) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const Center(
+                          child: Text(MyStrings.undefinedState));
+                    },
                   ),
-                ]
-                
-              ),
+                ),
+              ]),
             ),
           ),
         ],
@@ -141,8 +138,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   }
 }
 
-Widget cardDesign(
-    BuildContext context, String? title, String? subject, String? description, String?date) {
+Widget cardDesign(BuildContext context, String? title, String? subject,
+    String? description, String? date, String? fileContent) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
@@ -193,14 +190,14 @@ Widget cardDesign(
                           gradient: MyColors.assignmentDate,
                           borderRadius: BorderRadius.circular(borderRadius5),
                         ),
-                        child:  Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(padding5),
                               child: Text(
-                                date??"",
+                                date ?? "",
                                 style: TextStyle(
                                   color: MyColors.assignmentDateColor,
                                   fontSize: 12.h,
@@ -212,10 +209,14 @@ Widget cardDesign(
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset(MyAssets.seen),
-                    ),
+                    fileContent == null
+                        ? const SizedBox()
+                        : IconButton(
+                            onPressed: () {
+                              onSaveWithDialogPressed(fileContent);
+                            },
+                            icon: SvgPicture.asset(MyAssets.download),
+                          ),
                   ],
                 ),
               ],
