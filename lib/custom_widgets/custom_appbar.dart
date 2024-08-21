@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
+import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/screens/Communication/communication.dart';
@@ -22,7 +24,6 @@ CustomAppBar dashboardAppBar() {
 }
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 
@@ -56,35 +57,42 @@ class _CustomAppBarState extends State<CustomAppBar> {
           Row(
             // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              DropdownButton<String>(
-                value: selectedValue,
-                icon: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: SvgPicture.asset(
-                    MyAssets.drop_down_arrow,
-                    color: MyColors.addButtonColor,
-                  ),
-                ),
-                underline: const SizedBox.shrink(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedValue = newValue!;
-                  });
-                },
-                items:
-                    dropdownItems.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: FontUtil.customStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          textColor: MyColors.sessionText),
-                    ),
+              BlocBuilder<DashboardCubit, DashboardState>(
+                  builder: (context, state) {
+                if (state is DashboardLoadingState) {
+                  return Text(
+                    "_ _",
+                    style: FontUtil.customStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.sessionText),
                   );
-                }).toList(),
-              )
+                } else if (state is DashboardSuccessState) {
+                  return Text(
+                    state.studentName ?? "_",
+                    style: FontUtil.customStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.sessionText),
+                  );
+                } else if (state is DashboardErrorState) {
+                  return Text(
+                    "_ _",
+                    style: FontUtil.customStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.sessionText),
+                  );
+                } else {
+                  return Text(
+                    "_ _",
+                    style: FontUtil.customStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        textColor: MyColors.sessionText),
+                  );
+                }
+              }),
             ],
           ),
           const Spacer(),
@@ -100,13 +108,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: selectedIcon == 'school' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>const  ContactScreen()))
-                        .then((value) => setState(() {
-                              selectedIcon = 'school';
-                            }));
+                    // Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) => const ContactScreen()))
+                    //  .then((value) =>
+                    setState(() {
+                      selectedIcon = 'school';
+                    });
+                    //);
                   },
                 ),
               ),
@@ -121,8 +131,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-NavigationService.navigateTo(
-                        const TransportScreen(), context);
+                    // NavigationService.navigateTo(
+                    //     const TransportScreen(), context);
                     setState(() {
                       selectedIcon = 'travel';
                     });
@@ -141,8 +151,8 @@ NavigationService.navigateTo(
                         selectedIcon == 'message' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-                      NavigationService.navigateTo(
-                        const CommunicationScreen(), context);
+                    // NavigationService.navigateTo(
+                    //     const CommunicationScreen(), context);
                     setState(() {
                       selectedIcon = 'message';
                     });
@@ -193,8 +203,8 @@ NavigationService.navigateTo(
                                 : null,
                           ),
                           onPressed: () {
-                            NavigationService.navigateTo(
-                        const NotificationScreen(), context);
+                            // NavigationService.navigateTo(
+                            //     const NotificationScreen(), context);
                             setState(() {
                               selectedIcon = 'notifications';
                             });

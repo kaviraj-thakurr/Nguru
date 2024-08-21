@@ -1,10 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
+import 'package:nguru/screens/assignment_screen.dart';
+import 'package:nguru/screens/circular_screen.dart';
+import 'package:nguru/screens/discipline_screen.dart';
+import 'package:nguru/screens/story/story_description.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -32,17 +38,17 @@ class StoryView extends StatefulWidget {
   final List<CircularList>? circularList;
   final List<DisciplineList>? disciplineList;
 
-  const StoryView(
-      {super.key,
-      this.stories,
-      required this.isGalleryWidget,
-      required this.isAssignmentWidget,
-      required this.isCircularWidget,
-      required this.isDisciplineWidget,
-      this.subjectList,
-      this.circularList,
-      this.disciplineList,
-       });
+  const StoryView({
+    super.key,
+    this.stories,
+    required this.isGalleryWidget,
+    required this.isAssignmentWidget,
+    required this.isCircularWidget,
+    required this.isDisciplineWidget,
+    this.subjectList,
+    this.circularList,
+    this.disciplineList,
+  });
 
   @override
   StoryViewState createState() => StoryViewState();
@@ -56,7 +62,6 @@ class StoryViewState extends State<StoryView>
 
   @override
   void initState() {
-    log("assignment lenght:  ${widget.subjectList?[0].assignments?.length}");
     super.initState();
     _pageController = PageController();
     _initializeAnimationController();
@@ -84,9 +89,18 @@ class StoryViewState extends State<StoryView>
             _nextStory();
           }
         });
-    }
-
-    else if (widget.isCircularWidget) {
+    } else if (widget.isCircularWidget) {
+      _animationController = AnimationController(
+        vsync: this,
+        duration:
+            //  widget.subjectList[_currentIndex].duration ??
+            const Duration(seconds: 3),
+      )..addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            _nextStory();
+          }
+        });
+    } else if (widget.isDisciplineWidget) {
       _animationController = AnimationController(
         vsync: this,
         duration:
@@ -98,20 +112,6 @@ class StoryViewState extends State<StoryView>
           }
         });
     }
-
-    else if (widget.isDisciplineWidget) {
-      _animationController = AnimationController(
-        vsync: this,
-        duration:
-            //  widget.subjectList[_currentIndex].duration ??
-            const Duration(seconds: 3),
-      )..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            _nextStory();
-          }
-        });
-    }
-    
 
     _animationController.forward();
   }
@@ -137,65 +137,124 @@ class StoryViewState extends State<StoryView>
         Navigator.of(context).pop(); // Close the StoryView when done
       }
     } else if (widget.isAssignmentWidget) {
-      if (_currentIndex < widget.subjectList!.length - 1) {
-        setState(() {
-          _currentIndex++;
-        });
-        _animationController.reset(); // Reset the controller
-        _animationController.duration =
-            //  widget.subjectList![_currentIndex].duration ??
-            const Duration(seconds: 3);
-        _animationController.forward(); // Restart the animation
-        _pageController.animateToPage(
-          _currentIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-        );
+      if (widget.subjectList!.isEmpty) {
+        if (_currentIndex < 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       } else {
-        //  _animationController.dispose();
-        Navigator.of(context).pop(); // Close the StoryView when done
+        if (_currentIndex < widget.subjectList!.length - 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       }
-    }
-
-    else if (widget.isCircularWidget) {
-      if (_currentIndex < widget.circularList!.length - 1) {
-        setState(() {
-          _currentIndex++;
-        });
-        _animationController.reset(); // Reset the controller
-        _animationController.duration =
-            //  widget.subjectList![_currentIndex].duration ??
-            const Duration(seconds: 3);
-        _animationController.forward(); // Restart the animation
-        _pageController.animateToPage(
-          _currentIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-        );
+    } else if (widget.isCircularWidget) {
+      if (widget.circularList!.isEmpty) {
+        if (_currentIndex < 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       } else {
-        //  _animationController.dispose();
-        Navigator.of(context).pop(); // Close the StoryView when done
+        if (_currentIndex < widget.circularList!.length - 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       }
-    }
-
-    else if (widget.isDisciplineWidget) {
-      if (_currentIndex < widget.disciplineList!.length - 1) {
-        setState(() {
-          _currentIndex++;
-        });
-        _animationController.reset(); // Reset the controller
-        _animationController.duration =
-            //  widget.subjectList![_currentIndex].duration ??
-            const Duration(seconds: 3);
-        _animationController.forward(); // Restart the animation
-        _pageController.animateToPage(
-          _currentIndex,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-        );
+    } else if (widget.isDisciplineWidget) {
+      if (widget.disciplineList!.isEmpty) {
+        if (_currentIndex < 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       } else {
-        //  _animationController.dispose();
-        Navigator.of(context).pop(); // Close the StoryView when done
+        if (_currentIndex < widget.disciplineList!.length - 1) {
+          setState(() {
+            _currentIndex++;
+          });
+          _animationController.reset(); // Reset the controller
+          _animationController.duration =
+              //  widget.subjectList![_currentIndex].duration ??
+              const Duration(seconds: 3);
+          _animationController.forward(); // Restart the animation
+          _pageController.animateToPage(
+            _currentIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        } else {
+          //  _animationController.dispose();
+          Navigator.of(context).pop(); // Close the StoryView when done
+        }
       }
     }
   }
@@ -229,6 +288,8 @@ class StoryViewState extends State<StoryView>
   void _resumeAnimation() {
     _animationController.forward();
   }
+
+  DateTime todaysDate = DateTime.now();
 
   @override
   void dispose() {
@@ -266,7 +327,26 @@ class StoryViewState extends State<StoryView>
                       }
                   })
           : GestureDetector(
-              onTap: () => {},
+              onTap: () => {
+                    widget.isAssignmentWidget
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AssignmentScreen()))
+                        : widget.isCircularWidget
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CircularScreen()))
+                            : widget.isDisciplineWidget
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DisciplineScreen()))
+                                : null
+                  },
               child: SvgPicture.asset(
                 MyAssets.backArrow,
               )),
@@ -281,13 +361,28 @@ class StoryViewState extends State<StoryView>
           children: [
             PageView.builder(
               controller: _pageController,
-              itemCount: widget.isAssignmentWidget
-                  ? widget.subjectList?.length
-                  : widget.isCircularWidget ? widget.circularList?.length
-                  : widget.isDisciplineWidget ? widget.disciplineList?.length
-                  : widget.stories?.length,
-              itemBuilder: (context, index) {
+              itemCount: widget.isAssignmentWidget == true &&
+                      widget.subjectList!.isEmpty
+                  ? 1
+                  : widget.isAssignmentWidget == true &&
+                          widget.subjectList!.isNotEmpty
+                      ? widget.subjectList?.length
 
+                      : widget.isCircularWidget == true &&
+                              widget.circularList!.isEmpty
+                          ? 1
+                          : widget.isCircularWidget == true &&
+                                  widget.circularList!.isNotEmpty
+                              ? widget.circularList?.length
+
+                              : widget.isDisciplineWidget == true &&
+                                      widget.disciplineList!.isEmpty
+                                  ? 1
+                                  : widget.isDisciplineWidget == true &&
+                                          widget.disciplineList!.isNotEmpty
+                                      ? widget.disciplineList?.length
+                                      : widget.stories?.length,
+              itemBuilder: (context, index) {
                 return CustomStoryWidget(
                   story: widget.stories?[index],
                   onNext: _nextStory,
@@ -298,12 +393,16 @@ class StoryViewState extends State<StoryView>
                   isAssignmentWidget: widget.isAssignmentWidget,
                   isCircularWidget: widget.isCircularWidget,
                   isDisciplineWidget: widget.isDisciplineWidget,
-                  subjectList: widget.subjectList?[index],
-                  circularList: widget.circularList?[index],
-                  disciplineList: widget.disciplineList?[index],
+                  subjectList: widget.subjectList!.isNotEmpty
+                      ? widget.subjectList![index]
+                      : null,
+                  circularList: widget.circularList!.isNotEmpty
+                      ? widget.circularList![index]
+                      : null,
+                  disciplineList: widget.disciplineList!.isNotEmpty
+                      ? widget.disciplineList![index]
+                      : null,
                 );
-
-
               },
               onPageChanged: (index) {
                 setState(() {
@@ -333,9 +432,26 @@ class StoryViewState extends State<StoryView>
                   return GradientIndicator(
                     itemCount: widget.isGalleryWidget
                         ? widget.stories!.length
-                        : widget.isAssignmentWidget
-                            ? widget.subjectList!.length
-                            : 0,
+                        : widget.isAssignmentWidget == true &&
+                                widget.subjectList!.isEmpty
+                            ? 1
+                            : widget.isAssignmentWidget == true &&
+                                    widget.subjectList!.isNotEmpty
+                                ? widget.subjectList!.length
+                                : widget.isDisciplineWidget == true &&
+                                        widget.disciplineList!.isEmpty
+                                    ? 1
+                                    : widget.isDisciplineWidget == true &&
+                                            widget.disciplineList!.isNotEmpty
+                                        ? widget.disciplineList!.length
+                                        : widget.isCircularWidget == true &&
+                                                widget.circularList!.isEmpty
+                                            ? 1
+                                            : widget.isCircularWidget == true &&
+                                                    widget.circularList!
+                                                        .isNotEmpty
+                                                ? widget.circularList!.length
+                                                : 0,
                     currentIndex: _currentIndex,
                     progress: _animationController.value,
                   );
@@ -424,282 +540,523 @@ class CustomStoryWidget extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                       ),
                     )
-                  : isAssignmentWidget
+                  : isAssignmentWidget == true && subjectList == null
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 25, left: 15),
-                              child: Flexible(
-                                flex: 1,
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        MyAssets.assignmentIcon,
-                                        width: 35,
-                                        height: 35,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.03,
-                                      ),
-                                      Flexible(
-                                          child: Text(
-                                        MyStrings.assignment,
-                                        style: FontUtil.customStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            textColor: Colors.black),
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                    ],
-                                  ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.45,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      MyAssets.assignmentIcon,
+                                      width: 35,
+                                      height: 35,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.03,
+                                    ),
+                                    Text(
+                                      MyStrings.assignment,
+                                      style: FontUtil.customStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          textColor: Colors.black),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Flexible(
-                              flex: 3,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    subjectList?.subjectName != null
-                                        ? "Subject Name: ${subjectList?.subjectName}"
-                                        : MyStrings.notAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w800,
-                                        textColor: Colors.black),
-                                  ),
-                                  10.heightBox,
-                                  SizedBox(
-                                    height: 210,
-                                    width: double.infinity,
-                                    child: ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.zero,
-                                        itemCount:
-                                            subjectList?.assignments?.length,
-                                        itemBuilder: (context, index) {
-                                          return assignmentItem(context,
-                                              subjectList?.assignments?[index]);
-                                          //  return Center(child: Text("data"),);
-                                        }),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-
-
-
-
-                        : isCircularWidget
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25, left: 15),
-                              child: Flexible(
-                                flex: 1,
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        MyAssets.assignmentIcon,
-                                        width: 35,
-                                        height: 35,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.03,
-                                      ),
-                                      Flexible(
-                                          child: Text(
-                                        MyStrings.circular,
-                                        style: FontUtil.customStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            textColor: Colors.black),
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                    ],
+                            200.heightBox,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  subjectList?.subjectName != null
+                                      ? "Subject Name: ${subjectList?.subjectName}"
+                                      : MyStrings.notAvailable,
+                                  textAlign: TextAlign.center,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w800,
+                                      textColor: Colors.black),
+                                ),
+                                10.heightBox,
+                                const SizedBox(
+                                  height: 210,
+                                  width: double.infinity,
+                                  child: Center(
+                                    child: Text("No Assignments for today!"),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    circularList?.subject != null
-                                        ? "Subject : ${circularList?.subject}"
-                                        : MyStrings.notAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w800,
-                                        textColor: Colors.black),
-                                  ),
-                                  10.heightBox,
-                                  Text(
-                                    circularList?.description != null
-                                        ? "Description : ${circularList?.description}"
-                                        : MyStrings.notAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        textColor: Colors.black),
-                                  ),
-                                  10.heightBox,
-                                  Text(
-                                    circularList?.circularDate != null
-                                        ? "Date : ${circularList?.circularDate}"
-                                        : MyStrings.notAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        textColor: MyColors.fadedTextColor),
-                                  ),
-                                  10.heightBox,
-                                  SizedBox(
-                                    height: 210,
-                                    width: double.infinity,
-                                    child: ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.zero,
-                                        itemCount:1 ,
-                                        itemBuilder: (context, index) {
-
-                                          return circularItem(context,
-                                              circularList);
-                                          //  return Center(child: Text("data"),);
-                                        }),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
                           ],
                         )
-
-
-                        : isDisciplineWidget
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 25, left: 15),
-                              child: Flexible(
-                                flex: 1,
-                                child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        MyAssets.assignmentIcon,
-                                        width: 35,
-                                        height: 35,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.03,
-                                      ),
-                                      Flexible(
-                                          child: Text(
-                                        MyStrings.discipline,
-                                        style: FontUtil.customStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            textColor: Colors.black),
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                    ],
+                      : isAssignmentWidget == true && subjectList != null
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 25, left: 15),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          MyAssets.assignmentIcon,
+                                          width: 35,
+                                          height: 35,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.03,
+                                        ),
+                                        Text(
+                                          MyStrings.assignment,
+                                          style: FontUtil.customStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold,
+                                              textColor: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    disciplineList?.teacherName!= null
-                                        ? "Teacher Name: ${disciplineList?.teacherName}"
-                                        : MyStrings.notAvailable,
-                                    textAlign: TextAlign.center,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w800,
-                                        textColor: Colors.black),
-                                  ),
-                                  10.heightBox,
-                                  SizedBox(
-                                    height: 210,
-                                    width: double.infinity,
-                                    child: ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.zero,
-                                        itemCount:1,
-                                        itemBuilder: (context, index) {
-                                          return disciplineItem(context,
-                                              disciplineList);
-                                          //  return Center(child: Text("data"),);
-                                        }),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-
-
-                      : IconButton(
-                          icon: const Icon(Icons.download, color: Colors.white),
-                          onPressed: () {
-                            log("Story downloaded"); // Log download action
-                            // Implement download functionality here
-                          },
-                        ),
+                                200.heightBox,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      subjectList?.subjectName != null
+                                          ? "Subject Name: ${subjectList?.subjectName}"
+                                          : MyStrings.notAvailable,
+                                      textAlign: TextAlign.center,
+                                      style: FontUtil.customStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                          textColor: Colors.black),
+                                    ),
+                                    10.heightBox,
+                                    SizedBox(
+                                      height: 210,
+                                      width: double.infinity,
+                                      child: ListView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          padding: EdgeInsets.zero,
+                                          itemCount:
+                                              subjectList?.assignments?.length,
+                                          itemBuilder: (context, index) {
+                                            return assignmentItem(
+                                                context,
+                                                subjectList
+                                                    ?.assignments?[index]);
+                                            //  return Center(child: Text("data"),);
+                                          }),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : isCircularWidget == true && circularList == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 25, left: 15),
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                            0.45,
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.1,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              MyAssets.assignmentIcon,
+                                              width: 35,
+                                              height: 35,
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.03,
+                                            ),
+                                            Text(
+                                                                                            MyStrings.circular,
+                                                                                            style: FontUtil.customStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold,
+                                              textColor: Colors.black),
+                                                                                            overflow: TextOverflow.ellipsis,
+                                                                                          ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          circularList?.subject != null
+                                              ? "Subject : ${circularList?.subject}"
+                                              : MyStrings.notAvailable,
+                                          textAlign: TextAlign.center,
+                                          style: FontUtil.customStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              textColor: Colors.black),
+                                        ),
+                                        10.heightBox,
+                                        const SizedBox(
+                                          height: 210,
+                                          width: double.infinity,
+                                          child: Center(
+                                              child: Text(
+                                                  "No circular for today!")),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : isCircularWidget == true && circularList != null
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 25, left: 15),
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.45,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.1,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  MyAssets.assignmentIcon,
+                                                  width: 35,
+                                                  height: 35,
+                                                ),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.03,
+                                                ),
+                                                Text(
+                                                  MyStrings.circular,
+                                                  style: FontUtil.customStyle(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      textColor: Colors.black),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        200.heightBox,
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              circularList?.subject != null
+                                                  ? "Subject : ${circularList?.subject}"
+                                                  : MyStrings.notAvailable,
+                                              textAlign: TextAlign.center,
+                                              style: FontUtil.customStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500,
+                                                  textColor: Colors.black),
+                                            ),
+                                            10.heightBox,
+                                            Text(
+                                              circularList?.description != null
+                                                  ? "Description : ${circularList?.description}"
+                                                  : "Description : ${MyStrings.notAvailable}",
+                                              textAlign: TextAlign.center,
+                                              style: FontUtil.customStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  textColor: Colors.black),
+                                            ),
+                                            
+                                            10.heightBox,
+                                            SizedBox(
+                                              height: 210,
+                                              width: double.infinity,
+                                              child: ListView.builder(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.zero,
+                                                  itemCount: 1,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return circularItem(
+                                                        context, circularList);
+                                                    //  return Center(child: Text("data"),);
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  : isDisciplineWidget == true &&
+                                          disciplineList == null
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 25, left: 15),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.45,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.1,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      MyAssets.assignmentIcon,
+                                                      width: 35,
+                                                      height: 35,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03,
+                                                    ),
+                                                    Text(
+                                                      MyStrings.discipline,
+                                                      style:
+                                                          FontUtil.customStyle(
+                                                              fontSize: 17,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              textColor:
+                                                                  Colors.black),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            200.heightBox,
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  disciplineList?.teacherName !=
+                                                          null
+                                                      ? "Teacher Name: ${disciplineList?.teacherName}"
+                                                      : MyStrings.notAvailable,
+                                                  textAlign: TextAlign.center,
+                                                  style: FontUtil.customStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      textColor: Colors.black),
+                                                ),
+                                                10.heightBox,
+                                                const SizedBox(
+                                                    height: 210,
+                                                    width: double.infinity,
+                                                    child: Center(
+                                                        child: Text(
+                                                            "No discipline for today!"))),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : isDisciplineWidget == true &&
+                                              disciplineList != null
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 25, left: 15),
+                                                  child: SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.45,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.1,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          MyAssets
+                                                              .assignmentIcon,
+                                                          width: 35,
+                                                          height: 35,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03,
+                                                        ),
+                                                        Text(
+                                                          MyStrings.discipline,
+                                                          style: FontUtil
+                                                              .customStyle(
+                                                                  fontSize: 17,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  textColor:
+                                                                      Colors
+                                                                          .black),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                200.heightBox,
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      disciplineList
+                                                                  ?.teacherName !=
+                                                              null
+                                                          ? "Teacher Name: ${disciplineList?.teacherName}"
+                                                          : MyStrings
+                                                              .notAvailable,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FontUtil.customStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              textColor:
+                                                                  Colors.black),
+                                                    ),
+                                                    10.heightBox,
+                                                    SizedBox(
+                                                      height: 210,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          itemCount: 1,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return disciplineItem(
+                                                                context,
+                                                                disciplineList);
+                                                            //  return Center(child: Text("data"),);
+                                                          }),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          : IconButton(
+                                              icon: const Icon(Icons.download,
+                                                  color: Colors.black),
+                                              onPressed: () {
+                                                log("Story downloaded"); // Log download action
+                                                // Implement download functionality here
+                                              },
+                                            ),
             ),
           ],
         ),
@@ -763,7 +1120,6 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-
       SizedBox(
         height: screenHeight * 0.12,
         width: screenWidth * 0.9,
@@ -795,10 +1151,10 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
                             textColor: MyColors.fadedTextColor),
                         overflow: TextOverflow.ellipsis,
                       )),
-                       Flexible(
+                      Flexible(
                           child: Text(
                         assignments?.startDate != null
-                            ? "Description: ${removeHtmlTags(assignments?.assignmentDetail?? "")}"
+                            ? "Description: ${removeHtmlTags(assignments?.assignmentDetail ?? "")}"
                             : MyStrings.notAvailable,
                         style: FontUtil.customStyle(
                             fontSize: 12,
@@ -839,7 +1195,14 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
                         assignments?.fileContent != null
                             ? onSaveWithDialogPressed(
                                 assignments?.fileContent ?? "")
-                            : null,
+                            : Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
+                         isCircular: false,
+                          isAssignment: true,
+                          isDiscipline: false,
+                          circularList:null ,
+                          assignmentList: assignments,
+                          disciplineList: null,
+                            ))),
                         log("download")
                       },
 
@@ -849,7 +1212,12 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
                               height: 25,
                               width: 25,
                             )
-                          : const SizedBox(),
+                          :  SvgPicture.asset(
+                              MyAssets.seen,
+                              height: 18,
+                              width: 18,
+                              color: MyColors.greyShade_7,
+                            )
                     ),
                   ],
                 ),
@@ -862,11 +1230,7 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
   );
 }
 
-
-
 ////// CIRCULAR WIDGET
-
-
 
 Widget circularItem(BuildContext context, CircularList? circularList) {
   final screenWidth = MediaQuery.of(context).size.width;
@@ -875,7 +1239,6 @@ Widget circularItem(BuildContext context, CircularList? circularList) {
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-
       SizedBox(
         height: screenHeight * 0.12,
         width: screenWidth * 0.9,
@@ -907,7 +1270,7 @@ Widget circularItem(BuildContext context, CircularList? circularList) {
                             textColor: MyColors.fadedTextColor),
                         overflow: TextOverflow.ellipsis,
                       )),
-                       Flexible(
+                      Flexible(
                           child: Text(
                         circularList?.description != null
                             ? "Description: ${removeHtmlTags(circularList?.description ?? "")}"
@@ -941,32 +1304,36 @@ Widget circularItem(BuildContext context, CircularList? circularList) {
                 ),
 
                 // for download circulars
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   children: [
-                //     const Spacer(),
-                //     GestureDetector(
-                //       // on progress
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Spacer(),
+                    GestureDetector(
+                      // on progress
 
-                //       onTap: () => {
-                //         circularList?.subject != null
-                //             ? onSaveWithDialogPressed(
-                //                 circularList?.subject ?? "")
-                //             : null,
-                //         log("download")
-                //       },
+                      onTap: () => {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
+                          isCircular: true,
+                          isAssignment: false,
+                          isDiscipline: false,
+                          circularList:circularList ,
+                          assignmentList: null,
+                          disciplineList: null,
+                        ))),
+                        
+                      },
 
-                //       child: circularList?.subject != null
-                //           ? SvgPicture.asset(
-                //               MyAssets.downloadIcon,
-                //               height: 25,
-                //               width: 25,
-                //             )
-                //           : const SizedBox(),
-                //     ),
-                //   ],
-                // ),
+                      child: SvgPicture.asset(
+                              MyAssets.seen,
+                              height: 18,
+                              width: 18,
+                              color: MyColors.greyShade_7,
+                            ),
+                          
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -976,12 +1343,7 @@ Widget circularItem(BuildContext context, CircularList? circularList) {
   );
 }
 
-
-
-
-////// CIRCULAR WIDGET
-
-
+////// DISCIPLINE WIDGET
 
 Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
   final screenWidth = MediaQuery.of(context).size.width;
@@ -990,7 +1352,6 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-
       SizedBox(
         height: screenHeight * 0.12,
         width: screenWidth * 0.9,
@@ -1022,7 +1383,7 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
                             textColor: MyColors.fadedTextColor),
                         overflow: TextOverflow.ellipsis,
                       )),
-                       Flexible(
+                      Flexible(
                           child: Text(
                         disciplineList?.reason != null
                             ? "Reason: ${removeHtmlTags(disciplineList?.reason ?? "")}"
@@ -1035,7 +1396,7 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
                       )),
                       Row(
                         children: [
-                         Text(
+                          Text(
                             disciplineList?.points != null
                                 ? " ${MyStrings.points}: ${disciplineList?.points}"
                                 : MyStrings.notAvailable,
@@ -1069,32 +1430,34 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
                 ),
 
                 // for download circulars
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   children: [
-                //     const Spacer(),
-                //     GestureDetector(
-                //       // on progress
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Spacer(),
+                    GestureDetector(
+                      // on progress
 
-                //       onTap: () => {
-                //         circularList?.subject != null
-                //             ? onSaveWithDialogPressed(
-                //                 circularList?.subject ?? "")
-                //             : null,
-                //         log("download")
-                //       },
+                      onTap: () => {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
+                          isCircular: false,
+                          isAssignment: false,
+                          isDiscipline: true,
+                          circularList:null ,
+                          assignmentList: null,
+                          disciplineList: disciplineList,
+                        ))),
+                      },
 
-                //       child: circularList?.subject != null
-                //           ? SvgPicture.asset(
-                //               MyAssets.downloadIcon,
-                //               height: 25,
-                //               width: 25,
-                //             )
-                //           : const SizedBox(),
-                //     ),
-                //   ],
-                // ),
+                      child:   SvgPicture.asset(
+                              MyAssets.seen,
+                              height: 18,
+                              width: 18,
+                              color: MyColors.greyShade_7,
+                            ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -1103,4 +1466,3 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
     ],
   );
 }
-

@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
+import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
+import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/screens/assignment_calendar.dart';
+import 'package:nguru/screens/story/story_description.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -50,16 +53,16 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding20),
+            padding: const EdgeInsets.all(padding18),
             child: SafeArea(
               child: Column(
                 children: [
-                  customAppBar(),
-                  CustomSearchBar(controller: searchController),
-                  screenTitleHeader(
-                    MyStrings.assignment,
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                  10.heightBox,
+                  dashboardAppBar(),
+                  10.heightBox,
+                  screenTitleHeader("Attendance",
+                      onPressed: () => Navigator.pop(context)),
+                      20.heightBox,
                   assignmentCalendar(),
                   Expanded(
                     child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
@@ -116,7 +119,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       assignment.assignmentName,
                                       subject.subjectName,
                                       assignment.assignmentDetail,
-                                      assignment.assignmentDate
+                                      assignment.assignmentDate,
+                                      assignment
                                     ),
                                   );
                                 },
@@ -142,7 +146,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 }
 
 Widget cardDesign(
-    BuildContext context, String? title, String? subject, String? description, String?date) {
+    BuildContext context, String? title, String? subject, String? description, String?date, Assignment? assignment) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
@@ -213,7 +217,10 @@ Widget cardDesign(
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: true, isCircular: false, isDiscipline: false, assignmentList: assignment, circularList: null, disciplineList:null)));
+
+                      },
                       icon: SvgPicture.asset(MyAssets.seen),
                     ),
                   ],

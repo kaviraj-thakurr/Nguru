@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
+import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/circular/circular_cubit.dart';
 import 'package:nguru/logic/circular/circular_state.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/screens/circular_calendar.dart';
+import 'package:nguru/screens/story/story_description.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -73,7 +75,7 @@ class _CircularScreenState extends State<CircularScreen> {
           child: SafeArea(
             child: Column(
               children: [
-                customAppBar(),
+                dashboardAppBar(),
                 CustomSearchBar(controller: searchController,
                 
               
@@ -200,9 +202,10 @@ class _CircularScreenState extends State<CircularScreen> {
                       ),
                       IconButton(
                         onPressed: () {
-                          
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: false, isCircular: true, isDiscipline: false, assignmentList: null, circularList: circular, disciplineList:null)));
+
                         },
-                        icon: SvgPicture.asset(MyAssets.download),
+                        icon: SvgPicture.asset(MyAssets.seen),
                       ),
                     ],
                   ),

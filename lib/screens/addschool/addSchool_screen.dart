@@ -9,12 +9,10 @@ import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
-import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_gapping.dart';
-import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
@@ -241,9 +239,9 @@ final _formKey = GlobalKey<FormState>();
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           context.read<AddSchoolCubit>().saveToHive(
-                              schoolUrlController.text,
-                              subdomainController.text,
-                              schoolNameController.text);
+                              schoolUrlController.text.trim(),
+                              subdomainController.text.trim(),
+                              schoolNameController.text.trim());
                           context.read<AddSchoolCubit>().addSchool(
                               schoolUrlController.text.trim(),
                               subdomainController.text.trim(),
@@ -272,9 +270,9 @@ final _formKey = GlobalKey<FormState>();
                   if (state is AddSchoolSuccessState) {
                     final box = Hive.box<UserModel>('listItems');
                     final user = UserModel(
-                      schoolUrl: "${schoolUrlController.text}",
-                      subDomain: "${subdomainController.text}",
-                      schoolNickName: "${schoolNameController.text}",
+                      schoolUrl: "${schoolUrlController.text.trim()}",
+                      subDomain: "${subdomainController.text.trim()}",
+                      schoolNickName: "${schoolNameController.text.trim()}",
                     );
 
                     //           bool exists = addSchoolList!.any(

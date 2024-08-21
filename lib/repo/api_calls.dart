@@ -14,6 +14,7 @@ import 'package:nguru/models/chatsend_button_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/communication_models.dart';
 import 'package:nguru/models/contact_us_model.dart';
+import 'package:nguru/models/cumulative_attendance_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/models/fees_model.dart';
@@ -219,27 +220,18 @@ class AuthRepo {
     // required String userName
   }) async {
     try {
-      final res = await _myService
-          .networkPost(url: EndUrl.assignmentCalendarList, data: {
-        "appMessageID": 0,
-        "assignmentDate": month,
-        //"2024-08-14T00:00:00",
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-        "sessionID": 178,
-        "studentID": 108416,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "118011",
-        "year": 0
-      });
+      final res = await _myService.networkPost(
+          url: EndUrl.assignmentCalendarList,
+          isStagingLink: true,
+          data: {
+            "month": month,
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
+            "pageNumber": 1
+          });
       AssignmentsMonthList assignmentsMonthList =
           assignmentsMonthListFromJson(res.toString());
       return assignmentsMonthList;
@@ -261,12 +253,10 @@ class AuthRepo {
     // required String userName  "2024-08-14T00:00:00"  "2024-08-14T00:00:00"
   }) async {
     try {
-      final res = await _myService.networkPost(
-        isStagingLink: true,
-        url: EndUrl.assignmentList, data:
-       {
+      final res = await _myService
+          .networkPost(isStagingLink: true, url: EndUrl.assignmentList, data: {
         "appMessageID": 0,
-        "assignmentDate":  "$assignmentOnParticularDate",
+        "assignmentDate": "$assignmentOnParticularDate",
         "circularID": 0,
         "contentType": 0,
         "downloadAttachment": 0,
@@ -274,7 +264,7 @@ class AuthRepo {
         "messageTypeId": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID":  await SharedPref.getSchoolID(),
+        "schoolID": await SharedPref.getSchoolID(),
         "schoolUrl": await SharedPref.getSchoolUrl(),
         "sessionID": await SharedPref.getSessionId(),
         "studentID": await SharedPref.getStudentID(),
@@ -311,8 +301,8 @@ class AuthRepo {
             "circularID": 1,
             "month": month,
             "type": 1,
-            "pageSize": 4,
-            "pageNumber": 2,
+            "pageSize": 1,
+            "pageNumber": 0,
             "userID": await SharedPref.getUserID(),
             "schoolID": await SharedPref.getSchoolID(),
             "studentID": await SharedPref.getStudentID(),
@@ -411,11 +401,7 @@ class AuthRepo {
     }
   }
 
-
-
-
-
-    ////////////////////////////////////////////////      GALLERY ITEMS LIST API      //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////      GALLERY ITEMS LIST API      //////////////////////////////////////////////////////
 
   Future<GalleryItemListModel> getGalleryItemList({
     int? pageNumber,
@@ -424,16 +410,14 @@ class AuthRepo {
       final res = await _myService.networkPost(
           isStagingLink: true,
           url: EndUrl.photoGalleryList,
-          data: 
-          {
-            "schoolID":  await SharedPref.getSchoolID(),
+          data: {
+            "schoolID": await SharedPref.getSchoolID(),
             "schoolUrl": await SharedPref.getSchoolUrl(),
             "sessionID": await SharedPref.getSessionId(),
             "studentID": await SharedPref.getStudentID(),
             "userID": await SharedPref.getUserID(),
             "pageNumber": 0
-           }
-          );
+          });
       GalleryItemListModel galleryPhotoResponse =
           galleryItemListModelFromJson(res.toString());
       return galleryPhotoResponse;
@@ -442,10 +426,6 @@ class AuthRepo {
       throw Exception("Failed to fetch gallery items list: $e");
     }
   }
-
-
-
-
 
   ////////////////////////////////////////////////     PARTICULAR GALLERY ITEM PHOTOS API      //////////////////////////////////////////////////////
 
@@ -456,13 +436,11 @@ class AuthRepo {
       final res = await _myService.networkPost(
           isStagingLink: true,
           url: EndUrl.photoGalleryGetDetList,
-          data:
-          {
-         "schoolID": await SharedPref.getSchoolID(),
-         "dashPictureGalleryId": dashPictureGalleryId,
-         "schoolURL": await SharedPref.getSchoolUrl(),
-}
-          );
+          data: {
+            "schoolID": await SharedPref.getSchoolID(),
+            "dashPictureGalleryId": dashPictureGalleryId,
+            "schoolURL": await SharedPref.getSchoolUrl(),
+          });
       GalleryPhotosModel galleryPhotoResponse =
           galleryPhotosModelFromJson(res.toString());
       return galleryPhotoResponse;
@@ -472,41 +450,7 @@ class AuthRepo {
     }
   }
 
-  ////////////////////////////////////////////////     SIGNOUT API      //////////////////////////////////////////////////////
 
-  Future<Map<String, String>> signout({
-    int? pageNumber,
-  }) async {
-    try {
-      final res = await _myService.networkPost(url: EndUrl.signInLogIn, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "deviceToken":
-            "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-        "deviceType": "1",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 58,
-        "studentID": 888,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
-      Map<String, String> signoutResponse = res;
-      return signoutResponse;
-    } catch (e) {
-      print(e.toString());
-      throw Exception("Failed to logout: $e");
-    }
-  }
 
   ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
 
@@ -788,30 +732,19 @@ class AuthRepo {
     int? isNotification,
   }) async {
     try {
-      
-      final res = await _myService
-          .networkPost(
-            isStagingLink: true,
-            url: EndUrl.attendanceGetBarChart,
-             data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl": await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
-        "type": 1,
-        "userID": await SharedPref.getUserID(),
-        "year": 0
-      });
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.attendanceGetBarChart,
+          data:
+           {
+"userID": await SharedPref.getUserID(),
+  "schoolID":await SharedPref.getSchoolID(),
+  "studentID": await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL":await SharedPref.getSchoolUrl(),
+  "pageNumber": 1
+}
+          );
       AttendanceBarChartModel attendanceBarChartDataResponse =
           attendanceBarChartModelFromJson(res.toString());
       return attendanceBarChartDataResponse;
@@ -827,29 +760,21 @@ class AuthRepo {
     int? monthNumber,
   }) async {
     try {
-      final res = await _myService
-          .networkPost(
-            isStagingLink: true,
-            url: EndUrl.attendanceGetMonthWise,
-             data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": monthNumber,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl": await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
-        "type": 0,
-        "userID": await SharedPref.getUserID(),
-        "year": 2024
-      });
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.attendanceGetMonthWise,
+          data: 
+          {
+  "month": monthNumber,
+  "year": 2024,
+  "userID": await SharedPref.getUserID(),
+  "schoolID":await SharedPref.getSchoolID(),
+  "studentID": await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL": await SharedPref.getSchoolUrl(),
+  "pageNumber": 1
+}
+          );
       ParticularMonthAttendanceModel particularMonthAttendanceDataResponse =
           particularMonthAttendanceModelFromJson(res.toString());
       return particularMonthAttendanceDataResponse;
@@ -899,29 +824,14 @@ class AuthRepo {
       final res = await _myService.networkPost(
           isStagingLink: true,
           url: EndUrl.diciplineGetList,
-          data: 
-
-          {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 4,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl":  await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
-        "type":0,
-        "userID": "118011",
-        "year": 0
-      }
-          
-          );
+          data: {
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
+            "pageNumber": 0
+          });
       DisciplineModel disciplineModelResponse =
           disciplineModelFromJson(res.toString());
       return disciplineModelResponse;
@@ -1160,6 +1070,65 @@ class AuthRepo {
     } catch (e) {
       log(e.toString());
       throw Exception("Failed to fetch infirmary list: $e");
+    }
+  }
+
+
+
+
+
+  ////////////////////////////////////////////////     GET Cumulative Attendance LIST       //////////////////////////////////////////////////////
+
+  Future<CumulativeAttendanceModel> getCumulativeAttendance() async {
+    try {
+      final res = await _myService
+          .networkPost(url: EndUrl.attendanceGetCumulativeAttendance,
+           isStagingLink: true,
+            data: {
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolURL": await SharedPref.getSchoolUrl(),
+        "pageNumber": 0
+      });
+      CumulativeAttendanceModel cumulativeAttendanceResponse =
+          cumulativeAttendanceModelFromJson(res.toString());
+      return cumulativeAttendanceResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch Cumulative Attendance list: $e");
+    }
+  }
+
+
+
+
+
+    ////////////////////////////////////////////////     LOG OUT       //////////////////////////////////////////////////////
+
+  Future<dynamic> logOut() async {
+    try {
+      final res = await _myService
+          .networkPost(url: EndUrl.signInLogout,
+           isStagingLink: true,
+            data: 
+           {
+  "deviceToken": "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
+  "deviceType": 1,
+  "userID":  await SharedPref.getUserID(),
+  "schoolID": await SharedPref.getSchoolID(),
+  "studentID": await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL": await SharedPref.getSchoolUrl(),
+  "pageNumber": 8
+}
+      );
+       dynamic signoutResponse = res; 
+      return signoutResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch Cumulative Attendance list: $e");
     }
   }
 }

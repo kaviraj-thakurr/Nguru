@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
+import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
+import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/screens/contact_screen.dart';
@@ -47,11 +49,34 @@ class _CustomAppBarState extends State<Appbar> {
           Row(
             
             children: [
-              Text("ANU DRAVID", style: FontUtil.customStyle(
+              BlocBuilder<DashboardCubit, DashboardState>(
+                  builder: (context, state) {
+                if (state is DashboardLoadingState) {
+                  return Text("_ _", style: FontUtil.customStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           textColor: MyColors.sessionText),
-                    ),
+                    );
+                } else if (state is DashboardSuccessState) {
+                  return Text(state.studentName?? "_", style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.sessionText),
+                    );
+                } else if (state is DashboardErrorState) {
+                  return Text("_ _", style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.sessionText),
+                    );
+                } else {
+                  return Text("_ _", style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.sessionText),
+                    );
+                }
+              }),
               8.widthBox,
              
             ],

@@ -1,16 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
-import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/discipline/descipline_cubit.dart';
 import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/screens/discipline_calendar.dart';
+import 'package:nguru/screens/story/story_description.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -28,6 +27,7 @@ class DisciplineScreen extends StatefulWidget {
 class _DisciplineScreenState extends State<DisciplineScreen> {
   TextEditingController searchController = TextEditingController();
   DateTime focusedDay = DateTime.now();
+
 
   @override
   void initState() {
@@ -71,14 +71,14 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "${MyStrings.positivePoints}: ${state.disciplineList[0].totalPositive}",
+                                "${MyStrings.positivePoints}: $totalPositiveP",
                                 style: FontUtil.customStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
                               Text(
-                                "${MyStrings.negativePoints}: ${state.disciplineList[0].totalNegative}",
+                                "${MyStrings.negativePoints}: $totalNegitiveP",
                                 style: FontUtil.customStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -91,14 +91,14 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "${MyStrings.positivePoints}: 00.00",
+                                "${MyStrings.positivePoints}: $totalPositiveP",
                                 style: FontUtil.customStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
                               Text(
-                                "${MyStrings.negativePoints}: 00.00",
+                                "${MyStrings.negativePoints}: $totalNegitiveP",
                                 style: FontUtil.customStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -254,104 +254,108 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
 
 Widget cardDesign(BuildContext context, DisciplineList discipline) {
   
-  return Container(
-    height: MediaQuery.sizeOf(context).height * 0.15,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: discipline.cardtype.toString() == "Red Card"
-          ? MyColors.redShade_1.withOpacity(0.13)
-          : discipline.cardtype.toString() == "Yellow Card"
-              ? MyColors.yellowShade_1.withOpacity(0.13)
-              : MyColors.greenShade_3.withOpacity(0.13),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: MediaQuery.sizeOf(context).width * 0.06,
-                height: MediaQuery.sizeOf(context).height * 0.04,
-                decoration: BoxDecoration(
-                    color: discipline.cardtype == "Red Card"
-                        ? MyColors.redShade_1
-                        : discipline.cardtype == "Yellow Card"
-                            ? MyColors.yellowShade_1
-                            : MyColors.greenShade_3,
-                    borderRadius: BorderRadius.circular(3)),
-              ),
-              10.widthBox,
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      DateFormat("MMM dd, yyyy").format(DateFormat("dd/MM/yyyy")
-                          .parse(discipline.actionDate!)),
-                      style: FontUtil.customStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          textColor: MyColors.boldTextColor),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                            child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "${MyStrings.disciplineGroup}: ",
-                                style: FontUtil.customStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: MyColors.boldTextColor),
-                              ),
-                              TextSpan(
-                                text: "${discipline.reason}",
-                                style: FontUtil.customStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: MyColors.monthNameColor
-                                        .withOpacity(0.8)),
-                              ),
-                            ],
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                        )),
-                      ],
-                    ),
-                  ],
+  return GestureDetector(
+     onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: false, isCircular: false, isDiscipline: true, assignmentList: null, circularList: null, disciplineList: discipline))),
+
+    child: Container(
+      height: MediaQuery.sizeOf(context).height * 0.15,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: discipline.cardtype.toString() == "Red Card"
+            ? MyColors.redShade_1.withOpacity(0.13)
+            : discipline.cardtype.toString() == "Yellow Card"
+                ? MyColors.yellowShade_1.withOpacity(0.13)
+                : MyColors.greenShade_3.withOpacity(0.13),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width * 0.06,
+                  height: MediaQuery.sizeOf(context).height * 0.04,
+                  decoration: BoxDecoration(
+                      color: discipline.cardtype == "Red Card"
+                          ? MyColors.redShade_1
+                          : discipline.cardtype == "Yellow Card"
+                              ? MyColors.yellowShade_1
+                              : MyColors.greenShade_3,
+                      borderRadius: BorderRadius.circular(3)),
                 ),
-              ),
-            ],
-          ),
-          10.heightBox,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${discipline.teacherName}",
-                style: FontUtil.customStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    textColor: MyColors.monthNameColor),
-              ),
-              Text(
-                "${discipline.points}",
-                style: FontUtil.customStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    textColor: MyColors.monthNameColor),
-              ),
-            ],
-          )
-        ],
+                10.widthBox,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        DateFormat("MMM dd, yyyy").format(DateFormat("dd/MM/yyyy")
+                            .parse(discipline.actionDate!)),
+                        style: FontUtil.customStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            textColor: MyColors.boldTextColor),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                              child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "${MyStrings.disciplineGroup}: ",
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                                TextSpan(
+                                  text: "${discipline.reason}",
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.monthNameColor
+                                          .withOpacity(0.8)),
+                                ),
+                              ],
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          )),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            10.heightBox,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${discipline.teacherName}",
+                  style: FontUtil.customStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: MyColors.monthNameColor),
+                ),
+                Text(
+                  "${discipline.points}",
+                  style: FontUtil.customStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: MyColors.monthNameColor),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     ),
   );

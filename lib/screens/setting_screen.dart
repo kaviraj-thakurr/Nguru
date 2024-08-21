@@ -9,12 +9,14 @@ import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
+import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/custom_flutter_switch.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -62,31 +64,38 @@ class _SettingScreenState extends State<SettingScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-                  child: Image.asset(
-                MyAssets.bg,
-                fit: BoxFit.fill,
-              )),
+              child: Image.asset(
+            MyAssets.bg,
+            fit: BoxFit.fill,
+          )),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(children: [
-              CustomAppBar(),
-              BlocBuilder<DashboardCubit,DashboardState>(
-                builder: (context,state) {
-                 if(state is DashboardLoadingState){
-                    return const Center(child:  CircularProgressIndicator(),);
-                  }
-                 else if(state is DashboardSuccessState)
-                  {return customSettingProfileWidget(context, screenWidth, screenHeight,state.studentName!,"${state.qualification} ${state.section!}",state.admissionNumber!);}
-               
-                else if(state is DashboardErrorState){
-                  return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
+              20.heightBox,
+              dashboardAppBar(),
+              BlocBuilder<DashboardCubit, DashboardState>(
+                  builder: (context, state) {
+                if (state is DashboardLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is DashboardSuccessState) {
+                  return customSettingProfileWidget(
+                      context,
+                      screenWidth,
+                      screenHeight,
+                      state.studentName!,
+                      "${state.qualification} ${state.section!}",
+                      state.admissionNumber!);
+                } else if (state is DashboardErrorState) {
+                  return customSettingProfileWidget(
+                      context, screenWidth, screenHeight, "", "", "");
+                } else {
+                  return customSettingProfileWidget(
+                      context, screenWidth, screenHeight, "", "", "");
                 }
-                else {
-                  return customSettingProfileWidget(context, screenWidth, screenHeight,"","","");
-                }
-                }
-              ),
-              Container(
+              }),
+              SizedBox(
                 height: screenHeight * 0.58,
                 width: double.infinity,
                 child: ListView.builder(
@@ -103,7 +112,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           });
                           return isTap;
                         },
-          
+
                             // () => {
                             //       Navigator.push(
                             //           context,
@@ -115,53 +124,54 @@ class _SettingScreenState extends State<SettingScreen> {
                     }),
               ),
               20.heightBox,
-              
-          
-                   Center(
-                     child: ShaderMask(
-                       blendMode: BlendMode.srcIn,
-                       shaderCallback: (Rect bounds) {
-                         return MyColors.buttonColors.createShader(bounds);
-                       },
-                       child: Builder(
-                         builder: (context) {
-                           return GestureDetector(
-                            onTap: ()=> context.read<SignoutCubit>().signout(),
-                             child: Text(
-                               "Sign out",
-                               style: FontUtil.customStyle(
-                                   fontSize: 18,
-                                   fontWeight: FontWeight.w500,
-                                   textColor: MyColors.boldTextColor),
-                             ),
-                           );
-                         }
-                       ),
-                     ),
-                   ),
-          
-                  //  BlocConsumer<SignoutCubit,SignoutState>(
-                  //   builder: (context,state){
-                  //        if(state is SignoutErrorState){
-                  //  return   Center(child: Text("${state.message}",style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w400, textColor: MyColors.textcolors),),);
-                  // }
-          
-                  // else if(state is SignoutLoadingState){
-                  // return const  Center(child: CircularProgressIndicator(),);
-                  // }
-                  // else{ return const  SizedBox();}
-                  //   },
-                  //    listener: (context,state){
-                  //     if(state is SignoutSuccessState){
-                  //       return Navigator.of(context).popUntil((route) => route.isFirst);
-                  //     }
-                  //    else  if(state is SignoutErrorState){
-                  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message) ));
-                  //     }
-          
-                  //    })
-                  
-              
+              Center(
+                child: ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (Rect bounds) {
+                    return MyColors.buttonColors.createShader(bounds);
+                  },
+                  child: Builder(builder: (context) {
+                    return GestureDetector(
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return buildLogoutAlertDialog(
+                            context: context,
+                            onLogout: () => context
+                                .read<SignoutCubit>()
+                                .signout().then((value) => SharedPref.saveLoggedInStatus(false))
+                                .then((value) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const AddSchool(
+                                            isAddSchoolScreen: false)))),
+                            onCancel: () => Navigator.pop(context),
+                          );
+                        },
+                      ),
+                      child: Text(
+                        "Sign out",
+                        style: FontUtil.customStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            textColor: MyColors.boldTextColor),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              BlocConsumer<SignoutCubit, SignoutState>(
+                  builder: (context, state) {
+                return const SizedBox();
+              }, listener: (context, state) {
+                if (state is SignoutSuccessState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("${state.responseMessage}")));
+                } else if (state is SignoutErrorState) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(state.message)));
+                }
+              })
             ]),
           ),
         ],
@@ -241,7 +251,14 @@ class _SettingScreenState extends State<SettingScreen> {
 }
 
 Widget customSettingProfileWidget(
-    BuildContext context, double screenWidth, double screenHeight, String name, String classAndSession, String admissionNumber,{String? bloodGroup,String? gender}) {
+    BuildContext context,
+    double screenWidth,
+    double screenHeight,
+    String name,
+    String classAndSession,
+    String admissionNumber,
+    {String? bloodGroup,
+    String? gender}) {
   return Container(
     alignment: Alignment.center,
     width: double.infinity,
@@ -266,26 +283,28 @@ Widget customSettingProfileWidget(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-             name != null ? Text("$name") :   const Text("Anshul Sharma"),
+                name != null ? Text("$name") : const Text("Anshul Sharma"),
                 8.heightBox,
                 Row(
                   children: [
-                    customTags("$classAndSession", const Color.fromARGB(255, 204, 231, 255),
+                    customTags(
+                        "$classAndSession",
+                        const Color.fromARGB(255, 204, 231, 255),
                         MyColors.blueShades_1),
                     5.widthBox,
                     customTags(
                         "$admissionNumber",
                         const Color.fromARGB(255, 251, 225, 218),
                         MyColors.orangeShades_1),
-                         5.widthBox,
-                        customTags(
+                    5.widthBox,
+                    customTags(
                         "$bloodGroup",
                         MyColors.yellowShade_5.withOpacity(0.2),
                         MyColors.yellowShade_5),
-                         5.widthBox,
-                        customTags(
+                    5.widthBox,
+                    customTags(
                         "$gender",
-                       MyColors.greenShade_3.withOpacity(0.2),
+                        MyColors.greenShade_3.withOpacity(0.2),
                         MyColors.greenShade_3)
                   ],
                 ),
@@ -295,5 +314,27 @@ Widget customSettingProfileWidget(
         ),
       ),
     ),
+  );
+}
+
+AlertDialog buildLogoutAlertDialog({
+  required BuildContext context,
+  required VoidCallback onLogout,
+  required VoidCallback onCancel,
+}) {
+  return AlertDialog(
+    backgroundColor: MyColors.white,
+    title: const Text('Log Out'),
+    content: const Text('Are you sure you want to log out?'),
+    actions: <Widget>[
+      TextButton(
+        onPressed: onCancel,
+        child:  Text('Cancel',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+      ),
+      TextButton(
+        onPressed: onLogout,
+        child: Text('Log Out',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+      ),
+    ],
   );
 }

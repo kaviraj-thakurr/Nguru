@@ -7,6 +7,10 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
+import 'package:nguru/logic/circular/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/logic/discipline/descipline_cubit.dart';
+import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
@@ -42,13 +46,14 @@ class _StoryScreenState extends State<StoryScreen>
   DateTime todaysDate = DateTime.now();
   bool todayAssignmentAdded = false;
   bool _isNavigating = false;
+  DateTime focusedDay = DateTime.now();
+  final int currentDate = DateTime.now().month;
+  DateTime selectedDate = DateTime(2024, 8, 14);
+  DateTime selectedDateForDiscipline = DateTime(2024, 8, 6);
 
   @override
   void initState() {
     super.initState();
-    context
-        .read<AssignmentMonthListCubit>()
-        .getAssignmentMonthList(todaysDate.month);
 
     _assignmentAnimationController = AnimationController(
       vsync: this,
@@ -73,6 +78,17 @@ class _StoryScreenState extends State<StoryScreen>
     context
         .read<AssignmentListCubit>()
         .getAssignmentList(todaysDate.month, "2024-08-14T00:00:00");
+
+    context.read<CircularCubit>().getCurrentCircular(month: 8);
+
+    context
+        .read<AssignmentMonthListCubit>()
+        .getAssignmentMonthList(todaysDate.month);
+    context.read<DisciplineCubit>().getDiscipline(type: 0);
+    // .then((value) =>
+    // context
+    //     .read<DisciplineCubit>()
+    //     .filterDisciplineListByDate(focusedDay, false));
   }
 
   @override
@@ -113,11 +129,94 @@ class _StoryScreenState extends State<StoryScreen>
                 }
               }),
           10.widthBox,
-          _storyWidget(screenHeight, screenWidth, true,
-              _circularAnimationController, "Circular", context),
+          BlocConsumer<CircularCubit, CircularState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state is CircularLoadingState) {
+                  return _storyWidget(screenHeight, screenWidth, true,
+                      _circularAnimationController, "Circular", context);
+                } else if (state is CircularSuccessState) {
+                  List<CircularList> circularList = state.circularList
+                      .where((item) =>
+                          DateFormat("dd-MMM-yyyy")
+                                  .parse(item.circularDate!)
+                                  .year ==
+                              selectedDate.year &&
+                          DateFormat("dd-MMM-yyyy")
+                                  .parse(item.circularDate!)
+                                  .month ==
+                              selectedDate.month &&
+                          DateFormat("dd-MMM-yyyy")
+                                  .parse(item.circularDate!)
+                                  .day ==
+                              selectedDate.day)
+                      .toList();
+                  log("list count of circular :$circularList");
+                  return _storyWidget(screenHeight, screenWidth, true,
+                      _circularAnimationController, "Circular", context,
+                      circularList: circularList);
+                } else if (state is CircularErrorState) {
+                  return const SizedBox();
+                } else {
+                  return const SizedBox();
+                }
+              }),
           10.widthBox,
-          _storyWidget(screenHeight, screenWidth, true,
-              _disciplineAnimationController, "Discipline", context)
+          BlocConsumer<DisciplineCubit, DisciplineState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state is DisciplineLoadingState) {
+                  return _storyWidget(screenHeight, screenWidth, true,
+                      _disciplineAnimationController, "Discipline", context);
+                } else if (state is DisciplineSuccessState) {
+                  List<DisciplineList> disciplineList = state.disciplineList
+                      .where((item) =>
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .year ==
+                              selectedDateForDiscipline.year &&
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .month ==
+                              selectedDateForDiscipline.month &&
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .day ==
+                              selectedDateForDiscipline.day)
+                      .toList();
+
+                  log("discipline non filter list: $disciplineList");
+                  return _storyWidget(screenHeight, screenWidth, true,
+                      _disciplineAnimationController, "Discipline", context,
+                      disciplineList: disciplineList);
+                } else if (state is DisciplineFilteredState) {
+                  List<DisciplineList> filteredList = state.filteredList
+                      .where((item) =>
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .year ==
+                              selectedDateForDiscipline.year &&
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .month ==
+                              selectedDateForDiscipline.month &&
+                          DateFormat("dd/MM/yyyy")
+                                  .parse(item.actionDate!)
+                                  .day ==
+                              selectedDateForDiscipline.day)
+                      .toList();
+
+                  log("discipline filter list: $filteredList");
+
+                  return _storyWidget(screenHeight, screenWidth, true,
+                      _disciplineAnimationController, "Discipline", context,
+                      disciplineList: filteredList);
+                } else if (state is AssignmentListErrorState) {
+                  return const SizedBox();
+                } else {
+                  return const SizedBox();
+                }
+              }),
         ],
       ),
     );
@@ -131,16 +230,16 @@ class _StoryScreenState extends State<StoryScreen>
     String title,
     context, {
     List<SubjectList>? subjectList,
+    List<CircularList>? circularList,
+    List<DisciplineList>? disciplineList,
   }) {
-     final assignmentCubit = BlocProvider.of<AssignmentListCubit>(context);
+    final assignmentCubit = BlocProvider.of<AssignmentListCubit>(context);
+    final circularCubit = BlocProvider.of<CircularCubit>(context);
+    final disciplineCubit = BlocProvider.of<DisciplineCubit>(context);
 
     log("subject list: ${subjectList?.length}");
     return GestureDetector(
-      onTap: () async{
-        
-      
-     
-
+      onTap: () async {
         if (!_isNavigating) {
           _isNavigating = true;
           if (animationController.isAnimating) {
@@ -148,70 +247,104 @@ class _StoryScreenState extends State<StoryScreen>
           } else {
             animationController.repeat(reverse: false);
           }
-          
 
-          if(title == "Assignment"){
-            await assignmentCubit.getAssignmentList(todaysDate.month, "2024-08-14T00:00:00") ;
-            Future.delayed(const Duration(seconds: 1)).then((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StoryView(
-                        isAssignmentWidget: true,
-                        isGalleryWidget: false,
-                        isCircularWidget: false,
-                        isDisciplineWidget: false,
-                        subjectList: subjectList ?? [],
-                      )),
-            ).then((_) {
-              _isNavigating = false;
+          if (title == "Assignment") {
+            await assignmentCubit.getAssignmentList(
+                todaysDate.month, "2024-08-14T00:00:00");
+
+            BlocConsumer<AssignmentListCubit, AssignmentListState>(
+                listener: (context, state) {
+              if (state is AssignmentListLoadingState) {
+                null;
+              } else if (state is AssignmentListSuccessState) {
+                Future.delayed(const Duration(seconds: 1)).then((_) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => StoryView(
+                              isAssignmentWidget: true,
+                              isGalleryWidget: false,
+                              isCircularWidget: false,
+                              isDisciplineWidget: false,
+                              subjectList: state.subjectList ?? [],
+                              circularList: [],
+                              disciplineList: [],
+                            )),
+                  ).then((_) {
+                    _isNavigating = false;
+                  });
+                  // _isNavigating=false;
+                  animationController.stop();
+                });
+              } else if (state is AssignmentListErrorState) {
+              } else {}
+            }, builder: (context, state) {
+              return SizedBox();
             });
-            // _isNavigating=false;
-            animationController.stop();
-          });
-          }
 
-         else if(title == "Circular"){
             Future.delayed(const Duration(seconds: 1)).then((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StoryView(
-                      isCircularWidget: true,
-                      isDisciplineWidget: false,
-                        isAssignmentWidget: false,
-                        isGalleryWidget: false,
-                        subjectList: subjectList ?? [],
-                      )),
-            ).then((_) {
-              _isNavigating = false;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StoryView(
+                          isAssignmentWidget: true,
+                          isGalleryWidget: false,
+                          isCircularWidget: false,
+                          isDisciplineWidget: false,
+                          subjectList: subjectList,
+                          circularList: [],
+                          disciplineList: [],
+                        )),
+              ).then((_) {
+                _isNavigating = false;
+              });
+              // _isNavigating=false;
+              animationController.stop();
             });
-            // _isNavigating=false;
-            animationController.stop();
-          });
-          }
+          } else if (title == "Circular") {
+            await circularCubit.getCurrentCircular(month: 8);
 
-         else if(title == "Discipline"){
             Future.delayed(const Duration(seconds: 1)).then((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StoryView(
-                    isDisciplineWidget: true,
-                        isCircularWidget: true,
-                        isAssignmentWidget: false,
-                        isGalleryWidget: false,
-                        subjectList: subjectList ?? [],
-                      )),
-            ).then((_) {
-              _isNavigating = false;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StoryView(
+                          isAssignmentWidget: false,
+                          isGalleryWidget: false,
+                          isCircularWidget: true,
+                          isDisciplineWidget: false,
+                          subjectList: [],
+                          circularList: circularList ?? [],
+                          disciplineList: [],
+                        )),
+              ).then((_) {
+                _isNavigating = false;
+              });
+              // _isNavigating=false;
+              animationController.stop();
             });
-            // _isNavigating=false;
-            animationController.stop();
-          });
+          } else if (title == "Discipline") {
+            disciplineCubit.getDiscipline();
+            Future.delayed(const Duration(seconds: 1)).then((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StoryView(
+                          isAssignmentWidget: false,
+                          isGalleryWidget: false,
+                          isCircularWidget: false,
+                          isDisciplineWidget: true,
+                          subjectList: [],
+                          circularList: [],
+                          disciplineList: disciplineList ?? [],
+                        )),
+              ).then((_) {
+                _isNavigating = false;
+              });
+              // _isNavigating=false;
+              animationController.stop();
+            });
           }
-
-          
         }
       },
       child: Column(
@@ -250,29 +383,24 @@ class _StoryScreenState extends State<StoryScreen>
                           : MyColors.disciplineColor,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: const Center(
+                child:  Center(
                   child: Text(
                       //  listData.isNotEmpty ? '${listData.length}'
                       //   :
-                      '0'),
+                    title=="Assignment" ? '${subjectList?.length ?? ""}'
+                    :  title=="Circular" ? '${circularList?.length ?? ""}'
+                    :  title=="Discipline" ? '${disciplineList?.length ?? ""}'
+                    :  
+                      'N/A'
+                     ),
                 ),
               ),
             ],
           ),
           AppGapping.padding3,
-          InkWell(
-            onTap: () {
-              title == "Assignment"
-                  ? NavigationService.navigateTo(AssignmentScreen(), context)
-                  : title == "Circular"
-                      ? NavigationService.navigateTo(CircularScreen(), context)
-                      : NavigationService.navigateTo(
-                          DisciplineScreen(), context);
-            },
-            child: Text(
-              title,
-              style: FontUtil.storyTitle,
-            ),
+          Text(
+            title,
+            style: FontUtil.storyTitle,
           ),
         ],
       ),

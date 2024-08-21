@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,11 +16,14 @@ import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/screens/Examination/examination_screen.dart';
+import 'package:nguru/screens/activity_screen.dart';
 import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
+import 'package:nguru/screens/calendar_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/infirmary_screen.dart';
 import 'package:nguru/screens/library_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
@@ -44,12 +46,9 @@ class NguruDashboardScreen extends StatefulWidget {
 class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   TextEditingController searchController = TextEditingController();
 
-  
-
-
   @override
   void initState() {
-  //  log("school url: ${ SharedPref.getSchoolUrl()}");
+    //  log("school url: ${ SharedPref.getSchoolUrl()}");
     context.read<DashboardCubit>().dashboardGetList();
     context.read<NotificationCubit>().notificationCount();
     context.read<FeesCubit>().getTotalFees();
@@ -57,21 +56,21 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
 
     super.initState();
   }
-DateTime? _lastBackPressedTime;
+
+  DateTime? _lastBackPressedTime;
   @override
   Widget build(BuildContext context) {
-    
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
     return WillPopScope(
-       
-       onWillPop: () {
+      onWillPop: () {
         final currentTime = DateTime.now();
 
         // Check if the back button was pressed twice within 2 seconds
         if (_lastBackPressedTime == null ||
-            currentTime.difference(_lastBackPressedTime!) > const Duration(seconds: 2)) {
+            currentTime.difference(_lastBackPressedTime!) >
+                const Duration(seconds: 2)) {
           _lastBackPressedTime = currentTime;
 
           // Show a message to press back again to exit
@@ -84,10 +83,10 @@ DateTime? _lastBackPressedTime;
 
           return Future.value(false); // Do nothing if not double pressed
         }
-   SystemNavigator.pop();
-      
-        return Future.value(true);; // 
-         
+        SystemNavigator.pop();
+
+        return Future.value(true);
+        ; //
       },
       child: Scaffold(
         body: BlocConsumer<DashboardCubit, DashboardState>(
@@ -102,15 +101,15 @@ DateTime? _lastBackPressedTime;
             if (state is DashboardLoadingState) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is DashboardSuccessState) {
-              List<DashboardList> filteredDashboardList = state.dashboardList?.where((item) {
-              return item.dashboardItem != "Circular" &&
-                     item.dashboardItem != "Assignment" &&
-                     item.dashboardItem != "Discipline";
-            }).toList() ?? [];
-      
-              return Stack(
-                
-                children: [
+              List<DashboardList> filteredDashboardList =
+                  state.dashboardList?.where((item) {
+                        return item.dashboardItem != "Circular" &&
+                            item.dashboardItem != "Assignment" &&
+                            item.dashboardItem != "Discipline";
+                      }).toList() ??
+                      [];
+
+              return Stack(children: [
                 Positioned.fill(
                     child: Image.asset(
                   MyAssets.bg,
@@ -121,6 +120,7 @@ DateTime? _lastBackPressedTime;
                     padding: const EdgeInsets.all(padding18),
                     child: Column(
                       children: [
+                        10.heightBox,
                         dashboardAppBar(),
                         CustomSearchBar(controller: searchController),
                         10.heightBox,
@@ -148,7 +148,8 @@ DateTime? _lastBackPressedTime;
                                 ),
                               ),
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Flexible(
                                     flex: 5,
@@ -171,14 +172,14 @@ DateTime? _lastBackPressedTime;
                                         },
                                         builder: (context, state) {
                                           if (state is AttendanceLoading) {
-                           return attendenceAndFeeCard(
+                                            return attendenceAndFeeCard(
                                               context,
-                                              mainText:
-                                                  "__",
+                                              mainText: "__",
                                               footerText: MyStrings.attendence,
                                               isFeeCard: false,
                                             );
-                                          } else if (state is AttendanceSuccess) {
+                                          } else if (state
+                                              is AttendanceSuccess) {
                                             return attendenceAndFeeCard(
                                               context,
                                               mainText:
@@ -187,13 +188,12 @@ DateTime? _lastBackPressedTime;
                                               isFeeCard: false,
                                             );
                                           }
-                                          return   attendenceAndFeeCard(
-                                              context,
-                                              mainText:
-                                                  "_ _",
-                                              footerText: MyStrings.attendence,
-                                              isFeeCard: false,
-                                            );
+                                          return attendenceAndFeeCard(
+                                            context,
+                                            mainText: "_ _",
+                                            footerText: MyStrings.attendence,
+                                            isFeeCard: false,
+                                          );
                                         },
                                       ),
                                     ),
@@ -222,7 +222,7 @@ DateTime? _lastBackPressedTime;
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          StoryScreen(),
+                          const  StoryScreen(),
                             18.heightBox,
                             SizedBox(
                               height: screenHeight * 0.17,
@@ -231,10 +231,9 @@ DateTime? _lastBackPressedTime;
                                 children: [
                                   customCard(
                                     context: context,
-                                   title: MyStrings.timetable,
+                                    title: MyStrings.timetable,
                                     content: MyStrings.timeTablesub,
                                     isPngImage: false,
-      
                                     onIconPressed: () {
                                       // NavigationService.navigateTo(
                                       //     const CircularScreen(), context);
@@ -249,7 +248,6 @@ DateTime? _lastBackPressedTime;
                                     title: MyStrings.examination,
                                     content: MyStrings.examinationSub,
                                     isPngImage: true,
-      
                                     cardHeight: double.maxFinite,
                                     cardWidth: screenWidth * 0.35,
                                     image: MyAssets.exams,
@@ -272,15 +270,13 @@ DateTime? _lastBackPressedTime;
                                     title: MyStrings.calender,
                                     content: MyStrings.calendarSub,
                                     isPngImage: false,
-                                  
                                     cardHeight: double.maxFinite,
                                     cardWidth: screenWidth * 0.35,
                                     onIconPressed: () {
-                                      // NavigationService.navigateTo(
-                                      //     const DisciplineScreen(), context);
+                                      NavigationService.navigateTo(
+                                          const CalendarScreen(), context);
                                     },
                                     image: MyAssets.calendar,
-      
                                   ),
                                   14.widthBox,
                                   Expanded(
@@ -289,9 +285,9 @@ DateTime? _lastBackPressedTime;
                                       title: MyStrings.activity,
                                       content: MyStrings.activitySub,
                                       isPngImage: false,
-                                 
                                       onIconPressed: () {
-                                        print("forward");
+                                        NavigationService.navigateTo(
+                                            const ActivityScreen(), context);
                                       },
                                       cardHeight: double.maxFinite,
                                       cardWidth: 250,
@@ -309,14 +305,12 @@ DateTime? _lastBackPressedTime;
                                   Expanded(
                                     child: customCard(
                                       context: context,
-                                      title:MyStrings.Library,
+                                      title: MyStrings.Library,
                                       content: MyStrings.librarySub,
                                       isPngImage: false,
-      
                                       onIconPressed: () {
-      
-                                        //  NavigationService.navigateTo(
-                                        //   LibraryScreen(), context);
+                                        NavigationService.navigateTo(
+                                            const LibraryScreen(), context);
                                       },
                                       image: MyAssets.library,
                                     ),
@@ -328,9 +322,9 @@ DateTime? _lastBackPressedTime;
                                       title: MyStrings.infirmary,
                                       content: MyStrings.infirmarysub,
                                       isPngImage: false,
-      
                                       onIconPressed: () {
-                                        print("forward");
+                                        NavigationService.navigateTo(
+                                            const InfirmaryScreen(), context);
                                       },
                                       image: MyAssets.infirmary,
                                     ),
@@ -342,7 +336,6 @@ DateTime? _lastBackPressedTime;
                                       title: MyStrings.gallery,
                                       content: MyStrings.gallerySub,
                                       isPngImage: false,
-      
                                       onIconPressed: () {
                                         Navigator.push(
                                             context,
@@ -376,7 +369,7 @@ DateTime? _lastBackPressedTime;
     required BuildContext context,
     required String title,
     required String content,
-   // required IconData icon,
+    // required IconData icon,
     required VoidCallback onIconPressed,
     required String image,
     double? cardHeight,
@@ -411,10 +404,9 @@ DateTime? _lastBackPressedTime;
                       shaderCallback: (Rect bounds) {
                         return MyColors.arrowColor.createShader(bounds);
                       },
-                      child: SvgPicture.asset(
-                        MyAssets.arrowIcon
-                       // color: MyColors.white,
-                      ),
+                      child: SvgPicture.asset(MyAssets.arrowIcon
+                          // color: MyColors.white,
+                          ),
                     ),
                     color: Colors.transparent,
                     onPressed: onIconPressed,

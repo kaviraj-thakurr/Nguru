@@ -7,6 +7,10 @@ import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/app_strings.dart';
 
+
+var totalPositiveP;
+var totalNegitiveP;
+
 class DisciplineCubit extends Cubit<DisciplineState> {
   final AuthRepo? authRepo;
 
@@ -24,6 +28,8 @@ List<DisciplineList> disciplineList=[];
         if (result.responseCode == "200") {
           emit(DisciplineSuccessState(
               disciplineList: result.disciplineList ?? []));
+              totalPositiveP = result.disciplineList?[0].totalPositive;
+              totalNegitiveP = result.disciplineList?[0].totalNegative;
                disciplineList = (state as DisciplineSuccessState).disciplineList;
         } else {
           emit(DisciplineErrorState(result.responseMessage ?? "Error occured"));
@@ -38,25 +44,21 @@ List<DisciplineList> disciplineList=[];
 
 
 
-    void filterDisciplineListByDate(DateTime selectedDate, bool IsOnlyMonthSelected) {
- //   if (state is DisciplineSuccessState) {
-    //  final disciplineList = (state as DisciplineSuccessState).disciplineList;
-   // disciplineList.clear();
+    void filterDisciplineListByDate(DateTime selectedDate, bool isOnlyMonthSelected) {
       final filteredList =
-      IsOnlyMonthSelected ? 
+      isOnlyMonthSelected ? 
       disciplineList
           .where((item) =>
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year ||
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month)
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month )
           .toList()
           :
        disciplineList
           .where((item) =>
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year ||
-              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month ||
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).year == selectedDate.year &&
+              DateFormat("dd/MM/yyyy").parse(item.actionDate!).month == selectedDate.month &&
               DateFormat("dd/MM/yyyy").parse(item.actionDate!).day == selectedDate.day)
           .toList();
       emit(DisciplineFilteredState(filteredList: filteredList));
-    //}
+  
   }
 }

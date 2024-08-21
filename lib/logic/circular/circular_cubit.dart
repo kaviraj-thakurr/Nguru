@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/logic/circular/circular_state.dart';
 import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
+import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/repo/api_calls.dart';
 
 class CircularCubit extends Cubit<CircularState> {
@@ -12,7 +14,10 @@ class CircularCubit extends Cubit<CircularState> {
 
   CircularCubit(this.authRepo) : super(CircularInitialState());
 
+  List<CircularList> circularList=[];
+
   Future<void> getCurrentCircular({int page = 1, int? month}) async {
+    circularList.clear();
     try {
       emit(CircularLoadingState());
       final result = await authRepo?.getCurrentCircular(page: "page", month: month);
@@ -22,6 +27,7 @@ class CircularCubit extends Cubit<CircularState> {
           totalRecords = result.pagination?.totalRecords ?? 0;
           emit(CircularSuccessState(
               circularList: result.circularList ?? []));
+              circularList = (state as CircularSuccessState).circularList;
         } else {
           emit(CircularErrorState(result.responseMessage ?? "Error occurred"));
         }
@@ -30,6 +36,40 @@ class CircularCubit extends Cubit<CircularState> {
       emit(CircularErrorState(e.toString()));
     }
   }
+
+
+
+    void filterCircularListByDate(DateTime selectedDate, bool isOnlyMonthSelected) {
+ //   if (state is DisciplineSuccessState) {
+    //  final disciplineList = (state as DisciplineSuccessState).disciplineList;
+   // disciplineList.clear();
+      final filteredList =
+      isOnlyMonthSelected ? 
+      circularList
+          .where((item) =>
+              DateFormat("dd-MMM-yyyy").parse(item.circularDate!).year == selectedDate.year ||
+              DateFormat("dd-MMM-yyyy").parse(item.circularDate!).month == selectedDate.month)
+          .toList()
+          :
+       circularList
+          .where((item) =>
+              DateFormat("dd-MMM-yyyy").parse(item.circularDate!).year == selectedDate.year ||
+              DateFormat("dd-MMM-yyyy").parse(item.circularDate!).month == selectedDate.month ||
+              DateFormat("dd-MMM-yyyy").parse(item.circularDate!).day == selectedDate.day)
+          .toList();
+      emit(CircularFilterState(filterList: filteredList));
+    //}
+  }
+
+
+
+
+
+
+
+
+
+/// PAGINATION
 
   void nextPage() {
     if (currentPage * itemsPerPage < totalRecords) {

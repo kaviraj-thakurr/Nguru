@@ -11,6 +11,13 @@ class CircularSuccessState extends CircularState {
    CircularSuccessState({  required this.circularList});
 }
 
+
+class CircularFilterState extends CircularState {
+   List<CircularList> filterList;
+   CircularFilterState({  required this.filterList});
+}
+
+
 class CircularErrorState extends CircularState {
   final String message;
   CircularErrorState(this.message);
