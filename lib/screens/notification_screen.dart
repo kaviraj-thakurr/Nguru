@@ -9,12 +9,19 @@ import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/notification_list/notification_list_cubit.dart';
 import 'package:nguru/logic/notification_list/notification_list_state.dart';
 import 'package:nguru/models/notificationlist_model.dart';
+import 'package:nguru/screens/discipline_screen.dart';
+import 'package:nguru/screens/gallery_screen.dart';
+import 'package:nguru/screens/time_table_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+// Import the necessary screens
+import 'assignment_screen.dart'; // Import your AssignmentScreen
+import 'circular_screen.dart'; // Import your CircularScreen
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -73,8 +80,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 children: [
                   customAppBar(),
                   CustomSearchBar(controller: searchController),
+                  8.heightBox,
                   screenTitleHeader(MyStrings.notification,
                       onPressed: () => Navigator.pop(context)),
+                      8.heightBox,
                   Expanded(
                     child: BlocBuilder<NotificationListCubit, NotificationListState>(
                       builder: (context, state) {
@@ -105,18 +114,41 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return ListView.builder(
       itemCount: notifications.length,
       itemBuilder: (context, index) {
+        final notification = notifications[index];
         return Padding(
           padding: const EdgeInsets.all(padding5),
-          child: cardDesign(
-            context,
-            notifications[index].notificationHeader,
-            notifications[index].createdOn,
-            notifications[index].notificationDetail,
+          child: GestureDetector(
+            onTap: () => handleNotificationTap(notification),
+            child: cardDesign(
+              context,
+              notification.notificationHeader,
+              notification.createdOn,
+              notification.notificationDetail,
+            ),
           ),
         );
       },
     );
   }
+
+  void handleNotificationTap(NotificationList notification) {
+    if (notification.notificationHeader == "Assignment Notification") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>const AssignmentScreen()));
+    } else if (notification.notificationHeader == "Circular Notification") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const CircularScreen()));
+    } else if (notification.notificationHeader == "Discipline Notification") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>const DisciplineScreen()));
+    }else if (notification.notificationHeader == "TimeTable Notification") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>const TimetableScreen()));
+      }
+      else if(notification.notificationHeader == "Photo Gallery Notification"){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const GalleryScreen()));
+      }
+      
+
+      
+  }
+
 
   Widget cardDesign(BuildContext context, String? title, DateTime? createdOn, String? subtitle) {
     String formattedDate = createdOn != null 

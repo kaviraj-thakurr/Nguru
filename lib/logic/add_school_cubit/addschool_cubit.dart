@@ -73,12 +73,11 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
               schoolName: result.schoolName,
               schoolPhoto: result.schoolPhoto,
             ));
-          }else{
+          } else {
             emit(AddSchoolSuccessUpdated(
               schoolName: result.schoolName,
               schoolPhoto: result.schoolPhoto,
             ));
-            
           }
         } else {
           emit(AddSchoolErrorState(result.responseMessage ?? "Error occured"));
@@ -89,20 +88,28 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
     }
   }
 
-  saveToHive(String schoolUrl, String subDomain, String schoolNickName) {
-    final box = Hive.box<UserModel>('listItems');
+  saveToHive(String schoolUrl, String subDomain, String schoolNickName) async {
+    final box =   Hive.box<UserModel>('listItems');
     final user = UserModel(
       schoolUrl: schoolUrl,
       subDomain: subDomain,
       schoolNickName: schoolNickName,
     );
-    box.add(user).then((value) async {
-      debugPrint("Success");
-      var box = await Hive.openBox<UserModel>('listItems');
-      var userModel = box.values.toList();
-      debugPrint("fetching: $userModel");
-    }).onError((error, stackTrace) {
-      debugPrint("Faileddd!!!");
-    });
+    var userModel = box.values.toList();
+    UserModel existingUser = userModel.isEmpty?UserModel(schoolUrl: "", subDomain: "", schoolNickName: ""): userModel.firstWhere(
+      (user) => user.schoolUrl == schoolUrl && user.subDomain == subDomain,
+    );
+    if (existingUser.isInBox) {
+      box.put(existingUser.key, existingUser);
+    } else {
+      box.add(user).then((value) async {
+        debugPrint("Success");
+        var box = await Hive.openBox<UserModel>('listItems');
+        var userModel = box.values.toList();
+        debugPrint("fetching: $userModel");
+      }).onError((error, stackTrace) {
+        debugPrint("Faileddd!!!");
+      });
+    }
   }
 }

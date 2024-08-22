@@ -8,9 +8,12 @@ import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/attendance_bar_chart/attendance_bar_chart_cubit.dart';
 import 'package:nguru/logic/attendance_bar_chart/attendance_bar_chart_state.dart';
+import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
+import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_state.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
 import 'package:nguru/models/attendance_bar_chart_model.dart';
+import 'package:nguru/models/cumulative_attendance_model.dart';
 import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -31,6 +34,24 @@ class _BarChartExampleState extends State<BarChartExample> {
   final TextEditingController _searchController = TextEditingController();
   DateTime _focusedDay = DateTime.now();
 
+  int? attendanceBarCharMonth;
+  List monthMap = [
+    "",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  AttendanceCumulativeModel? attendanceCumulativeModel;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +59,7 @@ class _BarChartExampleState extends State<BarChartExample> {
     context
         .read<ParticularMonthAttendanceCubit>()
         .getParticularMonthAttendance(_focusedDay.month);
+    attendanceBarCharMonth = _focusedDay.month;
   }
 
   @override
@@ -46,20 +68,22 @@ class _BarChartExampleState extends State<BarChartExample> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),
           Padding(
-              padding: const EdgeInsets.all(padding20),
+              padding: const EdgeInsets.all(padding18),
               child: Column(
                 children: [
-                  CustomAppBar(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomSearchBar(controller: _searchController),
-                  ),
+                  10.heightBox,
+                  dashboardAppBar(),
+                  10.heightBox,
+                  CustomSearchBar(controller: _searchController),
+                  10.heightBox,
                   screenTitleHeader("Attendance",
                       onPressed: () => Navigator.pop(context)),
+                      20.heightBox,
                   Container(
                     padding: const EdgeInsets.all(8),
                     width: double.infinity,
@@ -83,52 +107,133 @@ class _BarChartExampleState extends State<BarChartExample> {
                                 fontWeight: FontWeight.w500,
                                 textColor: MyColors.boldTextColor),
                           ),
-                          Text(
-                            "220",
-                            style: FontUtil.customStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
-                                textColor: MyColors.boldTextColor),
-                          ),
+                          BlocConsumer<CumulativeAttendanceCubit,
+                                  CumulativeAttendanceState>(
+                              listener: (context, state) {
+                            // if (state is CumulativeAttendanceSuccessState) {
+                            //   attendanceCumulativeModel = state
+                            //       .attendanceCumulativeModel!
+                            //       .where((item) =>
+                            //           item.monthName ==
+                            //           monthMap[currentMonthNumber ??
+                            //               _focusedDay.month ??
+                            //               1])
+                            //       .first;
+                            // }
+                          }, builder: (context, state) {
+                            if (state is CumulativeAttendanceLoadingState) {
+                              return const Center(
+                                child: SizedBox.shrink(),
+                              );
+                            } else if (state
+                                is CumulativeAttendanceSuccessState) {
+                              int totalWorkingDays = 0;
+
+                              for (int i = 0;
+                                  i < state.attendanceCumulativeModel!.length;
+                                  i++) {
+                                totalWorkingDays = totalWorkingDays +
+                                    int.parse(state
+                                        .attendanceCumulativeModel![i]
+                                        .workingDays
+                                        .toString());
+                              }
+                              return Text(
+                                "$totalWorkingDays",
+                                style: FontUtil.customStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor),
+                              );
+                            } else if (state
+                                is CumulativeAttendanceErrorState) {
+                              return Center(
+                                child: Text(
+                                  state.message,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                  MyStrings.undefinedState,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                              );
+                            }
+                          }),
                         ]),
                   ),
                   15.heightBox,
                   _buildMonthSelector(),
-                  BlocConsumer<ParticularMonthAttendanceCubit,
-                          ParticularMonthAttendanceState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        if (state is ParticularMonthAttendanceLoadingState) {
-                          return const Center(
-                            child: SizedBox.shrink(),
-                          );
-                        } else if (state
-                            is ParticularMonthAttendanceSuccessState) {
-                          return attendanceStatusTopGraph(
-                              context, state.particularMonthAttendanceModel);
-                        } else if (state
-                            is ParticularMonthAttendanceErrorState) {
-                          return Center(
-                            child: Text(
-                              state.message,
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              MyStrings.undefinedState,
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          );
-                        }
-                      }),
+
+                  BlocConsumer<CumulativeAttendanceCubit,
+                      CumulativeAttendanceState>(listener: (context, state) {
+                    if (state is CumulativeAttendanceSuccessState) {
+                      attendanceCumulativeModel = state
+                          .attendanceCumulativeModel!
+                          .where((item) =>
+                              item.monthName ==
+                              monthMap[attendanceBarCharMonth ??
+                                  currentMonthNumber ??
+                                  _focusedDay.month])
+                          .first;
+                    }
+                  }, builder: (context, state) {
+                    if (state is CumulativeAttendanceLoadingState) {
+                       return attendanceStatusTopGraph(
+                          context, null);
+                    } else if (state is CumulativeAttendanceSuccessState) {
+
+                      try{
+
+                         attendanceCumulativeModel =  state
+                          .attendanceCumulativeModel!
+                          .where((item) =>
+                              item.monthName ==
+                              monthMap[attendanceBarCharMonth ??
+                                  currentMonthNumber ??
+                                  _focusedDay.month])
+                          .first ;
+
+                      }
+                      catch(e){
+                        attendanceCumulativeModel=null;
+
+                      }
+                      
+                     
+                      return attendanceStatusTopGraph(
+                          context, attendanceCumulativeModel);
+                    } else if (state is CumulativeAttendanceErrorState) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: FontUtil.customStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.boldTextColor),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          MyStrings.undefinedState,
+                          style: FontUtil.customStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.boldTextColor),
+                        ),
+                      );
+                    }
+                  }),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -148,7 +253,7 @@ class _BarChartExampleState extends State<BarChartExample> {
                   //         MaterialPageRoute(
                   //             builder: (context) => AttendenceScreen())),
                   //     child: attendanceVerticalBarChartGraph(context))
-                  attendanceVerticalBarChartGraph(context,_focusedDay),
+                  attendanceVerticalBarChartGraph(context, _focusedDay),
                 ],
               )),
         ],
@@ -189,7 +294,11 @@ class _BarChartExampleState extends State<BarChartExample> {
                     _focusedDay.year,
                     months.indexOf(month) + 1,
                   );
+                  attendanceBarCharMonth = _focusedDay.month;
                 });
+                context
+                    .read<CumulativeAttendanceCubit>()
+                    .getCumulativeAttendance();
                 context
                     .read<ParticularMonthAttendanceCubit>()
                     .getParticularMonthAttendance(_focusedDay.month);
@@ -206,7 +315,7 @@ class _BarChartExampleState extends State<BarChartExample> {
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
                             color: Colors.white, // This color is not visible
-                            width: 1.0,
+                            width: 1.5,
                           ),
                         ),
                         child: Text(
@@ -249,7 +358,7 @@ class _BarChartExampleState extends State<BarChartExample> {
 }
 
 Widget attendanceStatusTopGraph(BuildContext context,
-    ParticularMonthAttendanceModel particularMonthAttendanceModel) {
+    AttendanceCumulativeModel? attendanceCumulativeModel) {
   return SizedBox(
     height: MediaQuery.sizeOf(context).height * 0.23,
     width: double.infinity,
@@ -363,10 +472,10 @@ Widget attendanceStatusTopGraph(BuildContext context,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: Text(value.toInt() == 0
-                                  ? "${particularMonthAttendanceModel.presentCount} Days"
+                                  ? "${attendanceCumulativeModel?.presentDay ?? 0} Days"
                                   : value.toInt() == 1
-                                      ? "${particularMonthAttendanceModel.absentCount} Days"
-                                      : "${particularMonthAttendanceModel.holidayCount} Days"),
+                                      ? "${attendanceCumulativeModel?.absentDay ?? 0} Days"
+                                      : "${attendanceCumulativeModel?.hoidays ?? 0} Days"),
                             ));
                       },
                     ),
@@ -501,9 +610,9 @@ Widget attendanceStatusTopGraph(BuildContext context,
                     barRods: [
                       BarChartRodData(
                         color: MyColors.greenShade_2,
-                        toY: double.parse(particularMonthAttendanceModel
-                            .presentCount
-                            .toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(
+                            attendanceCumulativeModel?.presentDay ??
+                                "0.0"), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 15, Colors.green),
@@ -522,9 +631,9 @@ Widget attendanceStatusTopGraph(BuildContext context,
                     barRods: [
                       BarChartRodData(
                         color: MyColors.redShade_1,
-                        toY: double.parse(particularMonthAttendanceModel
-                            .absentCount
-                            .toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(
+                            attendanceCumulativeModel?.absentDay ??
+                                "0.0"), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 5, Colors.red),
@@ -543,9 +652,8 @@ Widget attendanceStatusTopGraph(BuildContext context,
                     barRods: [
                       BarChartRodData(
                         color: MyColors.appColor1,
-                        toY: double.parse(particularMonthAttendanceModel
-                            .holidayCount
-                            .toString()), // Position on the y-axis (0-based index)
+                        toY: double.parse(attendanceCumulativeModel?.hoidays ??
+                            "0.0"), // Position on the y-axis (0-based index)
                         width: 4,
                         // rodStackItems: [
                         //   BarChartRodStackItem(0, 2, Colors.blue),
@@ -569,7 +677,8 @@ Widget attendanceStatusTopGraph(BuildContext context,
   );
 }
 
-Widget attendanceVerticalBarChartGraph(BuildContext context,DateTime? _focusedDay) {
+Widget attendanceVerticalBarChartGraph(
+    BuildContext context, DateTime? _focusedDay) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: SizedBox(
@@ -579,8 +688,87 @@ Widget attendanceVerticalBarChartGraph(BuildContext context,DateTime? _focusedDa
           listener: (context, state) {},
           builder: (context, state) {
             if (state is AttendanceBarChartLoadingState) {
-              return const Center(
-                child: SizedBox.shrink(),
+              return BarChart(
+                BarChartData(
+                    maxY: 100,
+                    alignment: BarChartAlignment.spaceAround,
+                    barTouchData: BarTouchData(
+                      enabled: true,
+                      touchCallback: (event, response) {
+                        if (response != null &&
+                            response.spot != null &&
+                            event is FlTapUpEvent) {
+                          
+                        }
+                      },
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          reservedSize: 30,
+                          showTitles: true,
+                          getTitlesWidget: (double value, TitleMeta meta) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                [
+                                  'Jan',
+                                  'Feb',
+                                  'Mar',
+                                  'Apr',
+                                  'May',
+                                  'Jun',
+                                  'Jul',
+                                  'Aug',
+                                  'Sep',
+                                  'Oct',
+                                  'Nov',
+                                  'Dec'
+                                ][value.toInt()],
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor
+                                        .withOpacity(0.5)),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          reservedSize: 40,
+                          showTitles: true,
+                          getTitlesWidget: (double value, TitleMeta meta) {
+                            return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              child: Text(
+                                "${value.toInt()} %",
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor
+                                        .withOpacity(0.5)),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    gridData: const FlGridData(show: true),
+                    borderData: FlBorderData(
+                      show: false,
+                      border: Border.all(color: Colors.blue, width: 1),
+                    ),
+                  //  barGroups: barChartGroupData(state.attendanceBarChart)
+                    ),
               );
             } else if (state is AttendanceBarChartSuccessState) {
               return BarChart(
@@ -598,16 +786,18 @@ Widget attendanceVerticalBarChartGraph(BuildContext context,DateTime? _focusedDa
                           final tappedBarData =
                               state.attendanceBarChart[tappedIndex].month;
 
-                              context
-                    .read<ParticularMonthAttendanceCubit>()
-                    .getParticularMonthAttendance(tappedBarData?? _focusedDay!.month).then((value) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>  AttendenceScreen(month: tappedBarData,),
-                            ),
-                          ));
-
-                          
+                          context
+                              .read<ParticularMonthAttendanceCubit>()
+                              .getParticularMonthAttendance(
+                                  tappedBarData ?? _focusedDay!.month)
+                              .then((value) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AttendenceScreen(
+                                        month: tappedBarData,
+                                      ),
+                                    ),
+                                  ));
                         }
                       },
                     ),

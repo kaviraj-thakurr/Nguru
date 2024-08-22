@@ -15,6 +15,7 @@ import 'package:nguru/logic/gallery_item_list/gallery_item_list_state.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/custom_download_file.dart';
 import 'package:nguru/utils/story.dart';
@@ -55,10 +56,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      floatingActionButton: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: SvgPicture.asset(MyAssets.storyDownload)),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: GestureDetector(
+      //     onTap: () => Navigator.pop(context),
+      //     child: SvgPicture.asset(MyAssets.storyDownload)),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Stack(children: [
         Positioned.fill(
             child: Image.asset(
@@ -66,13 +67,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
           fit: BoxFit.fill,
         )),
         Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(padding18),
           child: Column(
             children: [
-              dashboardAppBar(),
-              CustomSearchBar(controller: _searchController),
-              screenTitleHeader(MyStrings.photogallery,
-                  onPressed: () => Navigator.pop(context)),
+              10.heightBox,
+                  dashboardAppBar(),
+                  10.heightBox,
+                  CustomSearchBar(controller: _searchController),
+                  10.heightBox,
+                  screenTitleHeader("Photo Gallery",
+                      onPressed: () => Navigator.pop(context)),
+                      20.heightBox,
               Flexible(
                 child: BlocBuilder<GalleryItemListCubit, GalleryItemListState>(
                   builder: (context, state) {
@@ -241,6 +246,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
           isCircularWidget: false,
           isDisciplineWidget: false,
           stories: storyItemss,
+          subjectList: [],
+          circularList: [],
+          disciplineList: [],
         ),
 
             );

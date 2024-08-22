@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
+import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
@@ -199,7 +201,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   todayTextStyle: FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      textColor: Colors.pink),
+                      textColor: Color.fromARGB(255, 116, 229, 231)),
                   todayDecoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -267,8 +269,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     _focusedDay.year,
                     months.indexOf(month) + 1,
                   );
+
+                  currentMonthNumber=_focusedDay.month;
                   
                 });
+                context.read<CumulativeAttendanceCubit>().getCumulativeAttendance();
                 context
                     .read<ParticularMonthAttendanceCubit>()
                     .getParticularMonthAttendance(_focusedDay.month);
@@ -285,7 +290,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
                             color: Colors.white, // This color is not visible
-                            width: 1.0,
+                            width: 1.5,
                           ),
                         ),
                         child: Text(

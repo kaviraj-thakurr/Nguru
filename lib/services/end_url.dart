@@ -38,4 +38,6 @@ class EndUrl{
 
 
    static const String photoGalleryGetDetList = "PhotoGallery/GetDetList";
+   static const String attendanceGetCumulativeAttendance = "Attendance/GetCumulativeAttendance";
+   static const String signInLogout = "SignIn/Logout";
 }

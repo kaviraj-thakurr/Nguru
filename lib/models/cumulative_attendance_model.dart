@@ -1,36 +1,36 @@
 // To parse this JSON data, do
 //
-//     final attendenceModel = attendenceModelFromJson(jsonString);
+//     final cumulativeAttendanceModel = cumulativeAttendanceModelFromJson(jsonString);
 
 import 'dart:convert';
 
-AttendanceModel attendenceModelFromJson(String str) => AttendanceModel.fromJson(json.decode(str));
+CumulativeAttendanceModel cumulativeAttendanceModelFromJson(String str) => CumulativeAttendanceModel.fromJson(json.decode(str));
 
-String attendenceModelToJson(AttendanceModel data) => json.encode(data.toJson());
+String cumulativeAttendanceModelToJson(CumulativeAttendanceModel data) => json.encode(data.toJson());
 
-class AttendanceModel {
-    List<AttendanceCumulativeModel>? attendanceCumulativeModel;
-    String? responseCode;
-    String? responseMessage;
+class CumulativeAttendanceModel {
+    final List<AttendanceCumulativeModel>? attendanceCumulativeModel;
+    final String? responseCode;
+    final String? responseMessage;
 
-    AttendanceModel({
+    CumulativeAttendanceModel({
         this.attendanceCumulativeModel,
         this.responseCode,
         this.responseMessage,
     });
 
-    AttendanceModel copyWith({
+    CumulativeAttendanceModel copyWith({
         List<AttendanceCumulativeModel>? attendanceCumulativeModel,
         String? responseCode,
         String? responseMessage,
     }) => 
-        AttendanceModel(
+        CumulativeAttendanceModel(
             attendanceCumulativeModel: attendanceCumulativeModel ?? this.attendanceCumulativeModel,
             responseCode: responseCode ?? this.responseCode,
             responseMessage: responseMessage ?? this.responseMessage,
         );
 
-    factory AttendanceModel.fromJson(Map<String, dynamic> json) => AttendanceModel(
+    factory CumulativeAttendanceModel.fromJson(Map<String, dynamic> json) => CumulativeAttendanceModel(
         attendanceCumulativeModel: json["attendanceCumulativeModel"] == null ? [] : List<AttendanceCumulativeModel>.from(json["attendanceCumulativeModel"]!.map((x) => AttendanceCumulativeModel.fromJson(x))),
         responseCode: json["responseCode"],
         responseMessage: json["responseMessage"],
@@ -44,14 +44,14 @@ class AttendanceModel {
 }
 
 class AttendanceCumulativeModel {
-    String? monthName;
-    String? hoidays;
-    String? presentDay;
-    String? absentDay;
-    String? leaveDay;
-    String? workingDays;
-    String? overAllPercentage;
-    String? monthWisePercentage;
+    final String? monthName;
+    final String? hoidays;
+    final String? presentDay;
+    final String? absentDay;
+    final String? leaveDay;
+    final String? workingDays;
+    final String? overAllPercentage;
+    final String? monthWisePercentage;
 
     AttendanceCumulativeModel({
         this.monthName,

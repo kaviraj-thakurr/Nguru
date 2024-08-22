@@ -5,13 +5,19 @@ import 'package:dio/dio.dart';
 class Networking {
   final _dio = Dio();
   late Response response;
-  final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
+
+  //Production link
+  // final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
 
   
-  final stagingLink = "https://qsstg.niiteducation.com/mobileappservice/Api/";
+  //Stagging link
+  final baseUrl = "https://qsstg.niiteducation.com/mobileappservice/Api/";
   //Api fun for post API
   Future<dynamic> networkPost(
-      {dynamic data, String? token, required String url,bool isStagingLink=false}) async {
+      {dynamic data,
+      String? token,
+      required String url,
+      bool isStagingLink = false}) async {
     final headers = {
       'Content-Type': 'application/json',
       'Cookie':
@@ -20,13 +26,11 @@ class Networking {
 
     try {
       response = await _dio.post(
-       
-      isStagingLink ? stagingLink+url :   baseUrl+url,
+        baseUrl + url,
         data: data,
         options: Options(headers: headers),
-       
       );
-       log("request body: $data");
+      log("request body: $data");
       return response;
     } catch (e) {
       if (e is DioError) {
@@ -46,7 +50,7 @@ class Networking {
     final headers = {'Authorization': "$token"};
     try {
       response = await _dio.get(
-        baseUrl+url,
+        baseUrl + url,
         queryParameters: params,
         data: data,
         options: Options(headers: headers),

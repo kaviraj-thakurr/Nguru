@@ -1,17 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:nguru/logic/login_cubit/login_state.dart';
-import 'package:nguru/logic/reset_password/reset_password_state.dart';
 import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/app_utils.dart';
-
-import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepo? authRepo;
+ 
 
   LoginCubit(this.authRepo) : super(LoginInitState());
 
@@ -26,6 +21,7 @@ class LoginCubit extends Cubit<LoginState> {
           await SharedPref.saveSchoolID(result.schoolId ?? 0);
           await SharedPref.saveStudentID(result.studentProfile?.studentId ?? 0);
           await SharedPref.saveSessionID(result.studentProfile?.sessionId ?? 0);
+          await SharedPref.saveLoggedInStatus(true);
           if (isFromForgotPassword) {
             
             emit(LoginForgetPasswordState());

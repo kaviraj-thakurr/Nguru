@@ -47,12 +47,16 @@ class _TransportScreenState extends State<TransportScreen> {
               child: Column(children: [
                 screenTitleHeader(MyStrings.transport,
                     onPressed: () => Navigator.pop(context)),
+
+                    10.heightBox,
                 BlocBuilder<TransportCubit,TransportState>(
                   builder: (context,state) {
                     if(state is TransportLoadingState){
                       return const CircularProgressIndicator();
                     }else if (state is TransportSuccessState){
                      return transportCard(context:context,
+                     profileImage:MyAssets.placeholderDriverImage,
+                    
                      driverName: state.transportDetails.driverName,
                      driverNo: state.transportDetails.contactNo,
                      busStop: state.transportDetails.pickupLocation,
@@ -78,12 +82,12 @@ class _TransportScreenState extends State<TransportScreen> {
 }
 
 
-  Widget transportCard({required BuildContext context, String ? driverName , String ? driverNo , String ? busStop, String ? dropOff}) {
+  Widget transportCard({required BuildContext context,String?profileImage,String ? driverName , String ? driverNo , String ? busStop, String ? dropOff}) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final widthHeight = MediaQuery.sizeOf(context).width;
     return Container(
       width: double.maxFinite,
-      height: screenHeight * 0.130,
+      height: screenHeight * 0.160,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: MyColors.searchBackGroundColor),
@@ -99,10 +103,10 @@ class _TransportScreenState extends State<TransportScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                     const CircleAvatar(
-                      backgroundImage:NetworkImage(MyAssets.activity),
+                      const CircleAvatar(
+                      backgroundImage:NetworkImage("https://via.placeholder.com/150"),
                       maxRadius: 25,
-                      backgroundColor: Colors.green,
+                     
                     ),
                     10.widthBox,
                     Column(
@@ -142,7 +146,7 @@ class _TransportScreenState extends State<TransportScreen> {
                             textColor: MyColors.busStop),
                       ),
                       Text(
-                       busStop??"No Location",
+                       busStop??"-",
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,

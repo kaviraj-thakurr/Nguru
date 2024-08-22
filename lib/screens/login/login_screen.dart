@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
@@ -14,7 +13,6 @@ import 'package:nguru/screens/reset_password_screen.dart';
 
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/custom_widgets/gradient_divider.dart';
-import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_gapping.dart';
 
@@ -33,8 +31,12 @@ class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
   final String? schoolUrl;
+  final String subDomain;
+  final String schoolNickName;
+   final String trimmedSchoolUrl;
 
-  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl});
+
+  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl, required this.subDomain, required this.schoolNickName, required this.trimmedSchoolUrl});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -47,14 +49,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   bool isSelected = false;
   String selectedRadio = '';
+  String schoolUrlGlobal = '';
+  bool isFirstTime = true;
   Box<UserModel>? box;
   List<UserModel>? addSchoolList;
 
   Future<void> openAddSchoolBox() async {
     box = await Hive.openBox<UserModel>('listItems');
-
-    addSchoolList = box?.values.toList();
-    selectedRadio = addSchoolList?.first.schoolNickName ?? "";
+     addSchoolList = box?.values.toList();
+      int index = findUserModelIndex(addSchoolList??[],widget.schoolNickName,widget.subDomain, widget.trimmedSchoolUrl??"" );
+  
+    selectedRadio = addSchoolList?.elementAt(index).schoolNickName ?? "";
+    schoolUrlGlobal =
+        "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
+            "";
     removeDuplicateSchools(addSchoolList);
     setState(() {});
     log("fetching: $addSchoolList");
@@ -79,6 +87,20 @@ class _LoginScreenState extends State<LoginScreen> {
           .read<FormValidationCubit>()
           .validateUserName(userNameController.text);
     });
+  }
+
+  int findUserModelIndex(List<UserModel> userModelList, String schoolNickName,
+      String subDomain, String schoolUrl) {
+    try {
+      return userModelList.indexWhere(
+        (user) =>
+            user.schoolNickName == schoolNickName &&
+            user.subDomain == subDomain &&
+            user.schoolUrl == schoolUrl,
+      );
+    } catch (e) {
+      return 0;
+    }
   }
 
   @override
@@ -146,10 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: addSchoolList?.length,
-                         
                             itemBuilder: (context, index) {
                               String schoolNickName =
                                   addSchoolList?[index].schoolNickName ?? "";
+                              String schoolUrl =
+                                  "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
                               return GestureDetector(
                                 onTap: () {
                                   context.read<AddSchoolCubit>().addSchool(
@@ -163,15 +186,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                     selectedRadio =
                                         addSchoolList?[index].schoolNickName ??
                                             "";
+                                    schoolNickName =
+                                        addSchoolList?[index].schoolNickName ??
+                                            "";
+                                    schoolUrl =
+                                        "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
+                                    schoolUrlGlobal =
+                                        "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
                                     isSelected = !isSelected;
+                                    isFirstTime = false;
                                   });
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left:  8.0),
+                                  padding: const EdgeInsets.only(left: 8.0),
                                   child: customRadioButton(
                                       context,
-                                      selectedRadio == schoolNickName,
-                                      addSchoolList![index].schoolNickName ?? "",
+                                      selectedRadio == schoolNickName &&
+                                          schoolUrl == schoolUrlGlobal,
+                                      addSchoolList![index].schoolNickName ??
+                                          "",
                                       addSchoolList?[index]),
                                 ),
                               );

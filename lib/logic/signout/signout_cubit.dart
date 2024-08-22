@@ -11,7 +11,7 @@ class SignoutCubit extends Cubit<SignoutState>{
 Future <void> signout () async{
   try{
     emit(SignoutLoadingState());
-    final result = await authRepo?.signout();
+    final result = await authRepo?.logOut();
     if(result != null){
       if(result["responseCode"] == "200"){
         emit(SignoutSuccessState(
