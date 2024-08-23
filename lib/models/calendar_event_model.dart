@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final calendarEventModel = calendarEventModelFromJson(jsonString);
+
 import 'dart:convert';
 
 CalendarEventModel calendarEventModelFromJson(String str) => CalendarEventModel.fromJson(json.decode(str));
@@ -6,13 +10,13 @@ String calendarEventModelToJson(CalendarEventModel data) => json.encode(data.toJ
 
 class CalendarEventModel {
     final List<CalendarEventList>? calendarEventList;
-    final String responseCode;
-    final String responseMessage;
+    final String? responseCode;
+    final String? responseMessage;
 
     CalendarEventModel({
         this.calendarEventList,
-        this.responseCode = '',
-        this.responseMessage = '',
+        this.responseCode,
+        this.responseMessage,
     });
 
     CalendarEventModel copyWith({
@@ -27,9 +31,9 @@ class CalendarEventModel {
         );
 
     factory CalendarEventModel.fromJson(Map<String, dynamic> json) => CalendarEventModel(
-        calendarEventList: json["calendarEventList"] == null ? [] : List<CalendarEventList>.from((json["calendarEventList"] as List).map((x) => CalendarEventList.fromJson(x))),
-        responseCode: json["responseCode"] ?? '',
-        responseMessage: json["responseMessage"] ?? '',
+        calendarEventList: json["calendarEventList"] == null ? [] : List<CalendarEventList>.from(json["calendarEventList"]!.map((x) => CalendarEventList.fromJson(x))),
+        responseCode: json["responseCode"],
+        responseMessage: json["responseMessage"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -40,20 +44,20 @@ class CalendarEventModel {
 }
 
 class CalendarEventList {
-    final int dayKey;
-    final int status;
+    final int? dayKey;
+    final int? status;
     final DateTime? calendarDate;
-    final EventName eventName;
-    final String details;
-    final Date? fromDate;
-    final Date? toDate;
+    final String? eventName;
+    final String? details;
+    final String? fromDate;
+    final String? toDate;
 
     CalendarEventList({
-        this.dayKey = 0,
-        this.status = 0,
+        this.dayKey,
+        this.status,
         this.calendarDate,
-        this.eventName = EventName.EMPTY,
-        this.details = '',
+        this.eventName,
+        this.details,
         this.fromDate,
         this.toDate,
     });
@@ -62,10 +66,10 @@ class CalendarEventList {
         int? dayKey,
         int? status,
         DateTime? calendarDate,
-        EventName? eventName,
+        String? eventName,
         String? details,
-        Date? fromDate,
-        Date? toDate,
+        String? fromDate,
+        String? toDate,
     }) => 
         CalendarEventList(
             dayKey: dayKey ?? this.dayKey,
@@ -78,58 +82,22 @@ class CalendarEventList {
         );
 
     factory CalendarEventList.fromJson(Map<String, dynamic> json) => CalendarEventList(
-        dayKey: json["dayKey"] ?? 0,
-        status: json["status"] ?? 0,
+        dayKey: json["dayKey"],
+        status: json["status"],
         calendarDate: json["calendarDate"] == null ? null : DateTime.parse(json["calendarDate"]),
-        eventName: json["eventName"] == null ? EventName.EMPTY : eventNameValues.map[json["eventName"]] ?? EventName.EMPTY,
-        details: json["details"] ?? '',
-        fromDate: json["fromDate"] == null ? null : dateValues.map[json["fromDate"]],
-        toDate: json["toDate"] == null ? null : dateValues.map[json["toDate"]],
+        eventName: json["eventName"],
+        details: json["details"],
+        fromDate: json["fromDate"],
+        toDate: json["toDate"],
     );
 
     Map<String, dynamic> toJson() => {
         "dayKey": dayKey,
         "status": status,
         "calendarDate": calendarDate?.toIso8601String(),
-        "eventName": eventName == null ? null : eventNameValues.reverse[eventName],
+        "eventName": eventName,
         "details": details,
-        "fromDate": fromDate == null ? null : dateValues.reverse[fromDate],
-        "toDate": toDate == null ? null : dateValues.reverse[toDate],
+        "fromDate": fromDate,
+        "toDate": toDate,
     };
-}
-
-enum EventName {
-    EMPTY,
-    THE_2_ND_SATURDAY_MAY,
-    WORKER_S_DAY
-}
-
-final eventNameValues = EnumValues({
-    "": EventName.EMPTY,
-    "2nd Saturday-May": EventName.THE_2_ND_SATURDAY_MAY,
-    "worker's Day": EventName.WORKER_S_DAY
-});
-
-enum Date {
-    EMPTY,
-    MAY_12024,
-    MAY_42024
-}
-
-final dateValues = EnumValues({
-    "": Date.EMPTY,
-    "May  1 2024 ": Date.MAY_12024,
-    "May  4 2024 ": Date.MAY_42024
-});
-
-class EnumValues<T> {
-    Map<String, T?> map;
-    late Map<T?, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T?, String> get reverse {
-        reverseMap = map.map((k, v) => MapEntry(v, k));
-        return reverseMap;
-    }
 }

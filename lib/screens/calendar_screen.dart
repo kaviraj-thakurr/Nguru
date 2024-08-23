@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_attendence_footer_card.dart';
 import 'package:nguru/custom_widgets/custom_search_bar.dart';
@@ -45,14 +46,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
       children: [
         Image.asset(MyAssets.background_2),
         Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(8),
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 1,
               width: double.infinity,
               child: Column(
                 //   mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  CustomAppBar(),
+                  20.heightBox,
+                  dashboardAppBar(),
                   CustomSearchBar(
                     controller: searchBarController,
                     hintText: MyStrings.search,
@@ -61,52 +63,67 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       onPressed: () => Navigator.pop(context)),
                   const EventCalendar(),
                   20.heightBox,
-                  Container(
-                      constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.2,
-                          maxWidth: double.infinity),
-                      child:  BlocConsumer<CalendarEventCubit,
-                                  CalendarEventState>(
-                              listener: (context, state) {},
-                              builder: (context, state) {
-                                if (state is CalendarEventLoadingState) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state is CalendarEventSuccessState &&  cubit.calendarEventList.isNotEmpty) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ListView.builder(
-                                      itemCount: cubit.calendarEventList.length ,
-                                      itemBuilder: (context,index) {
-                                        return footer(index, context,
-                                            cubit.calendarEventList);
-                                      }
-                                    ),
-                                  );
-                                } else if (state is CalendarEventErrorState) {
-                                  return Center(
-                                    child: Text(
-                                     "error"+ state.message ?? "",
-                                      style: FontUtil.customStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: MyColors.boldTextColor),
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text(
-                                      MyStrings.undefinedState,
-                                      style: FontUtil.customStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          textColor: MyColors.boldTextColor),
-                                    ),
-                                  );
-                                }
-                              })
-                       ),
+                  Expanded(
+                    child: SizedBox(
+                      
+                        child:  BlocConsumer<CalendarEventCubit,
+                                    CalendarEventState>(
+                                listener: (context, state) {},
+                                builder: (context, state) {
+                                  if (state is CalendarEventLoadingState) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                   else if (state is CalendarEventSuccessState &&  cubit.calendarEventList.isNotEmpty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount: cubit.calendarEventList.length ,
+                                        itemBuilder: (context,index) {
+                                          return footer(index, context,
+                                              cubit.calendarEventList);
+                                        }
+                                      ),
+                                    );
+                                  } 
+                                  else if (cubit.calendarEventList.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                       "No Events for this month!",
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: MyColors.boldTextColor),
+                                      ),
+                                    );
+                                  } 
+                                  else if (state is CalendarEventErrorState ) {
+                                    return Center(
+                                      child: Text(
+                                       "error"+ state.message ?? "",
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: MyColors.boldTextColor),
+                                      ),
+                                    );
+                                  } 
+                                  else {
+                                    return Center(
+                                      child: Text(
+                                        MyStrings.undefinedState,
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            textColor: MyColors.boldTextColor),
+                                      ),
+                                    );
+                                  }
+                                })
+                         ),
+                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
@@ -119,19 +136,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget footer(int index, BuildContext context,
       List<CalendarEventList> calendarEventList) {
-    return SizedBox(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.08,
-      child: ListView.builder(
-          itemCount: calendarEventList.length,
-          itemBuilder: (context, index) {
-            return customCalendarEventFooterCard(context,headerText: calendarEventList[index].eventName.name,footerText: calendarEventList[index].calendarDate.toString(),footerColor: Colors.red );
-          }),
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.08,
+          child:  customCalendarEventFooterCard(context,calendarEventList[index].details, headerText: calendarEventList[index].eventName,footerText: calendarEventList[index].calendarDate.toString(),footerColor: MyColors.boldTextColor )
+        
+        ),
+        10.heightBox,
+      ],
     );
   }
 }
 
-Widget customCalendarEventFooterCard(BuildContext context,
+Widget customCalendarEventFooterCard(BuildContext context, String? details,
     {String? headerText, String? footerText, Color? footerColor}) {
   return Container(
     padding: const EdgeInsets.all(5.0),
@@ -153,34 +172,47 @@ Widget customCalendarEventFooterCard(BuildContext context,
       children: [
         Expanded(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.23,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: Text(
-                  headerText ?? MyStrings.totalWorkingDays,
-                  style: FontUtil.customStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textColor: MyColors.textcolors),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
+              Text(
+                headerText ?? "",
+                style: FontUtil.customStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.textcolors),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+              ),
+              Text(
+                 DateFormat('EEEE').format(DateTime.parse(footerText.toString() )) ,
+                style: FontUtil.customStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.textcolors),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ],
           ),
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              footerText ?? "30",
+              DateFormat('MMM dd, yyyy').format(DateTime.parse(footerText.toString())) ,
               style: FontUtil.customStyle(
-                  fontSize: 22,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                   textColor: footerColor!),
+            ),
+            Text(
+             details=="0" ? "Not working" :details=="1" ? "Working" : "Working status: N/A",
+              style: FontUtil.customStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  textColor:  MyColors.textcolors),
             )
           ],
         )

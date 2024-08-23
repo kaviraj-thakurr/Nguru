@@ -140,11 +140,13 @@ class _SettingScreenState extends State<SettingScreen> {
                             onLogout: () => context
                                 .read<SignoutCubit>()
                                 .signout().then((value) => SharedPref.saveLoggedInStatus(false))
-                                .then((value) => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const AddSchool(
-                                            isAddSchoolScreen: false)))),
+                                .then((value) =>
+                                 Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const AddSchool(isAddSchoolScreen: false,)), 
+                                  (Route<dynamic> route) => false,
+                                )
+                                            ),
                             onCancel: () => Navigator.pop(context),
                           );
                         },

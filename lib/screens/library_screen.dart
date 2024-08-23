@@ -50,7 +50,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     context.read<LibraryIssueBookCubit>().getLibraryIssueBook();
     context.read<LibraryHistoryCubit>().getLibraryHistory();
   //  context.read<LibrarySearchBookCubit>().getLibrarySearchBook();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -70,16 +69,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CustomAppBar(),
+                    20.heightBox,
+                    dashboardAppBar(),
                     CustomSearchBar(
                       controller: searchBarController,
                       hintText: MyStrings.search,
                       onSubmitted:(String value)=> value.isEmpty ? null : context.read<LibrarySearchBookCubit>().getLibrarySearchBook(searchQuery: searchBarController.text.toString()),
                     ),
-                    10.heightBox,
+                    20.heightBox,
                     screenTitleHeader("Library",
                         onPressed: () => Navigator.pop(context)),
-                    10.heightBox,
+                    20.heightBox,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -233,7 +233,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       crossAxisSpacing: 10,
                       crossAxisCount: 3),
                   itemBuilder: (context, index) {
-                    return book(context,
+                    return  book(context,
                         libraryIssued: state.libraryIssued[index]);
                   });
             } else if (state is LibraryIssueBookErrorState) {
@@ -322,7 +322,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       child: customTags(
                           verticalPadding: 0.1,
                           horizontalPadding: 0.1,
-                          accessionNo.toString() ?? "0002UG092153",
+                          accessionNo.toString(),
                           MyColors.greenShade_4,
                           MyColors.white,
                           fontWeight: FontWeight.w600,
@@ -337,7 +337,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             child: customTags(
                                 //  currentDateForCheckingDueDate.isAfter(DateFormat("dd MMM yyyy").parse(libraryIssued?.dueDate ?? ""))
                                 //   ? libraryIssued?.dueDate : libraryIssued?.issueDate ?? "April 24, 2024",
-                                dueDate.toString() ?? "Date: N/A",
+                                dueDate.toString(),
 
                                 // currentDateForCheckingDueDate.isAfter(
                                 //         DateFormat("dd MMM yyyy")
@@ -401,7 +401,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     : const SizedBox(),
                 librarySearch?.accessionNo == null
                     ? Text(
-                        issueDate.toString() ?? "Date: N/A",
+                        issueDate.toString(),
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
@@ -534,27 +534,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget customCalendar(BuildContext context) {
     return TableCalendar(
-      // calendarBuilders: CalendarBuilders(
-      //   defaultBuilder: (context, day, focusedDay) {
-      //     final dayIndex = day.day - 1;
-      //     Color textColor = Colors.black;
-      //     int attendanceStatus = state.particularMonthAttendanceModel
-      //         .attendanceMonth![dayIndex].status!;
-      //     if (attendanceStatus == 0) {
-      //       textColor = Colors.green;
-      //     } else if (attendanceStatus == 3) {
-      //       textColor = Colors.red;
-      //     } else {
-      //       textColor = Colors.black;
-      //     }
-      //     return Center(
-      //       child: Text(
-      //         '${day.day}',
-      //         style: TextStyle(color: textColor, fontSize: 16),
-      //       ),
-      //     );
-      //   },
-      // ),
+ 
       rowHeight: 45,
       daysOfWeekHeight: 20,
       daysOfWeekStyle: DaysOfWeekStyle(
@@ -610,20 +590,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget buildMonthSelector() {
-    // List<String> months = [
-    //   "Jan",
-    //   "Feb",
-    //   "Mar",
-    //   "Apr",
-    //   "May",
-    //   "Jun",
-    //   "Jul",
-    //   "Aug",
-    //   "Sep",
-    //   "Oct",
-    //   "Nov",
-    //   "Dec"
-    // ];
+
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -718,7 +685,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       borderRadius: BorderRadius.circular(30)),
                 ),
                 10.heightBox,
-                buildMonthSelector(),
+              //  buildMonthSelector(),
                 10.heightBox,
                 customCalendar(context),
                 //   CustomCalendar(),
@@ -741,7 +708,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget _buildCategorySelector() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only( right: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {

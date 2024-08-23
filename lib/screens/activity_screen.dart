@@ -57,7 +57,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: screenTitleHeader("Activity"),
+                child: screenTitleHeader("Activity",onPressed: ()=>Navigator.pop(context)),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15,left: 15,right: 15,bottom: 5),

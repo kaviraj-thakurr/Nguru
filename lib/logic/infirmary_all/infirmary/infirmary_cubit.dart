@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nguru/logic/infirmary/infirmary_state.dart';
+import 'package:nguru/logic/infirmary_all/infirmary/infirmary_state.dart';
 import 'package:nguru/logic/library/history/library_history_state.dart';
 import 'package:nguru/repo/api_calls.dart';
 

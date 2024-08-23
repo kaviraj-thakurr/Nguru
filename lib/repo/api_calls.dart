@@ -32,6 +32,7 @@ import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/models/timetable_model.dart';
 import 'package:nguru/models/transport_detail_model.dart';
+import 'package:nguru/models/vaccination_model.dart';
 import 'package:nguru/services/end_url.dart';
 import 'package:nguru/services/networking.dart';
 
@@ -121,7 +122,10 @@ class AuthRepo {
   Future<DashboardModel> dashboardGetList() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.dashboardList, data: {
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.dashboardList,
+             data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -154,6 +158,7 @@ class AuthRepo {
   Future<NotificationModel> notificationCount() async {
     try {
       final res = await _myService.networkPost(
+        isStagingLink: true,
         url: EndUrl.notificationCount,
         data: {
           "appMessageID": 0,
@@ -331,6 +336,7 @@ class AuthRepo {
 
     try {
       final res = await _myService.networkPost(
+        isStagingLink: true,
         url: EndUrl.currentDisciplineList,
         data: {
           "appMessageID": 0,
@@ -372,6 +378,7 @@ class AuthRepo {
   }) async {
     try {
       final res = await _myService.networkPost(
+        isStagingLink: true,
         url: EndUrl.contactUs,
         data: {
           "appMessageID": 0,
@@ -383,13 +390,13 @@ class AuthRepo {
           "month": 0,
           "pageNumber": 0,
           "pageSize": 0,
-          "schoolID": 1,
-          "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-          "sessionID": 107,
-          "studentID": 896,
+          "schoolID": await SharedPref.getSchoolID(),
+          "schoolUrl": await SharedPref.getSchoolUrl(),
+          "sessionID": await SharedPref.getSessionId(),
+          "studentID": await SharedPref.getStudentID(),
           "subjectID": 0,
           "type": 0,
-          "userID": "6135",
+          "userID": await SharedPref.getUserID(),
           "year": 0
         },
       );
@@ -473,13 +480,13 @@ class AuthRepo {
         "oldPassword": "$oldPassword",
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl":await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       ResetPasswordModel resetResponse =
@@ -538,7 +545,10 @@ class AuthRepo {
       // int? pageNumber,
       ) async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.fees, data: {
+      final res = await _myService.networkPost(
+        isStagingLink: true,
+        url: EndUrl.fees,
+         data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -569,7 +579,10 @@ class AuthRepo {
 
   Future<TimeTableModel> getTimeTableList() async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.timeTable, data: {
+      final res = await _myService.networkPost(
+        isStagingLink: true,
+        url: EndUrl.timeTable,
+         data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -788,7 +801,10 @@ class AuthRepo {
 
   Future<GetFeeListModel> getFeeList() async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.feeGetList, data: {
+      final res = await _myService.networkPost(
+        isStagingLink: true,
+        url: EndUrl.feeGetList,
+         data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -798,13 +814,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       GetFeeListModel getFeeListModelResponse =
@@ -847,25 +863,18 @@ class AuthRepo {
     // type = 1 for fetching all the discipline
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.calendarEventGetList, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": monthNumber,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+          await _myService.networkPost(
+            url: EndUrl.calendarEventGetList,
+            isStagingLink: true,
+             data: {
+  "month":  monthNumber,
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+  "pageNumber": 7
+});
       CalendarEventModel calendarEventModelResponse =
           calendarEventModelFromJson(res.toString());
       return calendarEventModelResponse;
@@ -880,25 +889,23 @@ class AuthRepo {
   Future<LibraryIssuedBookModel> getLibraryIssuedBook() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.libraryGetIssuedList, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.libraryGetIssuedList,
+             data: 
+          {
+  "bookID": 1,
+  "accessionNo": 1,
+  "issueReturnId": 1,
+  "type": 1,
+  "pageSize": 10,
+  "pageNumber": 0,
+  "userID": await SharedPref.getUserID(),
+  "schoolID": 1,
+  "studentID": await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL": await SharedPref.getSchoolUrl()
+});
       LibraryIssuedBookModel libraryIssuedBookListResponse =
           libraryIssuedBookModelFromJson(res.toString());
       return libraryIssuedBookListResponse;
@@ -913,25 +920,22 @@ class AuthRepo {
   Future<LibraryHistoryModel> getLibraryHistory({int? monthNumber}) async {
     try {
       final res = await _myService
-          .networkPost(url: EndUrl.libraryGetHistoryList, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+          .networkPost(
+            isStagingLink: true,
+            url: EndUrl.libraryGetHistoryList,
+             data: {
+  "bookID": 1,
+  "accessionNo": 1,
+  "issueReturnId": 1,
+  "type": 1,
+  "pageSize": 1,
+  "pageNumber": 1,
+  "userID": await SharedPref.getUserID(),
+  "schoolID": await SharedPref.getSchoolID(),
+  "studentID": await SharedPref.getStudentID(),
+  "sessionID": await SharedPref.getSessionId(),
+  "schoolURL": await SharedPref.getSchoolUrl()
+});
       LibraryHistoryModel libraryHistoyListResponse =
           libraryHistoryModelFromJson(res.toString());
       return libraryHistoyListResponse;
@@ -947,28 +951,21 @@ class AuthRepo {
       {String? searchQuery}) async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.libraryGetSearchList, data: {
-        "appMessageID": 0,
-        "authorName": "",
-        "bookName": "$searchQuery",
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "keyword": "",
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.libraryGetSearchList,
+             data: 
+          {
+  "schoolURL": await SharedPref.getSchoolUrl(),
+  "schoolID": await SharedPref.getSchoolID(),
+  "studentID":await SharedPref.getStudentID(),
+  "bookName": "",
+  "keyword": "$searchQuery",
+  "authorName": "",
+  "pageSize": 7,
+  "pageNumber": 8,
+  "sessionID": await SharedPref.getSessionId(),
+});
       LibrarySearchBookModel libraryHistoyListResponse =
           librarySearchBookModelFromJson(res.toString());
       return libraryHistoyListResponse;
@@ -1014,25 +1011,18 @@ class AuthRepo {
   Future<InfirmaryModel> getInfirmaryList() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.infirmaryGetList, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 8,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+          await _myService.networkPost(
+            url: EndUrl.infirmaryGetList,
+            isStagingLink: true,
+             data: {
+  "pageSize": 1,
+  "pageNumber": 2,
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
       InfirmaryModel infirmaryResponse = infirmaryModelFromJson(res.toString());
       return infirmaryResponse;
     } catch (e) {
@@ -1041,30 +1031,52 @@ class AuthRepo {
     }
   }
 
+
+
+    ////////////////////////////////////////////////     GET Vaccination LIST DATA      //////////////////////////////////////////////////////
+
+  Future<VaccinationModel> getVaccinationList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.vaccinationGetList,
+            isStagingLink: true,
+             data: {
+  "pageSize": 1,
+  "pageNumber": 2,
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
+      VaccinationModel vaccinationResponse = vaccinationModelFromJson(res.toString());
+      return vaccinationResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch vaccination list: $e");
+    }
+  }
+
   ////////////////////////////////////////////////     GET ACTIVITY LIST DATA      //////////////////////////////////////////////////////
 
   Future<ActivityModel> getActivityList() async {
     try {
       final res = await _myService
-          .networkPost(url: EndUrl.activityGetList, isStagingLink: true, data: {
-        "appMessageID": 0,
-        "circularID": 0,
-        "contentType": 0,
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 8,
-        "schoolID": 1,
-        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-        "sessionID": 178,
-        "studentID": 108416,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "118011",
-        "year": 0
-      });
+          .networkPost(
+            url: EndUrl.activityGetList,
+             isStagingLink: true,
+              data: 
+              {
+  "pageSize": 1,
+  "pageNumber": 2,
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+}
+      );
       ActivityModel infirmaryResponse = activityModelFromJson(res.toString());
       return infirmaryResponse;
     } catch (e) {

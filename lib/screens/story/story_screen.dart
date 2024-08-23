@@ -48,8 +48,8 @@ class _StoryScreenState extends State<StoryScreen>
   bool _isNavigating = false;
   DateTime focusedDay = DateTime.now();
   final int currentDate = DateTime.now().month;
-  DateTime selectedDate = DateTime(2024, 8, 14);
-  DateTime selectedDateForDiscipline = DateTime(2024, 8, 6);
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedDateForDiscipline = DateTime.now();
 
   @override
   void initState() {
@@ -77,7 +77,7 @@ class _StoryScreenState extends State<StoryScreen>
 
     context
         .read<AssignmentListCubit>()
-        .getAssignmentList(todaysDate.month, "2024-08-14T00:00:00");
+        .getAssignmentList(todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString());
 
     context.read<CircularCubit>().getCurrentCircular(month: 8);
 
@@ -250,7 +250,7 @@ class _StoryScreenState extends State<StoryScreen>
 
           if (title == "Assignment") {
             await assignmentCubit.getAssignmentList(
-                todaysDate.month, "2024-08-14T00:00:00");
+                todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString());
 
             BlocConsumer<AssignmentListCubit, AssignmentListState>(
                 listener: (context, state) {

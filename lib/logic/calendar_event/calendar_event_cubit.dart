@@ -31,7 +31,7 @@ class CalendarEventCubit extends Cubit<CalendarEventState> {
 
 List<CalendarEventList> getAllEventsWithStatusOne(List<CalendarEventList> allEvents) {
   // Filtering the list to get only the events that have status == 1
-  return allEvents.where((event) => event.status == 1).toList();
+  return allEvents.where((event) => event.details == "1" || event.details == "0").toList();
 }
 
 

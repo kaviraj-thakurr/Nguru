@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
-import 'package:nguru/logic/infirmary/infirmary_cubit.dart';
-import 'package:nguru/logic/infirmary/infirmary_state.dart';
+import 'package:nguru/logic/infirmary_all/infirmary/infirmary_cubit.dart';
+import 'package:nguru/logic/infirmary_all/infirmary/infirmary_state.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -22,7 +24,15 @@ class InfirmaryScreen extends StatefulWidget {
 
 class _InfirmaryScreenState extends State<InfirmaryScreen> {
   final TextEditingController _searchController = TextEditingController();
+    List<String> months = [
+    "Illness",
+    "Vaccination",
+    "Body Details",
+  ];
+    int seletedIndex = 0;
 
+  DateTime? _selectedDay;
+    DateTime _focusedDay = DateTime.now();
 
   @override
   void initState() {
@@ -45,7 +55,8 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                CustomAppBar(),
+                20.heightBox,
+                dashboardAppBar(),
                 CustomSearchBar(controller: _searchController),
                 20.heightBox,
                 screenTitleHeader("Infirmary",
@@ -55,6 +66,13 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                     "name", "10th A", "1237/AA/2023B",
                     bloodGroup: "O+", gender: "Male"),
                 20.heightBox,
+                // Row(
+                //       mainAxisAlignment: MainAxisAlignment.start,
+                //       children: [
+                //         _buildCategorySelector(),
+                //       ],
+                //     ),
+                //     20.heightBox,
                 SizedBox(
                   width: double.infinity,
                   child: RichText(
@@ -133,6 +151,81 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+
+    Widget _buildCategorySelector() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: months.map((month) {
+          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _focusedDay = DateTime(
+                    _focusedDay.year,
+                    months.indexOf(month) + 1,
+                  );
+                });
+                seletedIndex = months.indexOf(month);
+                log("selected: ${months.indexOf(month)}");
+              },
+              child: isSelected
+                  ? ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return MyColors.buttonColors.createShader(bounds);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                            color: Colors.white, // This color is not visible
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Text(
+                          month,
+                          style: FontUtil.customStyle(
+                            fontSize: 10,
+                            fontWeight:
+                                isSelected ? FontWeight.w500 : FontWeight.w400,
+                            textColor: MyColors.monthNameColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6.0, horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                          color: Colors.grey, // This color is not visible
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        month,
+                        style: FontUtil.customStyle(
+                          fontSize: 10,
+                          fontWeight:
+                              isSelected ? FontWeight.w500 : FontWeight.w400,
+                          textColor: MyColors.monthNameColor,
+                        ),
+                      ),
+                    ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -262,4 +355,8 @@ Widget customInfirmaryItems(BuildContext context,{String?illnessHeading, String?
                     ],
                   ),
                 );
+
+
+
+
 }

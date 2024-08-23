@@ -34,6 +34,7 @@ class EndUrl{
    static const String libraryGetSearchList = "Library/GetSearchList/";
    static const String chatList = "Communication/GetMessageDetail/";
    static const String infirmaryGetList = "Infirmary/GetIllnessList/";
+   static const String vaccinationGetList = "Infirmary/GetVaccinationList/";
    static const String activityGetList = "Activity/GetList/";
 
 
