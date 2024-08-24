@@ -31,6 +31,7 @@ static const String examDown = "assets/icons/exam_download.svg";
   static const String noDataFound = "assets/images/noDataFound.svg";
 
   //icons
+  static const String placeholderDriverImage = "assets/icons/placeholder.svg";
   static const String sendIcon = "assets/icons/send.svg";
   static const String notification_icon = "assets/icons/bell-regular.svg";
   static const String edit = "assets/icons/edit.svg";

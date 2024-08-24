@@ -201,7 +201,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   todayTextStyle: FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      textColor: Colors.pink),
+                      textColor: Color.fromARGB(255, 116, 229, 231)),
                   todayDecoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,

@@ -168,6 +168,7 @@ class _EventCalendarState extends State<EventCalendar> {
                       setState(() {
                         _focusedDay = focusedDay;
                       });
+                      isParticularEventDateSelected=false;
 
                       context
                           .read<CalendarEventCubit>()
@@ -181,9 +182,19 @@ class _EventCalendarState extends State<EventCalendar> {
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             textColor: MyColors.greyShade_7);
+                            int attendanceStatus =99;
+                            try{
 
-                        int attendanceStatus =
+                              attendanceStatus =
                            state.calendarEventList?[dayIndex].status == null ? 99 :  state.calendarEventList?[dayIndex].status ?? 99 ;
+
+                            }
+                            catch(e){
+                              attendanceStatus=99;
+
+                            }
+
+                        
 
                         if (attendanceStatus == 3) {
                           defaultStyle = FontUtil.customStyle(
@@ -253,6 +264,10 @@ class _EventCalendarState extends State<EventCalendar> {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       });
+                       context
+                    .read<CalendarEventCubit>()
+                    .filterEventListByDate(_focusedDay, false);
+                      isParticularEventDateSelected=true;
                     },
                     calendarFormat: CalendarFormat.month,
                     calendarStyle: CalendarStyle(
@@ -357,6 +372,7 @@ class _EventCalendarState extends State<EventCalendar> {
                 context
                     .read<CalendarEventCubit>()
                     .getCalendarEvent(_focusedDay.month);
+                    isParticularEventDateSelected=false;
               },
               child: isSelected
                   ? ShaderMask(

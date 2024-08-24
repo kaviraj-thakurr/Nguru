@@ -168,10 +168,10 @@ class _SettingScreenState extends State<SettingScreen> {
               }, listener: (context, state) {
                 if (state is SignoutSuccessState) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("${state.responseMessage}")));
+                      const SnackBar(content: Text("Logout Successfully")));
                 } else if (state is SignoutErrorState) {
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(state.message)));
+                      .showSnackBar(SnackBar(content: Text("Logout Successfully")));
                 }
               })
             ]),

@@ -21,7 +21,7 @@ void onSaveWithDialogPressed(String base64Image) async {
   try {
     // Write the bytes to the file
     final file = File(filePath);
-    await file.writeAsBytes(decodedBytes);
+    await file.writeAsBytes(decodedBytes);  
 
     // Save the file with a dialog (using your existing method)
     final savedFile = await CRFileSaver.saveFileWithDialog(SaveFileDialogParams(

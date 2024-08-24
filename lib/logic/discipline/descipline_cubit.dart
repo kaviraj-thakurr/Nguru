@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/logic/discipline/descipline_state.dart';
-import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/repo/api_calls.dart';
-import 'package:nguru/utils/app_strings.dart';
 
 
 var totalPositiveP;
@@ -39,11 +36,7 @@ List<DisciplineList> disciplineList=[];
       emit(DisciplineErrorState(e.toString()));
     }
   }
-
-
-
-
-    void filterDisciplineListByDate(DateTime selectedDate, bool isOnlyMonthSelected) {
+  void filterDisciplineListByDate(DateTime selectedDate, bool isOnlyMonthSelected) {
       final filteredList =
       isOnlyMonthSelected ? 
       disciplineList

@@ -47,12 +47,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
           Image.asset(MyAssets.background_2),
           Column(
             children: [
+              10.heightBox,
               Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: CustomAppBar(),
+                padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
+                child: dashboardAppBar(),
               ),
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.only(left: 15,right: 15),
                 child: CustomSearchBar(controller: _searchController),
               ),
               Padding(
@@ -142,6 +143,7 @@ Widget buildSelector(
       mainAxisAlignment: MainAxisAlignment.center,
       children: selecterItems.map((month) {
         bool isSelected = focusedDay.month == selecterItems.indexOf(month) + 1;
+        isSelected=true;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: GestureDetector(

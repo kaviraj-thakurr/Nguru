@@ -4,33 +4,33 @@
 
 import 'dart:convert';
 
-AttendenceModel attendenceModelFromJson(String str) => AttendenceModel.fromJson(json.decode(str));
+AttendanceModel attendenceModelFromJson(String str) => AttendanceModel.fromJson(json.decode(str));
 
-String attendenceModelToJson(AttendenceModel data) => json.encode(data.toJson());
+String attendenceModelToJson(AttendanceModel data) => json.encode(data.toJson());
 
-class AttendenceModel {
+class AttendanceModel {
     List<AttendanceCumulativeModel>? attendanceCumulativeModel;
     String? responseCode;
     String? responseMessage;
 
-    AttendenceModel({
+    AttendanceModel({
         this.attendanceCumulativeModel,
         this.responseCode,
         this.responseMessage,
     });
 
-    AttendenceModel copyWith({
+    AttendanceModel copyWith({
         List<AttendanceCumulativeModel>? attendanceCumulativeModel,
         String? responseCode,
         String? responseMessage,
     }) => 
-        AttendenceModel(
+        AttendanceModel(
             attendanceCumulativeModel: attendanceCumulativeModel ?? this.attendanceCumulativeModel,
             responseCode: responseCode ?? this.responseCode,
             responseMessage: responseMessage ?? this.responseMessage,
         );
 
-    factory AttendenceModel.fromJson(Map<String, dynamic> json) => AttendenceModel(
+    factory AttendanceModel.fromJson(Map<String, dynamic> json) => AttendanceModel(
         attendanceCumulativeModel: json["attendanceCumulativeModel"] == null ? [] : List<AttendanceCumulativeModel>.from(json["attendanceCumulativeModel"]!.map((x) => AttendanceCumulativeModel.fromJson(x))),
         responseCode: json["responseCode"],
         responseMessage: json["responseMessage"],

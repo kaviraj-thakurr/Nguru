@@ -27,6 +27,7 @@ import 'package:nguru/screens/infirmary_screen.dart';
 import 'package:nguru/screens/library_screen.dart';
 import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
+import 'package:nguru/screens/time_table_screen.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -235,8 +236,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     content: MyStrings.timeTablesub,
                                     isPngImage: false,
                                     onIconPressed: () {
-                                      // NavigationService.navigateTo(
-                                      //     const CircularScreen(), context);
+                                      NavigationService.navigateTo(
+                                          const TimetableScreen(), context);
                                     },
                                     cardWidth: screenWidth * 0.5,
                                     cardHeight: double.maxFinite,
@@ -252,8 +253,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     cardWidth: screenWidth * 0.35,
                                     image: MyAssets.exams,
                                     onIconPressed: () {
-                                      NavigationService.navigateTo(
-                                          const ExaminationScreen(), context);
+                                      // NavigationService.navigateTo(
+                                      //     const ExaminationScreen(), context);
                                     },
                                   ),
                                 ],

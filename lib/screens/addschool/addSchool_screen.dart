@@ -21,7 +21,6 @@ import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/screens/login/login_screen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-
 class AddSchool extends StatefulWidget {
   final bool isAddSchoolScreen;
   const AddSchool({super.key, required this.isAddSchoolScreen});
@@ -32,17 +31,17 @@ class AddSchool extends StatefulWidget {
 
 class _AddSchoolState extends State<AddSchool> {
   final FocusNode _schoolUrlFocusNode = FocusNode();
-  
-final _formKey = GlobalKey<FormState>();
+
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController schoolUrlController = TextEditingController();
   final TextEditingController subdomainController = TextEditingController();
   final TextEditingController schoolNameController = TextEditingController();
   List<UserModel>? addSchoolList;
- bool isEditable = false;
+  bool isEditable = false;
   Box<UserModel>? box;
   String selectedRadio = '';
 
-   void _toggleEditability() {
+  void _toggleEditability() {
     setState(() {
       isEditable = !isEditable;
       if (isEditable) {
@@ -56,9 +55,7 @@ final _formKey = GlobalKey<FormState>();
 
     addSchoolList = box?.values.toList();
     removeDuplicateSchools(addSchoolList);
-    setState(() {
-      
-    });
+    setState(() {});
     log("fetching: $addSchoolList");
   }
 
@@ -116,58 +113,57 @@ final _formKey = GlobalKey<FormState>();
                   textAlign: TextAlign.center,
                 ),
                 20.heightBox,
-                
                 20.heightBox,
                 Form(
-                      key: _formKey,
+                  key: _formKey,
                   child: Column(
                     children: [
                       Visibility(
-                  visible: widget.isAddSchoolScreen,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.09,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: addSchoolList?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          String schoolNickName =
-                              addSchoolList?[index].schoolNickName ?? "";
-                          return GestureDetector(
-                            onTap: () {
-                              context.read<AddSchoolCubit>().addSchool(
-                                  addSchoolList?[index].schoolUrl ?? "",
-                                  addSchoolList?[index].subDomain ?? "",
-                                  addSchoolList?[index].schoolNickName ?? "",
-                                  isNavigating: false);
-
-                              setState(() {
-                                selectedRadio =
+                        visible: widget.isAddSchoolScreen,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.09,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: addSchoolList?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                String schoolNickName =
                                     addSchoolList?[index].schoolNickName ?? "";
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(left:8.0),
-                              child: customRadioButton(
-                                  context,
-                                  selectedRadio == schoolNickName,
-                                  addSchoolList?[index].schoolNickName ?? "",
-                                  addSchoolList?[index]),
-                            ),
-                          );
-                        }),
-                  ),
-                ),
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.read<AddSchoolCubit>().addSchool(
+                                        addSchoolList?[index].schoolUrl ?? "",
+                                        addSchoolList?[index].subDomain ?? "",
+                                        addSchoolList?[index].schoolNickName ??
+                                            "",
+                                        isNavigating: false);
+
+                                    setState(() {
+                                      selectedRadio = addSchoolList?[index]
+                                              .schoolNickName ??
+                                          "";
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: customRadioButton(
+                                        context,
+                                        selectedRadio == schoolNickName,
+                                        addSchoolList?[index].schoolNickName ??
+                                            "",
+                                        addSchoolList?[index]),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
                       CustomTextFormField(
                         read: !isEditable,
-
-                         suffixIcon: IconButton(
-                icon: SvgPicture.asset(MyAssets.edit),
-                onPressed: _toggleEditability
-              ),
-
+                        suffixIcon: IconButton(
+                            icon: SvgPicture.asset(MyAssets.edit),
+                            onPressed: _toggleEditability),
                         controller: schoolUrlController,
-                         focusNode: _schoolUrlFocusNode,
+                        focusNode: _schoolUrlFocusNode,
                         labelText: MyStrings.schoolUrl,
                         suffixIconAsset: MyAssets.edit,
                         validator: _validateSchoolUrl,
@@ -218,7 +214,7 @@ final _formKey = GlobalKey<FormState>();
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                AddSchool(isAddSchoolScreen: true),
+                                const AddSchool(isAddSchoolScreen: true),
                           ));
                     },
                     child: Text(
@@ -266,28 +262,52 @@ final _formKey = GlobalKey<FormState>();
                       },
                     );
                   }
-                }, listener: (context, state) {
+                }, listener: (context, state) async {
                   if (state is AddSchoolSuccessState) {
-                    final box = Hive.box<UserModel>('listItems');
+                    var box = await Hive.openBox<UserModel>('listItems');
+
+                    var userModel = box.values.toList();
                     final user = UserModel(
                       schoolUrl: "${schoolUrlController.text.trim()}",
                       subDomain: "${subdomainController.text.trim()}",
                       schoolNickName: "${schoolNameController.text.trim()}",
                     );
 
-                    //           bool exists = addSchoolList!.any(
-                    // (e) => e.schoolUrl == schoolName && e.subDomain == subDomain);
+                    try {
+                      UserModel existingUser = userModel.isEmpty
+                          ? UserModel(
+                              schoolUrl: "", subDomain: "", schoolNickName: "")
+                          : userModel.firstWhere(
+                              (user) =>
+                                  user.schoolUrl ==
+                                      schoolUrlController.text.trim() &&
+                                  user.subDomain ==
+                                      subdomainController.text.trim(),
+                            );
+                      if (existingUser.isInBox) {
+                        box.put(existingUser.key, user);
+                      } else {
+                        box.add(user).then((value) async {
+                          var box = await Hive.openBox<UserModel>('listItems');
 
-                    box.add(user).then((value) async {
-                      print("Successs");
-                      var box = await Hive.openBox<UserModel>('listItems');
+                          var userModel = box.values.toList();
 
-                      var userModel = box.values.toList();
+                          log("fetching: $userModel");
+                        }).onError((error, stackTrace) {
+                          print("Faileddddd!!!");
+                        });
+                      }
+                    } catch (e) {
+                      box.add(user).then((value) async {
+                        var box = await Hive.openBox<UserModel>('listItems');
 
-                      log("fetching: $userModel");
-                    }).onError((error, stackTrace) {
-                      print("Faileddddd!!!");
-                    });
+                        var userModel = box.values.toList();
+
+                        log("fetching: $userModel");
+                      }).onError((error, stackTrace) {
+                        print("Faileddddd!!!");
+                      });
+                    }
 
                     NavigationService.navigateTo(
                         LoginScreen(
@@ -295,6 +315,9 @@ final _formKey = GlobalKey<FormState>();
                           schoolLogo: state.schoolPhoto,
                           schoolUrl: schoolUrlController.text +
                               subdomainController.text,
+                              schoolNickName:schoolNameController.text ,
+                              subDomain: subdomainController.text,
+                              trimmedSchoolUrl: schoolUrlController.text,
                         ),
                         context);
                   } else if (state is AddSchoolErrorState) {

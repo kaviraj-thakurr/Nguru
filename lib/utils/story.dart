@@ -9,6 +9,7 @@ import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
+import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/story/story_description.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -134,7 +135,8 @@ class StoryViewState extends State<StoryView>
         );
       } else {
         //  _animationController.dispose();
-        Navigator.of(context).pop(); // Close the StoryView when done
+          //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+     Navigator.pop(context);
       }
     } else if (widget.isAssignmentWidget) {
       if (widget.subjectList!.isEmpty) {
@@ -154,7 +156,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.subjectList!.length - 1) {
@@ -173,7 +175,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));// Close the StoryView when done
         }
       }
     } else if (widget.isCircularWidget) {
@@ -194,7 +196,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.circularList!.length - 1) {
@@ -213,7 +215,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
         }
       }
     } else if (widget.isDisciplineWidget) {
@@ -234,7 +236,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.disciplineList!.length - 1) {
@@ -253,7 +255,7 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-          Navigator.of(context).pop(); // Close the StoryView when done
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));// Close the StoryView when done
         }
       }
     }
@@ -354,7 +356,8 @@ class StoryViewState extends State<StoryView>
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
-            Navigator.of(context).pop();
+            widget.isGalleryWidget ? Navigator.pop(context) :
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));
           }
         },
         child: Stack(

@@ -68,6 +68,7 @@ class _BarChartExampleState extends State<BarChartExample> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),

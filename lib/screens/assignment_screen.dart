@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:nguru/custom_widgets/appbar.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
-import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
@@ -17,6 +15,8 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
+import 'package:nguru/utils/custom_download_file.dart';
+import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
@@ -31,14 +31,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  DateTime currentDate=DateTime.now();
- 
-
+  DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    context.read<AssignmentMonthListCubit>().getAssignmentMonthList(currentDate.month);
+    context
+        .read<AssignmentMonthListCubit>()
+        .getAssignmentMonthList(currentDate.month);
   }
 
   @override
@@ -53,91 +53,95 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding18),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  10.heightBox,
-                  dashboardAppBar(),
-                  10.heightBox,
-                  screenTitleHeader("Attendance",
-                      onPressed: () => Navigator.pop(context)),
-                      20.heightBox,
-                  assignmentCalendar(),
-                  Expanded(
-                    child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
-                      builder: (context, state) {
-                        if (state is AssignmentListLoadingState) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (state is AssignmentListSuccessState) {
-                            if (state.subjectList.isEmpty ) {
-                            return  Center(
-                                child: Column(
-                                children: [
-                                  160.heightBox,
-                                  SvgPicture.asset(
-                                    MyAssets.noDataFound,
-                                    height: height150,
-                                  ),
-                                  5.heightBox,
-                                  Text(
-                                    MyStrings.assignmentTitle,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14.h,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: APP_FONT,
-                                        textColor: MyColors.noDataFoundTitle),
-                                  ),
-                                  Text(
-                                    MyStrings.assignmentSub,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 10.h,
-                                        fontWeight: FontWeight.w400,
-                                        textColor:
-                                            MyColors.noDataFoundSubtitle),
-                                  )
-                                ],
-                              ));
-                          }
-                          return PageView.builder(
-                            controller: _pageController,
-                            itemCount: state.subjectList.length,
-                            onPageChanged: (index) {
-                            },
-                            itemBuilder: (context, index) {
-                              final subject = state.subjectList[index];
+            padding: const EdgeInsets.all(padding20),
+            child: Column(children: [
+              10.heightBox,
+              dashboardAppBar(),
+              10.heightBox,
+              screenTitleHeader("Assignment",
+                  onPressed: () => Navigator.pop(context)),
+              20.heightBox,
+              assignmentCalendar(),
+              Expanded(
+                child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
+                  builder: (context, state) {
+                    if (state is AssignmentListLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is AssignmentListSuccessState) {
+                      if (state.subjectList.isEmpty) {
+                        return Center(
+                            child: Column(
+                          children: [
+                            160.heightBox,
+                            SvgPicture.asset(
+                              MyAssets.noDataFound,
+                              height: height150,
+                            ),
+                            5.heightBox,
+                            Text(
+                              MyStrings.assignmentTitle,
+                              style: FontUtil.customStyle(
+                                  fontSize: 14.h,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: APP_FONT,
+                                  textColor: MyColors.noDataFoundTitle),
+                            ),
+                            Text(
+                              MyStrings.assignmentSub,
+                              style: FontUtil.customStyle(
+                                  fontSize: 10.h,
+                                  fontWeight: FontWeight.w400,
+                                  textColor: MyColors.noDataFoundSubtitle),
+                            )
+                          ],
+                        ));
+                      }
+                      return PageView.builder(
+                        controller: _pageController,
+                        itemCount: state.subjectList.length,
+                        onPageChanged: (index) {},
+                        itemBuilder: (context, index) {
+                           final subjects = state.subjectList;
+                        
+                          return ListView.builder(
+                          //  physics: const NeverScrollableScrollPhysics(),
+                             shrinkWrap: true,
+                            itemCount: subjects.length,
+                            itemBuilder: (context,index) {
+                                final assignments = state.subjectList[index];
                               return ListView.builder(
-                                itemCount: subject.assignments?.length ?? 0,
+                                itemCount: assignments.assignments?.length ?? 0,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final assignment = subject.assignments![index];
-                                  return Padding(
+                                  final assignment = assignments.assignments![index];
+                                  return 
+                                  Padding(
                                     padding: const EdgeInsets.all(padding3),
-                                    child: cardDesign(
-                                      context,
-                                      assignment.assignmentName,
-                                      subject.subjectName,
-                                      assignment.assignmentDetail,
-                                      assignment.assignmentDate,
-                                      assignment
-                                    ),
+                                    child: 
+                                    cardDesign(
+                                        context,
+                                        assignment.assignmentName,
+                                        assignments.subjectName,
+                                        removeHtmlTags(
+                                            "${assignment.assignmentDetail}"),
+                                        assignment.assignmentDate,
+                                        assignment),
                                   );
                                 },
                               );
-                            },
+                            }
                           );
-                        } else if (state is AssignmentListErrorState) {
-                          return Center(child: Text(state.message));
-                        }
-                        return const Center(child: Text(MyStrings.undefinedState));
-                      },
-                    ),
-                  ),
-                ]
-                
+                        },
+                      );
+                    } else if (state is AssignmentListErrorState) {
+                      return Center(child: Text(state.message));
+                    }
+                    return const Center(child: Text(MyStrings.undefinedState));
+                  },
+                ),
               ),
-            ),
+            ]),
           ),
         ],
       ),
@@ -145,8 +149,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   }
 }
 
-Widget cardDesign(
-    BuildContext context, String? title, String? subject, String? description, String?date, Assignment? assignment) {
+Widget cardDesign(BuildContext context, String? title, String? subject,
+    String? description, String? date, Assignment? assignment) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
@@ -182,6 +186,7 @@ Widget cardDesign(
                   style: FontUtil.circularSubtitle,
                   maxLines: 1,
                 ),
+                5.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -197,14 +202,14 @@ Widget cardDesign(
                           gradient: MyColors.assignmentDate,
                           borderRadius: BorderRadius.circular(borderRadius5),
                         ),
-                        child:  Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(padding5),
                               child: Text(
-                                date??"",
+                                date ?? "",
                                 style: TextStyle(
                                   color: MyColors.assignmentDateColor,
                                   fontSize: 12.h,
@@ -216,13 +221,36 @@ Widget cardDesign(
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: true, isCircular: false, isDiscipline: false, assignmentList: assignment, circularList: null, disciplineList:null)));
-
-                      },
-                      icon: SvgPicture.asset(MyAssets.seen),
-                    ),
+                    GestureDetector(
+                        onTap: () => {
+                              assignment?.fileContent != null
+                                  ? onSaveWithDialogPressed(
+                                      assignment?.fileContent ?? "")
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              StoryDescription(
+                                                isCircular: false,
+                                                isAssignment: true,
+                                                isDiscipline: false,
+                                                circularList: null,
+                                                assignmentList: assignment,
+                                                disciplineList: null,
+                                              ))),
+                            },
+                        child: assignment?.fileContent != null
+                            ? SvgPicture.asset(
+                                MyAssets.downloadIcon,
+                                height: 25,
+                                width: 25,
+                              )
+                            : SvgPicture.asset(
+                                MyAssets.seen,
+                                height: 18,
+                                width: 18,
+                                color: MyColors.greyShade_7,
+                              )),
                   ],
                 ),
               ],

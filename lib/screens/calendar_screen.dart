@@ -35,6 +35,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   void initState() {
+    isParticularEventDateSelected=false;
     super.initState();
     initCubit();
   }
@@ -76,7 +77,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     );
                                   }
                                    else if (state is CalendarEventSuccessState &&  cubit.calendarEventList.isNotEmpty) {
-                                    return Padding(
+                                    return isParticularEventDateSelected ?  Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount: state.calendarEventListData.length ,
+                                        itemBuilder: (context,index) {
+                                          return footer(index, context,
+                                              state.calendarEventListData);
+                                        }
+                                      ),
+                                    )
+                                    :
+
+                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ListView.builder(
                                         padding: EdgeInsets.zero,
@@ -84,6 +98,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         itemBuilder: (context,index) {
                                           return footer(index, context,
                                               cubit.calendarEventList);
+                                        }
+                                      ),
+                                    )
+
+                                    ;
+                                  } 
+
+                                  else if (state is CalendarEventFilteredState ) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount: state.calendarEventFilteredList?.length ,
+                                        itemBuilder: (context,index) {
+                                          return footer(index, context,
+                                              state.calendarEventFilteredList ?? []);
                                         }
                                       ),
                                     );

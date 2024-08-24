@@ -27,6 +27,7 @@ import 'package:nguru/logic/gallery_item_list/gallery_item_list_cubit.dart';
 import 'package:nguru/logic/infirmary_all/infirmary/infirmary_cubit.dart';
 import 'package:nguru/logic/library/history/library_history_cubit.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
+import 'package:nguru/logic/library/reserve_book/reserve_book_cubit.dart';
 import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/main_screen/main_screen_cubit.dart';
@@ -180,6 +181,9 @@ class MyApp extends StatelessWidget {
          BlocProvider(
           create: (context) => LibrarySearchBookCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => ReserveBookCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -228,6 +232,10 @@ class _NguruMainScreenState extends State<NguruMainScreen> {
           } else if (state is MainScreenAddSchoolScreenState) {
            return const AddSchool(isAddSchoolScreen: false);
          //  return const NguruDashboardScreen();
+            return const
+            // NguruDashboardScreen();
+            
+            AddSchool(isAddSchoolScreen: false);
           } else if (state is MainScreenErrorState) {
             return const Scaffold(
                 body: Center(
@@ -236,7 +244,7 @@ class _NguruMainScreenState extends State<NguruMainScreen> {
           } else {
             return const Scaffold(
                 body: Center(
-              child: Text("Undifined state!"),
+              child: Text("Undefined state!"),
             ));
           }
         },

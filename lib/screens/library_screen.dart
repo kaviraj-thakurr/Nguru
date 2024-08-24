@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nguru/custom_widgets/custom_alert_dialog.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/custom_tags.dart';
@@ -12,6 +13,8 @@ import 'package:nguru/logic/library/history/library_history_cubit.dart';
 import 'package:nguru/logic/library/history/library_history_state.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_state.dart';
+import 'package:nguru/logic/library/reserve_book/reserve_book_cubit.dart';
+import 'package:nguru/logic/library/reserve_book/reserve_book_state.dart';
 import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
 import 'package:nguru/logic/library/search_book/search_book_state.dart';
 import 'package:nguru/models/library_book_search_model.dart';
@@ -38,25 +41,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   List<String> months = [
     "Issued Book",
-    "Reserved",
+    "Reserve",
     "History",
   ];
   int seletedIndex = 0;
 
   DateTime? _selectedDay;
 
+  ScrollController searchBookController= ScrollController();
+
   @override
   void initState() {
     context.read<LibraryIssueBookCubit>().getLibraryIssueBook();
     context.read<LibraryHistoryCubit>().getLibraryHistory();
-  //  context.read<LibrarySearchBookCubit>().getLibrarySearchBook();
+      context.read<LibrarySearchBookCubit>().getLibrarySearchBook();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),
@@ -70,11 +74,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     20.heightBox,
-                    dashboardAppBar(),
-                    CustomSearchBar(
-                      controller: searchBarController,
-                      hintText: MyStrings.search,
-                      onSubmitted:(String value)=> value.isEmpty ? null : context.read<LibrarySearchBookCubit>().getLibrarySearchBook(searchQuery: searchBarController.text.toString()),
+                    Padding(
+                     padding: const EdgeInsets.only(left: 10,right: 10),
+                      child: dashboardAppBar(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10,right: 10),
+                      child: CustomSearchBar(
+                        controller: searchBarController,
+                        hintText: MyStrings.search,
+                        onSubmitted: (String value) => value.isEmpty
+                            ? null
+                            : context
+                                .read<LibrarySearchBookCubit>()
+                                .getLibrarySearchBook(
+                                    searchQuery:
+                                        searchBarController.text.toString()),
+                      ),
                     ),
                     20.heightBox,
                     screenTitleHeader("Library",
@@ -86,13 +102,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
                         _buildCategorySelector(),
                       ],
                     ),
+                    10.heightBox,
                     seletedIndex == 0
                         ? issuedBook(context)
                         : seletedIndex == 1
-                            ? reserveBook(context)
+                            ? Expanded(child: reserveBook(context))
                             : seletedIndex == 2
                                 ? historyBook(context)
-                                : SizedBox(),
+                                :const SizedBox(),
                     footer(context),
                   ],
                 ),
@@ -117,6 +134,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               );
             } else if (state is LibraryHistorySuccessState) {
               return GridView.builder(
+                 padding: EdgeInsets.zero,
                   itemCount: state.libraryHistory.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       mainAxisExtent: 200,
@@ -153,13 +171,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget reserveBook(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.66,
+      height: MediaQuery.of(context).size.height * 0.6,
       width: double.infinity,
       child: BlocConsumer<LibrarySearchBookCubit, LibrarySearchBookState>(
           listener: (context, state) {},
           builder: (context, state) {
-
-             if (state is LibrarySearchBookInitialState) {
+            if (state is LibrarySearchBookInitialState) {
               return Center(
                 child: Text(
                   "No Search Yet!",
@@ -168,26 +185,36 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
-              );;
-            }
-
-           else if (state is LibrarySearchBookLoadingState) {
+              );
+              ;
+            } else if (state is LibrarySearchBookLoadingState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state is LibrarySearchBookSuccessState) {
-              return state.librarySearch.isEmpty ? 
-               Center(child: Text("No Book Found!",style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),)) 
-              :  GridView.builder(
-                  itemCount: state.librarySearch.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: 200,
-                      crossAxisSpacing: 10,
-                      crossAxisCount: 3),
-                  itemBuilder: (context, index) {
-                    return  book(context,
-                        librarySearch: state.librarySearch[index]);
-                  });
+              return state.librarySearch.isEmpty
+                  ? Center(
+                      child: Text(
+                      "No Book Found!",
+                      style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.boldTextColor),
+                    ))
+                    
+                  : GridView.builder(
+                    padding: EdgeInsets.zero,
+                    controller: searchBookController,
+                      itemCount: state.librarySearch.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisExtent: 200,
+                              crossAxisSpacing: 10,
+                              crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        return book(context,
+                            librarySearch: state.librarySearch[index]);
+                      });
               //  return Center(child: Text("data"),);
             } else if (state is LibrarySearchBookErrorState) {
               return Center(
@@ -227,13 +254,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
               );
             } else if (state is LibraryIssueBookSuccessState) {
               return GridView.builder(
+                 padding: EdgeInsets.zero,
                   itemCount: state.libraryIssued.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       mainAxisExtent: 200,
                       crossAxisSpacing: 10,
                       crossAxisCount: 3),
                   itemBuilder: (context, index) {
-                    return  book(context,
+                    return book(context,
                         libraryIssued: state.libraryIssued[index]);
                   });
             } else if (state is LibraryIssueBookErrorState) {
@@ -274,121 +302,127 @@ class _LibraryScreenState extends State<LibraryScreen> {
         librarySearch?.accessionNo;
     var dueDate = libraryHistory?.returnDate ?? libraryIssued?.dueDate;
     var issueDate = libraryHistory?.issueDate ?? libraryIssued?.issueDate;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Container(
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: MyColors.boarderColor,
-            width: 2.0,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              bookName ?? "Book Name: N/A",
-              maxLines: 1,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: FontUtil.customStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  textColor: MyColors.boldTextColor),
-            ),
-            Text(
-              //libraryIssued?.bookName ??
-              authorName ?? "Author Name: N/A",
-              style: FontUtil.customStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  textColor: MyColors.fadedTextColor),
-            ),
-            Stack(
-              children: [
-                Image.asset(
-                  MyAssets.bookCover,
-                  scale: 4,
+    bool isBookSelected = false;
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return GestureDetector(
+          onTap: () => setState(() {
+            isBookSelected = !isBookSelected;
+            customAlertDiaog(
+                "Reserve Book",
+                "Want to reserve ${librarySearch?.bookName ?? ""} !",
+                "Cancel",
+                "Reserve",
+                context: context,
+                onSubmit: () => context.read<ReserveBookCubit>().reserveBook(
+                    librarySearch?.bookId,
+                    librarySearch?.accessionNo,
+                    librarySearch?.issueReturnId)
+                  .then((value) => Navigator.pop(context)).then((value) =>
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content:
+                              BlocBuilder<ReserveBookCubit, ReserveBookState>(
+                                  builder: (context, state) {
+                        if (state is ReserveBookLoadingState) {
+                          return const Text("");
+                        }
+                        if (state is ReserveBookSuccessState) {
+                          return Text(
+                              "Reserve ${librarySearch?.bookName ?? ""} Successfully");
+                        } else if (state is ReserveBookErrorState) {
+                          return Text("${state.message}");
+                        } else {
+                          return const SizedBox();
+                        }
+                      })))).then((value) =>{} ),
+                onCancel: () {
+                  isBookSelected=!isBookSelected;
+                  Navigator.pop(context);} );
+          }),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color:
+                  //  isBookSelected
+                  //     ?
+                  //      MyColors.appColor2
+                  //     :
+                       MyColors.boarderColor,
+                  width: 2.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 28, top: 10),
-                  child: SizedBox(
-                      height: 17,
-                      width: 50,
-                      child: customTags(
-                          verticalPadding: 0.1,
-                          horizontalPadding: 0.1,
-                          accessionNo.toString(),
-                          MyColors.greenShade_4,
-                          MyColors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 6.5)),
-                ),
-                librarySearch?.accessionNo == null
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 90, left: 6),
-                        child: SizedBox(
-                            height: 17,
-                            width: 50,
-                            child: customTags(
-                                //  currentDateForCheckingDueDate.isAfter(DateFormat("dd MMM yyyy").parse(libraryIssued?.dueDate ?? ""))
-                                //   ? libraryIssued?.dueDate : libraryIssued?.issueDate ?? "April 24, 2024",
-                                dueDate.toString(),
-
-                                // currentDateForCheckingDueDate.isAfter(
-                                //         DateFormat("dd MMM yyyy")
-                                //             .parse(libraryIssued?.dueDate ?? ""))
-                                currentDateForCheckingDueDate.isAfter(
-                                        DateFormat("dd MMM yyyy")
-                                            .parse(dueDate ?? ""))
-                                    ? MyColors.redShade_3
-                                    : MyColors.yellowShade_5,
-                                MyColors.white,
-                                verticalPadding: 0.1,
-                                horizontalPadding: 0.1,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 6)),
-                      )
-                    : const SizedBox(),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "User Accession No: ",
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: FontUtil.customStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w500,
-                      textColor: MyColors.fadedTextColor.withOpacity(0.7)),
-                ),
-                Flexible(
-                  child: Text(
-                    "$accessionNo",
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    bookName ?? "Book Name: N/A",
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: FontUtil.customStyle(
-                        fontSize: 8,
+                        fontSize: 10,
                         fontWeight: FontWeight.w600,
+                        textColor: MyColors.boldTextColor),
+                  ),
+                  Text(
+                    authorName ?? "Author Name: N/A",
+                    style: FontUtil.customStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
                         textColor: MyColors.fadedTextColor),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                librarySearch?.accessionNo == null
-                    ? Text(
-                        "Issue Date: ",
+                  Stack(
+                    children: [
+                      Image.asset(
+                        MyAssets.bookCover,
+                        scale: 4,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 28, top: 10),
+                        child: SizedBox(
+                            height: 17,
+                            width: 50,
+                            child: customTags(
+                                verticalPadding: 0.1,
+                                horizontalPadding: 0.1,
+                                accessionNo.toString(),
+                                MyColors.greenShade_4,
+                                MyColors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 6.5)),
+                      ),
+                      librarySearch?.accessionNo == null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 90, left: 6),
+                              child: SizedBox(
+                                  height: 17,
+                                  width: 50,
+                                  child: customTags(
+                                      dueDate.toString(),
+                                      currentDateForCheckingDueDate.isAfter(
+                                              DateFormat("dd MMM yyyy")
+                                                  .parse(dueDate ?? ""))
+                                          ? MyColors.redShade_3
+                                          : MyColors.yellowShade_5,
+                                      MyColors.white,
+                                      verticalPadding: 0.1,
+                                      horizontalPadding: 0.1,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 6)),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "User Accession No: ",
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
@@ -397,25 +431,57 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             fontWeight: FontWeight.w500,
                             textColor:
                                 MyColors.fadedTextColor.withOpacity(0.7)),
-                      )
-                    : const SizedBox(),
-                librarySearch?.accessionNo == null
-                    ? Text(
-                        issueDate.toString(),
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: FontUtil.customStyle(
-                            fontSize: 8,
-                            fontWeight: FontWeight.w600,
-                            textColor: MyColors.fadedTextColor),
-                      )
-                    : const SizedBox(),
-              ],
-            )
-          ],
-        ),
-      ),
+                      ),
+                      Flexible(
+                        child: Text(
+                          "$accessionNo",
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: FontUtil.customStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.fadedTextColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      librarySearch?.accessionNo == null
+                          ? Text(
+                              "Issue Date: ",
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: FontUtil.customStyle(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w500,
+                                  textColor:
+                                      MyColors.fadedTextColor.withOpacity(0.7)),
+                            )
+                          : const SizedBox(),
+                      librarySearch?.accessionNo == null
+                          ? Text(
+                              issueDate.toString(),
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: FontUtil.customStyle(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w600,
+                                  textColor: MyColors.fadedTextColor),
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -470,15 +536,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ),
             ],
           )
-        : seletedIndex == 1
-            ? Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: PrimaryButton(
-                    title: "Reserved",
-                    onPressed: () {
-                      customModalBottomSheet(context);
-                    }),
-              )
+        // : seletedIndex == 1
+        //     ? Padding(
+        //         padding: const EdgeInsets.all(10.0),
+        //         child: PrimaryButton(
+        //             title: "Reserve",
+        //             onPressed: () {
+        //               customModalBottomSheet(context);
+        //             }),
+        //       )
             : seletedIndex == 2
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -534,7 +600,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   Widget customCalendar(BuildContext context) {
     return TableCalendar(
- 
       rowHeight: 45,
       daysOfWeekHeight: 20,
       daysOfWeekStyle: DaysOfWeekStyle(
@@ -590,8 +655,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 
   Widget buildMonthSelector() {
-
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -608,6 +671,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     _focusedDay.year,
                     months.indexOf(month) + 1,
                   );
+                 
                 });
               },
               child: isSelected
@@ -685,7 +749,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       borderRadius: BorderRadius.circular(30)),
                 ),
                 10.heightBox,
-              //  buildMonthSelector(),
+                //  buildMonthSelector(),
                 10.heightBox,
                 customCalendar(context),
                 //   CustomCalendar(),
@@ -708,15 +772,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget _buildCategorySelector() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only( right: 8.0),
+      padding: const EdgeInsets.only(right: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
+          bool isSelected = _focusedDay.month == months.indexOf(month) +1;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
               onTap: () {
+                 isSelected = _focusedDay.month == months.indexOf(month) + 1;
                 setState(() {
                   _focusedDay = DateTime(
                     _focusedDay.year,
@@ -725,6 +790,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 });
                 seletedIndex = months.indexOf(month);
                 log("selected: ${months.indexOf(month)}");
+                 log("seleccccTttttt: $seletedIndex");
+                  seletedIndex == 0 
+                  ? context.read<LibraryIssueBookCubit>().getLibraryIssueBook()
+                   : seletedIndex ==1 ?context.read<LibrarySearchBookCubit>().getLibrarySearchBook()
+                   : seletedIndex ==2 ? context.read<LibraryHistoryCubit>().getLibraryHistory()
+                   :null;
               },
               child: isSelected
                   ? ShaderMask(

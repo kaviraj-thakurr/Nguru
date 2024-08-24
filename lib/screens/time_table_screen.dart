@@ -98,6 +98,9 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
     );
   }
 
+
+  
+
   Widget timetablePage(BuildContext context, List<ListTimeTable>? list) {
     if (list == null || list.isEmpty) {
       return const Center(child: Text("No data available"));
@@ -293,7 +296,9 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 ),
                 20.widthBox,
                 Text(
-                  teacherName,
+                 teacherName.length > 23 ? '${teacherName.substring(0, 23)}.' : teacherName,
+                
+                 
                   style: FontUtil.customStyle(
                     fontSize: 17.h,
                     fontWeight: FontWeight.w500,

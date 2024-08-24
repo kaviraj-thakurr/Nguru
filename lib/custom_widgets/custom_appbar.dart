@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
@@ -9,7 +7,6 @@ import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/notification/notification_state.dart';
 import 'package:nguru/screens/Communication/communication.dart';
-import 'package:nguru/screens/contact_screen.dart';
 import 'package:nguru/screens/notification_screen.dart';
 import 'package:nguru/screens/transport/transport_screen.dart';
 
@@ -131,8 +128,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: selectedIcon == 'travel' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-                    // NavigationService.navigateTo(
-                    //     const TransportScreen(), context);
+                    NavigationService.navigateTo(
+                        const TransportScreen(), context);
                     setState(() {
                       selectedIcon = 'travel';
                     });
@@ -151,8 +148,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         selectedIcon == 'message' ? MyColors.appColor1 : null,
                   ),
                   onPressed: () {
-                    // NavigationService.navigateTo(
-                    //     const CommunicationScreen(), context);
+                    NavigationService.navigateTo(
+                        const CommunicationScreen(), context);
                     setState(() {
                       selectedIcon = 'message';
                     });
@@ -203,8 +200,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 : null,
                           ),
                           onPressed: () {
-                            // NavigationService.navigateTo(
-                            //     const NotificationScreen(), context);
+                            NavigationService.navigateTo(
+                                const NotificationScreen(), context);
                             setState(() {
                               selectedIcon = 'notifications';
                             });

@@ -24,21 +24,51 @@ class EndUrl{
    static const String signInLogIn = "SignIn/Logout/";
    static const String changeUpdatePassword = "ChangePassword/Update";
 
+
+
+// ATTENDACNE SCREEN
    static const String attendanceGetBarChart = "Attendance/GetBarChart/";
    static const String attendanceGetMonthWise = "Attendance/GetMonthwise/";
+
+
+
+// FEE
    static const String feeGetList = "Fee/GetList/";
+
+
+// DISCIPLINE SCREEN
    static const String diciplineGetList = "Discipline/GetList/";
+
+
+// CALENDAR EVENT SCREEN
    static const String calendarEventGetList = "CalendarEvent/GetList/";
+
+
+// LIBRARY SCREEN
    static const String libraryGetIssuedList = "Library/GetIssuedList/";
    static const String libraryGetHistoryList = "Library/GetHistoryList/";
-   static const String libraryGetSearchList = "Library/GetSearchList/";
+   static const String libraryGetSearchList = "Library/GetSearchList";
+   static const String libraryReserveBook = "Library/ReserveBook";
+
    static const String chatList = "Communication/GetMessageDetail/";
+
+// INFIRMARY SCREEN
    static const String infirmaryGetList = "Infirmary/GetIllnessList/";
    static const String vaccinationGetList = "Infirmary/GetVaccinationList/";
+
+// ACTIVITY SCREEN
    static const String activityGetList = "Activity/GetList/";
 
 
+
+// PHOTO GALLERY SCREEN
    static const String photoGalleryGetDetList = "PhotoGallery/GetDetList";
+
+
+// CUMULATIVE ATTENDANCE 
    static const String attendanceGetCumulativeAttendance = "Attendance/GetCumulativeAttendance";
+
+
+// SIGN OUT
    static const String signInLogout = "SignIn/Logout";
 }

@@ -72,95 +72,97 @@ class _CircularScreenState extends State<CircularScreen> {
         )),
         Padding(
           padding: const EdgeInsets.all(padding20),
-          child: SafeArea(
-            child: Column(
-              children: [
-                dashboardAppBar(),
-                CustomSearchBar(controller: searchController,
-                
+          child: Column(
+            children: [
+              10.heightBox,
+              dashboardAppBar(),
+              5.heightBox,
+              CustomSearchBar(controller: searchController,
               
-                onTap: () {
-                   context.read<CircularCubit>().getCurrentCircular(month: currentDate);
-                },),
-                screenTitleHeader(MyStrings.circular,
-                    onPressed: () => Navigator.pop(context)),
-                5.heightBox,
-                circularCalendar(),
-                Expanded(
-                  child: BlocBuilder<CircularCubit, CircularState>(
-                    builder: (context, state) {
-                      if (state is CircularLoadingState) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state is CircularSuccessState) {
-                        final circularsToShow = searchController.text.isEmpty
-                            ? state.circularList
-                            : filteredCirculars;
-                        return circularsToShow.isEmpty
-                            ? Center(
-                                child: Column(
-                                children: [
-                                  160.heightBox,
-                                  SvgPicture.asset(
-                                    MyAssets.noDataFound,
-                                    height: height150,
-                                  ),
-                                  5.heightBox,
-                                  Text(
-                                    MyStrings.circularTitle,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14.h,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: APP_FONT,
-                                        textColor: MyColors.noDataFoundTitle),
-                                  ),
-                                  Text(
-                                    MyStrings.circularSubTittle,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 10.h,
-                                        fontWeight: FontWeight.w400,
-                                        textColor:
-                                            MyColors.noDataFoundSubtitle),
-                                  )
-                                ],
-                              ))
-                            : PageView.builder(
-                                itemCount: (circularsToShow.length / 11).ceil(),
-                                itemBuilder: (context, pageIndex) {
-                                  final startIndex = pageIndex * 11;
-                                  final endIndex =
-                                      (startIndex + 11) > circularsToShow.length
-                                          ? circularsToShow.length
-                                          : (startIndex + 11);
-                                  final circulars = circularsToShow.sublist(
-                                      startIndex, endIndex);
-
-                                  return ListView.builder(
-                                    itemCount: circulars.length,
-                                    itemBuilder: (context, index) {
-                                      final circular = circulars[index];
-                                      return Column(
-                                        children: [
-                                          cardDesign(
-                                            context: context,
-                                            circular: circular,
-                                          ),
-                                          AppGapping.padding10
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                      } else if (state is CircularErrorState) {
-                        return Center(child: Text(state.message));
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
+            
+              onTap: () {
+                 context.read<CircularCubit>().getCurrentCircular(month: currentDate);
+              },),
+              10.heightBox,
+              screenTitleHeader(MyStrings.circular,
+                  onPressed: () => Navigator.pop(context)),
+              5.heightBox,
+              circularCalendar(),
+              5.heightBox,
+              Expanded(
+                child: BlocBuilder<CircularCubit, CircularState>(
+                  builder: (context, state) {
+                    if (state is CircularLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is CircularSuccessState) {
+                      final circularsToShow = searchController.text.isEmpty
+                          ? state.circularList
+                          : filteredCirculars;
+                      return circularsToShow.isEmpty
+                          ? Center(
+                              child: Column(
+                              children: [
+                                160.heightBox,
+                                SvgPicture.asset(
+                                  MyAssets.noDataFound,
+                                  height: height150,
+                                ),
+                                5.heightBox,
+                                Text(
+                                  MyStrings.circularTitle,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14.h,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: APP_FONT,
+                                      textColor: MyColors.noDataFoundTitle),
+                                ),
+                                Text(
+                                  MyStrings.circularSubTittle,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 10.h,
+                                      fontWeight: FontWeight.w400,
+                                      textColor:
+                                          MyColors.noDataFoundSubtitle),
+                                )
+                              ],
+                            ))
+                          : PageView.builder(
+                              itemCount: (circularsToShow.length / 11).ceil(),
+                              itemBuilder: (context, pageIndex) {
+                                final startIndex = pageIndex * 11;
+                                final endIndex =
+                                    (startIndex + 11) > circularsToShow.length
+                                        ? circularsToShow.length
+                                        : (startIndex + 11);
+                                final circulars = circularsToShow.sublist(
+                                    startIndex, endIndex);
+          
+                                return ListView.builder(
+                                  itemCount: circulars.length,
+                                  itemBuilder: (context, index) {
+                                    final circular = circulars[index];
+                                    return Column(
+                                      children: [
+                                        cardDesign(
+                                          context: context,
+                                          circular: circular,
+                                        ),
+                                        AppGapping.padding10
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                    } else if (state is CircularErrorState) {
+                      return Center(child: Text(state.message));
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
-                
-              ],
-            ),
+              ),
+              
+            ],
           ),
         ),
       ]),

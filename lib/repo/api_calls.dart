@@ -102,7 +102,10 @@ class AuthRepo {
   Future<ForgetPassWordModel> forgotPassword(String userName) async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.forgetPassword, data: {
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.forgetPassword,
+             data: {
         "deviceToken":
             "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
         "deviceType": "1",
@@ -144,7 +147,9 @@ class AuthRepo {
         "type": 0,
         "userID": await SharedPref.getUserID(),
         "year": 0
-      });
+      }, 
+      
+      );
       var result = DashboardModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
@@ -191,7 +196,7 @@ class AuthRepo {
     }
   }
 
-  Future<AttendenceModel> fetchAttendanceData() async {
+  Future<AttendanceModel> fetchAttendanceData() async {
     try {
       final res = await _myService.networkPost(
         isStagingLink: true,
@@ -206,7 +211,7 @@ class AuthRepo {
         },
       );
 
-      var result = AttendenceModel.fromJson(json.decode(res.toString()));
+      var result = AttendanceModel.fromJson(json.decode(res.toString()));
       return result;
     } catch (e) {
       print(e.toString());
@@ -468,7 +473,7 @@ class AuthRepo {
   }) async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.changeUpdatePassword, data: {
+          await _myService.networkPost(url: EndUrl.changeUpdatePassword,isStagingLink: true, data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -481,10 +486,10 @@ class AuthRepo {
         "pageNumber": 0,
         "pageSize": 0,
         "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl":await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSchoolUrl(),
+        "studentID": await SharedPref.getSessionId(),
+        "subjectID":0,
         "type": 0,
         "userID": await SharedPref.getUserID(),
         "year": 0
@@ -579,10 +584,7 @@ class AuthRepo {
 
   Future<TimeTableModel> getTimeTableList() async {
     try {
-      final res = await _myService.networkPost(
-        isStagingLink: true,
-        url: EndUrl.timeTable,
-         data: {
+      final res = await _myService.networkPost(url: EndUrl.timeTable,isStagingLink: true, data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -613,27 +615,27 @@ class AuthRepo {
   Future<NotificationListModel> getNotificationList() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.notificationList, data: {
+          await _myService.networkPost(url: EndUrl.notificationList,isStagingLink: true, data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
         "deviceToken":
             "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-        "deviceType": "1",
-        "downloadAttachment": 0,
+         "deviceType": "1",
+         "downloadAttachment": 0,
         "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 10,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
+         "messageTypeId": 0,
+         "month": 0,
+         "pageNumber": 1,
+         "pageSize": 10,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+         "subjectID": 0,
+         "type": 0,
+        "userID": await SharedPref.getUserID(),
+         "year": 0
       });
       NotificationListModel notificationListModel =
           notificationListModelFromJson(res.toString());
@@ -648,7 +650,7 @@ class AuthRepo {
   Future<TransportDetails> getTransportDetails() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.transportDetails, data: {
+          await _myService.networkPost(url: EndUrl.transportDetails,isStagingLink: true, data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -658,13 +660,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getStudentID(),
         "year": 0
       });
       TransportDetails transportDetails =
@@ -679,7 +681,10 @@ class AuthRepo {
   Future<CommunicationModel> getCommunicationDetails() async {
     try {
       final res =
-          await _myService.networkPost(url: EndUrl.communicationDetails, data: {
+          await _myService.networkPost(
+            isStagingLink: true,
+            url: EndUrl.communicationDetails,
+             data: {
         "appMessageID": 0,
         "circularID": 0,
         "contentType": 0,
@@ -689,13 +694,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 1,
         "pageSize": 8,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID":await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID": await SharedPref.getUserID(),
         "year": 0
       });
       CommunicationModel communicationModel =
@@ -709,7 +714,10 @@ class AuthRepo {
 
   Future<ChatSendButton> sendMessageButton(String? message) async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.sendMessage, data: {
+      final res = await _myService.networkPost(
+        isStagingLink: true,
+        url: EndUrl.sendMessage,
+         data: {
         "appMessageID": 20,
         "circularID": 0,
         "content": message,
@@ -721,13 +729,13 @@ class AuthRepo {
         "month": 0,
         "pageNumber": 0,
         "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
         "subjectID": 0,
         "type": 0,
-        "userID": "6135",
+        "userID":await SharedPref.getUserID(),
         "year": 0
       });
       ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
@@ -884,7 +892,7 @@ class AuthRepo {
     }
   }
 
-  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+  ////////////////////////////////////////////////      LIBRARY      //////////////////////////////////////////////////////
 
   Future<LibraryIssuedBookModel> getLibraryIssuedBook() async {
     try {
@@ -898,8 +906,8 @@ class AuthRepo {
   "accessionNo": 1,
   "issueReturnId": 1,
   "type": 1,
-  "pageSize": 10,
-  "pageNumber": 0,
+  "pageSize": 1,
+  "pageNumber": 1,
   "userID": await SharedPref.getUserID(),
   "schoolID": 1,
   "studentID": await SharedPref.getStudentID(),
@@ -915,7 +923,7 @@ class AuthRepo {
     }
   }
 
-  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+// LIBRARY HISTORY
 
   Future<LibraryHistoryModel> getLibraryHistory({int? monthNumber}) async {
     try {
@@ -928,7 +936,7 @@ class AuthRepo {
   "accessionNo": 1,
   "issueReturnId": 1,
   "type": 1,
-  "pageSize": 1,
+  "pageSize": 12,
   "pageNumber": 1,
   "userID": await SharedPref.getUserID(),
   "schoolID": await SharedPref.getSchoolID(),
@@ -945,7 +953,9 @@ class AuthRepo {
     }
   }
 
-  ////////////////////////////////////////////////     GET LIBRARY ISSUED BOOK LIST DATA      //////////////////////////////////////////////////////
+
+  // LIBRARY SEARCH
+
 
   Future<LibrarySearchBookModel> getLibrarySearchList(
       {String? searchQuery}) async {
@@ -962,8 +972,8 @@ class AuthRepo {
   "bookName": "",
   "keyword": "$searchQuery",
   "authorName": "",
-  "pageSize": 7,
-  "pageNumber": 8,
+  "pageSize": 12,
+  "pageNumber": 1,
   "sessionID": await SharedPref.getSessionId(),
 });
       LibrarySearchBookModel libraryHistoyListResponse =
@@ -974,6 +984,50 @@ class AuthRepo {
       throw Exception("Failed to fetch library book search list: $e");
     }
   }
+
+
+
+// RESERVE A BOOK
+
+  Future<Map<String,String>> reserveBook(int? bookID, int? accessionNo, int? issueReturnId) async {
+  try {
+    // Making the POST request
+    final response = await _myService.networkPost(
+      isStagingLink: true,
+      url: EndUrl.libraryReserveBook,
+      data: {
+        "bookID": bookID,
+        "accessionNo": accessionNo,
+        "issueReturnId": issueReturnId,
+        "type": 1,
+        "pageSize": 12,
+        "pageNumber": 1,
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolURL": await SharedPref.getSchoolUrl(),
+      },
+    );
+    Map<String, dynamic> res = response.data;
+    Map<String,String> reservedResponse= {
+      "responseCode": "${res["responseCode"]}",
+      "responseMessage": "${res["responseMessage"]}"
+    };
+    
+    return reservedResponse;
+  } catch (e) {
+    log(e.toString());
+    throw Exception("Failed to fetch reserve book: $e");
+  }
+}
+
+
+
+
+
+  ////////////////////////////////////////////////      Comunication      //////////////////////////////////////////////////////
+
 
   Future<ListCommunicationModel> getCommunicationList() async {
     try {
