@@ -9,6 +9,10 @@ import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/notification_list/notification_list_cubit.dart';
 import 'package:nguru/logic/notification_list/notification_list_state.dart';
 import 'package:nguru/models/notificationlist_model.dart';
+import 'package:nguru/screens/Examination/examination_screen.dart';
+import 'package:nguru/screens/attendance/attendace_card_screen.dart';
+import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
+import 'package:nguru/screens/attendance/attendence_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
@@ -110,37 +114,60 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  Widget buildNotificationList(List<NotificationList> notifications) {
-    return ListView.builder(
-      itemCount: notifications.length,
-      itemBuilder: (context, index) {
-        final notification = notifications[index];
+Widget buildNotificationList(List<NotificationList> notifications) {
+  return ListView.builder(
+    itemCount: notifications.length + 1, // Adding 1 to include the loading indicator
+    itemBuilder: (context, index) {
+      if (index == notifications.length) {
+        // Show loading indicator if at the end of the list
         return Padding(
-          padding: const EdgeInsets.all(padding5),
-          child: GestureDetector(
-            onTap: () => handleNotificationTap(notification),
-            child: cardDesign(
-              context,
-              notification.notificationHeader,
-              notification.createdOn,
-              notification.notificationDetail,
-            ),
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: CircularProgressIndicator(),
           ),
         );
-      },
-    );
-  }
+      }
+
+      final notification = notifications[index];
+      return Padding(
+        padding: const EdgeInsets.all(padding5),
+        child: GestureDetector(
+          onTap: () => handleNotificationTap(notification),
+          child: cardDesign(
+            context,
+            notification.notificationHeader,
+            notification.createdOn,
+            notification.notificationDetail,
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
   void handleNotificationTap(NotificationList notification) {
     if (notification.notificationHeader == "Assignment Notification") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>const AssignmentScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn,)));
     } else if (notification.notificationHeader == "Circular Notification") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const CircularScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>  CircularScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn?.month,)));
     } else if (notification.notificationHeader == "Discipline Notification") {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>const DisciplineScreen()));
     }else if (notification.notificationHeader == "TimeTable Notification") {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>const TimetableScreen()));
       }
+      else if(notification.notificationHeader == "Photo Gallery Notification"){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const GalleryScreen()));
+      }
+
+      else if(notification.notificationHeader == "Attendance Notification"){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen(month: notification.createdOn?.month,)));
+      }
+
+      else if(notification.notificationHeader == "Exam Report Notification"){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ExaminationScreen()));
+      }
+
       else if(notification.notificationHeader == "Photo Gallery Notification"){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>const GalleryScreen()));
       }
@@ -202,7 +229,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           subtitle ?? 'Description Not Available',
                           style: FontUtil.customStyle(
                             fontSize: 14.h,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             textColor: MyColors.periodOrTimeColor,
                           ),
                           overflow: TextOverflow.ellipsis,

@@ -108,7 +108,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
         var userModel = box.values.toList();
         debugPrint("fetching: $userModel");
       }).onError((error, stackTrace) {
-        debugPrint("Faileddd!!!");
+        debugPrint("Failed!!!");
       });
     }
   }

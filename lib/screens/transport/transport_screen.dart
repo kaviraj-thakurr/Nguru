@@ -124,7 +124,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       style: FontUtil.customStyle(
                           fontSize: 13.h,
                           fontWeight: FontWeight.w500,
-                          textColor: MyColors.busStop),
+                          textColor: MyColors.circular),
                     ),
                       ],
                     ),
@@ -147,6 +147,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       ),
                       Text(
                        busStop??"-",
+                       textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,
@@ -170,6 +171,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       ),
                       Text(
                         dropOff??"",
+                         textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,

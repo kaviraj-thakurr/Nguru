@@ -618,7 +618,7 @@ class AuthRepo {
          "messageTypeId": 0,
          "month": 0,
          "pageNumber": 1,
-         "pageSize": 10,
+         "pageSize": 2000,
         "schoolID": await SharedPref.getSchoolID(),
         "schoolUrl": await SharedPref.getSchoolUrl(),
         "sessionID": await SharedPref.getSessionId(),
@@ -702,27 +702,31 @@ class AuthRepo {
 
   Future<ChatSendButton> sendMessageButton(String? message) async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.sendMessage, data: {
-        "appMessageID": 20,
-        "circularID": 0,
-        "content": message,
-        "contentType": 0,
-        "createdForUserId": "4771",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl": await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
-        "type": 0,
-        "userID":await SharedPref.getUserID(),
-        "year": 0
-      });
+      final res = await _myService.networkPost(url: EndUrl.sendMessage,isStagingLink: true, 
+      data:
+    {
+	"appMessageID":2,
+	"circularID":0,
+	"content":message,
+	"contentType":0,
+	"createdForUserId":"114989",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":0,
+	"pageSize":0,
+	"schoolID":1,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"sessionID":178,
+	"studentID":108416,
+	"subjectID":0,
+	"type":0,
+	"userID":"118011",
+	"year":0
+}
+
+      );
       ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
       return chatSendButton;
     } catch (e) {
@@ -986,26 +990,28 @@ class AuthRepo {
 
   Future<ListCommunicationModel> getCommunicationList() async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.chatList, data: {
-        "appMessageID": 20,
-        "circularID": 0,
-        "contentType": 0,
-        "createdForUserId": "4771",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 20,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+      final res = await _myService.networkPost(url: EndUrl.chatList,isStagingLink: true, data:
+{
+	"appMessageID":2,
+	"circularID":0,
+	"contentType":0,
+	"createdForUserId":"114989",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":1,
+	"pageSize":20,
+	"schoolID":1,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"sessionID":178,
+	"studentID":108416,
+	"subjectID":0,
+	"type":0,
+	"userID":"118011",
+	"year":0
+}
+      );
       ListCommunicationModel listCommunicationModel =
           listCommunicationModelFromJson(res.toString());
       return listCommunicationModel;

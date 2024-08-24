@@ -15,7 +15,9 @@ AssignmentCalendar assignmentCalendar() {
 }
 
 class AssignmentCalendar extends StatefulWidget {
-  const AssignmentCalendar({super.key});
+  final  bool ? isNotificationScreen  ;
+final  DateTime? notificationScreenDate;
+  const AssignmentCalendar({super.key, this.isNotificationScreen, this.notificationScreenDate});
 
   @override
   _CircularScreenState createState() => _CircularScreenState();
@@ -29,6 +31,16 @@ class _CircularScreenState extends State<AssignmentCalendar> {
   DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
   @override
   void initState() {
+
+
+     if(widget.notificationScreenDate == null){
+      null;
+    }
+    else{
+      _focusedDay=widget.notificationScreenDate?? _focusedDay;
+    }
+
+
     context.read<AssignmentListCubit>().getAssignmentList(_focusedDay.month,
         DateFormat('yyyy-MM-ddTHH:mm:ss').format(_focusedDay).toString());
     context

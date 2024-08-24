@@ -253,8 +253,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     cardWidth: screenWidth * 0.35,
                                     image: MyAssets.exams,
                                     onIconPressed: () {
-                                      // NavigationService.navigateTo(
-                                      //     const ExaminationScreen(), context);
+                                      NavigationService.navigateTo(
+                                          const ExaminationScreen(), context);
                                     },
                                   ),
                                 ],

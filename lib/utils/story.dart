@@ -340,7 +340,7 @@ class StoryViewState extends State<StoryView>
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const CircularScreen()))
+                                         CircularScreen()))
                             : widget.isDisciplineWidget
                                 ? Navigator.push(
                                     context,

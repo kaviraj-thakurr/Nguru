@@ -88,7 +88,7 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
                         }
                       ),
                     ),
-                 PrimaryButton(title: "New Chat", onPressed: ()=>NavigationService.navigateTo(ChatScreen(), context))   
+                 PrimaryButton(title: "New Chat", onPressed: ()=>NavigationService.navigateTo(const ChatScreen(isNewChat: true,), context))   
 
         ],
         
