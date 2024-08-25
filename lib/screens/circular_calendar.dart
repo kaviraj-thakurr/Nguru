@@ -13,11 +13,14 @@ import 'package:table_calendar/table_calendar.dart';
 
 
 CircularCalendar circularCalendar() {
+  
   return const CircularCalendar();
 }
 
 class CircularCalendar extends StatefulWidget {
-  const CircularCalendar({super.key});
+  final  bool ? isNotificationScreen  ;
+final  int? notificationScreenDate;
+  const CircularCalendar({super.key, this.isNotificationScreen, this.notificationScreenDate});
 
   @override
  
@@ -32,6 +35,22 @@ class _CircularScreenState extends State<CircularCalendar> {
   String dateString = "03-Jun-2024";
   DateFormat dateFormat = DateFormat("dd-MMM-yyyy");
  // DateTime dateTime = DateFormat("dd-MMM-yyyy").parse(dateString);
+
+ @override
+  void initState() {
+
+    if(widget.notificationScreenDate == null){
+
+    }
+    else{
+        _focusedDay= DateTime(_focusedDay.year,widget.notificationScreenDate?? _focusedDay.month,_focusedDay.day);
+
+    }
+
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -340,7 +340,7 @@ class StoryViewState extends State<StoryView>
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const CircularScreen()))
+                                         CircularScreen()))
                             : widget.isDisciplineWidget
                                 ? Navigator.push(
                                     context,
@@ -731,6 +731,7 @@ class CustomStoryWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    200.heightBox,
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

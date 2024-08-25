@@ -1,24 +1,31 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/logic/Chat/chat_state_cubit.dart';
-// Import your cubit
 import 'package:nguru/logic/chatsend_button/chat_send_button_cubit.dart';
 import 'package:nguru/logic/chatsend_button/chat_send_button_state.dart';
+import 'package:nguru/logic/create_communication/save_message_subject_cubit.dart';
 import 'package:nguru/models/chatMessagesList.dart';
-import 'package:nguru/models/message_model.dart';
-
+import 'package:nguru/screens/Communication/communication.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
-import 'package:velocity_x/velocity_x.dart'; // Import your model
+import 'package:velocity_x/velocity_x.dart';
 
 class ChatScreen extends StatefulWidget {
+  final int? appMessageID;
+  final bool isNewChat;
+  const ChatScreen({
+    super.key,
+    this.isNewChat = false, this.appMessageID,
+  });
+
   @override
   _ChatUiScreenState createState() => _ChatUiScreenState();
 }
@@ -26,23 +33,31 @@ class ChatScreen extends StatefulWidget {
 class _ChatUiScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
+  final TextEditingController subjectNameController = TextEditingController();
+  int messageTypeId=0;
   int? userID;
 
   @override
   void initState() {
     super.initState();
-    context.read<ChatCubit>().fetchMessages();
+    if (widget.isNewChat) {
+    } else {
+      context.read<ChatCubit>().fetchMessages(widget.appMessageID);
+    }
+
+    // context.read<ChatCubit>().fetchMessages();
     _scrollController.addListener(onScroll);
-    getSharePrefVAlues();
+    getSharePrefValues();
   }
 
-  void getSharePrefVAlues() async{
-   userID=await SharedPref.getUserID();
-   log("qwerty: $userID");
+  void getSharePrefValues() async {
+    userID = await SharedPref.getUserID();
+    log("User ID: $userID");
   }
 
   void onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
       // Handle pagination if needed
     }
   }
@@ -55,342 +70,437 @@ class _ChatUiScreenState extends State<ChatScreen> {
     });
   }
 
-
-
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Chat',
-          style: TextStyle(
-              color: Color.fromARGB(255, 103, 195, 232),
-              fontWeight: FontWeight.w500,
-              fontSize: 30),
-        ),
-        backgroundColor: const Color.fromRGBO(35, 33, 46, 1),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const CircleAvatar(
-                  maxRadius: 25,
-                  backgroundImage: NetworkImage(
-                    "url",
+      body: Stack(
+        children: [
+          Positioned.fill(
+              child: Image.asset(
+            MyAssets.bg,
+            fit: BoxFit.fill,
+          )),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(padding18),
+              child: Column(
+                children: [
+                  // User Info Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        maxRadius: 25,
+                        backgroundImage: NetworkImage("url"),
+                      ),
+                      10.widthBox,
+                      Text(
+                        "Anandi Jha",
+                        style: FontUtil.customStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            textColor: MyColors.addButtonColor),
+                      )
+                    ],
                   ),
-                ),
-                10.widthBox,
-                Text(
-                  "Anandi Jha",
-                  style: FontUtil.customStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.addButtonColor),
-                )
-              ],
-            ),
-            Expanded(
-              child: BlocBuilder<ChatCubit, ChatState>(
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: state.messages.length,
-                    itemBuilder: (context, index) {
-                      ListcommunicationMsgDetail message = state.messages[index];
-                      var isUserMessage = message.createdByUserId; 
+                  // Chat Messages
+                  Expanded(
+                    child: BlocBuilder<ChatCubit, ChatState>(
+                      builder: (context, state) {
+                        if (state.isLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (state.errorMessage != null) {
+                          return Center(child: Text(state.errorMessage!));
+                        } else if (state.messages.isEmpty) {
+                          return const Center(
+                              child: Text('No messages found.'));
+                        }
 
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            isUserMessage != 6135
-                                ? Row(
-                                    children: [
-                                      const SizedBox(width: 17),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            color: Colors.red,
-                                            child: Text(
-                                              message.content ?? '',
-                                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                                            ),
-                                          )
-                                        ],
+                        return SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              widget.isNewChat ? 10.heightBox : SizedBox(),
+                              widget.isNewChat
+                                  ? Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.18,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      decoration: BoxDecoration(
+                                        color: MyColors.greyShade_6,
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                      const Spacer(),
-                                    ],
-                                  )
-                                : Row(
-                                    children: [
-                                      const Spacer(),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            height: MediaQuery.of(context).size.height *0.03,
-                                            width:  MediaQuery.of(context).size.width *0.03,
-                                            decoration: BoxDecoration(
-
-                                            ),
-                                            child: Text(
-                                              message.content ?? '',
-                                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Hi there!\n \nI'm here to help you connect with your child's teacher. To best assist you, can you tell me what kind of message you'd like to send?",
+                                          style: FontUtil.customStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w400,
+                                              textColor:
+                                                  MyColors.boldTextColor),
+                                          maxLines: 7,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                      const SizedBox(width: 17),
-                                    ],
-                                  ),
-                            const SizedBox(height: 5),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                  } else if (state.errorMessage != null) {
-                    return Center(child: Text(state.errorMessage!));
-                  } else if (state.messages.isEmpty) {
-                    return const Center(child: Text('No messages found.'));
-                  }
-
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                         Padding(
-                           padding: const EdgeInsets.all(8.0),
-                           child: Container(
-                                  height: MediaQuery.of(context).size.height * 0.14,
-                                  width: MediaQuery.of(context).size.width * 0.5,
-                                  decoration: BoxDecoration(
-                                    color: MyColors.greyShade_6,
-                                    borderRadius: BorderRadius.circular(15),
-                           
-                                  ),
-                           
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Hi there!\n \nI'm here to help you connect with your child's teacher. To best assist you, can you tell me what kind of message you'd like to send?",
-                                              style: FontUtil.customStyle(fontSize: 13, fontWeight: FontWeight.w400, textColor: MyColors.boldTextColor),
-                                              maxLines: 5,
-                                              overflow: TextOverflow.ellipsis,),
-                                  ),
-                                ),
-                         ),
-                         Container(
-                                  height: MediaQuery.of(context).size.height * 0.14,
-                                  width: MediaQuery.of(context).size.width * 0.5,
-                                  decoration: BoxDecoration(
-                                    color: MyColors.greyShade_6,
-                                    borderRadius: BorderRadius.circular(15),
-                           
-                                  ),
-                           
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Here are your options: ",
-                                                  style: FontUtil.customStyle(fontSize: 13, fontWeight: FontWeight.w400, textColor: MyColors.boldTextColor),
-                                                  maxLines: 5,
-                                                  overflow: TextOverflow.ellipsis,),
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      Container(
-                                                        height:  MediaQuery.of(context).size.height*0.03,
-                                                        width: MediaQuery.of(context).size.width*0.15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(8),
-                                                          color: MyColors.blueShade_3.withOpacity(0.15),
-
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: Text("General",
-                                                          style: FontUtil.customStyle(fontSize: 13, fontWeight: FontWeight.w400, textColor: MyColors.blueShade_3),
-                                                          textAlign: TextAlign.center,
-                                                          ),
-                                                        ),
-                                                        
-                                                      ),
-                                                      Container(
-                                                        height:  MediaQuery.of(context).size.height*0.03,
-                                                        width: MediaQuery.of(context).size.width*0.15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(8),
-                                                          color: MyColors.white,
-
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: Text("Complaint",
-                                                          style: FontUtil.customStyle(fontSize: 13, fontWeight: FontWeight.w400, textColor: MyColors.boldTextColor),
-                                                          textAlign: TextAlign.center,
-                                                          ),
-                                                        ),
-                                                        
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  5.heightBox,
-                                                  Container(
-                                                        height:  MediaQuery.of(context).size.height*0.03,
-                                                        width: MediaQuery.of(context).size.width*0.15,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(8),
-                                                          color: MyColors.white,
-
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(4.0),
-                                                          child: Text("Complaint",
-                                                          style: FontUtil.customStyle(fontSize: 13, fontWeight: FontWeight.w400, textColor: MyColors.boldTextColor),
-                                                          textAlign: TextAlign.center,
-                                                          ),
-                                                        ),
-                                                        
-                                                      ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                        ListView.builder(
-                          
-                          controller: _scrollController,
-                          itemCount: state.messages.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            ListcommunicationMsgDetail message = state.messages[index];
-                            var isUserMessage = message.createdByUserId; 
-                        
-                            return Container(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                children: [
-                                  
-                                  isUserMessage != 6135
-                                      ? Row(
+                                    )
+                                  : SizedBox(),
+                              widget.isNewChat ? 10.heightBox : SizedBox(),
+                              widget.isNewChat
+                                  ? Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.14,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      decoration: BoxDecoration(
+                                        color: MyColors.greyShade_6,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            const SizedBox(width: 17),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                            Text(
+                                              "Here are your options: ",
+                                              style: FontUtil.customStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  textColor:
+                                                      MyColors.boldTextColor),
+                                              maxLines: 5,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            15.heightBox,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Container(
-                                                  color: Colors.red,
-                                                  child: Text(
-                                                    message.content ?? '',
-                                                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.03,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.15,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: MyColors.blueShade_3
+                                                        .withOpacity(0.15),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                            const Spacer(),
-                                          ],
-                                        )
-                                      : Row(
-                                          children: [
-                                            const Spacer(),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  message.content ?? '',
-                                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: GestureDetector(
+                                                      onTap: (){
+                                                        setState(() {
+                                                          messageTypeId=1;
+                                                        });
+                                                        dialog();
+                                                      },
+                                                      child: Text(
+                                                        "General",
+                                                        style:
+                                                            FontUtil.customStyle(
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                textColor: MyColors
+                                                                    .blueShade_3),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                10.widthBox,
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.03,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.2,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: MyColors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: GestureDetector(
+                                                      onTap: (){
+                                                        setState(() {
+                                                          messageTypeId=2;
+                                                        });
+                                                        dialog();
+                                                      },
+                                                      child: Text(
+                                                        "Complaint",
+                                                        style: FontUtil.customStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            textColor: MyColors
+                                                                .boldTextColor),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                            const SizedBox(width: 17),
+                                            10.heightBox,
+                                            Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.03,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.28,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: MyColors.white,
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                        setState(() {
+                                                          messageTypeId=3;
+                                                        });
+                                                        dialog();
+                                                      },
+                                                  child: Text(
+                                                    "Subject Query",
+                                                    style: FontUtil.customStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        textColor: MyColors
+                                                            .boldTextColor),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                  const SizedBox(height: 5),
-                                ],
-                              ),
-                            );
-                          },
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              widget.isNewChat
+                                  ? ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      controller: _scrollController,
+                                      itemCount: state.messages.length,
+                                      itemBuilder: (context, index) {
+                                        ListcommunicationMsgDetail message =
+                                            state.messages[index];
+                                        bool isUserMessage =
+                                            message.createdByUserId == userID;
+
+                                        // return Align(
+                                        //   alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                                        //   child: Container(
+
+                                        //     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                                        //     padding: EdgeInsets.all(10),
+                                        //     decoration: BoxDecoration(
+                                        //       color: isUserMessage ? MyColors.blueShade_3 : Colors.grey[300],
+                                        //       borderRadius: BorderRadius.circular(20),
+
+                                        //     ),
+                                        //     child: Text(
+                                        //       message.content ?? '',
+                                        //       style: FontUtil.customStyle(fontSize: 13.h, fontWeight: FontWeight.w500, textColor: MyColors.white)
+                                        //     ),
+                                        //   ),
+                                        // );
+                                      },
+                                    )
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      controller: _scrollController,
+                                      itemCount: state.messages.length,
+                                      itemBuilder: (context, index) {
+                                        ListcommunicationMsgDetail message =
+                                            state.messages[index];
+                                        bool isUserMessage =
+                                            message.createdByUserId == userID;
+
+                                        return Align(
+                                          alignment: isUserMessage
+                                              ? Alignment.centerRight
+                                              : Alignment.centerLeft,
+                                          child: Container(
+                                            margin:const EdgeInsets.symmetric(
+                                                vertical: 5, horizontal: 12),
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: isUserMessage
+                                                  ? MyColors.blueShade_3
+                                                  : Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Text(message.content ?? '',
+                                                style: FontUtil.customStyle(
+                                                    fontSize: 13.h,
+                                                    fontWeight: FontWeight.w500,
+                                                    textColor: MyColors.white)),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  // Input Area
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10, bottom: 5),
+                            child: BlocBuilder<ChatSendButtonCubit,
+                                ChatSendButtonState>(
+                              builder: (context, state) {
+                                return CustomTextFormField(
+                                  controller: _controller,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _controller.text = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                        const EdgeInsets.only(left: 15),
+                                    hintText: MyStrings.writeYourMessage,
+                                    hintStyle: FontUtil.customStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.notificationSubtitle,
+                                    ),
+                                    filled: true,
+                                    fillColor: MyColors.chatTextField,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    suffixIcon: _controller.text.isNotEmpty
+                                        ? IconButton(
+                                            onPressed: () {
+                                              context
+                                                  .read<ChatSendButtonCubit>()
+                                                  .sendMessageButton(
+                                                      _controller.text, widget.appMessageID)
+                                                  .then((value) => context
+                                                      .read<ChatCubit>()
+                                                      .fetchMessages(widget.appMessageID))
+                                                  .then((value) =>
+                                                      _controller.clear());
+                                              _scrollToBottom();
+                                            },
+                                            icon: SvgPicture.asset(
+                                                MyAssets.sendIcon),
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, bottom: 5),
-                      child: BlocBuilder<ChatSendButtonCubit, ChatSendButtonState>(
-                        builder: (context, state) {
-                          return CustomTextFormField(
-                            controller: _controller,
-                            onChanged: (value) {
-                              setState(() {
-                                _controller.text = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.only(left: 10),
-                              hintText: MyStrings.writeYourMessage,
-                              hintStyle: FontUtil.customStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                textColor: MyColors.notificationSubtitle,
-                              ),
-                              filled: true,
-                              fillColor: MyColors.chatTextField,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide.none,
-                              ),
-                              suffixIcon: _controller.text.isNotEmpty
-                                  ? IconButton(
-                                      onPressed: () {
-                                        context.read<ChatSendButtonCubit>().sendMessageButton(
-                                         _controller.text
-                                        ).then((value) =>  context.read<ChatCubit>().fetchMessages()).then((value) => _controller.clear());
-                                      },
-                                      icon: SvgPicture.asset(MyAssets.sendIcon),
-                                    )
-                                  : const SizedBox(),
-                            ),
-                          );
-                        },
-                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-   
+
+
+Future<dynamic> dialog() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: MyColors.white,
+          title: const Text('Chat Subject'),
+          content: Container(
+            width: double.infinity,
+            height: 100,
+            child: Column(
+              children: [
+                const Text('Please enter a chat subject!'),
+              25.heightBox,
+                 CustomTextFormField(
+                            controller: subjectNameController,
+                            labelText: "Subject",
+                          )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: ()=>Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: FontUtil.customStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.boldTextColor),
+              ),
+            ),
+            TextButton(
+              onPressed: ()=> context
+          .read<SaveMessageSubjectCubit>().getSaveMessageSubjectDetails(subjectNameController.text.toString(),messageTypeId).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const CommunicationScreen()))),
+              child: Text(
+                'Add',
+                style: FontUtil.customStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.boldTextColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

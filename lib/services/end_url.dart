@@ -50,7 +50,10 @@ class EndUrl{
    static const String libraryGetSearchList = "Library/GetSearchList";
    static const String libraryReserveBook = "Library/ReserveBook";
 
+
+// COMMUNICATION
    static const String chatList = "Communication/GetMessageDetail/";
+   static const String saveMessageSubject = "Communication/SaveMessageSubject";
 
 // INFIRMARY SCREEN
    static const String infirmaryGetList = "Infirmary/GetIllnessList/";

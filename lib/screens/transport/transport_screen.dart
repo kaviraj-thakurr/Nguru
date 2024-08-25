@@ -87,7 +87,7 @@ class _TransportScreenState extends State<TransportScreen> {
     final widthHeight = MediaQuery.sizeOf(context).width;
     return Container(
       width: double.maxFinite,
-      height: screenHeight * 0.160,
+      height: screenHeight * 0.18,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: MyColors.searchBackGroundColor),
@@ -124,7 +124,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       style: FontUtil.customStyle(
                           fontSize: 13.h,
                           fontWeight: FontWeight.w500,
-                          textColor: MyColors.busStop),
+                          textColor: MyColors.circular),
                     ),
                       ],
                     ),
@@ -132,9 +132,11 @@ class _TransportScreenState extends State<TransportScreen> {
     
                   ],
                 ),
+                10.heightBox,
                 Padding(
                   padding: const EdgeInsets.all(padding3),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                     children: [
@@ -147,6 +149,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       ),
                       Text(
                        busStop??"-",
+                       textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,
@@ -158,6 +161,7 @@ class _TransportScreenState extends State<TransportScreen> {
                 Padding(
                   padding: const EdgeInsets.all(padding3),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                     children: [
@@ -170,6 +174,7 @@ class _TransportScreenState extends State<TransportScreen> {
                       ),
                       Text(
                         dropOff??"",
+                         textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,

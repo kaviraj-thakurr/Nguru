@@ -231,18 +231,20 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               )
             : GestureDetector(
-                onTap: title == "My Profile"
-                    ? () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyProfileScreen()))
-                    : title == "Change Password"
-                        ? () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ResetPasswordScreen()))
-                        : null,
+                onTap: (){},
+                // title == "My Profile"
+                //     ? () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => MyProfileScreen()))
+                //     :
+                    //  title == "Change Password"
+                    //     ? () => Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 const ResetPasswordScreen()))
+                    //     : null,
                 child: const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,

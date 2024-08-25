@@ -627,7 +627,7 @@ class AuthRepo {
          "messageTypeId": 0,
          "month": 0,
          "pageNumber": 1,
-         "pageSize": 10,
+         "pageSize": 2000,
         "schoolID": await SharedPref.getSchoolID(),
         "schoolUrl": await SharedPref.getSchoolUrl(),
         "sessionID": await SharedPref.getSessionId(),
@@ -712,32 +712,33 @@ class AuthRepo {
     }
   }
 
-  Future<ChatSendButton> sendMessageButton(String? message) async {
+  Future<ChatSendButton> sendMessageButton(String? message, int? appMessageID) async {
     try {
-      final res = await _myService.networkPost(
-        isStagingLink: true,
-        url: EndUrl.sendMessage,
-         data: {
-        "appMessageID": 20,
-        "circularID": 0,
-        "content": message,
-        "contentType": 0,
-        "createdForUserId": "4771",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": await SharedPref.getSchoolID(),
-        "schoolUrl": await SharedPref.getSchoolUrl(),
-        "sessionID": await SharedPref.getSessionId(),
-        "studentID": await SharedPref.getStudentID(),
-        "subjectID": 0,
-        "type": 0,
-        "userID":await SharedPref.getUserID(),
-        "year": 0
-      });
+      final res = await _myService.networkPost(url: EndUrl.sendMessage,isStagingLink: true, 
+      data:
+    {
+	"appMessageID":appMessageID,
+	"circularID":0,
+	"content":message,
+	"contentType":0,
+	"createdForUserId":"114989",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":0,
+	"pageSize":0,
+	"schoolID":1,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"sessionID":178,
+	"studentID":108416,
+	"subjectID":0,
+	"type":0,
+	"userID":"118011",
+	"year":0
+}
+
+      );
       ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
       return chatSendButton;
     } catch (e) {
@@ -1029,28 +1030,74 @@ class AuthRepo {
   ////////////////////////////////////////////////      Comunication      //////////////////////////////////////////////////////
 
 
-  Future<ListCommunicationModel> getCommunicationList() async {
+
+
+// RESERVE A BOOK
+
+//   Future<Map<String,String>> reserveBook(int? bookID, int? accessionNo, int? issueReturnId) async {
+//   try {
+//     // Making the POST request
+//     final response = await _myService.networkPost(
+//       isStagingLink: true,
+//       url: EndUrl.libraryReserveBook,
+//       data: {
+//         "bookID": bookID,
+//         "accessionNo": accessionNo,
+//         "issueReturnId": issueReturnId,
+//         "type": 1,
+//         "pageSize": 12,
+//         "pageNumber": 1,
+//         "userID": await SharedPref.getUserID(),
+//         "schoolID": await SharedPref.getSchoolID(),
+//         "studentID": await SharedPref.getStudentID(),
+//         "sessionID": await SharedPref.getSessionId(),
+//         "schoolURL": await SharedPref.getSchoolUrl(),
+//       },
+//     );
+//     Map<String, dynamic> res = response.data;
+//     Map<String,String> reservedResponse= {
+//       "responseCode": "${res["responseCode"]}",
+//       "responseMessage": "${res["responseMessage"]}"
+//     };
+    
+//     return reservedResponse;
+//   } catch (e) {
+//     log(e.toString());
+//     throw Exception("Failed to fetch reserve book: $e");
+//   }
+// }
+
+
+
+
+
+  ////////////////////////////////////////////////      Comunication      //////////////////////////////////////////////////////
+
+
+Future<ListCommunicationModel> getCommunicationList(int? appMessageID ) async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.chatList, data: {
-        "appMessageID": 20,
-        "circularID": 0,
-        "contentType": 0,
-        "createdForUserId": "4771",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 1,
-        "pageSize": 20,
-        "schoolID": 1,
-        "schoolUrl": "https://quickschool.niitnguru.com/demoschool",
-        "sessionID": 107,
-        "studentID": 896,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "6135",
-        "year": 0
-      });
+      final res = await _myService.networkPost(url: EndUrl.chatList,isStagingLink: true, data:
+{
+	"appMessageID":appMessageID,
+	"circularID":0,
+	"contentType":0,
+	"createdForUserId":"114989",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":0,
+	"month":0,
+	"pageNumber":1,
+	"pageSize":20,
+	"schoolID":1,
+	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
+	"sessionID":178,
+	"studentID":108416,
+	"subjectID":0,
+	"type":0,
+	"userID":"118011",
+	"year":0
+}
+      );
       ListCommunicationModel listCommunicationModel =
           listCommunicationModelFromJson(res.toString());
       return listCommunicationModel;
@@ -1059,6 +1106,48 @@ class AuthRepo {
       throw Exception("Failed to fetch library book search list: $e");
     }
   }
+
+
+
+  Future<Map<String,String>> saveMessageSubject(String subjectName,int messageTypeId ) async {
+    try {
+      final res = await _myService.networkPost(url: EndUrl.saveMessageSubject,isStagingLink: true, data:
+{
+	"appMessageID":0,
+	"circularID":0,
+	"contentType":0,
+	"createdForUserId":"114989",
+	"downloadAttachment":0,
+	"isNotification":0,
+	"messageTypeId":messageTypeId,
+	"month":0,
+	"pageNumber":0,
+	"pageSize":0,
+	"schoolID":await SharedPref.getSchoolID(),
+	"schoolUrl":await SharedPref.getSchoolUrl(),
+	"sessionID":await SharedPref.getSessionId(),
+	"studentID":await SharedPref.getStudentID(),
+	"subjectID":0,
+	"subjectName":subjectName,
+	"type":0,
+	"userID":await SharedPref.getUserID(),
+	"year":0
+}
+      );
+
+          Map<String, dynamic> response = res.data;
+    Map<String,String> reservedResponse= {
+      "responseCode": "${response["responseCode"]}",
+      "responseMessage": "${response["responseMessage"]}"
+    };
+      return reservedResponse;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch library book search list: $e");
+    }
+  }
+
+
 
   ////////////////////////////////////////////////     GET INFIRMARY LIST DATA      //////////////////////////////////////////////////////
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
@@ -20,7 +21,10 @@ import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
-  const AssignmentScreen({super.key});
+  final  bool ? isNotificationScreen  ;
+final  DateTime? notificationScreenDate;
+  final int?month;
+  const AssignmentScreen({super.key, this.month, this.isNotificationScreen, this.notificationScreenDate});
 
   @override
   State<AssignmentScreen> createState() => _AssignmentScreenState();
@@ -33,12 +37,32 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 
   DateTime currentDate = DateTime.now();
 
+
+
+
   @override
   void initState() {
     super.initState();
-    context
+      if(widget.notificationScreenDate == null){
+     context
         .read<AssignmentMonthListCubit>()
         .getAssignmentMonthList(currentDate.month);
+
+    }
+    else{
+     context
+        .read<AssignmentMonthListCubit>()
+        .getAssignmentMonthList(widget.notificationScreenDate?.month ?? DateTime.now().month);
+        
+         context.read<AssignmentListCubit>().getAssignmentList(
+                    widget.notificationScreenDate?.month,
+                   "${DateFormat('yyyy-MM-dd').format(widget.notificationScreenDate!)}T00:00:00");
+
+  
+
+    }
+    
+    
   }
 
   @override
@@ -61,7 +85,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
               screenTitleHeader("Assignment",
                   onPressed: () => Navigator.pop(context)),
               20.heightBox,
-              assignmentCalendar(),
+              AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate),
               Expanded(
                 child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
                   builder: (context, state) {

@@ -15,6 +15,7 @@ import 'package:nguru/logic/chatsend_button/chat_send_button_cubit.dart';
 import 'package:nguru/logic/circular/circular_cubit.dart';
 import 'package:nguru/logic/communication/communication_cubit.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_cubit.dart';
+import 'package:nguru/logic/create_communication/save_message_subject_cubit.dart';
 import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
@@ -183,6 +184,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ReserveBookCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => SaveMessageSubjectCubit(AuthRepo()),
         ),
       ],
       child: ScreenUtilInit(

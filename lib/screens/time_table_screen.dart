@@ -255,7 +255,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
     }
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.080,
+      height: MediaQuery.of(context).size.height * 0.088,
       width: double.maxFinite,
       decoration: BoxDecoration(
           color: MyColors.searchBox, borderRadius: BorderRadius.circular(6)),
@@ -270,7 +270,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 RichText(
                   text: TextSpan(
                     style: FontUtil.customStyle(
-                      fontSize: 26.h,
+                      fontSize: 20.h,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.addButtonColor,
                     ),
@@ -284,7 +284,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                           child: Text(
                             getSuffix(int.parse("${item.periodSrNo}")),
                             style: FontUtil.customStyle(
-                    fontSize: 17.h,
+                    fontSize: 14.h,
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.teacherNameColor,
                   ),
@@ -300,7 +300,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 
                  
                   style: FontUtil.customStyle(
-                    fontSize: 17.h,
+                    fontSize: 14.h,
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.teacherNameColor,
                   ),
@@ -310,7 +310,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                   child: Text(
                     subject,
                     style: FontUtil.customStyle(
-                      fontSize: 17.h,
+                      fontSize: 14.h,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.teacherNameColor,
                     ),
