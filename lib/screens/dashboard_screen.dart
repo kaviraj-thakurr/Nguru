@@ -22,6 +22,7 @@ import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
 import 'package:nguru/screens/calendar_screen.dart';
 import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
+import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/infirmary_screen.dart';
 import 'package:nguru/screens/library_screen.dart';
@@ -203,7 +204,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                   Flexible(
                                     flex: 5,
                                     child: GestureDetector(
-                                      // onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> FeesMainScreen())),
+                                       onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>const FeesMainScreen())),
                                       child: attendenceAndFeeCard(
                                         context,
                                         headerText: "Paid 23k",
