@@ -39,24 +39,9 @@ import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/timetable/timetable_cubit.dart';
 import 'package:nguru/logic/transport/transport_cubit.dart';
-import 'package:nguru/models/attendance_bar_chart_model.dart';
 import 'package:nguru/repo/api_calls.dart';
-import 'package:nguru/screens/activity_screen.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
-import 'package:nguru/screens/attendance/attendace_card_screen.dart';
-import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
-import 'package:nguru/screens/calendar_screen.dart';
-import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
-import 'package:nguru/screens/discipline_screen.dart';
-import 'package:nguru/screens/fees/fee_main_screen.dart';
-import 'package:nguru/screens/infirmary_screen.dart';
-import 'package:nguru/screens/library_screen.dart';
-import 'package:nguru/screens/setting_screen.dart';
-import 'package:nguru/screens/story/story_screen.dart';
-import 'package:nguru/screens/testing_story.dart';
-import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
-import 'package:nguru/utils/story.dart';
 
 void main() async {
   await Hive.initFlutter();
