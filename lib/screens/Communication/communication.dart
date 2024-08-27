@@ -70,7 +70,7 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
                                   InkWell(
                                     onTap: (){
                                     NavigationService.navigateTo(
-                         ChatScreen(), context);
+                         ChatScreen(isNewChat: false,appMessageID: state.communicationModel.listCommunicationHeaderDetail?[index].appMessageId), context);
                                     },
                                     child: cardDesign(context: context,
                                     image: "image",
@@ -88,7 +88,7 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
                         }
                       ),
                     ),
-                 PrimaryButton(title: "New Chat", onPressed: ()=>NavigationService.navigateTo(const ChatScreen(isNewChat: true,), context))   
+                 PrimaryButton(title: "New Chat", onPressed: ()=>NavigationService.navigateTo( ChatScreen(isNewChat: true,), context))   
 
         ],
         

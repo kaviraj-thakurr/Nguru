@@ -10,6 +10,7 @@ import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
+import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -20,6 +21,7 @@ import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SettingScreen extends StatefulWidget {
+  
   const SettingScreen({super.key});
 
   @override
@@ -140,11 +142,13 @@ class _SettingScreenState extends State<SettingScreen> {
                             onLogout: () => context
                                 .read<SignoutCubit>()
                                 .signout().then((value) => SharedPref.saveLoggedInStatus(false))
-                                .then((value) => Navigator.pushAndRemoveUntil(
+                                .then((value) =>
+                                 Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const AddSchool(isAddSchoolScreen: false,)), 
+                                  MaterialPageRoute(builder: (context) => const LoginScreen(schoolNickName: "",subDomain: "",trimmedSchoolUrl: "", retainUsername: true,)), 
                                   (Route<dynamic> route) => false,
-                                )),
+                                )
+                                            ),
                             onCancel: () => Navigator.pop(context),
                           );
                         },
@@ -166,10 +170,10 @@ class _SettingScreenState extends State<SettingScreen> {
               }, listener: (context, state) {
                 if (state is SignoutSuccessState) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Logout Successfully")));
+                      const SnackBar(content: Text("Sign out Successfully")));
                 } else if (state is SignoutErrorState) {
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("Logout Successfully")));
+                      .showSnackBar(const SnackBar(content: Text("Sign out Successfully")));
                 }
               })
             ]),
@@ -229,18 +233,20 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               )
             : GestureDetector(
-                onTap: title == "My Profile"
-                    ? () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyProfileScreen()))
-                    : title == "Change Password"
-                        ? () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ResetPasswordScreen()))
-                        : null,
+                onTap: (){},
+                // title == "My Profile"
+                //     ? () => Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => MyProfileScreen()))
+                //     :
+                    //  title == "Change Password"
+                    //     ? () => Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) =>
+                    //                 const ResetPasswordScreen()))
+                    //     : null,
                 child: const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
@@ -324,8 +330,8 @@ AlertDialog buildLogoutAlertDialog({
 }) {
   return AlertDialog(
     backgroundColor: MyColors.white,
-    title: const Text('Log Out'),
-    content: const Text('Are you sure you want to log out?'),
+    title: const Text('Sign out'),
+    content: const Text('Are you sure you want to Sign out?'),
     actions: <Widget>[
       TextButton(
         onPressed: onCancel,
@@ -333,7 +339,7 @@ AlertDialog buildLogoutAlertDialog({
       ),
       TextButton(
         onPressed: onLogout,
-        child: Text('Log Out',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+        child: Text('Sign out',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
       ),
     ],
   );

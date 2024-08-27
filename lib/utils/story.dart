@@ -731,6 +731,7 @@ class CustomStoryWidget extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    200.heightBox,
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

@@ -10,9 +10,9 @@ import 'package:nguru/logic/notification_list/notification_list_cubit.dart';
 import 'package:nguru/logic/notification_list/notification_list_state.dart';
 import 'package:nguru/models/notificationlist_model.dart';
 import 'package:nguru/screens/Examination/examination_screen.dart';
-import 'package:nguru/screens/attendance/attendace_card_screen.dart';
-import 'package:nguru/screens/attendance/attendance_bar_graph_screen.dart';
+import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendance/attendence_screen.dart';
+import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
@@ -23,9 +23,6 @@ import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-// Import the necessary screens
-import 'assignment_screen.dart'; // Import your AssignmentScreen
-import 'circular_screen.dart'; // Import your CircularScreen
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -35,7 +32,7 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   List<NotificationList> filteredNotifications = [];
 
   @override
@@ -101,7 +98,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         } else if (state is NotificationListErrorState) {
                           return Center(child: Text(state.message));
                         }
-                        return const Center(child: Text("No notifications found"));
+                        return const Center(child: Text(MyStrings.noNotificationFound));
                       },
                     ),
                   ),
@@ -114,14 +111,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
+
+  // This method for notificationList
+
 Widget buildNotificationList(List<NotificationList> notifications) {
   return ListView.builder(
     itemCount: notifications.length + 1, // Adding 1 to include the loading indicator
     itemBuilder: (context, index) {
       if (index == notifications.length) {
         // Show loading indicator if at the end of the list
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
+        return const Padding(
+          padding: EdgeInsets.all(padding8),
           child: Center(
             child: CircularProgressIndicator(),
           ),
@@ -146,41 +146,42 @@ Widget buildNotificationList(List<NotificationList> notifications) {
 }
 
 
+// This method for Navigating to particular screen of particular Notification
+
   void handleNotificationTap(NotificationList notification) {
-    if (notification.notificationHeader == "Assignment Notification") {
+    if (notification.notificationHeader == MyStrings.assignmentNotification) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn,)));
-    } else if (notification.notificationHeader == "Circular Notification") {
+    } else if (notification.notificationHeader == MyStrings.circularNotification) {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>  CircularScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn?.month,)));
-    } else if (notification.notificationHeader == "Discipline Notification") {
+    } else if (notification.notificationHeader == MyStrings.circularNotification) {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>const DisciplineScreen()));
-    }else if (notification.notificationHeader == "TimeTable Notification") {
+    }else if (notification.notificationHeader == MyStrings.timetableNotification) {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>const TimetableScreen()));
       }
-      else if(notification.notificationHeader == "Photo Gallery Notification"){
+      else if(notification.notificationHeader == MyStrings.photoNotification){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>const GalleryScreen()));
       }
 
-      else if(notification.notificationHeader == "Attendance Notification"){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen(month: notification.createdOn?.month,)));
+      else if(notification.notificationHeader == MyStrings.attendanceNotification){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(month: notification.createdOn?.month,)));
       }
 
-      else if(notification.notificationHeader == "Exam Report Notification"){
+      else if(notification.notificationHeader == MyStrings.examReportNotification){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>const ExaminationScreen()));
       }
 
-      else if(notification.notificationHeader == "Photo Gallery Notification"){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>const GalleryScreen()));
-      }
+     
       
 
       
   }
 
+  // This method for UI design card for notification
 
   Widget cardDesign(BuildContext context, String? title, DateTime? createdOn, String? subtitle) {
     String formattedDate = createdOn != null 
         ? DateFormat('dd MMM ').format(createdOn) 
-        : 'Date not available';
+        : MyStrings.noData;
 
     return Stack(
       children: [
@@ -194,7 +195,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
-                SvgPicture.asset(MyAssets.notification_icon, height: 28),
+                SvgPicture.asset(MyAssets.notification_icon, height: height28),
                 12.widthBox,
                 Expanded(
                   child: Padding(
@@ -206,7 +207,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              title ?? '',
+                              title ??"",
                               style: FontUtil.customStyle(
                                 fontSize: 17.h,
                                 fontWeight: FontWeight.w500,
@@ -226,7 +227,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
                         ),
                         5.heightBox,
                         Text(
-                          subtitle ?? 'Description Not Available',
+                          subtitle ?? MyStrings.noDescription,
                           style: FontUtil.customStyle(
                             fontSize: 14.h,
                             fontWeight: FontWeight.w400,

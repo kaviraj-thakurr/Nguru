@@ -15,7 +15,8 @@ import 'package:velocity_x/velocity_x.dart';
 final _formKey = GlobalKey<FormState>();
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+  final String username;
+  const ForgotPassword({super.key, required this.username});
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
@@ -25,7 +26,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController userNameController = TextEditingController();
 
   @override
+  void initState() {
+    userNameController = TextEditingController(text: widget.username);
+   
+    
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void dispose() {
+    // Dispose the controller to avoid memory leaks
+    userNameController.dispose();
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+    
     return BlocProvider(
       create: (context) => ForgetPassCubit(AuthRepo()),
       child: Scaffold(

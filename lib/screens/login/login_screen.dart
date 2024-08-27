@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
+import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/forgot_password.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
@@ -34,9 +35,12 @@ class LoginScreen extends StatefulWidget {
   final String subDomain;
   final String schoolNickName;
    final String trimmedSchoolUrl;
+  final String? username;
+  final bool retainUsername;
 
 
-  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl, required this.subDomain, required this.schoolNickName, required this.trimmedSchoolUrl});
+
+  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl, required this.subDomain, required this.schoolNickName, required this.trimmedSchoolUrl,this.username, this.retainUsername = false});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -82,6 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     openAddSchoolBox();
     super.initState();
+    if (widget.retainUsername && widget.username != null) {
+      userNameController.text = widget.username!;
+    }
     userNameController.addListener(() {
       context
           .read<FormValidationCubit>()
@@ -291,10 +298,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {
-                        NavigationService.navigateTo(
-                            const ForgotPassword(), context);
-                      },
+
+                
+                      
+                        onPressed: () {
+        if (userNameController.text.trim().isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(MyStrings.userNameReq), // Show an error message
+            ),
+          );
+        } else {
+          NavigationService.navigateTo(
+            ForgotPassword(username: userNameController.text.trim()),
+            context,
+          );
+        }
+      },
+                      
                       child: Text(
                         MyStrings.forgotPassword,
                         style: FontUtil.forgotPassword,
@@ -302,6 +323,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
+
+                 TextButton(
+                   onPressed: () {
+                     Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) =>
+                               const AddSchool(isAddSchoolScreen: true),
+                         ));
+                   },
+                   child: Text(
+                     MyStrings.add,
+                     style: FontUtil.add,
+                   ),
+                 ),
                 BlocConsumer<LoginCubit, LoginState>(builder: (context, state) {
                   if (state is LoginLoadingState) {
                     return const Center(

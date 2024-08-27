@@ -68,6 +68,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
           //     schoolNickName: "$schoolNickName",
           //   ));
           // }
+          
           if (isNavigating) {
             emit(AddSchoolSuccessState(
               schoolName: result.schoolName,

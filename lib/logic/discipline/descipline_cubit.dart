@@ -17,7 +17,6 @@ class DisciplineCubit extends Cubit<DisciplineState> {
 List<DisciplineList> disciplineList=[];
   Future<void> getDiscipline({int? type}) async {
     disciplineList.clear();
-    // type = 1 for fetching all the discipline 
     try {
       emit(DisciplineLoadingState());
       final result = await authRepo?.getDisciplineList(type: type ?? 0);

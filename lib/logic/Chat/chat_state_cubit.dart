@@ -40,10 +40,10 @@ class ChatCubit extends Cubit<ChatState> {
 
   ChatCubit(this.authRepo) : super(const ChatState());
 
-  Future<void> fetchMessages() async {
+  Future<void> fetchMessages(int? appMessageID) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final ListCommunicationModel response = await authRepo.getCommunicationList();
+      final ListCommunicationModel response = await authRepo.getCommunicationList(appMessageID);
       emit(state.copyWith(
         messages: response.listcommunicationMsgDetail ?? [],
         isLoading: false,

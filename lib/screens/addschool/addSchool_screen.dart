@@ -159,6 +159,7 @@ class _AddSchoolState extends State<AddSchool> {
                       ),
                       CustomTextFormField(
                         read: !isEditable,
+                        
                         suffixIcon: IconButton(
                             icon: SvgPicture.asset(MyAssets.edit),
                             onPressed: _toggleEditability),
@@ -174,7 +175,7 @@ class _AddSchoolState extends State<AddSchool> {
                         builder: (context, state) {
                           return CustomTextFormField(
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
+                              LengthLimitingTextInputFormatter(35)
                             ],
                             controller: subdomainController,
                             labelText: MyStrings.subdomain,
@@ -191,11 +192,16 @@ class _AddSchoolState extends State<AddSchool> {
                         builder: (context, state) {
                           return CustomTextFormField(
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
+                              LengthLimitingTextInputFormatter(35)
                             ],
                             controller: schoolNameController,
                             labelText: MyStrings.schoolName,
-                            validator: _validateSchoolName,
+                             validator: (value) {
+    // Trim spaces before validating
+    final trimmedValue = value?.trim() ?? '';
+    return _validateSchoolName(trimmedValue);
+  },
+
                             autoValidateMode: state.autoValidateSchoolName
                                 ? AutovalidateMode.onUserInteraction
                                 : AutovalidateMode.disabled,
@@ -206,23 +212,44 @@ class _AddSchoolState extends State<AddSchool> {
                   ),
                 ),
                 30.heightBox,
-                Visibility(
-                  visible: !widget.isAddSchoolScreen,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const AddSchool(isAddSchoolScreen: true),
-                          ));
-                    },
-                    child: Text(
-                      MyStrings.add,
-                      style: FontUtil.add,
-                    ),
-                  ),
-                ),
+             Visibility(
+  visible: !widget.isAddSchoolScreen,
+  child: TextButton(
+    onPressed: () {
+    
+      final subdomain = subdomainController.text.trim();
+      final schoolName = schoolNameController.text.trim();
+
+      if (subdomain.isEmpty || schoolName.isEmpty) {
+
+        String errorMessage = '';
+        if (subdomain.isEmpty) {
+          errorMessage = MyStrings.subdomainRequired;
+        } else if (schoolName.isEmpty) {
+          errorMessage = MyStrings.enterSchoolName;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Enter Subdomain and School Name"),
+          ),
+        );
+      } else {
+        // Navigate to AddSchool screen if validation passes
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddSchool(isAddSchoolScreen: true),
+          ),
+        );
+      }
+    },
+    child: Text(
+      MyStrings.add,
+      style: FontUtil.add,
+    ),
+  ),
+),
+
                 BlocConsumer<AddSchoolCubit, AddSchoolState>(
                     builder: (context, state) {
                   if (state is AddSchoolLoadingState) {
@@ -311,6 +338,7 @@ class _AddSchoolState extends State<AddSchool> {
 
                     NavigationService.navigateTo(
                         LoginScreen(
+                          
                           title: schoolNameController.text,
                           schoolLogo: state.schoolPhoto,
                           schoolUrl: schoolUrlController.text +
@@ -403,14 +431,17 @@ class _AddSchoolState extends State<AddSchool> {
   }
 
   String? _validateSchoolName(String? value) {
-    if (value == null || value.isEmpty) {
-      return MyStrings.enterSchoolName;
-    }
-    if (value.length < 3) {
-      return MyStrings.schoolNameLeastName;
-    }
-    return null;
+  // Trim spaces for validation
+  final trimmedValue = value?.trim() ?? '';
+  if (trimmedValue.isEmpty) {
+    return MyStrings.enterSchoolName;
   }
+  if (trimmedValue.length < 3) {
+    return MyStrings.schoolNameLeastName;
+  }
+  return null;
+}
+
 
   String? _validateSchoolUrl(String? url) {
     if (url == null || url.isEmpty) {

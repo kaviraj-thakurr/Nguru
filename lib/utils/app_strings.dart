@@ -8,10 +8,28 @@ class MyStrings {
   static const String noDescription = "No Description";
   static const String noTeacher = "No teacher available";
   static const String holiday = "Holiday!";
+  static const String busStop = "Bus Stop";
+  static const String dropOff= "Drop off";
+  static const String dash = "-";
+  static const String placeholder = "https://via.placeholder.com/150";
+  
+    
+
+    static const String assignmentNotification = "Assignment Notification";
+      static const String circularNotification = "Circular Notification";
+        static const String disciplineNotification = "Discipline Notification";
+          static const String timetableNotification =  "TimeTable Notification";
+            static const String photoNotification = "Photo Gallery Notification";
+                     static const String attendanceNotification = "Attendance Notification";
+                     static const String examReportNotification= "Exam Report Notification";
+   
+
+
+  static const String noNotificationFound ="No notifications found";
   static const String appName = "Nguru";
   static const String transport = "Transport";
   static const String schoolNameRequired = "School Name required";
-  static const String add = "+Add";
+  static const String add = "Add School";
   static const String submit = "Submit";
   static const String needHelp = "Need help?";
   static const String schoolName = "School Name";

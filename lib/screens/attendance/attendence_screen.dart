@@ -19,18 +19,18 @@ import 'package:velocity_x/velocity_x.dart';
 
 
 int? currentMonthNumber;
-class AttendenceScreen extends StatefulWidget {
+class AttendanceScreen extends StatefulWidget {
 
   final int? month;
 
 
-  const AttendenceScreen({super.key, this.month});
+  const AttendanceScreen({super.key, this.month});
 
   @override
-  State<AttendenceScreen> createState() => _AttendenceScreenState();
+  State<AttendanceScreen> createState() => _AttendenceScreenState();
 }
 
-class _AttendenceScreenState extends State<AttendenceScreen> {
+class _AttendenceScreenState extends State<AttendanceScreen> {
   final TextEditingController searchBarController = TextEditingController();
   final DateTime _focusedDay = DateTime.now();
   List monthMap = [ 

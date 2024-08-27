@@ -6,10 +6,10 @@ class ChatSendButtonCubit  extends Cubit<ChatSendButtonState>{
   final AuthRepo ? authRepo;
   ChatSendButtonCubit(this.authRepo):super(ChatSendButtonInitState());
 
-  Future<void>sendMessageButton(String ? message) async{
+  Future<void>sendMessageButton(String ? message, int? appMessageID) async{
     try{
       emit(ChatSendButtonLoadingState());
-      final result = await authRepo?.sendMessageButton(message);
+      final result = await authRepo?.sendMessageButton(message, appMessageID);
       if(result != null){
         if(result.responseCode== "200"){
           emit (ChatSendButtonSuccessState(result));

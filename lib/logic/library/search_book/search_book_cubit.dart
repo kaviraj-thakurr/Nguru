@@ -7,7 +7,7 @@ class LibrarySearchBookCubit extends Cubit<LibrarySearchBookState> {
 
   LibrarySearchBookCubit(this.authRepo) : super(LibrarySearchBookInitialState());
 
-  Future<void> getLibrarySearchBook({String? searchQuery}) async {
+  Future<void> getLibrarySearchBook({String? searchQuery=""}) async {
     try {
       emit(LibrarySearchBookLoadingState());
       final result = await authRepo?.getLibrarySearchList(searchQuery: searchQuery);

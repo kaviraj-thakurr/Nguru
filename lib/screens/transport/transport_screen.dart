@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/transport/transport_cubit.dart';
 import 'package:nguru/logic/transport/transport_state.dart';
@@ -30,8 +29,6 @@ class _TransportScreenState extends State<TransportScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Stack(
@@ -84,10 +81,9 @@ class _TransportScreenState extends State<TransportScreen> {
 
   Widget transportCard({required BuildContext context,String?profileImage,String ? driverName , String ? driverNo , String ? busStop, String ? dropOff}) {
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final widthHeight = MediaQuery.sizeOf(context).width;
     return Container(
       width: double.maxFinite,
-      height: screenHeight * 0.160,
+      height: screenHeight * 0.18,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: MyColors.searchBackGroundColor),
@@ -104,7 +100,7 @@ class _TransportScreenState extends State<TransportScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                       const CircleAvatar(
-                      backgroundImage:NetworkImage("https://via.placeholder.com/150"),
+                      backgroundImage:NetworkImage(MyStrings.placeholder),
                       maxRadius: 25,
                      
                     ),
@@ -113,14 +109,14 @@ class _TransportScreenState extends State<TransportScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                        driverName??"",
+                        driverName??MyStrings.dash,
                           style: FontUtil.customStyle(
                               fontSize: 16.h,
                               fontWeight: FontWeight.w600,
                               textColor: MyColors.addButtonColor),
                         ),
                          Text(
-                     driverNo??"No Contact Number",
+                     driverNo??MyStrings.dash,
                       style: FontUtil.customStyle(
                           fontSize: 13.h,
                           fontWeight: FontWeight.w500,
@@ -132,21 +128,23 @@ class _TransportScreenState extends State<TransportScreen> {
     
                   ],
                 ),
+                10.heightBox,
                 Padding(
                   padding: const EdgeInsets.all(padding3),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Bus Stop",
+                        MyStrings.busStop,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,
                             textColor: MyColors.busStop),
                       ),
                       Text(
-                       busStop??"-",
+                       busStop??MyStrings.dash,
                        textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
@@ -159,18 +157,19 @@ class _TransportScreenState extends State<TransportScreen> {
                 Padding(
                   padding: const EdgeInsets.all(padding3),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Drop off",
+                        MyStrings.dropOff,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,
                             fontWeight: FontWeight.w500,
                             textColor: MyColors.busStop),
                       ),
                       Text(
-                        dropOff??"",
+                        dropOff??MyStrings.dash,
                          textAlign: TextAlign.right,
                         style: FontUtil.customStyle(
                             fontSize: 12.h,

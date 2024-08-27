@@ -274,8 +274,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     cardHeight: double.maxFinite,
                                     cardWidth: screenWidth * 0.35,
                                     onIconPressed: () {
-                                      // NavigationService.navigateTo(
-                                      //     const CalendarScreen(), context);
+                                      NavigationService.navigateTo(
+                                          const CalendarScreen(), context);
                                     },
                                     image: MyAssets.calendar,
                                   ),
@@ -287,8 +287,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                       content: MyStrings.activitySub,
                                       isPngImage: false,
                                       onIconPressed: () {
-                                        // NavigationService.navigateTo(
-                                        //     const ActivityScreen(), context);
+                                        NavigationService.navigateTo(
+                                            const ActivityScreen(), context);
                                       },
                                       cardHeight: double.maxFinite,
                                       cardWidth: 250,
@@ -310,8 +310,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                       content: MyStrings.librarySub,
                                       isPngImage: false,
                                       onIconPressed: () {
-                                        // NavigationService.navigateTo(
-                                        //     const LibraryScreen(), context);
+                                        NavigationService.navigateTo(
+                                            const LibraryScreen(), context);
                                       },
                                       image: MyAssets.library,
                                     ),
@@ -324,8 +324,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                       content: MyStrings.infirmarysub,
                                       isPngImage: false,
                                       onIconPressed: () {
-                                        // NavigationService.navigateTo(
-                                        //     const InfirmaryScreen(), context);
+                                        NavigationService.navigateTo(
+                                            const InfirmaryScreen(), context);
                                       },
                                       image: MyAssets.infirmary,
                                     ),

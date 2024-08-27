@@ -1,12 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
+  static const String _baseUrl = 'baseUrl';
   static const String _userIDKey = 'userID';
   static const String _schoolIDKey = 'schoolID';
   static const String _studentIDKey = 'studentID';
   static const String _schoolUrl = "schoolUrl";
   static const String _sessionID = "sessionId";
   static const String _isLoggedIn = "LoggedIn";
+
+
+
+  //Save Url 
+  static Future<void> saveUrl(String  baseUrl) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_baseUrl, baseUrl);
+  }
+
+
 
   // Save UserID
   static Future<void> saveSessionID(int sessionID) async {
@@ -51,7 +62,11 @@ class SharedPref {
 
 /////////////////////////////////////////////////////////////////// GETTERS
 
-
+// Get Url
+  static Future<String?> getBaseUrl() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_baseUrl);
+  }
 
   // Get UserID
   static Future<int?> getUserID() async {

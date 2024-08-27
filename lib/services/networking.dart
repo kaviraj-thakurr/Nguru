@@ -28,7 +28,7 @@ class Networking {
       response = await _dio.post(
         baseUrl + url,
         data: data,
-        options: Options(headers: headers),
+         options: Options(headers: headers),
       );
       log("request body: $data");
       return response;

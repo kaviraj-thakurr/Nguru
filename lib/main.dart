@@ -15,6 +15,7 @@ import 'package:nguru/logic/chatsend_button/chat_send_button_cubit.dart';
 import 'package:nguru/logic/circular/circular_cubit.dart';
 import 'package:nguru/logic/communication/communication_cubit.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_cubit.dart';
+import 'package:nguru/logic/create_communication/save_message_subject_cubit.dart';
 import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
@@ -24,9 +25,10 @@ import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_cubit.dart';
 import 'package:nguru/logic/gallery_item_list/gallery_item_list_cubit.dart';
-import 'package:nguru/logic/infirmary/infirmary_cubit.dart';
+import 'package:nguru/logic/infirmary_all/infirmary/infirmary_cubit.dart';
 import 'package:nguru/logic/library/history/library_history_cubit.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
+import 'package:nguru/logic/library/reserve_book/reserve_book_cubit.dart';
 import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/main_screen/main_screen_cubit.dart';
@@ -165,6 +167,12 @@ class MyApp extends StatelessWidget {
          BlocProvider(
           create: (context) => LibrarySearchBookCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => ReserveBookCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => SaveMessageSubjectCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -211,6 +219,8 @@ class _NguruMainScreenState extends State<NguruMainScreen> {
           } else if (state is MainScreenLoggedInStatusState) {
             return const NguruDashboardScreen();
           } else if (state is MainScreenAddSchoolScreenState) {
+           return const AddSchool(isAddSchoolScreen: false);
+         //  return const NguruDashboardScreen();
             return const
             // NguruDashboardScreen();
             
