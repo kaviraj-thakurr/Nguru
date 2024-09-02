@@ -23,8 +23,8 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
-  int selectedDay = DateTime.now().weekday;
-  bool isSelected = false;
+  int selectedDay = DateTime.now().weekday; 
+  bool isSelected=false;
 
   @override
   void initState() {
@@ -52,12 +52,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 screenTitleHeader(MyStrings.timeTable,
                     onPressed: () => Navigator.pop(context)),
                 40.heightBox,
-                BlocBuilder<TimeTableCubit, TimeTableState>(
-                  builder: (context, state) {
-                    return weekDaysRow(context.read<TimeTableCubit>().selectedDay);
-                  },
-                ),
-
+                weekDaysRow(),
                 30.heightBox,
                 Expanded(
                   child: BlocBuilder<TimeTableCubit, TimeTableState>(
@@ -82,31 +77,33 @@ class _TimetableScreenState extends State<TimetableScreen> {
     );
   }
 
-  // This method for selection for week ------------->
-
-Widget weekDaysRow(int selectedDay) {
+  Widget weekDaysRow() {
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(7, (index) {
-          return gradientRoundedBorderButton(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: List.generate(7, (index) {
+        return gradientRoundedBorderButton(
             title: days[index],
             onPressed: () {
-              context.read<TimeTableCubit>().setSelectedDay(index + 1);
+              setState(() {
+                selectedDay = index + 1;
+              });
             },
+          //  fontSize: 12,
             fontWeight:
-                selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
-            isSelected: selectedDay == index + 1,
-          );
-        }));
+selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
+          isSelected: selectedDay == index + 1,);
+
+      })
+    );
   }
 
-  ///This method for  timetable list which comes from API  ////////
+
+  
 
   Widget timetablePage(BuildContext context, List<ListTimeTable>? list) {
-    final selectedDay = context.read<TimeTableCubit>().selectedDay;
     if (list == null || list.isEmpty) {
-      return const Center(child: Text(MyStrings.noData));
+      return const Center(child: Text("No data available"));
     }
 
     List<ListTimeTable> filteredList = [];
@@ -137,7 +134,7 @@ Widget weekDaysRow(int selectedDay) {
                 MyAssets.noData,
                 height: height300,
               )),
-              Text(MyStrings.holiday,
+              Text("Happy Holiday !",
                   style: FontUtil.customStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -151,13 +148,10 @@ Widget weekDaysRow(int selectedDay) {
     }
 
     if (filteredList.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
-          MyStrings.noData,
-          style: FontUtil.customStyle(
-              fontSize: 12.h,
-              fontWeight: FontWeight.bold,
-              textColor: MyColors.textColors),
+          "No data available",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       );
     }
@@ -189,17 +183,15 @@ Widget weekDaysRow(int selectedDay) {
     );
   }
 
-  ///This method for breakTime in school timetable ---->
-
   Widget timetableCardType1(BuildContext context, String subject, String time) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.050,
       width: double.maxFinite,
       decoration: BoxDecoration(
           gradient: MyColors.assignmentDate,
-          borderRadius: BorderRadius.circular(radius6)),
+          borderRadius: BorderRadius.circular(6)),
       child: Padding(
-        padding: const EdgeInsets.all(padding12),
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,14 +199,14 @@ Widget weekDaysRow(int selectedDay) {
             Text(
               subject,
               style: FontUtil.customStyle(
-                  fontSize: 12.h,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   textColor: MyColors.appColor1),
             ),
             Text(
               time,
               style: FontUtil.customStyle(
-                  fontSize: 12.h,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   textColor: MyColors.appColor1),
             ),
@@ -223,8 +215,6 @@ Widget weekDaysRow(int selectedDay) {
       ),
     );
   }
-
-  // This method for Timetable card design where period number, teacher name come and all related details
 
   Widget timetableCardType2(BuildContext context, ListTimeTable item) {
     String subject;
@@ -265,11 +255,10 @@ Widget weekDaysRow(int selectedDay) {
     }
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.088,
+      height: MediaQuery.of(context).size.height * 0.080,
       width: double.maxFinite,
       decoration: BoxDecoration(
-          color: MyColors.searchBox,
-          borderRadius: BorderRadius.circular(radius6)),
+          color: MyColors.searchBox, borderRadius: BorderRadius.circular(6)),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -281,7 +270,7 @@ Widget weekDaysRow(int selectedDay) {
                 RichText(
                   text: TextSpan(
                     style: FontUtil.customStyle(
-                      fontSize: 20.h,
+                      fontSize: 26.h,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.addButtonColor,
                     ),
@@ -295,10 +284,10 @@ Widget weekDaysRow(int selectedDay) {
                           child: Text(
                             getSuffix(int.parse("${item.periodSrNo}")),
                             style: FontUtil.customStyle(
-                              fontSize: 14.h,
-                              fontWeight: FontWeight.w500,
-                              textColor: MyColors.teacherNameColor,
-                            ),
+                    fontSize: 17.h,
+                    fontWeight: FontWeight.w500,
+                    textColor: MyColors.teacherNameColor,
+                  ),
                           ),
                         ),
                       ),
@@ -307,11 +296,11 @@ Widget weekDaysRow(int selectedDay) {
                 ),
                 20.widthBox,
                 Text(
-                  teacherName.length > 23
-                      ? '${teacherName.substring(0, 23)}.'
-                      : teacherName,
+                 teacherName.length > 23 ? '${teacherName.substring(0, 23)}.' : teacherName,
+                
+                 
                   style: FontUtil.customStyle(
-                    fontSize: 14.h,
+                    fontSize: 17.h,
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.teacherNameColor,
                   ),
@@ -321,7 +310,7 @@ Widget weekDaysRow(int selectedDay) {
                   child: Text(
                     subject,
                     style: FontUtil.customStyle(
-                      fontSize: 14.h,
+                      fontSize: 17.h,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.teacherNameColor,
                     ),
@@ -355,8 +344,6 @@ Widget weekDaysRow(int selectedDay) {
       ),
     );
   }
-
-  // This method for get the suffix for period number
 
   String getSuffix(int number) {
     if (number == 1) {

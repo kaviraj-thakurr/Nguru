@@ -10,7 +10,7 @@ import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/infirmary_all/infirmary/infirmary_cubit.dart';
 import 'package:nguru/logic/infirmary_all/infirmary/infirmary_state.dart';
-import 'package:nguru/screens/setting_screen.dart';
+import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';

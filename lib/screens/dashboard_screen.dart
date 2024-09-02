@@ -25,9 +25,11 @@ import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/infirmary_screen.dart';
 import 'package:nguru/screens/library_screen.dart';
-import 'package:nguru/screens/setting_screen.dart';
+import 'package:nguru/screens/settings/change_siblings.dart';
+import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/screens/story/story_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
+import 'package:nguru/test.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -236,8 +238,9 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     content: MyStrings.timeTablesub,
                                     isPngImage: false,
                                     onIconPressed: () {
+
                                       NavigationService.navigateTo(
-                                          const TimetableScreen(), context);
+                                           ReportCardScreen(), context);
                                     },
                                     cardWidth: screenWidth * 0.5,
                                     cardHeight: double.maxFinite,

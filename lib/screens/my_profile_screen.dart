@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_gradient_border_button.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
-import 'package:nguru/screens/setting_screen.dart';
+import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:velocity_x/velocity_x.dart';

@@ -793,7 +793,7 @@ Widget attendanceVerticalBarChartGraph(
                               .then((value) => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AttendenceScreen(
+                                      builder: (context) => AttendanceScreen(
                                         month: tappedBarData,
                                       ),
                                     ),

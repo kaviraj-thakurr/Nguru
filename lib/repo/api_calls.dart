@@ -9,6 +9,7 @@ import 'package:nguru/models/assignment_models/assignment_month_list_model.dart'
 import 'package:nguru/models/attendance_bar_chart_model.dart';
 import 'package:nguru/models/attendence_model.dart';
 import 'package:nguru/models/calendar_event_model.dart';
+import 'package:nguru/models/change_siblings_model.dart';
 import 'package:nguru/models/chatMessagesList.dart';
 import 'package:nguru/models/chatsend_button_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
@@ -17,6 +18,8 @@ import 'package:nguru/models/contact_us_model.dart';
 import 'package:nguru/models/cumulative_attendance_model.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
+import 'package:nguru/models/examMarksModel.dart';
+import 'package:nguru/models/exam_sehedule_model.dart';
 import 'package:nguru/models/fees_model.dart';
 import 'package:nguru/models/forget_pass_model.dart';
 import 'package:nguru/models/gallery/gallery_model.dart';
@@ -29,6 +32,7 @@ import 'package:nguru/models/library_issued_book_model.dart';
 import 'package:nguru/models/notification_models.dart';
 import 'package:nguru/models/particular_month_attendance_model.dart';
 import 'package:nguru/models/push_notification_model.dart';
+import 'package:nguru/models/report_card_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/models/timetable_model.dart';
 import 'package:nguru/models/transport_detail_model.dart';
@@ -326,6 +330,12 @@ class AuthRepo {
       throw Exception("Failed to login: $e");
     }
   }
+
+
+
+
+
+
 
   ////////////////////////////////////////////////     Dicipline STORY ON TAP      //////////////////////////////////////////////////////
 
@@ -728,13 +738,13 @@ class AuthRepo {
 	"month":0,
 	"pageNumber":0,
 	"pageSize":0,
-	"schoolID":1,
-	"schoolUrl":"https://qsstg.niiteducation.com/tistnj",
-	"sessionID":178,
-	"studentID":108416,
+	"schoolID":await SharedPref.getSchoolID(),
+	"schoolUrl":await SharedPref.getSchoolUrl(),
+	"sessionID":await SharedPref.getSessionId(),
+	"studentID":await SharedPref.getStudentID(),
 	"subjectID":0,
 	"type":0,
-	"userID":"118011",
+	"userID":await SharedPref.getUserID(),
 	"year":0
 }
 
@@ -1173,6 +1183,131 @@ Future<ListCommunicationModel> getCommunicationList(int? appMessageID ) async {
       throw Exception("Failed to fetch infirmary list: $e");
     }
   }
+
+
+
+
+
+
+
+
+
+  ////////////////////////////CHANGE SIBLINGS //////////////////////////
+
+
+Future<ChangeSiblingsModel> getSiblingsList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.changeSiblings,
+            isStagingLink: true,
+             data: {
+ 
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
+      ChangeSiblingsModel changeSiblingsModel = changeSiblingsModelFromJson(res.toString());
+      return changeSiblingsModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch siblings list: $e");
+    }
+  }
+
+
+  
+//////////////////////////////Report Card List ////////////////////////
+  
+ Future<ReportCardModel> getReportCardList() async {
+    try {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.reportCardList,
+          data: 
+     {
+"appMessageID":0,
+ "circularID":0,
+  "contentType":0,
+ "downloadAttachment":0,
+  "isNotification":0,
+"messageTypeId":0,
+ "month":0,
+"pageNumber":1,
+ "pageSize":8,
+ "schoolID":await SharedPref.getSchoolID(),
+ "schoolUrl":await SharedPref.getSchoolUrl(),
+ "sessionID":await SharedPref.getSessionId(),
+"studentID":await SharedPref.getStudentID(),
+
+"type":0,
+ "userID":await SharedPref.getUserID(),
+"year":0
+}
+          );
+      ReportCardModel reportCardModel =
+          reportCardModelFromJson(res.toString());
+      return reportCardModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to fetch gallery items list: $e");
+    }
+  }
+
+
+
+/////////////////////////// Exam Marks List //////////////////////////////
+
+Future<ExamMarksModel> getExamMarks() async {
+    try {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.examMarksList,
+          data: 
+ {
+
+ "userID":await SharedPref.getUserID(),
+  "schoolID": await SharedPref.getSchoolID(),
+ "studentID":await SharedPref.getStudentID(),
+"sessionID":await SharedPref.getSessionId(),
+ "schoolUrl":await SharedPref.getSchoolUrl(),
+}
+          );
+      ExamMarksModel examMarksModel =
+         examMarksModelFromJson(res.toString());
+      return examMarksModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to fetch gallery items list: $e");
+    }
+  }
+
+///////////////////////////////// GET EXAM SCHEDULE LIST //////////////////////
+  
+Future<ScheduleModel> getScheduleList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.examScheduleList,
+            isStagingLink: true,
+             data: {
+ 
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
+      ScheduleModel scheduleModel = scheduleModelFromJson(res.toString());
+      return scheduleModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch schedule list: $e");
+    }
+  }
+
 
 
 

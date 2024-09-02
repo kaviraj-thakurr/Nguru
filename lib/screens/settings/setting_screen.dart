@@ -13,6 +13,7 @@ import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
+import 'package:nguru/screens/settings/change_siblings.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -145,7 +146,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 .then((value) =>
                                  Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const LoginScreen(schoolNickName: "",subDomain: "",trimmedSchoolUrl: "", retainUsername: true,)), 
+                                  MaterialPageRoute(builder: (context) => const   
+                                  
+                                  LoginScreen(schoolNickName: "",subDomain: "",trimmedSchoolUrl: "", retainUsername: true,)), 
                                   (Route<dynamic> route) => false,
                                 )
                                             ),
@@ -233,20 +236,30 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               )
             : GestureDetector(
-                onTap: (){},
+                onTap: (){
                 // title == "My Profile"
                 //     ? () => Navigator.push(
                 //         context,
                 //         MaterialPageRoute(
                 //             builder: (context) => MyProfileScreen()))
                 //     :
-                    //  title == "Change Password"
-                    //     ? () => Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder: (context) =>
-                    //                 const ResetPasswordScreen()))
-                    //     : null,
+
+                if(title==  "Change Password"){
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyProfileScreen()));
+
+                } else if(title ==  "Change Sibling"){
+
+                   Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ChangeSiblings()));
+
+                }
+                },
+                  
                 child: const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
