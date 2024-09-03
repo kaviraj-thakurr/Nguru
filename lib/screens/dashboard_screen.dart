@@ -225,7 +225,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          const  StoryScreen(),
+                            const StoryScreen(),
                             18.heightBox,
                             SizedBox(
                               height: screenHeight * 0.17,
@@ -238,9 +238,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     content: MyStrings.timeTablesub,
                                     isPngImage: false,
                                     onIconPressed: () {
-
                                       NavigationService.navigateTo(
-                                           ReportCardScreen(), context);
+                                          ReportCardScreen(), context);
                                     },
                                     cardWidth: screenWidth * 0.5,
                                     cardHeight: double.maxFinite,

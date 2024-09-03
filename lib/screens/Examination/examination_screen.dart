@@ -51,24 +51,25 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     context.read<ExamMarksListCubit>().getExamMarks();
     super.initState();
   }
-  String removeHttpPrefix(String url) {
-      if (url.startsWith('http://')) {
-        return url.replaceAll('http://', '');
-      }
-      return url;
-    }
 
-    void launchBrowser(String? url) async {
-      if (url != null && selectedCategoryIndex == 0) {
-        try {
-          Uri link = Uri(scheme: 'http', path: removeHttpPrefix(url));
-          await launchUrl(link, mode: LaunchMode.externalApplication);
-          print(link);
-        } catch (e) {
-          debugPrint(e.toString());
-        }
+  String removeHttpPrefix(String url) {
+    if (url.startsWith('http://')) {
+      return url.replaceAll('http://', '');
+    }
+    return url;
+  }
+
+  void launchBrowser(String? url) async {
+    if (url != null && selectedCategoryIndex == 0) {
+      try {
+        Uri link = Uri(scheme: 'http', path: removeHttpPrefix(url));
+        await launchUrl(link, mode: LaunchMode.externalApplication);
+        print(link);
+      } catch (e) {
+        debugPrint(e.toString());
       }
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +191,10 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                         selectedCategoryIndex,
                                     onTap: () {
                                       if (selectedCategoryIndex == 0) {
-                                       return launchBrowser(state.reportCardModel.report?[index].reportUrl);
+                                        return launchBrowser(state
+                                            .reportCardModel
+                                            .report?[index]
+                                            .reportUrl);
                                       }
                                     },
                                   ).pSymmetric(v: 8); // Padding between cards
@@ -226,8 +230,12 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                           selectedCategoryIndex:
                                               selectedCategoryIndex,
                                           onTap: () {
-                                            if(selectedCategoryIndex==2){
-                                               NavigationService.navigateTo(ExaminationScreenMarks(examinationmarksmodel:state.examMarksModel), context);
+                                            if (selectedCategoryIndex == 2) {
+                                              NavigationService.navigateTo(
+                                                  ExaminationScreenMarks(
+                                                      examinationmarksmodel:
+                                                          state.examMarksModel),
+                                                  context);
                                             }
                                           })
                                       .pSymmetric(
@@ -351,132 +359,6 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     );
   }
 }
-
-// class TimetableCardType1 extends StatefulWidget {
-//   final String subject;
-//   final String? term;
-//   final String? time;
-//   String? url;
-
-//   final String ?examID;
-
-//   final int selectedCategoryIndex;
-
-//   TimetableCardType1({
-//     required this.subject,
-//     this.time,
-//     this.term,
-//     this.url,
-
-//      this.examID,
-
-//     required this.selectedCategoryIndex,
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   State<TimetableCardType1> createState() => _TimetableCardType1State();
-// }
-
-// class _TimetableCardType1State extends State<TimetableCardType1> {
-
-//   String removeHttpPrefix(String url) {
-//     // Check if the string starts with 'http://'
-//     if (url.startsWith('http://')) {
-//       // Remove 'http://' and return the remaining string
-//       return url.replaceAll('http://', '');
-//     }
-//     // Return the original string if it does not start with 'http://'
-//     return url;
-//   }
-
-//   dynamic launchBrowser(String url) async {
-//     try {
-//       Uri link = Uri(scheme: 'http', path: removeHttpPrefix(url));
-
-//       await launchUrl(link, mode: LaunchMode.externalApplication);
-//       print(link);
-//     } catch (e) {
-//       debugPrint(e.toString());
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     String iconAsset = '';
-//     if (widget.selectedCategoryIndex == 1) {
-//       iconAsset = MyAssets.examDown; // Example icon for Schedule category
-//     } else if (widget.selectedCategoryIndex == 2) {
-//       iconAsset = MyAssets.homeIcon; // Example icon for Exam Marks category
-//     } else {
-//       iconAsset = MyAssets.callIcon; // Example icon for Report Cards category
-//     }
-//     return Container(
-//       height: MediaQuery.of(context).size.height * 0.092,
-//       width: double.infinity,
-//       decoration: BoxDecoration(
-//         color: MyColors.searchBox,
-//         borderRadius: BorderRadius.circular(6),
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.all(12.0),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             // Subject and term details
-//             Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text(
-//                   widget.subject,
-//                   style: FontUtil.customStyle(
-//                     fontSize: 16.h,
-//                     fontWeight: FontWeight.w500,
-//                     textColor: MyColors.addButtonColor,
-//                   ),
-//                 ),
-//                 2.heightBox,
-//                 Text(
-//                   widget.term ?? "",
-//                   style: FontUtil.customStyle(
-//                     fontSize: 12,
-//                     fontWeight: FontWeight.w500,
-//                     textColor: MyColors.teacherNameColor,
-//                   ),
-//                 ),
-//               ],
-//             ),
-
-//             // Action button or time display
-//             Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 IconButton(
-//                   onPressed: () async {
-//                     if (widget.selectedCategoryIndex == 0) {
-//                       launchBrowser(widget.url ?? "");
-//                     }
-//                     else if (widget.selectedCategoryIndex == 2){
-//                       NavigationService.navigateTo(const ExaminationScreenMarks(examId: ,), context);
-//                     }
-//                   },
-//                   icon: Icon(
-//                     widget.selectedCategoryIndex == 0
-//                         ? Icons.arrow_downward
-//                         : widget.selectedCategoryIndex == 1
-//                             ? Icons.arrow_forward
-//                             : Icons.arrow_forward,
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 // Widget for building the category selector
 Widget buildSelector(List<String> selecterItems, int selectedIndex,

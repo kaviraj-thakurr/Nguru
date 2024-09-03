@@ -8,8 +8,15 @@ class SharedPref {
   static const String _schoolUrl = "schoolUrl";
   static const String _sessionID = "sessionId";
   static const String _isLoggedIn = "LoggedIn";
+  static const String _userName = "userName";
 
+//Save user Name
 
+static Future<void> saveUsername (String userName) async
+{
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString(_userName, userName);
+}
 
   //Save Url 
   static Future<void> saveUrl(String  baseUrl) async {
@@ -61,6 +68,12 @@ class SharedPref {
 
 
 /////////////////////////////////////////////////////////////////// GETTERS
+///
+
+static Future<String?> getUerName() async{
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(_userName);
+}
 
 // Get Url
   static Future<String?> getBaseUrl() async {
@@ -111,7 +124,7 @@ class SharedPref {
 
 
 
-//////////////////////////////////////////////////// CLEARING ALL SHARED PREFS
+//////////////////////////////////////////////////// CLEARING ALL SHARED PREFS /////////////////////////////
 
 
 
