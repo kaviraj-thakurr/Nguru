@@ -9,6 +9,7 @@ import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
+import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
@@ -182,28 +183,7 @@ return getUserName;
   },
 ),
 
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return buildLogoutAlertDialog(
-                            context: context,
-                            onLogout: () => context
-                                .read<SignoutCubit>()
-                                .signout()
-                                .then((value) =>
-                                    SharedPref.saveLoggedInStatus(false))
-                                .then((value) => Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const AddSchool(
-                                                isAddSchoolScreen: false,
-                                              )),
-                                      (Route<dynamic> route) => false,
-                                    )),
-                            onCancel: () => Navigator.pop(context),
-                          );
-                        },
-                      ),
+                     
                       child: Text(
                         "Sign out",
                         style: FontUtil.customStyle(
@@ -286,15 +266,20 @@ return getUserName;
                 ),
               )
             : GestureDetector(
+               
                 onTap: () {
-                  // title == "My Profile"
-                  //     ? () => Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) => MyProfileScreen()))
-                  //     :
+                  log("title:  $title");
+                  if (title == "My Profile") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyProfileScreen(),
+                      ),
+                    );
+                  }
 
-                  if (title == "Change Password") {
+
+                   else  if (title == "Change Password") {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -305,17 +290,9 @@ return getUserName;
                         MaterialPageRoute(
                             builder: (context) => const ChangeSiblings()));
                   }
-                },
-                onTap: () {
-                  log("title:  $title");
-                  if (title == "My Profile") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyProfileScreen(),
-                      ),
-                    );
-                  } else if (title == "Change Password") {
+
+                  
+                   else if (title == "Change Password") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

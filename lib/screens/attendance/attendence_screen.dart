@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_attendence_footer_card.dart';
 import 'package:nguru/custom_widgets/custom_calendar.dart';
@@ -13,7 +12,6 @@ import 'package:nguru/models/cumulative_attendance_model.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
-import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -27,10 +25,10 @@ class AttendenceScreen extends StatefulWidget {
   const AttendenceScreen({super.key, this.month,  this.startDate,  this.endDate});
 
   @override
-  State<AttendanceScreen> createState() => _AttendenceScreenState();
+  State<AttendenceScreen> createState() => _AttendenceScreenState();
 }
 
-class _AttendenceScreenState extends State<AttendanceScreen> {
+class _AttendenceScreenState extends State<AttendenceScreen> {
   final TextEditingController searchBarController = TextEditingController();
   final DateTime _focusedDay = DateTime.now();
   List monthMap = [

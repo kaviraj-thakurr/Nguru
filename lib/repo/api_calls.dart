@@ -707,28 +707,7 @@ class AuthRepo {
 }
 
       );
-      final res = await _myService
-          .networkPost(url: EndUrl.sendMessage, isStagingLink: true, data: {
-        "appMessageID": appMessageID,
-        "circularID": 0,
-        "content": message,
-        "contentType": 0,
-        "createdForUserId": "114989",
-        "downloadAttachment": 0,
-        "isNotification": 0,
-        "messageTypeId": 0,
-        "month": 0,
-        "pageNumber": 0,
-        "pageSize": 0,
-        "schoolID": 1,
-        "schoolUrl": "https://qsstg.niiteducation.com/tistnj",
-        "sessionID": 178,
-        "studentID": 108416,
-        "subjectID": 0,
-        "type": 0,
-        "userID": "118011",
-        "year": 0
-      });
+      
       ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
       return chatSendButton;
     } catch (e) {
@@ -922,6 +901,125 @@ class AuthRepo {
       throw Exception("Failed to fetch library histoy list: $e");
     }
   }
+
+
+  
+  ////////////////////////////CHANGE SIBLINGS //////////////////////////
+
+
+Future<ChangeSiblingsModel> getSiblingsList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.changeSiblings,
+            isStagingLink: true,
+             data: {
+ 
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
+      ChangeSiblingsModel changeSiblingsModel = changeSiblingsModelFromJson(res.toString());
+      return changeSiblingsModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch siblings list: $e");
+    }
+  }
+
+
+/////////////////////////// Exam Marks List //////////////////////////////
+
+Future<ExamMarksModel> getExamMarks() async {
+    try {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.examMarksList,
+          data: 
+ {
+
+ "userID":await SharedPref.getUserID(),
+  "schoolID": await SharedPref.getSchoolID(),
+ "studentID":await SharedPref.getStudentID(),
+"sessionID":await SharedPref.getSessionId(),
+ "schoolUrl":await SharedPref.getSchoolUrl(),
+}
+          );
+      ExamMarksModel examMarksModel =
+         examMarksModelFromJson(res.toString());
+      return examMarksModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to fetch gallery items list: $e");
+    }
+  }
+
+
+  //////////////////////////////Report Card List ////////////////////////
+  
+ Future<ReportCardModel> getReportCardList() async {
+    try {
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.reportCardList,
+          data: 
+     {
+"appMessageID":0,
+ "circularID":0,
+  "contentType":0,
+ "downloadAttachment":0,
+  "isNotification":0,
+"messageTypeId":0,
+ "month":0,
+"pageNumber":1,
+ "pageSize":8,
+ "schoolID":await SharedPref.getSchoolID(),
+ "schoolUrl":await SharedPref.getSchoolUrl(),
+ "sessionID":await SharedPref.getSessionId(),
+"studentID":await SharedPref.getStudentID(),
+
+"type":0,
+ "userID":await SharedPref.getUserID(),
+"year":0
+}
+          );
+      ReportCardModel reportCardModel =
+          reportCardModelFromJson(res.toString());
+      return reportCardModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to fetch gallery items list: $e");
+    }
+  }
+
+
+
+///////////////////////////////// GET EXAM SCHEDULE LIST //////////////////////
+  
+Future<ScheduleModel> getScheduleList() async {
+    try {
+      final res =
+          await _myService.networkPost(
+            url: EndUrl.examScheduleList,
+            isStagingLink: true,
+             data: {
+ 
+  "userID":  await SharedPref.getUserID(),
+  "schoolID":  await SharedPref.getSchoolID(),
+  "studentID":  await SharedPref.getStudentID(),
+  "sessionID":  await SharedPref.getSessionId(),
+  "schoolURL":  await SharedPref.getSchoolUrl(),
+});
+      ScheduleModel scheduleModel = scheduleModelFromJson(res.toString());
+      return scheduleModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch schedule list: $e");
+    }
+  }
+
 
   // LIBRARY SEARCH
 

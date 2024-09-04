@@ -87,32 +87,35 @@ class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
 
                                   itemBuilder: (context, index) {
                                     final marks = widget.examinationmarksmodel?.examinationmarksmodel?.elementAt(index);
-                                    return Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          marks?.subjectName ?? "",
-                                          style: FontUtil.subName,
-                                        ),
-                                     
-                                        Text(
-                                          "${marks?.writtenObtainMarks}/${marks?.maxWrittenMarks}",
-                                          style: FontUtil.subMarks,
-                                        ),
-                                        Text(
-                                          "${marks?.practicalObtainMarks}/${marks?.practicalObtainMarks}",
-                                          style: FontUtil.subMarks,
-                                        ),
-                                        Text(
-                                          "${marks?.oralObtainMarks}/${marks?.maxOralMarks}",
-                                          style: FontUtil.subMarks,
-                                        ),
-                                        Text(
-                                          "${marks?.practicalObtainMarks}/${marks?.maxProjectMarks}",
-                                          style: FontUtil.subMarks,
-                                        ),
-                                      ],
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            marks?.subjectName ?? "",
+                                            style: FontUtil.subName,
+                                          ),
+                                       5.heightBox,
+                                          Text(
+                                            "${marks?.writtenObtainMarks}/${marks?.maxWrittenMarks}",
+                                            style: FontUtil.subMarks,
+                                          ),
+                                          Text(
+                                            "${marks?.practicalObtainMarks}/${marks?.practicalObtainMarks}",
+                                            style: FontUtil.subMarks,
+                                          ),
+                                          Text(
+                                            "${marks?.oralObtainMarks}/${marks?.maxOralMarks}",
+                                            style: FontUtil.subMarks,
+                                          ),
+                                          Text(
+                                            "${marks?.practicalObtainMarks}/${marks?.maxProjectMarks}",
+                                            style: FontUtil.subMarks,
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
                                 ),

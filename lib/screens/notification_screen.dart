@@ -178,7 +178,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
       }
 
       else if(notification.notificationHeader == MyStrings.attendanceNotification){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(month: notification.createdOn?.month,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendenceScreen(month: notification.createdOn?.month,)));
       }
 
       else if(notification.notificationHeader == MyStrings.examReportNotification){

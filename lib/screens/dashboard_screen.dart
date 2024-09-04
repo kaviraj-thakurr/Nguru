@@ -22,22 +22,17 @@ import 'package:nguru/logic/settings/change_session/change_session_state.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/screens/Examination/examination_screen.dart';
 import 'package:nguru/screens/activity_screen.dart';
-import 'package:nguru/screens/assignment_screen.dart';
 import 'package:nguru/screens/attendance/attendance_main_screen.dart';
 import 'package:nguru/screens/calendar_screen.dart';
-import 'package:nguru/screens/circular_screen.dart';
-import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/infirmary_screen.dart';
-import 'package:nguru/screens/library_screen.dart';
-import 'package:nguru/screens/settings/change_siblings.dart';
+
 import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/screens/library/library_screen.dart';
-import 'package:nguru/screens/setting_screen.dart';
+
 import 'package:nguru/screens/story/story_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
-import 'package:nguru/test.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -294,8 +289,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                           cardWidth: screenWidth * 0.35,
                                           image: MyAssets.exams,
                                           onIconPressed: () {
-                                            // NavigationService.navigateTo(
-                                            //     const ExaminationScreen(), context);
+                                            NavigationService.navigateTo(
+                                                const ExaminationScreen(), context);
                                           },
                                         ),
                                       ],
