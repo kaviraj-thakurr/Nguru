@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
@@ -14,14 +13,11 @@ import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
-import 'package:nguru/repo/api_calls.dart';
-import 'package:nguru/screens/assignment_screen.dart';
-import 'package:nguru/screens/circular_screen.dart';
-import 'package:nguru/screens/discipline_screen.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_sizebox.dart';
 import 'package:nguru/utils/border_painter.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:nguru/utils/story.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -51,9 +47,22 @@ class _StoryScreenState extends State<StoryScreen>
   DateTime selectedDate = DateTime.now();
   DateTime selectedDateForDiscipline = DateTime.now();
 
+
+    DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+
+    Future<void> getSessionDates() async {
+    startDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getStartDateOfSession() ?? "");
+    endDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getEndDateOfSession() ?? "");
+    log(" init call from story screen:  $startDate $endDate");
+  }
+
   @override
   void initState() {
     super.initState();
+    getSessionDates();
 
     _assignmentAnimationController = AnimationController(
       vsync: this,
@@ -84,11 +93,11 @@ class _StoryScreenState extends State<StoryScreen>
     context
         .read<AssignmentMonthListCubit>()
         .getAssignmentMonthList(todaysDate.month);
-    context.read<DisciplineCubit>().getDiscipline(type: 0);
-    // .then((value) =>
-    // context
-    //     .read<DisciplineCubit>()
-    //     .filterDisciplineListByDate(focusedDay, false));
+   context.read<DisciplineCubit>().getDiscipline(type: 0)
+    .then((value) =>
+    context
+        .read<DisciplineCubit>()
+        .filterDisciplineListByDate(focusedDay, false));
   }
 
   @override
@@ -262,6 +271,8 @@ class _StoryScreenState extends State<StoryScreen>
                     context,
                     MaterialPageRoute(
                         builder: (context) => StoryView(
+                          startDate: startDate,
+                          endDate: endDate,
                               isAssignmentWidget: true,
                               isGalleryWidget: false,
                               isCircularWidget: false,
@@ -287,6 +298,8 @@ class _StoryScreenState extends State<StoryScreen>
                 context,
                 MaterialPageRoute(
                     builder: (context) => StoryView(
+                      startDate: startDate,
+                      endDate: endDate,
                           isAssignmentWidget: true,
                           isGalleryWidget: false,
                           isCircularWidget: false,
@@ -309,6 +322,8 @@ class _StoryScreenState extends State<StoryScreen>
                 context,
                 MaterialPageRoute(
                     builder: (context) => StoryView(
+                      startDate: startDate,
+                      endDate: endDate,
                           isAssignmentWidget: false,
                           isGalleryWidget: false,
                           isCircularWidget: true,
@@ -324,12 +339,14 @@ class _StoryScreenState extends State<StoryScreen>
               animationController.stop();
             });
           } else if (title == "Discipline") {
-            disciplineCubit.getDiscipline();
+          //  disciplineCubit.getDiscipline();
             Future.delayed(const Duration(seconds: 1)).then((_) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => StoryView(
+                      startDate: startDate,
+                      endDate: endDate,
                           isAssignmentWidget: false,
                           isGalleryWidget: false,
                           isCircularWidget: false,

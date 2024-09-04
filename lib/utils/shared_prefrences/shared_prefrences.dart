@@ -7,6 +7,10 @@ class SharedPref {
   static const String _schoolUrl = "schoolUrl";
   static const String _sessionID = "sessionId";
   static const String _isLoggedIn = "LoggedIn";
+  static const String _startDate = "StartDate";
+  static const String _endDate = "EndDate";
+  static const String _isFromSelectSessionScreen = "SessionSelected";
+
 
   // Save UserID
   static Future<void> saveSessionID(int sessionID) async {
@@ -44,8 +48,25 @@ class SharedPref {
     await prefs.setBool(_isLoggedIn.toString(), isLoggedIn);
   }
 
+  // Save start date of session
+  static Future<void> saveStartDateOfSession(String startDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_startDate, startDate);
+  }
 
 
+  // Save end date of session
+  static Future<void> saveEndDateOfSession(String endDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_endDate, endDate);
+  }
+
+
+  // Save session selected bool
+  static Future<void> saveSessionSeleted({bool isSessionSelected =false}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_isFromSelectSessionScreen.toString(), isSessionSelected);
+  }
 
 
 
@@ -93,7 +114,28 @@ class SharedPref {
   }
 
 
+  // Get logged in status
+  static Future<String?> getStartDateOfSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    return prefs.getString(_startDate);
+  }
+
+
+    // Get logged in status
+  static Future<String?> getEndDateOfSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(_endDate);
+  }
+
+
+  // Get session selected status
+  static Future<bool?> getSessionSelectedStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getBool(_isFromSelectSessionScreen);
+  }
 
 
 //////////////////////////////////////////////////// CLEARING ALL SHARED PREFS

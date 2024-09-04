@@ -12,6 +12,11 @@ import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
+import 'package:nguru/screens/settings/add_feedback_screen.dart';
+import 'package:nguru/screens/settings/change_session_screen.dart';
+import 'package:nguru/screens/settings/feedback_list_screen.dart';
+import 'package:nguru/screens/settings/privacy_policy_screen.dart';
+import 'package:nguru/screens/settings/terms_of_use_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -30,7 +35,7 @@ class _SettingScreenState extends State<SettingScreen> {
   List<String> settingitems = [
     "My Profile",
     "Change Sibling",
-    //  "Change Session",
+    "Change Session",
     "Add School",
     "Push Notification",
     "Change Password",
@@ -104,7 +109,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: settingItemsListTile(
-                            context, "${settingitems[index]}", isTapped: isTap,
+                            context, settingitems[index], isTapped: isTap,
                             onToggleChanged: (bool value) {
                           setState(() {
                             isTap = !isTap;
@@ -139,14 +144,17 @@ class _SettingScreenState extends State<SettingScreen> {
                             context: context,
                             onLogout: () => context
                                 .read<SignoutCubit>()
-                                .signout().then((value) => SharedPref.saveLoggedInStatus(false))
+                                .signout()
                                 .then((value) =>
-                                 Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const AddSchool(isAddSchoolScreen: false,)), 
-                                  (Route<dynamic> route) => false,
-                                )
-                                            ),
+                                    SharedPref.saveLoggedInStatus(false))
+                                .then((value) => Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const AddSchool(
+                                                isAddSchoolScreen: false,
+                                              )),
+                                      (Route<dynamic> route) => false,
+                                    )),
                             onCancel: () => Navigator.pop(context),
                           );
                         },
@@ -170,8 +178,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Logout Successfully")));
                 } else if (state is SignoutErrorState) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("Logout Successfully")));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Logout Successfully")));
                 }
               })
             ]),
@@ -231,20 +239,57 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               )
             : GestureDetector(
-                onTap: (){},
-                // title == "My Profile"
-                //     ? () => Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => MyProfileScreen()))
-                //     :
-                    //  title == "Change Password"
-                    //     ? () => Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder: (context) =>
-                    //                 const ResetPasswordScreen()))
-                    //     : null,
+                onTap: () {
+                  log("title:  $title");
+                  if (title == "My Profile") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyProfileScreen(),
+                      ),
+                    );
+                  } else if (title == "Change Password") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ResetPasswordScreen(),
+                      ),
+                    );
+                  } else if (title == "Change Session") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangeSessionScreen(),
+                      ),
+                    );
+                  }
+
+                  else if ( title == "Privacy & Policy"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyPolicyScreen(),
+                      ),
+                    );
+                  }
+
+                  else if ( title == "Terms of use"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TermsOfUseScreen(),
+                      ),
+                    );
+                  }
+                  else if ( title == "Feedback"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FeedbackListScreen(),
+                      ),
+                    );
+                  }
+                },
                 child: const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
@@ -333,11 +378,23 @@ AlertDialog buildLogoutAlertDialog({
     actions: <Widget>[
       TextButton(
         onPressed: onCancel,
-        child:  Text('Cancel',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+        child: Text(
+          'Cancel',
+          style: FontUtil.customStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textColor: MyColors.boldTextColor),
+        ),
       ),
       TextButton(
         onPressed: onLogout,
-        child: Text('Log Out',style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+        child: Text(
+          'Log Out',
+          style: FontUtil.customStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textColor: MyColors.boldTextColor),
+        ),
       ),
     ],
   );

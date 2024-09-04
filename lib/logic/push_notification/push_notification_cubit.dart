@@ -11,14 +11,14 @@ class PushNotificationCubit extends Cubit<PushNotificationState>{
 Future <void> PushNotification (int isNotification) async{
   try{
     emit(PushNotificationLoadingState());
-    final result = await authRepo?.pushNotification(isNotification: isNotification);
+    final result = await authRepo?.pushNotification(isNotification);
     if(result != null){
-      if(result.responseCode == "200"){
+      if(result["responseCode"] == "200"){
         emit(PushNotificationSuccessState(
-          pushNotificationModel: result
+          pushNotificationModel: result["responseMessage"]
         ));
       }else{
-        emit(PushNotificationErrorState(result.responseMessage ?? "Error occured"));
+        emit(PushNotificationErrorState(result["responseMessage"] ?? "Error occured"));
       }
     }
   }

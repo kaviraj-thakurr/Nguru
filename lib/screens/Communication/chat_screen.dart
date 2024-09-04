@@ -658,7 +658,11 @@ class _ChatUiScreenState extends State<ChatScreen> {
                   .then((value) => context
                       .read<CommunicationCubit>()
                       .getCommunicationDetails())
-                  .then((value) => initiatedTheChat = true)
+                  .then((value) {
+                    setState(() {
+                       initiatedTheChat = true;
+                    });
+                  })
                   .then((value) {
                 BlocListener<SaveMessageSubjectCubit, SaveMessageSubjectState>(
                     listener: (context, state) {

@@ -9,7 +9,7 @@ abstract class PushNotificationState{}
 class PushNotificationLoadingState extends PushNotificationState {}
 
 class PushNotificationSuccessState extends PushNotificationState {
-  final PushNotificationModel? pushNotificationModel;
+  final String? pushNotificationModel;
 
   PushNotificationSuccessState({
     this.pushNotificationModel,

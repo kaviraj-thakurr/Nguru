@@ -18,7 +18,9 @@ import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class DisciplineScreen extends StatefulWidget {
-  const DisciplineScreen({super.key});
+    final DateTime startDate;
+  final DateTime endDate;
+  const DisciplineScreen({super.key, required this.startDate, required this.endDate});
 
   @override
   State<DisciplineScreen> createState() => _DisciplineScreenState();
@@ -27,7 +29,6 @@ class DisciplineScreen extends StatefulWidget {
 class _DisciplineScreenState extends State<DisciplineScreen> {
   TextEditingController searchController = TextEditingController();
   DateTime focusedDay = DateTime.now();
-
 
   @override
   void initState() {
@@ -50,12 +51,13 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
               child: Column(
                 children: [
                   customAppBar(),
-              
-                  screenTitleHeader(MyStrings.discipline,onPressed: ()=> Navigator.pop(context)),
-              
+
+                  screenTitleHeader(MyStrings.discipline,
+                      onPressed: () => Navigator.pop(context)),
+
                   35.heightBox,
-              
-                  disciplineCalendar(),
+
+                  DisciplineCalendar(startDate: widget.startDate, endDate: widget.endDate,),
                   15.heightBox,
                   BlocConsumer<DisciplineCubit, DisciplineState>(
                       listener: (context, state) {},
@@ -64,23 +66,22 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
-                        } else if (state is DisciplineSuccessState ) {
-
-                         // var disciplineListt=state as DisciplineSuccessState;
+                        } else if (state is DisciplineSuccessState) {
+                          // var disciplineListt=state as DisciplineSuccessState;
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "${MyStrings.positivePoints}: $totalPositiveP",
+                                "${MyStrings.positivePoints}: ${double.parse(totalPositiveP).toStringAsFixed(2)}",
                                 style: FontUtil.customStyle(
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
                               Text(
-                                "${MyStrings.negativePoints}: $totalNegitiveP",
+                                "${MyStrings.negativePoints}: ${double.parse(totalNegitiveP).toStringAsFixed(2)}",
                                 style: FontUtil.customStyle(
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
@@ -91,16 +92,16 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "${MyStrings.positivePoints}: $totalPositiveP",
+                                "${MyStrings.positivePoints}: ${double.parse(totalPositiveP).toStringAsFixed(2)}",
                                 style: FontUtil.customStyle(
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
                               Text(
-                                "${MyStrings.negativePoints}: $totalNegitiveP",
+                                "${MyStrings.negativePoints}: ${double.parse(totalNegitiveP).toStringAsFixed(2)}",
                                 style: FontUtil.customStyle(
-                                    fontSize: 14,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
@@ -129,8 +130,8 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                         }
                       }),
 
-                      5.heightBox,
-              
+                  5.heightBox,
+
                   BlocConsumer<DisciplineCubit, DisciplineState>(
                       listener: (context, state) {},
                       builder: (context, state) {
@@ -157,93 +158,93 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                             ),
                           );
                         } else if (state is DisciplineFilteredState) {
-                          return  state.filteredList.isEmpty
+                          return state.filteredList.isEmpty
                               ? Center(
-                                child: Column(
-                                children: [
-                                  160.heightBox,
-                                  SvgPicture.asset(
-                                    MyAssets.noDataFound,
-                                    height: height150,
+                                  child: Column(children: [
+                                    160.heightBox,
+                                    SvgPicture.asset(
+                                      MyAssets.noDataFound,
+                                      height: height150,
+                                    ),
+                                    5.heightBox,
+                                    Text(
+                                      MyStrings.noDisciplineToday,
+                                      style: FontUtil.customStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          textColor: MyColors.boldTextColor),
+                                    ),
+                                  ]),
+                                )
+                              : Flexible(
+                                  child: PageView.builder(
+                                    itemCount: 2,
+                                    itemBuilder: (context, index) =>
+                                        ListView.builder(
+                                      itemCount: state.filteredList.length,
+                                      itemBuilder: (context, index) {
+                                        state.filteredList.isEmpty
+                                            ? log(
+                                                "logg ${state.filteredList.length}")
+                                            : null;
+                                        return state.filteredList.isEmpty
+                                            ? const Center(
+                                                child: Text(MyStrings.noData),
+                                              )
+                                            : Column(
+                                                children: [
+                                                  cardDesign(
+                                                      context,
+                                                      state
+                                                          .filteredList[index]),
+                                                  10.heightBox
+                                                ],
+                                              );
+                                      },
+                                    ),
                                   ),
-                                  5.heightBox,
-                                  Text(
-                                    MyStrings.noDisciplineToday,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textColor: MyColors.boldTextColor),
-                                  ),
-                                ]
-                                ),
-                              )
-                            : Flexible(
-                                child: PageView.builder(
-                                  itemCount: 2,
-                                  itemBuilder: (context, index) =>
-                                      ListView.builder(
-                                    itemCount: state.filteredList.length,
-                                    itemBuilder: (context, index) {
-                                      state.filteredList.isEmpty
-                                          ? log(
-                                              "logg ${state.filteredList.length}")
-                                          : null;
-                                      return state.filteredList.isEmpty
-                                          ? const Center(
-                                              child: Text(MyStrings.noData),
-                                            )
-                                          : Column(
-                                              children: [
-                                                cardDesign(context,
-                                                    state.filteredList[index]),
-                                                10.heightBox
-                                              ],
-                                            );
-                                    },
-                                  ),
-                                ),
-                              );
-                      } else if (state is DisciplineErrorState) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: FontUtil.customStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textColor: MyColors.boldTextColor),
-                          ),
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            MyStrings.undefinedState,
-                            style: FontUtil.customStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                textColor: MyColors.boldTextColor),
-                          ),
-                        );
-                      }
-                    }),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     IconButton(
-                //         onPressed: () {},
-                //         icon: SvgPicture.asset(MyAssets.back_arrow)),
-                //     IconButton(
-                //         onPressed: () {},
-                //         icon: SvgPicture.asset(MyAssets.front_arrow)),
-                //   ],
-                // ),
-                // Text('asdasdas')
-                // const CustomProgressBar(
-                //   progress: 0.3,
-                //   dotCount: 0,
-                // )
-              ],
+                                );
+                        } else if (state is DisciplineErrorState) {
+                          return Center(
+                            child: Text(
+                              state.message,
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: MyColors.boldTextColor),
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: Text(
+                              MyStrings.undefinedState,
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: MyColors.boldTextColor),
+                            ),
+                          );
+                        }
+                      }),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     IconButton(
+                  //         onPressed: () {},
+                  //         icon: SvgPicture.asset(MyAssets.back_arrow)),
+                  //     IconButton(
+                  //         onPressed: () {},
+                  //         icon: SvgPicture.asset(MyAssets.front_arrow)),
+                  //   ],
+                  // ),
+                  // Text('asdasdas')
+                  // const CustomProgressBar(
+                  //   progress: 0.3,
+                  //   dotCount: 0,
+                  // )
+                ],
+              ),
             ),
-          ),
           )
         ],
       ),
@@ -251,21 +252,28 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
   }
 }
 
-
 Widget cardDesign(BuildContext context, DisciplineList discipline) {
-  
   return GestureDetector(
-     onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: false, isCircular: false, isDiscipline: true, assignmentList: null, circularList: null, disciplineList: discipline))),
-
+    onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => StoryDescription(
+                isAssignment: false,
+                isCircular: false,
+                isDiscipline: true,
+                assignmentList: null,
+                circularList: null,
+                disciplineList: discipline))),
     child: Container(
       height: MediaQuery.sizeOf(context).height * 0.15,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: discipline.cardtype.toString() == "Red Card"
-            ? MyColors.redShade_1.withOpacity(0.13)
-            : discipline.cardtype.toString() == "Yellow Card"
-                ? MyColors.yellowShade_1.withOpacity(0.13)
-                : MyColors.greenShade_3.withOpacity(0.13),
+        color: discipline.cardtype == "Red Card" || discipline.cardtype == "Red"
+                          ? MyColors.redShade_1.withOpacity(0.13)
+                          : discipline.cardtype == "Yellow Card" || discipline.cardtype == "Yellow"
+                              ? MyColors.yellowShade_1.withOpacity(0.13)
+                              : discipline.cardtype == "Green Card" || discipline.cardtype == "Green" ? MyColors.greenShade_3.withOpacity(0.13)
+                              : MyColors.greyShade_5 ,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -279,11 +287,12 @@ Widget cardDesign(BuildContext context, DisciplineList discipline) {
                   width: MediaQuery.sizeOf(context).width * 0.06,
                   height: MediaQuery.sizeOf(context).height * 0.04,
                   decoration: BoxDecoration(
-                      color: discipline.cardtype == "Red Card"
+                      color: discipline.cardtype == "Red Card" || discipline.cardtype == "Red"
                           ? MyColors.redShade_1
-                          : discipline.cardtype == "Yellow Card"
+                          : discipline.cardtype == "Yellow Card" || discipline.cardtype == "Yellow"
                               ? MyColors.yellowShade_1
-                              : MyColors.greenShade_3,
+                              : discipline.cardtype == "Green Card" || discipline.cardtype == "Green" ? MyColors.greenShade_3
+                              : MyColors.white ,
                       borderRadius: BorderRadius.circular(3)),
                 ),
                 10.widthBox,
@@ -293,8 +302,9 @@ Widget cardDesign(BuildContext context, DisciplineList discipline) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        DateFormat("MMM dd, yyyy").format(DateFormat("dd/MM/yyyy")
-                            .parse(discipline.actionDate!)),
+                        DateFormat("MMM dd, yyyy").format(
+                            DateFormat("dd/MM/yyyy")
+                                .parse(discipline.actionDate!)),
                         style: FontUtil.customStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -329,6 +339,30 @@ Widget cardDesign(BuildContext context, DisciplineList discipline) {
                           )),
                         ],
                       ),
+                      5.heightBox,
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Card Type: ",
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: MyColors.boldTextColor),
+                            ),
+                            TextSpan(
+                              text: "${discipline.cardtype}",
+                              style: FontUtil.customStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  textColor:
+                                      MyColors.monthNameColor.withOpacity(0.8)),
+                            ),
+                          ],
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),
                     ],
                   ),
                 ),
@@ -346,7 +380,7 @@ Widget cardDesign(BuildContext context, DisciplineList discipline) {
                       textColor: MyColors.monthNameColor),
                 ),
                 Text(
-                  "${discipline.points}",
+                  double.parse(discipline.points ?? "").toStringAsFixed(2),
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

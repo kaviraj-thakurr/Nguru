@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
@@ -14,6 +15,7 @@ import 'package:nguru/screens/setting_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -59,7 +61,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                 dashboardAppBar(),
                 CustomSearchBar(controller: _searchController),
                 20.heightBox,
-                screenTitleHeader("Infirmary",
+                screenTitleHeader(MyStrings.infirmary,
                     onPressed: () => Navigator.pop(context)),
                 20.heightBox,
                 BlocBuilder<DashboardCubit, DashboardState>(
@@ -99,7 +101,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Daily Entries ",
+                              text: "${MyStrings.dailyEntries} ",
                               style: FontUtil.customStyle(
                                   fontSize: 17.h,
                                   fontWeight: FontWeight.w700,
@@ -126,7 +128,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Daily Entries ",
+                              text: "${MyStrings.dailyEntries} ",
                               style: FontUtil.customStyle(
                                   fontSize: 17.h,
                                   fontWeight: FontWeight.w700,
@@ -153,7 +155,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Daily Entries ",
+                              text: "${MyStrings.dailyEntries} ",
                               style: FontUtil.customStyle(
                                   fontSize: 17.h,
                                   fontWeight: FontWeight.w700,
@@ -178,7 +180,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Daily Entries ",
+                              text: "${MyStrings.dailyEntries} ",
                               style: FontUtil.customStyle(
                                   fontSize: 17.h,
                                   fontWeight: FontWeight.w700,
@@ -211,7 +213,29 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                               child: CircularProgressIndicator(),
                             );
                           } else if (state is InfirmarySuccessState) {
-                            return ListView.builder(
+                            return
+                            state.infirmary.isEmpty ?
+                           Center(
+                              child: Column(
+                              children: [
+                                160.heightBox,
+                                SvgPicture.asset(
+                                  MyAssets.noDataFound,
+                                  height: height150,
+                                ),
+                                5.heightBox,
+                                Text(
+                                  MyStrings.noInfirmaryFound,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14.h,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: APP_FONT,
+                                      textColor: MyColors.noDataFoundTitle),
+                                ),
+                              ],
+                            ))
+                            :
+                             ListView.builder(
                                 itemCount: state.infirmary.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
@@ -243,7 +267,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                           } else if (state is InfirmaryErrorState) {
                             return Center(
                               child: Text(
-                                "${state.message}",
+                                state.message,
                                 style: FontUtil.customStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -367,7 +391,7 @@ Widget customInfirmaryItems(BuildContext context,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          illnessHeading ?? "Dehydration",
+          illnessHeading ?? "",
           style: FontUtil.customStyle(
               fontSize: 22,
               fontWeight: FontWeight.w600,
@@ -376,7 +400,7 @@ Widget customInfirmaryItems(BuildContext context,
         10.heightBox,
         Text(
           illnessDetails ??
-              "Lorem ipsum dolor sit amet consectetur. Eleifend eu cursus sodales integer lacus. Tellus sagittis ullamcorper.n",
+              "",
           style: FontUtil.customStyle(
               fontSize: 13,
               fontWeight: FontWeight.w400,
@@ -388,14 +412,14 @@ Widget customInfirmaryItems(BuildContext context,
           text: TextSpan(
             children: [
               TextSpan(
-                text: "Medicine: ",
+                text: "${MyStrings.medicine}: ",
                 style: FontUtil.customStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     textColor: MyColors.boldTextColor),
               ),
               TextSpan(
-                text: medicine ?? "Oral rehydration solutions (ORS)",
+                text: medicine ?? "",
                 //    overflow: TextOverflow.ellipsis,
                 //    maxLines: 3,
                 style: FontUtil.customStyle(
@@ -414,16 +438,14 @@ Widget customInfirmaryItems(BuildContext context,
           text: TextSpan(
             children: [
               TextSpan(
-                text: "Dosage: ",
+                text: "${MyStrings.dosage}: ",
                 style: FontUtil.customStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     textColor: MyColors.boldTextColor),
               ),
               TextSpan(
-                text: dosage ?? "1 glass of ORS",
-                //    overflow: TextOverflow.ellipsis,
-                //    maxLines: 3,
+                text: dosage ?? "",
                 style: FontUtil.customStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -440,14 +462,14 @@ Widget customInfirmaryItems(BuildContext context,
           text: TextSpan(
             children: [
               TextSpan(
-                text: "Remark: ",
+                text: "${MyStrings.remark}: ",
                 style: FontUtil.customStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     textColor: MyColors.boldTextColor),
               ),
               TextSpan(
-                text: remarks ?? "Lorem ipsum dolor sit amet consectetur.",
+                text: remarks ?? "",
                 //    overflow: TextOverflow.ellipsis,
                 //    maxLines: 3,
                 style: FontUtil.customStyle(
@@ -463,7 +485,7 @@ Widget customInfirmaryItems(BuildContext context,
         ),
         10.heightBox,
         Text(
-          date ?? "Monday, July 14, 2023",
+          date ?? "",
           style: FontUtil.customStyle(
               fontSize: 10,
               fontWeight: FontWeight.w400,

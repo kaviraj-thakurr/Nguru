@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
@@ -10,6 +11,7 @@ import 'package:nguru/logic/activity/activity_state.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -58,7 +60,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: screenTitleHeader("Activity",onPressed: ()=>Navigator.pop(context)),
+                child: screenTitleHeader(MyStrings.activity,onPressed: ()=>Navigator.pop(context)),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15,left: 15,right: 15,bottom: 5),
@@ -78,7 +80,29 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             child: CircularProgressIndicator(),
                           );
                         } else if (state is ActivitySuccessState) {
-                          return Padding(
+                          return 
+                          state.activityList.isEmpty ?
+                           Center(
+                              child: Column(
+                              children: [
+                                160.heightBox,
+                                SvgPicture.asset(
+                                  MyAssets.noDataFound,
+                                  height: height150,
+                                ),
+                                5.heightBox,
+                                Text(
+                                  MyStrings.noActivityFound,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14.h,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: APP_FONT,
+                                      textColor: MyColors.noDataFoundTitle),
+                                ),
+                              ],
+                            ))
+                            :
+                           Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: ListView.builder(
                                 padding: EdgeInsets.zero,
@@ -155,7 +179,7 @@ Widget buildSelector(
                 ),
               );
             },
-            child: isSelected
+            child: isSelected ==true
                 ? ShaderMask(
                     shaderCallback: (Rect bounds) {
                       return MyColors.buttonColors.createShader(bounds);
@@ -175,7 +199,7 @@ Widget buildSelector(
                         style: FontUtil.customStyle(
                           fontSize: 10,
                           fontWeight:
-                              isSelected ? FontWeight.w500 : FontWeight.w400,
+                              isSelected==true ? FontWeight.w500 : FontWeight.w400,
                           textColor: MyColors.monthNameColor,
                         ),
                       ),
@@ -196,7 +220,7 @@ Widget buildSelector(
                       style: FontUtil.customStyle(
                         fontSize: 10,
                         fontWeight:
-                            isSelected ? FontWeight.w500 : FontWeight.w400,
+                            isSelected ==true ? FontWeight.w500 : FontWeight.w400,
                         textColor: MyColors.monthNameColor,
                       ),
                     ),
@@ -228,35 +252,35 @@ Widget activityItems(BuildContext context,
       children: [
         Row(
           children: [
-            SvgPicture.asset("assets/icons/activity.svg"),
+            SvgPicture.asset(MyAssets.activity_2),
             15.widthBox,
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  eventName ?? "Event Name: N/A",
+                  eventName ?? "${MyStrings.eventName}:  ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
                 Text(
-                  houseName ?? "House Name: N/A",
+                  houseName ?? "${MyStrings.houseName}:  ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
                 Text(
-                  eventLevel ?? "Event Level: N/A",
+                  eventLevel ?? "${MyStrings.eventLevel}: ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
                 Text(
-                  "Position: ${position ?? "N/A"}",
+                  "${MyStrings.position}: ${position ?? " ${MyStrings.notAvailable}"}",
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -271,14 +295,14 @@ Widget activityItems(BuildContext context,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              eventDate ?? "Date: N/A",
+              eventDate ?? "${MyStrings.date}: ${MyStrings.notAvailable}",
               style: FontUtil.customStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   textColor: MyColors.boldTextColor),
             ),
             Text(
-              points ?? "Points: N/A",
+              points ?? "${MyStrings.points}: ${MyStrings.notAvailable}",
               style: FontUtil.customStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w500,

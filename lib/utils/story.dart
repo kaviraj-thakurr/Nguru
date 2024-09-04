@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
@@ -24,8 +22,10 @@ import 'package:velocity_x/velocity_x.dart';
 class Story {
   final String base64Image;
   final Duration? duration;
+    final DateTime startDate;
+  final DateTime endDate;
 
-  Story({required this.base64Image, this.duration});
+  Story(this.startDate, this.endDate, {required this.base64Image, this.duration});
 }
 
 /// StoryView class manages the overall story view
@@ -38,6 +38,8 @@ class StoryView extends StatefulWidget {
   final List<SubjectList>? subjectList;
   final List<CircularList>? circularList;
   final List<DisciplineList>? disciplineList;
+    final DateTime startDate;
+  final DateTime endDate;
 
   const StoryView({
     super.key,
@@ -48,7 +50,7 @@ class StoryView extends StatefulWidget {
     required this.isDisciplineWidget,
     this.subjectList,
     this.circularList,
-    this.disciplineList,
+    this.disciplineList, required this.startDate, required this.endDate,
   });
 
   @override
@@ -135,8 +137,8 @@ class StoryViewState extends State<StoryView>
         );
       } else {
         //  _animationController.dispose();
-          //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
-     Navigator.pop(context);
+        //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+        Navigator.pop(context);
       }
     } else if (widget.isAssignmentWidget) {
       if (widget.subjectList!.isEmpty) {
@@ -156,7 +158,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+         Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const AssignmentScreen()));  // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.subjectList!.length - 1) {
@@ -175,7 +181,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));// Close the StoryView when done
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const AssignmentScreen())); // Close the StoryView when done
         }
       }
     } else if (widget.isCircularWidget) {
@@ -196,7 +206,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                       CircularScreen())); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.circularList!.length - 1) {
@@ -215,7 +229,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                       CircularScreen())); // Close the StoryView when done
         }
       }
     } else if (widget.isDisciplineWidget) {
@@ -236,7 +254,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen())); // Close the StoryView when done
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                       DisciplineScreen(startDate: widget.startDate, endDate: widget.endDate,))); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.disciplineList!.length - 1) {
@@ -255,7 +277,11 @@ class StoryViewState extends State<StoryView>
           );
         } else {
           //  _animationController.dispose();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));// Close the StoryView when done
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                       DisciplineScreen(startDate: widget.startDate, endDate: widget.endDate,))); // Close the StoryView when done
         }
       }
     }
@@ -339,14 +365,13 @@ class StoryViewState extends State<StoryView>
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                         CircularScreen()))
+                                    builder: (context) => CircularScreen()))
                             : widget.isDisciplineWidget
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const DisciplineScreen()))
+                                             DisciplineScreen(startDate: widget.startDate ,endDate: widget.endDate,)))
                                 : null
                   },
               child: SvgPicture.asset(
@@ -356,8 +381,12 @@ class StoryViewState extends State<StoryView>
       body: GestureDetector(
         onVerticalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
-            widget.isGalleryWidget ? Navigator.pop(context) :
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));
+            widget.isGalleryWidget
+                ? Navigator.pop(context)
+                : Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NguruDashboardScreen()));
           }
         },
         child: Stack(
@@ -370,14 +399,12 @@ class StoryViewState extends State<StoryView>
                   : widget.isAssignmentWidget == true &&
                           widget.subjectList!.isNotEmpty
                       ? widget.subjectList?.length
-
                       : widget.isCircularWidget == true &&
                               widget.circularList!.isEmpty
                           ? 1
                           : widget.isCircularWidget == true &&
                                   widget.circularList!.isNotEmpty
                               ? widget.circularList?.length
-
                               : widget.isDisciplineWidget == true &&
                                       widget.disciplineList!.isEmpty
                                   ? 1
@@ -694,14 +721,12 @@ class CustomStoryWidget extends StatelessWidget {
                                       padding: const EdgeInsets.only(
                                           top: 25, left: 15),
                                       child: SizedBox(
-                                        width: MediaQuery.of(context)
-                                                .size
-                                                .width *
-                                            0.45,
-                                        height: MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                            0.1,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.1,
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -720,13 +745,13 @@ class CustomStoryWidget extends StatelessWidget {
                                                   0.03,
                                             ),
                                             Text(
-                                                                                            MyStrings.circular,
-                                                                                            style: FontUtil.customStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold,
-                                              textColor: Colors.black),
-                                                                                            overflow: TextOverflow.ellipsis,
-                                                                                          ),
+                                              MyStrings.circular,
+                                              style: FontUtil.customStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  textColor: Colors.black),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -838,7 +863,6 @@ class CustomStoryWidget extends StatelessWidget {
                                                   fontWeight: FontWeight.w500,
                                                   textColor: Colors.black),
                                             ),
-                                            
                                             10.heightBox,
                                             SizedBox(
                                               height: 210,
@@ -1193,36 +1217,38 @@ Widget assignmentItem(BuildContext context, Assignment? assignments) {
                   children: [
                     const Spacer(),
                     GestureDetector(
-                      // on progress
+                        // on progress
 
-                      onTap: () => {
-                        assignments?.fileContent != null
-                            ? onSaveWithDialogPressed(
-                                assignments?.fileContent ?? "")
-                            : Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
-                         isCircular: false,
-                          isAssignment: true,
-                          isDiscipline: false,
-                          circularList:null ,
-                          assignmentList: assignments,
-                          disciplineList: null,
-                            ))),
-                        log("download")
-                      },
-
-                      child: assignments?.fileContent != null
-                          ? SvgPicture.asset(
-                              MyAssets.downloadIcon,
-                              height: 25,
-                              width: 25,
-                            )
-                          :  SvgPicture.asset(
-                              MyAssets.seen,
-                              height: 18,
-                              width: 18,
-                              color: MyColors.greyShade_7,
-                            )
-                    ),
+                        onTap: () => {
+                              assignments?.fileContent != null
+                                  ? onSaveWithDialogPressed(
+                                      assignments?.fileContent ?? "")
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              StoryDescription(
+                                                isCircular: false,
+                                                isAssignment: true,
+                                                isDiscipline: false,
+                                                circularList: null,
+                                                assignmentList: assignments,
+                                                disciplineList: null,
+                                              ))),
+                              log("download")
+                            },
+                        child: assignments?.fileContent != null
+                            ? SvgPicture.asset(
+                                MyAssets.downloadIcon,
+                                height: 25,
+                                width: 25,
+                              )
+                            : SvgPicture.asset(
+                                MyAssets.seen,
+                                height: 18,
+                                width: 18,
+                                color: MyColors.greyShade_7,
+                              )),
                   ],
                 ),
               ],
@@ -1317,24 +1343,25 @@ Widget circularItem(BuildContext context, CircularList? circularList) {
                       // on progress
 
                       onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
-                          isCircular: true,
-                          isAssignment: false,
-                          isDiscipline: false,
-                          circularList:circularList ,
-                          assignmentList: null,
-                          disciplineList: null,
-                        ))),
-                        
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StoryDescription(
+                                      isCircular: true,
+                                      isAssignment: false,
+                                      isDiscipline: false,
+                                      circularList: circularList,
+                                      assignmentList: null,
+                                      disciplineList: null,
+                                    ))),
                       },
 
                       child: SvgPicture.asset(
-                              MyAssets.seen,
-                              height: 18,
-                              width: 18,
-                              color: MyColors.greyShade_7,
-                            ),
-                          
+                        MyAssets.seen,
+                        height: 18,
+                        width: 18,
+                        color: MyColors.greyShade_7,
+                      ),
                     ),
                   ],
                 ),
@@ -1443,22 +1470,25 @@ Widget disciplineItem(BuildContext context, DisciplineList? disciplineList) {
                       // on progress
 
                       onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>StoryDescription(
-                          isCircular: false,
-                          isAssignment: false,
-                          isDiscipline: true,
-                          circularList:null ,
-                          assignmentList: null,
-                          disciplineList: disciplineList,
-                        ))),
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StoryDescription(
+                                      isCircular: false,
+                                      isAssignment: false,
+                                      isDiscipline: true,
+                                      circularList: null,
+                                      assignmentList: null,
+                                      disciplineList: disciplineList,
+                                    ))),
                       },
 
-                      child:   SvgPicture.asset(
-                              MyAssets.seen,
-                              height: 18,
-                              width: 18,
-                              color: MyColors.greyShade_7,
-                            ),
+                      child: SvgPicture.asset(
+                        MyAssets.seen,
+                        height: 18,
+                        width: 18,
+                        color: MyColors.greyShade_7,
+                      ),
                     ),
                   ],
                 ),

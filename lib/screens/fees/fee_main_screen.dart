@@ -11,6 +11,7 @@ import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_state.dart';
 import 'package:nguru/models/get_fee_model.dart';
+import 'package:nguru/screens/fees/fee_detail_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -144,18 +145,32 @@ class _FeesMainScreenState extends State<FeesMainScreen> {
                             ],
                           ),
                           20.heightBox,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                MyStrings.feeHistory,
-                                textAlign: TextAlign.start,
-                                style: FontUtil.customStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: MyColors.boldTextColor),
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  MyStrings.feeHistory,
+                                  textAlign: TextAlign.start,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                                GestureDetector(
+                                  onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>FeeDetailScreen())),
+                                  child: Text(
+                                    "View more",
+                                    textAlign: TextAlign.start,
+                                    style: FontUtil.customStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        textColor: MyColors.boldTextColor),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           15.heightBox,
                           customFeeHistoryCard(context,

@@ -23,6 +23,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool? obscureText;
   final InputDecoration? decoration;
   final void Function(String)? onChanged;
+  final int? maxLine;
 
   const CustomTextFormField({
     this.controller,
@@ -43,6 +44,7 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText,
     this.decoration,
     this.onChanged,
+    this.maxLine,
   });
 
   @override
@@ -99,6 +101,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       style: widget.style ?? FontUtil.signInFieldText,
       validator: widget.validator,
       onChanged: widget.onChanged,
+      maxLines: widget.maxLine,
     );
   }
 }

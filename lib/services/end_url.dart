@@ -74,4 +74,15 @@ class EndUrl{
 
 // SIGN OUT
    static const String signInLogout = "SignIn/Logout";
+
+
+
+// SETTINGS
+
+       //session
+  static const String changeSession = "User/GetSession";
+
+   
+      //feedback
+  static const String sendFeedback = "Feedback/Send";  
 }
