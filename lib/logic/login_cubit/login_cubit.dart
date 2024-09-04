@@ -22,6 +22,7 @@ class LoginCubit extends Cubit<LoginState> {
           await SharedPref.saveStudentID(result.studentProfile?.studentId ?? 0);
           await SharedPref.saveSessionID(result.studentProfile?.sessionId ?? 0);
           await SharedPref.saveLoggedInStatus(true);
+          await SharedPref.saveSessionSeleted(isSessionSelected: false);
           if (isFromForgotPassword) {
             
             emit(LoginForgetPasswordState());
