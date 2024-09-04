@@ -95,6 +95,7 @@ class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
                                           marks?.subjectName ?? "",
                                           style: FontUtil.subName,
                                         ),
+                                     
                                         Text(
                                           "${marks?.writtenObtainMarks}/${marks?.maxWrittenMarks}",
                                           style: FontUtil.subMarks,

@@ -239,7 +239,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     isPngImage: false,
                                     onIconPressed: () {
                                       NavigationService.navigateTo(
-                                          ReportCardScreen(), context);
+                                          const TimetableScreen(), context);
                                     },
                                     cardWidth: screenWidth * 0.5,
                                     cardHeight: double.maxFinite,

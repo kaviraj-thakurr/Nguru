@@ -34,15 +34,21 @@ class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
   final String? schoolUrl;
-  final String ?subDomain;
-  final String ?schoolNickName;
-   final String ?trimmedSchoolUrl;
+  final String? subDomain;
+  final String? schoolNickName;
+  final String? trimmedSchoolUrl;
   final String? username;
 
-
-
-
-  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl,  this.subDomain,  this.schoolNickName,  this.trimmedSchoolUrl,this.username, });
+  const LoginScreen({
+    super.key,
+    this.title,
+    this.schoolLogo,
+    this.schoolUrl,
+    this.subDomain,
+    this.schoolNickName,
+    this.trimmedSchoolUrl,
+    this.username,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -63,13 +69,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> openAddSchoolBox() async {
     box = await Hive.openBox<UserModel>('listItems');
-     addSchoolList = box?.values.toList();
-      int index = findUserModelIndex(addSchoolList??[],widget.schoolNickName??"",widget.subDomain??"", widget.trimmedSchoolUrl??"" );
-  
-    selectedRadio = addSchoolList?.elementAt(index).schoolNickName ?? "";
-    schoolUrlGlobal =
-        "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
-            "";
+    addSchoolList = box?.values.toList();
+    int index = findUserModelIndex(
+        addSchoolList ?? [],
+        widget.schoolNickName ?? "",
+        widget.subDomain ?? "",
+        widget.trimmedSchoolUrl ?? "");
+
+    if (index != -1) {
+      selectedRadio = addSchoolList?.elementAt(index).schoolNickName ?? "";
+      schoolUrlGlobal =
+          "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
+              "";
+    }
+    if(addSchoolList?.length==1){
+      selectedRadio = addSchoolList?.elementAt(0).schoolNickName ?? "";
+      schoolUrlGlobal =
+          "${addSchoolList?.elementAt(0).schoolUrl}${addSchoolList?.elementAt(0).subDomain}" ??
+              "";
+    }
+
     removeDuplicateSchools(addSchoolList);
     setState(() {});
     log("fetching: $addSchoolList");
@@ -89,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     openAddSchoolBox();
     super.initState();
-    userNameController.text=widget.username??"";
-     debugPrint("user name: ${ userNameController.text}");
-  
+    userNameController.text = widget.username ?? "";
+    debugPrint("user name: ${userNameController.text}");
+
     userNameController.addListener(() {
       context
           .read<FormValidationCubit>()
@@ -134,10 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBody(String schoolName, String schoolPhoto) {
     return WillPopScope(
-       onWillPop: () async {
+      onWillPop: () async {
         // Minimize the app instead of navigating back
         SystemNavigator.pop();
-      
+
         return false; // Return false to prevent navigating back
       },
       child: Scaffold(
@@ -163,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: height1,
                   ),
                   20.heightBox,
-      
+
                   // Row(
                   //   children: [
                   //     Radio(
@@ -176,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //     Text(widget.title ?? ""),
                   //   ],
                   // ),
-      
+
                   addSchoolList?.length == null
                       ? SizedBox()
                       : SizedBox(
@@ -198,14 +217,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         addSchoolList?[index].schoolNickName ??
                                             "",
                                         isNavigating: false);
-      
+
                                     setState(() {
-                                      selectedRadio =
-                                          addSchoolList?[index].schoolNickName ??
-                                              "";
-                                      schoolNickName =
-                                          addSchoolList?[index].schoolNickName ??
-                                              "";
+                                      selectedRadio = addSchoolList?[index]
+                                              .schoolNickName ??
+                                          "";
+                                      schoolNickName = addSchoolList?[index]
+                                              .schoolNickName ??
+                                          "";
                                       schoolUrl =
                                           "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
                                       schoolUrlGlobal =
@@ -227,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               }),
                         ),
-      
+
                   10.heightBox,
                   Form(
                     key: _formKey,
@@ -308,24 +327,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-      
-                  
-                        
-                          onPressed: () {
-          if (userNameController.text.trim().isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(MyStrings.userNameReq), // Show an error message
-              ),
-            );
-          } else {
-            NavigationService.navigateTo(
-              ForgotPassword(username: userNameController.text.trim()),
-              context,
-            );
-          }
-        },
-                        
+                        onPressed: () {
+                          if (userNameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(MyStrings
+                                    .userNameReq), // Show an error message
+                              ),
+                            );
+                          } else {
+                            NavigationService.navigateTo(
+                              ForgotPassword(
+                                  username: userNameController.text.trim()),
+                              context,
+                            );
+                          }
+                        },
                         child: Text(
                           MyStrings.forgotPassword,
                           style: FontUtil.forgotPassword,
@@ -333,22 +350,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-      
-                   TextButton(
-                     onPressed: () {
-                       Navigator.push(
-                           context,
-                           MaterialPageRoute(
-                             builder: (context) =>
-                                 const AddSchool(isAddSchoolScreen: true),
-                           ));
-                     },
-                     child: Text(
-                       MyStrings.add,
-                       style: FontUtil.add,
-                     ),
-                   ),
-                  BlocConsumer<LoginCubit, LoginState>(builder: (context, state) {
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const AddSchool(isAddSchoolScreen: true),
+                          ));
+                    },
+                    child: Text(
+                      MyStrings.add,
+                      style: FontUtil.add,
+                    ),
+                  ),
+                  BlocConsumer<LoginCubit, LoginState>(
+                      builder: (context, state) {
                     if (state is LoginLoadingState) {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -374,11 +392,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }
                   }, listener: (context, state) {
-
                     if (state is LoginSuccessState) {
-                      debugPrint("usernaaaaaaaaaaaame-->${userNameController.text}");
-                       SharedPref.saveUsername(userNameController.text.trim());
-           
+                      debugPrint(
+                          "usernaaaaaaaaaaaame-->${userNameController.text}");
+                      SharedPref.saveUsername(userNameController.text.trim());
+
                       NavigationService.navigateTo(
                           const NguruDashboardScreen(), context);
                     } else if (state is LoginForgetPasswordState) {
