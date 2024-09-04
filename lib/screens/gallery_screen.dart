@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
@@ -18,6 +20,7 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/custom_download_file.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:nguru/utils/story.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -33,11 +36,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
   final TextEditingController _searchController = TextEditingController();
 //  late final StoryController _storyController = StoryController();
   int currentIndex = 0; // To track the current gallery index
+    DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
 
  // downloading file
 
-
+  Future<void> getSessionDates() async {
+    startDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getStartDateOfSession() ?? "");
+    endDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getEndDateOfSession() ?? "");
+    log(" init call from dashboard:  $startDate $endDate");
+  }
 
 
 
@@ -46,6 +57,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   void initState() {
+    getSessionDates();
     super.initState();
     context.read<GalleryItemListCubit>().getGalleryItemList();
   }
@@ -84,7 +96,29 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     if (state is GalleryItemListLoadingState) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is GalleryItemListSuccessState) {
-                      return GridView.builder(
+                      return 
+                      state.galleryItemList.galleryList!.isEmpty ?
+                           Center(
+                              child: Column(
+                              children: [
+                                160.heightBox,
+                                SvgPicture.asset(
+                                  MyAssets.noDataFound,
+                                  height: height150,
+                                ),
+                                5.heightBox,
+                                Text(
+                                  MyStrings.noGalleryItemsFound,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14.h,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: APP_FONT,
+                                      textColor: MyColors.noDataFoundTitle),
+                                ),
+                              ],
+                            ))
+                            :
+                      GridView.builder(
                           itemCount:
                               state.galleryItemList.galleryList?.length ?? 0,
                           gridDelegate:
@@ -193,12 +227,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
             List<String> photos = [];
           //  List<StoryItem> storyItems = [];
             List<Story> storyItemss = [];
-            Story item=Story(base64Image: "");
+            Story item=Story(base64Image: "",startDate,endDate);
             
 
             for (int i = 0; i < state.galleryPhotos.photoList!.length; i++) {
               photos.add(state.galleryPhotos.photoList![i].photo ?? "");
-              item=Story(base64Image: state.galleryPhotos.photoList![i].photo ?? "",duration:const Duration(seconds: 3));
+              item=Story(startDate,endDate,base64Image: state.galleryPhotos.photoList![i].photo ?? "",duration:const Duration(seconds: 3),);
 
               // storyItems.add(customStoryWidget(
               //   screenHeight,
@@ -249,6 +283,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           subjectList: [],
           circularList: [],
           disciplineList: [],
+          startDate: startDate,
+          endDate: endDate,
         ),
 
             );

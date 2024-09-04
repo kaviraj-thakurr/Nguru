@@ -30,6 +30,7 @@ final  int? notificationScreenDate;
 class _CircularScreenState extends State<CircularCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+ final ScrollController buildMonthSelecterController= ScrollController();
 
 
   String dateString = "03-Jun-2024";
@@ -64,6 +65,25 @@ class _CircularScreenState extends State<CircularCalendar> {
       );
   }
 
+
+
+    void _scrollToCenter(int index, double itemWidth, double viewportWidth) {
+    // Calculate the offset to center the selected item
+    double offset = index * itemWidth - (viewportWidth / 2) + (itemWidth / 2);
+    
+    // Ensure the offset doesn't scroll out of bounds
+    double maxScrollExtent = buildMonthSelecterController.position.maxScrollExtent;
+    double minScrollExtent = buildMonthSelecterController.position.minScrollExtent;
+    double finalOffset = offset.clamp(minScrollExtent, maxScrollExtent);
+
+    // Animate the scroll to the calculated offset
+    buildMonthSelecterController.animateTo(
+      finalOffset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   Widget _buildMonthSelector() {
     List<String> months = [
       "Jan",
@@ -81,12 +101,15 @@ class _CircularScreenState extends State<CircularCalendar> {
     ];
 
     return SingleChildScrollView(
+      controller: buildMonthSelecterController,
       scrollDirection: Axis.horizontal,
       padding:const EdgeInsets.only(left: 8.0,right: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
           bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
+         
+        _scrollToCenter((months.indexOf(month) + 1), double.infinity, double.infinity);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(

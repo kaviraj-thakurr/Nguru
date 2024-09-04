@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,33 +44,105 @@ import 'package:nguru/logic/particular_month_attendance/particular_month_attenda
 import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/settings/change_siblings_cubit.dart';
+import 'package:nguru/logic/settings/change_session/change_session_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/timetable/timetable_cubit.dart';
 import 'package:nguru/logic/transport/transport_cubit.dart';
 import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
+import 'package:nguru/screens/attendance/attendace_card_screen.dart';
+import 'package:nguru/screens/attendance/attendance_main_screen.dart';
+import 'package:nguru/screens/calendar_screen.dart';
+import 'package:nguru/screens/circular_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
+import 'package:nguru/screens/discipline_screen.dart';
+import 'package:nguru/screens/fees/fee_main_screen.dart';
+import 'package:nguru/screens/infirmary_screen.dart';
+import 'package:nguru/screens/library/library_screen.dart';
+import 'package:nguru/screens/setting_screen.dart';
+import 'package:nguru/screens/story/story_screen.dart';
+import 'package:nguru/screens/testing_story.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
+import 'package:nguru/utils/story.dart';
+
+
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 void main() async {
-  
+
     WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
     debug: true, // Set to false for release
   );
- 
+
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
   await Hive.openBox<UserModel>('listItems');
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+   MyApp({super.key});
 
-//  Future<void> getSharedPref() async{
-//    isAlreadyLoggedIn = SharedPref.getLoggedInStatus();
-//  }
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  static const platform= const MethodChannel("razorpay_flutter");
+Razorpay _razorpay = Razorpay();
+
+@override
+  void initState() {
+  _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+  _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  // Do something when payment succeeds
+}
+
+void _handlePaymentError(PaymentFailureResponse response) {
+  // Do something when payment fails
+}
+
+void _handleExternalWallet(ExternalWalletResponse response) {
+  // Do something when an external wallet is selected
+}
+
+
+var options = {
+  'key': '<YOUR_KEY_ID>',
+  'amount': 50000, //in paise.
+  'name': 'Acme Corp.',
+  'order_id': 'order_EMBFqjDHEEn80l', // Generate order_id using Orders API
+  'description': 'Fine T-Shirt',
+  'timeout': 60, // in seconds
+  'prefill': {
+    'contact': '9000090000',
+    'email': 'gaurav.kumar@example.com'
+  }
+};
+
+// try{
+//   _razorpay.open(options);
+// }
+// catch(e){
+
+// }
+
+
+
+@override
+  void dispose() {
+    _razorpay.clear(); // Removes all listeners
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -195,6 +268,9 @@ class MyApp extends StatelessWidget {
          BlocProvider(
           create: (context) => ExamMarksListCubit(AuthRepo()),
         ),
+        BlocProvider(
+          create: (context) => ChangeSessionCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -203,7 +279,7 @@ class MyApp extends StatelessWidget {
         useInheritedMediaQuery: true,
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            
+
             title: 'Flutter Demo',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

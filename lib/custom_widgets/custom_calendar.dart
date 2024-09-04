@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_state.dart';
@@ -14,9 +17,11 @@ class CustomCalendar extends StatefulWidget {
 
 
 final int? month;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
 
-  const CustomCalendar( {super.key, this.month, });
+  const CustomCalendar( {super.key, this.month, this.startDate, this.endDate, });
 
   
 
@@ -31,6 +36,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
 
   @override
   void initState() {
+     log("the start and end dates arerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: ${widget.startDate} ${widget.endDate}");
     _focusedDay=
     DateTime(_focusedDay.year, widget.month?? _focusedDay.month, _focusedDay.day);
     // TODO: implement initState
@@ -66,8 +72,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       fontWeight: FontWeight.w200,
                       textColor: MyColors.calendarDateColor),
                 ),
-                firstDay: DateTime.utc(2010, 10, 16),
-                lastDay: DateTime.utc(2030, 3, 14),
+                firstDay:widget.startDate ?? DateTime.utc(2010, 10, 16),
+                lastDay:widget.endDate ?? DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
@@ -172,8 +178,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       fontWeight: FontWeight.w200,
                       textColor: MyColors.calendarDateColor),
                 ),
-                firstDay: DateTime.utc(2010, 10, 16),
-                lastDay: DateTime.utc(2030, 3, 14),
+                firstDay:widget.startDate ?? DateTime.utc(2010, 10, 16),
+                lastDay:widget.endDate ?? DateTime.utc(2030, 3, 14),
                 focusedDay: _focusedDay,
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
@@ -238,20 +244,14 @@ class _CustomCalendarState extends State<CustomCalendar> {
   }
 
   Widget _buildMonthSelector() {
-    List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
+    List<String> months = [];
+    DateTime current = widget.startDate ?? DateTime.now();
+        log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
+    while (current.isBefore(widget.endDate ?? DateTime.now()) || current.isAtSameMomentAs(widget.endDate ?? DateTime.now() )) {
+      months.add(DateFormat('MMM').format(current));
+      current = DateTime(current.year, current.month + 1, 1);
+    }
+    log("months list: $months");
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -259,20 +259,31 @@ class _CustomCalendarState extends State<CustomCalendar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
-          bool isSelected  = _focusedDay.month == months.indexOf(month) + 1;
+          int monthIndex = months.indexOf(month);
+          log("months index: $monthIndex");
+          DateTime monthDate = DateTime(
+            widget.startDate?.year ?? DateTime.now().year,
+            widget.startDate!.month  + monthIndex,
+          );
+          log("logic: ${widget.startDate?.month} $monthIndex");
+          log("monthDate  object: ${monthDate.year} ${monthDate.month} ${monthDate.day}");
+
+          bool isSelected = _focusedDay.year == monthDate.year &&
+              _focusedDay.month == monthDate.month;
+          log("currentt yearr: ${_focusedDay.year} ${monthDate.year}");
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
               onTap: () {
                 setState(() {
+                  // Update the focused day
                   _focusedDay = DateTime(
-                    _focusedDay.year,
-                    months.indexOf(month) + 1,
+                    widget.startDate?.year ?? DateTime.now().year,
+                 widget.startDate!.month  + monthIndex,
+                    1, // Default day to 1
                   );
-
-                  currentMonthNumber=_focusedDay.month;
-                  
-                });
+                  currentMonthNumber =_focusedDay.month;
+                  });
                 context.read<CumulativeAttendanceCubit>().getCumulativeAttendance();
                 context
                     .read<ParticularMonthAttendanceCubit>()
@@ -289,8 +300,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
-                            color: Colors.white, // This color is not visible
-                            width: 1.5,
+                            color: Colors.white,
+                            width: 1.0,
                           ),
                         ),
                         child: Text(
@@ -310,7 +321,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         border: Border.all(
-                          color: Colors.grey, // This color is not visible
+                          color: Colors.grey,
                           width: 1.0,
                         ),
                       ),

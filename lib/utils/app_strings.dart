@@ -128,35 +128,7 @@ class MyStrings {
   static const String unableTOOpenTheMail = "Unable to open the email";
   static const String couldNotLaunch = "Could not launch";
 
-  // static const String notAvailable = "N/A";
-  // static const String adddress = "Address";
-  //   static const String email = "Email";
-  //     static const String mobileNumber = "Mobile Number";
-  //       static const String landlineNumber = "Landline Number";
 
-
-
-
-
-
-
-
-
-
-      // static const String error = "Some error occured!";
-      // static const String undefinedState = "Some undefined state error!";
-      // static const String asssignment = "Assignment";
-      // static const String endDate = "End Date";
-      // static const String date = "Date";
-      // static const String circular = "Circular";
-      // static const String discipline = "Discipline";
-      // static const String teacherName = "Teacher Name";
-      // static const String reason= "Reason";
-      // static const String points= "Points";
-      // static const String photoGallery= "Photo Gallery";
-      // static const String noSchoolPhotoAvailable= "Sorry no school photo available!";
-      // static const String unableTOOpenTheMail= "Unable to open the email";
-      // static const String couldNotLaunch= "Could not launch";
       static const String totalFee= "Total Fee";
       static const String dueFee= "Total Due";
       static const String paidFee= "Paid Fee";
@@ -174,12 +146,47 @@ class MyStrings {
       static const String attendanceDetails = "Attendance Details";
       static const String disciplineGroup = "Discipline Group";
       static const String noData = "no data";
-      static const String positivePoints = "Positive Points";
-      static const String negativePoints = "Negative Points";
+      static const String positivePoints = "Total Positive Points(till date)";
+      static const String negativePoints = "Total Negative Points(till date)";
       static const String eventDate = "event data";
       static const String all = "All";
 
 
 
 
+      static const String dailyEntries = "Daily Entries";
+      static const String eventName = "Event Name";
+      static const String houseName = "House Name";
+      static const String eventLevel = "Event Level";
+      static const String position = "Position";
+
+
+
+    // library
+     static const String noLibraryHistoryFound = "No Library History Found!";
+     static const String noLibraryIssuedBookFound = "No Issued book Found!";
+     static const String noSearchedBookFound = "No Search book Found!";
+
+
+    // Gallery
+    static const String noGalleryItemsFound = "No Gallery Items Found!";
+
+
+    // activity
+    static const String noActivityFound = "No Activity Found!";
+
+
+
+    // infirmary
+    static const String medicine = "Medicine";
+    static const String dosage = "Dosage";
+    static const String remark = "Remark";
+     static const String noInfirmaryFound = "No Infirmary Found!";
+
+
+    //calendar screen
+    static const String noEventsForThisMonth = "No Events for this month!";
+
+    // setting screen
+    static const String changeSession = "Change Session";
 }

@@ -8,6 +8,10 @@ class SharedPref {
   static const String _schoolUrl = "schoolUrl";
   static const String _sessionID = "sessionId";
   static const String _isLoggedIn = "LoggedIn";
+  static const String _startDate = "StartDate";
+  static const String _endDate = "EndDate";
+  static const String _isFromSelectSessionScreen = "SessionSelected";
+
   static const String _userName = "userName";
 
 //Save user Name
@@ -18,7 +22,7 @@ static Future<void> saveUsername (String userName) async
   await prefs.setString(_userName, userName);
 }
 
-  //Save Url 
+  //Save Url
   static Future<void> saveUrl(String  baseUrl) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_baseUrl, baseUrl);
@@ -62,8 +66,25 @@ static Future<void> saveUsername (String userName) async
     await prefs.setBool(_isLoggedIn.toString(), isLoggedIn);
   }
 
+  // Save start date of session
+  static Future<void> saveStartDateOfSession(String startDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_startDate, startDate);
+  }
 
 
+  // Save end date of session
+  static Future<void> saveEndDateOfSession(String endDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_endDate, endDate);
+  }
+
+
+  // Save session selected bool
+  static Future<void> saveSessionSeleted({bool isSessionSelected =false}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_isFromSelectSessionScreen.toString(), isSessionSelected);
+  }
 
 
 
@@ -121,10 +142,31 @@ static Future<String?> getUerName() async{
   }
 
 
+  // Get logged in status
+  static Future<String?> getStartDateOfSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(_startDate);
+  }
 
 
+    // Get logged in status
+  static Future<String?> getEndDateOfSession() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-//////////////////////////////////////////////////// CLEARING ALL SHARED PREFS /////////////////////////////
+    return prefs.getString(_endDate);
+  }
+
+
+  // Get session selected status
+  static Future<bool?> getSessionSelectedStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getBool(_isFromSelectSessionScreen);
+  }
+
+
+//////////////////////////////////////////////////// CLEARING ALL SHARED PREFS
 
 
 

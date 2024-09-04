@@ -46,5 +46,8 @@ class MyAssets {
   static const String homeIcon = "assets/icons/home.svg";
   static const String floatingActionIcon = "assets/icons/floating_action_button.svg";
   static const String backArrow= "assets/images/back.svg";
+
+
+  
   
 }

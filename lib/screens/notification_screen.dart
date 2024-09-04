@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,10 +23,12 @@ import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 
 class NotificationScreen extends StatefulWidget {
+
   const NotificationScreen({super.key});
 
   @override
@@ -34,10 +38,21 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final TextEditingController searchController = TextEditingController();
   List<NotificationList> filteredNotifications = [];
+    DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+
+    Future<void> getSessionDates() async {
+    startDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getStartDateOfSession() ?? "");
+    endDate = DateFormat("dd-MMM-yyyy")
+        .parse(await SharedPref.getEndDateOfSession() ?? "");
+    log(" init call from notification screen:  $startDate $endDate");
+  }
 
   @override
   void initState() {
     super.initState();
+    getSessionDates();
     context.read<NotificationListCubit>().getNotificationList();
     searchController.addListener(_filterNotifications);
   }
@@ -153,9 +168,9 @@ Widget buildNotificationList(List<NotificationList> notifications) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn,)));
     } else if (notification.notificationHeader == MyStrings.circularNotification) {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>  CircularScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn?.month,)));
-    } else if (notification.notificationHeader == MyStrings.circularNotification) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>const DisciplineScreen()));
-    }else if (notification.notificationHeader == MyStrings.timetableNotification) {
+    } else if (notification.notificationHeader == "Discipline Notification") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => DisciplineScreen(startDate: startDate,endDate: endDate,)));
+    }else if (notification.notificationHeader == "TimeTable Notification") {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>const TimetableScreen()));
       }
       else if(notification.notificationHeader == MyStrings.photoNotification){
@@ -170,7 +185,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
         Navigator.push(context, MaterialPageRoute(builder: (context)=>const ExaminationScreen()));
       }
 
-     
+
       
 
       

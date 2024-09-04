@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_state.dart';
 import 'package:nguru/models/calendar_event_model.dart';
@@ -10,23 +12,40 @@ import 'package:nguru/utils/app_strings.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EventCalendar extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
   const EventCalendar({
-    super.key,
+    super.key, required this.startDate, required this.endDate,
   });
 
   @override
-  _EventCalendarState createState() => _EventCalendarState();
+  EventCalendarState createState() => EventCalendarState();
 }
 
-class _EventCalendarState extends State<EventCalendar> {
+class EventCalendarState extends State<EventCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+
   @override
   void initState() {
+    
+   // getSessionDates();
     super.initState();
-    context.read<CalendarEventCubit>().getCalendarEvent(_focusedDay.month);
+     _focusedDay.isAfter(widget.endDate)
+        ? _focusedDay = widget.endDate
+        : _focusedDay = _focusedDay;
+   _focusedDay.isAfter(widget.endDate) ? context.read<CalendarEventCubit>().getCalendarEvent(widget.endDate.month):  context.read<CalendarEventCubit>().getCalendarEvent(_focusedDay.month);
+   
   }
+
+  // Future<void> getSessionDates() async {
+  //   _startDate = DateFormat("dd-MMM-yyyy")
+  //       .parse(await SharedPref.getStartDateOfSession() ?? "");
+  //   _endDate = DateFormat("dd-MMM-yyyy")
+  //       .parse(await SharedPref.getEndDateOfSession() ?? "");
+  //   log(" init call :  $_startDate $_endDate");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +74,8 @@ class _EventCalendarState extends State<EventCalendar> {
                           fontWeight: FontWeight.w200,
                           textColor: MyColors.greyShade_7),
                     ),
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
+                    firstDay: widget.startDate,
+                    lastDay: widget.endDate,
                     focusedDay: _focusedDay,
                     selectedDayPredicate: (day) {
                       return isSameDay(_selectedDay, day);
@@ -101,8 +120,7 @@ class _EventCalendarState extends State<EventCalendar> {
                   );
                 }
 
-
-                 if (state is CalendarEventLoadingState) {
+                if (state is CalendarEventLoadingState) {
                   return TableCalendar(
                     rowHeight: 45,
                     daysOfWeekHeight: 20,
@@ -116,8 +134,8 @@ class _EventCalendarState extends State<EventCalendar> {
                           fontWeight: FontWeight.w200,
                           textColor: MyColors.greyShade_7),
                     ),
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
+                    firstDay: widget.startDate,
+                    lastDay: widget.endDate,
                     focusedDay: _focusedDay,
                     selectedDayPredicate: (day) {
                       return isSameDay(_selectedDay, day);
@@ -168,7 +186,7 @@ class _EventCalendarState extends State<EventCalendar> {
                       setState(() {
                         _focusedDay = focusedDay;
                       });
-                      isParticularEventDateSelected=false;
+                      isParticularEventDateSelected = false;
 
                       context
                           .read<CalendarEventCubit>()
@@ -182,19 +200,16 @@ class _EventCalendarState extends State<EventCalendar> {
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             textColor: MyColors.greyShade_7);
-                            int attendanceStatus =99;
-                            try{
-
-                              attendanceStatus =
-                           state.calendarEventList?[dayIndex].status == null ? 99 :  state.calendarEventList?[dayIndex].status ?? 99 ;
-
-                            }
-                            catch(e){
-                              attendanceStatus=99;
-
-                            }
-
-                        
+                        int attendanceStatus = 99;
+                        try {
+                          attendanceStatus =
+                              state.calendarEventList?[dayIndex].status == null
+                                  ? 99
+                                  : state.calendarEventList?[dayIndex].status ??
+                                      99;
+                        } catch (e) {
+                          attendanceStatus = 99;
+                        }
 
                         if (attendanceStatus == 3) {
                           defaultStyle = FontUtil.customStyle(
@@ -219,15 +234,12 @@ class _EventCalendarState extends State<EventCalendar> {
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               textColor: MyColors.buildLegendColor_1);
-                        } 
-                        else if (attendanceStatus == 99) {
-
-                      defaultStyle = FontUtil.customStyle(
+                        } else if (attendanceStatus == 99) {
+                          defaultStyle = FontUtil.customStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               textColor: MyColors.greyShade_7);
-                    } 
-                        else {
+                        } else {
                           defaultStyle = FontUtil.customStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -253,8 +265,8 @@ class _EventCalendarState extends State<EventCalendar> {
                           fontWeight: FontWeight.w200,
                           textColor: MyColors.greyShade_7),
                     ),
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
+                    firstDay: widget.startDate,
+                    lastDay: widget.endDate,
                     focusedDay: _focusedDay,
                     selectedDayPredicate: (day) {
                       return isSameDay(_selectedDay, day);
@@ -264,10 +276,10 @@ class _EventCalendarState extends State<EventCalendar> {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
                       });
-                       context
-                    .read<CalendarEventCubit>()
-                    .filterEventListByDate(_focusedDay, false);
-                      isParticularEventDateSelected=true;
+                      context
+                          .read<CalendarEventCubit>()
+                          .filterEventListByDate(_focusedDay, false);
+                      isParticularEventDateSelected = true;
                     },
                     calendarFormat: CalendarFormat.month,
                     calendarStyle: CalendarStyle(
@@ -290,7 +302,7 @@ class _EventCalendarState extends State<EventCalendar> {
                       todayTextStyle: FontUtil.customStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          textColor:  MyColors.arc_1),
+                          textColor: MyColors.arc_1),
                       todayDecoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -337,20 +349,14 @@ class _EventCalendarState extends State<EventCalendar> {
   }
 
   Widget _buildMonthSelector() {
-    List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
+    List<String> months = [];
+    DateTime current = widget.startDate;
+        log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
+    while (current.isBefore(widget.endDate) || current.isAtSameMomentAs(widget.endDate)) {
+      months.add(DateFormat('MMM').format(current));
+      current = DateTime(current.year, current.month + 1, 1);
+    }
+    log("months list: $months");
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -358,21 +364,36 @@ class _EventCalendarState extends State<EventCalendar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
+          int monthIndex = months.indexOf(month);
+          log("months index: $monthIndex");
+          DateTime monthDate = DateTime(
+            widget.startDate.year,
+            widget.startDate.month + monthIndex,
+          );
+          log("logic: ${widget.startDate.month} $monthIndex");
+          log("monthDate  object: ${monthDate.year} ${monthDate.month} ${monthDate.day}");
+
+          bool isSelected = _focusedDay.year == monthDate.year &&
+              _focusedDay.month == monthDate.month;
+          log("currentt yearr: ${_focusedDay.year} ${monthDate.year}");
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
               onTap: () {
                 setState(() {
+                  // Update the focused day
                   _focusedDay = DateTime(
-                    _focusedDay.year,
-                    months.indexOf(month) + 1,
+                    widget.startDate.year,
+                    widget.startDate.month + monthIndex,
+                    1, // Default day to 1
                   );
+
+                  log("focus  yearrr: ${_focusedDay.year} ${_focusedDay.month} ${_focusedDay.day}");
                 });
                 context
                     .read<CalendarEventCubit>()
                     .getCalendarEvent(_focusedDay.month);
-                    isParticularEventDateSelected=false;
+                isParticularEventDateSelected = false;
               },
               child: isSelected
                   ? ShaderMask(
@@ -385,7 +406,7 @@ class _EventCalendarState extends State<EventCalendar> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
-                            color: Colors.white, // This color is not visible
+                            color: Colors.white,
                             width: 1.0,
                           ),
                         ),
@@ -406,7 +427,7 @@ class _EventCalendarState extends State<EventCalendar> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         border: Border.all(
-                          color: Colors.grey, // This color is not visible
+                          color: Colors.grey,
                           width: 1.0,
                         ),
                       ),
@@ -434,8 +455,8 @@ class _EventCalendarState extends State<EventCalendar> {
         _buildLegendItem("Holiday", MyColors.pinkShade_1),
         _buildLegendItem("Week Offs", MyColors.greyShade_7),
         _buildLegendItem("Events", MyColors.buildLegendColor_5),
-         _buildLegendItem("Today",   MyColors.arc_1),
-          _buildLegendItem("Selected", MyColors.greenShade_2),
+        _buildLegendItem("Today", MyColors.arc_1),
+        _buildLegendItem("Selected", MyColors.greenShade_2),
       ],
     );
   }
