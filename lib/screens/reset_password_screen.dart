@@ -297,7 +297,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     backgroundColor: MyColors.white,
     title:  Text('Reset Password Policy'),
     content:  SizedBox(
-      height: 200,
+      height: 350,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,9 +308,34 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Text('User Name Policy: ',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
               10.heightBox,
               // ListView.builder(itemBuilder: (context,index){
-              //   return    resetPasswordPolicyModel[index].key == "CORE_PSWD_LENGHT_MAX" ? Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
+              //   return Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
 
               // })
+                     Text('1. User Name should be minimum of 6 and maximum of 20 characters.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                      Text('2. User Name will be alphanumeric string and can have "." And "_" character.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                      Text('3. User Name should contain at least 2 alphabets.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+
+
+              
+            ],
+          ),
+          20.heightBox,
+           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Password Policy: ',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+              10.heightBox,
+              // ListView.builder(itemBuilder: (context,index){
+              //   return Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
+
+              // })
+                     Text('1.Password should be minimum of 4 characters.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                      Text('2. Password should be different from last 4 passwords',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+
+
               
             ],
           ),
