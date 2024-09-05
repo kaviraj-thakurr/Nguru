@@ -162,7 +162,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      const AssignmentScreen()));  // Close the StoryView when done
+                       AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,)));  // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.subjectList!.length - 1) {
@@ -185,7 +185,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      const AssignmentScreen())); // Close the StoryView when done
+                       AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       }
     } else if (widget.isCircularWidget) {
@@ -210,7 +210,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                       CircularScreen())); // Close the StoryView when done
+                       CircularScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.circularList!.length - 1) {
@@ -233,7 +233,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                       CircularScreen())); // Close the StoryView when done
+                       CircularScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       }
     } else if (widget.isDisciplineWidget) {
@@ -360,12 +360,12 @@ class StoryViewState extends State<StoryView>
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AssignmentScreen()))
+                                builder: (context) =>  AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,)))
                         : widget.isCircularWidget
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CircularScreen()))
+                                    builder: (context) => CircularScreen(startDate: widget.startDate,endDate: widget.endDate,)))
                             : widget.isDisciplineWidget
                                 ? Navigator.push(
                                     context,

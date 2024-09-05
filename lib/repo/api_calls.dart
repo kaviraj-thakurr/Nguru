@@ -57,11 +57,14 @@ class AuthRepo {
 
   //------------------------------------this api method for add school screen---------> //
 
-  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain) async {
+  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain,String schoolNickName) async {
     String fullSchoolUrl = "$schoolurl$subDomain";
 
     try {
       await SharedPref.saveSchoolUrl(fullSchoolUrl);
+       await SharedPref.saveTrimmedUrl(schoolurl);
+      await SharedPref.saveSubDomain(subDomain);
+       await SharedPref.saveSchoolNickName(schoolNickName);
       final res = await _myService.networkPost(
         url: EndUrl.addSchool,
         data: {
@@ -311,11 +314,11 @@ class AuthRepo {
           isStagingLink: true,
           url: EndUrl.currentCircularList,
           data: {
-            "circularID": 1,
+            // "circularID": 1,
             "month": month,
             "type": 1,
             "pageSize": 1000,
-            "pageNumber": 0,
+            // "pageNumber": 0,
             "userID": await SharedPref.getUserID(),
             "schoolID": await SharedPref.getSchoolID(),
             "studentID": await SharedPref.getStudentID(),

@@ -64,8 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String schoolUrlGlobal = '';
   bool isFirstTime = true;
   Box<UserModel>? box;
+  String schoolUrl = '';
   List<UserModel>? addSchoolList;
-  bool isMinized = true;
 
   Future<void> openAddSchoolBox() async {
     box = await Hive.openBox<UserModel>('listItems');
@@ -81,12 +81,14 @@ class _LoginScreenState extends State<LoginScreen> {
       schoolUrlGlobal =
           "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
               "";
+      
     }
-    if(addSchoolList?.length==1){
+    if (addSchoolList?.length == 1) {
       selectedRadio = addSchoolList?.elementAt(0).schoolNickName ?? "";
       schoolUrlGlobal =
           "${addSchoolList?.elementAt(0).schoolUrl}${addSchoolList?.elementAt(0).subDomain}" ??
               "";
+      
     }
 
     removeDuplicateSchools(addSchoolList);
@@ -182,20 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: height1,
                   ),
                   20.heightBox,
-
-                  // Row(
-                  //   children: [
-                  //     Radio(
-                  //       activeColor: Color.fromARGB(255, 67, 225, 181),
-                  //      // hoverColor: Colors.blue,
-                  //       value: 1,
-                  //       groupValue: 1,
-                  //       onChanged: (value) {},
-                  //     ),
-                  //     Text(widget.title ?? ""),
-                  //   ],
-                  // ),
-
                   addSchoolList?.length == null
                       ? SizedBox()
                       : SizedBox(
@@ -246,7 +234,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               }),
                         ),
-
                   10.heightBox,
                   Form(
                     key: _formKey,
@@ -350,7 +337,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -379,7 +365,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             context.read<LoginCubit>().logIn(
                                   userNameController.text.trim(),
                                   passWordController.text.toString(),
-                                  widget.schoolUrl ?? "",
+                                  schoolUrlGlobal,
                                 );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

@@ -43,7 +43,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
 
       final result = await authRepo?.addSchool(
         schoolName,
-        subDomain,
+        subDomain,schoolNickName
       );
 
       openAddSchoolBox();

@@ -135,6 +135,18 @@ class _CustomCalendarState extends State<CustomCalendar> {
                         .attendanceMonth!.isEmpty ? 99:  state.particularMonthAttendanceModel
                         .attendanceMonth![dayIndex].status!;
 
+
+                        //first half ==1
+
+                          if (attendanceStatus == 1) {
+                      defaultDatesStyle =FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.pinkShade_1);
+                    } 
+
+                    //present ==0
+
                     if (attendanceStatus == 0) {
                       defaultDatesStyle =FontUtil.customStyle(
                       fontSize: 13,
@@ -142,13 +154,42 @@ class _CustomCalendarState extends State<CustomCalendar> {
                       textColor: MyColors.greenShade_3);
                     } 
 
+                    //late  ==2
+                    else if (attendanceStatus == 2) {
+
+                      defaultDatesStyle =FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.arc_2);
+                    } 
+
+                    //absent ==3
                     else if (attendanceStatus == 3) {
 
                       defaultDatesStyle =FontUtil.customStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      textColor: MyColors.redShade_3);
+                      textColor: MyColors.redShade_1);
                     } 
+
+                    // holiday =5
+                    else if (attendanceStatus == 5) {
+
+                      defaultDatesStyle =FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.blueShade);
+                    } 
+                    //weekoff ==7
+                    else if (attendanceStatus == 7) {
+
+                      defaultDatesStyle =FontUtil.customStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      textColor: MyColors.greyShade_3);
+                    } 
+
+//default
 
                     else if (attendanceStatus == 99) {
 

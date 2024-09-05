@@ -21,10 +21,12 @@ import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
   final  bool ? isNotificationScreen  ;
 final  DateTime? notificationScreenDate;
   final int?month;
-  const AssignmentScreen({super.key, this.month, this.isNotificationScreen, this.notificationScreenDate});
+  const AssignmentScreen({super.key, this.month, this.isNotificationScreen, this.notificationScreenDate, required this.startDate, required this.endDate});
 
   @override
   State<AssignmentScreen> createState() => _AssignmentScreenState();
@@ -85,7 +87,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
               screenTitleHeader("Assignment",
                   onPressed: () => Navigator.pop(context)),
               20.heightBox,
-              AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate),
+              AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,startDate: widget.startDate ,endDate:widget.endDate ,),
               Expanded(
                 child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
                   builder: (context, state) {
@@ -197,9 +199,25 @@ Widget cardDesign(BuildContext context, String? title, String? subject,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title ?? "",
-                  style: FontUtil.circularTitle,
+                GestureDetector(
+                  onTap: (){
+                     Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              StoryDescription(
+                                                isCircular: false,
+                                                isAssignment: true,
+                                                isDiscipline: false,
+                                                circularList: null,
+                                                assignmentList: assignment,
+                                                disciplineList: null,
+                                              )));
+                  },
+                  child: Text(
+                    title ?? "",
+                    style: FontUtil.circularTitle,
+                  ),
                 ),
                 Text(
                   subject ?? "",

@@ -12,15 +12,14 @@ import 'package:nguru/utils/app_font.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
-CircularCalendar circularCalendar() {
-  
-  return const CircularCalendar();
-}
+
 
 class CircularCalendar extends StatefulWidget {
+   final DateTime startDate;
+  final DateTime endDate;
   final  bool ? isNotificationScreen  ;
 final  int? notificationScreenDate;
-  const CircularCalendar({super.key, this.isNotificationScreen, this.notificationScreenDate});
+  const CircularCalendar({super.key, this.isNotificationScreen, this.notificationScreenDate, required this.startDate, required this.endDate});
 
   @override
  
@@ -85,42 +84,48 @@ class _CircularScreenState extends State<CircularCalendar> {
   }
 
   Widget _buildMonthSelector() {
-    List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
+    List<String> months = [];
+    DateTime current = widget.startDate;
+        log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
+    while (current.isBefore(widget.endDate) || current.isAtSameMomentAs(widget.endDate)) {
+      months.add(DateFormat('MMM').format(current));
+      current = DateTime(current.year, current.month + 1, 1);
+    }
+    log("months list: $months");
 
     return SingleChildScrollView(
-      controller: buildMonthSelecterController,
       scrollDirection: Axis.horizontal,
-      padding:const EdgeInsets.only(left: 8.0,right: 8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
-         
-        _scrollToCenter((months.indexOf(month) + 1), double.infinity, double.infinity);
+          int monthIndex = months.indexOf(month);
+          log("months index: $monthIndex");
+          DateTime monthDate = DateTime(
+            widget.startDate.year,
+            widget.startDate.month + monthIndex,
+          );
+          log("logic: ${widget.startDate.month} $monthIndex");
+          log("monthDate  object: ${monthDate.year} ${monthDate.month} ${monthDate.day}");
+
+          bool isSelected = _focusedDay.year == monthDate.year &&
+              _focusedDay.month == monthDate.month;
+          log("currentt yearr: ${_focusedDay.year} ${monthDate.year}");
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(
               onTap: () {
                 setState(() {
+                  // Update the focused day
                   _focusedDay = DateTime(
-                    _focusedDay.year,
-                    months.indexOf(month) + 1,
+                    widget.startDate.year,
+                    widget.startDate.month + monthIndex,
+                    1, // Default day to 1
                   );
+
+                  log("focus  yearrr: ${_focusedDay.year} ${_focusedDay.month} ${_focusedDay.day}");
                 });
-                  context.read<CircularCubit>().getCurrentCircular(month: _focusedDay.month);
+                 context.read<CircularCubit>().getCurrentCircular(month: _focusedDay.month);
               },
               child: isSelected
                   ? ShaderMask(
@@ -133,7 +138,7 @@ class _CircularScreenState extends State<CircularCalendar> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
                           border: Border.all(
-                            color: Colors.white, // This color is not visible
+                            color: Colors.white,
                             width: 1.0,
                           ),
                         ),
@@ -154,7 +159,7 @@ class _CircularScreenState extends State<CircularCalendar> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         border: Border.all(
-                          color: Colors.grey, // This color is not visible
+                          color: Colors.grey,
                           width: 1.0,
                         ),
                       ),

@@ -23,6 +23,8 @@ static const Color notificationSubtitle = Color(0xFF6A6A6A);
   static const Color needHelpColor = Color(0xFF999999);
   static const Color addButtonColor = Color(0xFF0C0C0B);
   static const Color teacherNameColor = Color (0xFF333333);
+
+static const Color examMarksBg = Color (0xFFE3EFD8);
   
   static const Color busStop = Color (0x80333333);
   static const Color appColorGreen =  Color(0xFFA0CA7B);

@@ -104,7 +104,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: BlocBuilder<NotificationListCubit, NotificationListState>(
                       builder: (context, state) {
                         if (state is NotificationListLoadingState) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(child: SizedBox.shrink());
                         } else if (state is NotificationListSuccessState) {
                           final notificationsToShow = searchController.text.isEmpty
                               ? state.notificationListModel.notificationList!
@@ -138,7 +138,7 @@ Widget buildNotificationList(List<NotificationList> notifications) {
         return const Padding(
           padding: EdgeInsets.all(padding8),
           child: Center(
-            child: CircularProgressIndicator(),
+            child:SizedBox(),
           ),
         );
       }
@@ -165,9 +165,9 @@ Widget buildNotificationList(List<NotificationList> notifications) {
 
   void handleNotificationTap(NotificationList notification) {
     if (notification.notificationHeader == MyStrings.assignmentNotification) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => AssignmentScreen(startDate: startDate,endDate: endDate,isNotificationScreen: true,notificationScreenDate: notification.createdOn,)));
     } else if (notification.notificationHeader == MyStrings.circularNotification) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>  CircularScreen(isNotificationScreen: true,notificationScreenDate: notification.createdOn?.month,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>  CircularScreen(startDate: startDate,endDate: endDate,isNotificationScreen: true,notificationScreenDate: notification.createdOn?.month,)));
     } else if (notification.notificationHeader == "Discipline Notification") {
       Navigator.push(context, MaterialPageRoute(builder: (context) => DisciplineScreen(startDate: startDate,endDate: endDate,)));
     }else if (notification.notificationHeader == "TimeTable Notification") {
