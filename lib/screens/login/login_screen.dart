@@ -359,8 +359,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     } else {
                       return PrimaryButton(
+                        
                         title: MyStrings.signIn,
-                        onPressed: () {
+                        onPressed: () async{
+                          await SharedPref.saveUsername(userNameController.text.trim());
                           if (_formKey.currentState!.validate()) {
                             context.read<LoginCubit>().logIn(
                                   userNameController.text.trim(),

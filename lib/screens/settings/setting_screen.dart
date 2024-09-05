@@ -57,6 +57,9 @@ class _SettingScreenState extends State<SettingScreen> {
     context.read<DashboardCubit>().dashboardGetList();
     // TODO: implement initState
     super.initState();
+    getUerName();
+    
+
   }
 
   Future<String> getUerName() async {
