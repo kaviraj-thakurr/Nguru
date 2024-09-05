@@ -280,7 +280,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Navigator.pop(context);
             } else if (state is ResetPasswordErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(MyStrings.somethingWentWrong)));
+                   SnackBar(content: Text(state.message)));
             }
           }),
         ],

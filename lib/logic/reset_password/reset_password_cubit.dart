@@ -16,7 +16,16 @@ Future <void> resetPassword (String newPassword, String oldPassword) async{
         emit(ResetPasswordSuccessState(
           resetPasswordModel: result
         ));
-      }else{
+      }
+    // else  if(result.responseCode == "500"){
+    //     emit(ResetPasswordSuccessState(
+    //       resetPasswordModel: result
+    //     ));
+    //   }
+   else if(result.responseCode == "500"){
+         emit(ResetPasswordErrorState(result.responseMessage ?? "Error occured"));
+      }
+      else{
         emit(ResetPasswordErrorState(result.responseMessage ?? "Error occured"));
       }
     }
