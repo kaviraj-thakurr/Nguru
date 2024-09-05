@@ -101,7 +101,7 @@ class _CircularScreenState extends State<CircularCalendar> {
     ];
 
     return SingleChildScrollView(
-      controller: buildMonthSelecterController,
+    //  controller: buildMonthSelecterController,
       scrollDirection: Axis.horizontal,
       padding:const EdgeInsets.only(left: 8.0,right: 8.0),
       child: Row(
@@ -109,7 +109,7 @@ class _CircularScreenState extends State<CircularCalendar> {
         children: months.map((month) {
           bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
          
-        _scrollToCenter((months.indexOf(month) + 1), double.infinity, double.infinity);
+       // _scrollToCenter((months.indexOf(month) + 1), double.infinity, double.infinity);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: GestureDetector(

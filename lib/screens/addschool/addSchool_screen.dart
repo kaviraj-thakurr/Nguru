@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
+import 'package:nguru/main.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_assets.dart';
@@ -97,6 +98,7 @@ class _AddSchoolState extends State<AddSchool> {
 
   @override
   Widget build(BuildContext context) {
+     
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(

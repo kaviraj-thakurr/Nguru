@@ -21,8 +21,16 @@ class EndUrl{
    static const String currentDisciplineList = "Discipline/GetList/";
    static const String contactUs = "ContactUs/GetContact/";
    static const String photoGalleryList = "PhotoGallery/GetList/";
+   static const String reportCardList = "Examination/GetExaminationList";
+   static const String examMarksList = "Examination/GetExaminationMarks";
    static const String signInLogIn = "SignIn/Logout/";
    static const String changeUpdatePassword = "ChangePassword/Update";
+   static const String examScheduleList = "Examination/GetExaminationScheduleModel";
+
+
+   //CHANGE SIBLINGS
+
+     static const String changeSiblings = "User/GetSibling";
 
 
 
@@ -85,4 +93,9 @@ class EndUrl{
    
       //feedback
   static const String sendFeedback = "Feedback/Send";  
+
+
+
+  // RESET PASSWORD
+    static const String changePasswordPolicy = "ChangePasswordFirstTime/CheckPasswordPolicy";
 }

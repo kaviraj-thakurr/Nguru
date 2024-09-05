@@ -14,7 +14,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(LoginLoadingState());
       final result =
-          await authRepo?.logIn(userName: userName, password: password,schoolUrl: schoolUrl) ;
+          await authRepo?.logIn(userName: userName, password: password,schoolUrl: schoolUrl.trim()) ;
       if (result != null) {
         if (result.responseCode == "200") {
           await SharedPref.saveUserID(result.userId ??0);

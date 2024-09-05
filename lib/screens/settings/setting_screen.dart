@@ -10,6 +10,7 @@ import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
+import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
 import 'package:nguru/screens/settings/add_feedback_screen.dart';
@@ -17,11 +18,13 @@ import 'package:nguru/screens/settings/change_session_screen.dart';
 import 'package:nguru/screens/settings/feedback_list_screen.dart';
 import 'package:nguru/screens/settings/privacy_policy_screen.dart';
 import 'package:nguru/screens/settings/terms_of_use_screen.dart';
+import 'package:nguru/screens/settings/change_siblings.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/custom_flutter_switch.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -35,7 +38,7 @@ class _SettingScreenState extends State<SettingScreen> {
   List<String> settingitems = [
     "My Profile",
     "Change Sibling",
-    "Change Session",
+    //  "Change Session",
     "Add School",
     "Push Notification",
     "Change Password",
@@ -47,19 +50,35 @@ class _SettingScreenState extends State<SettingScreen> {
   ];
 
   bool toggle = false;
+   var getUserName;
 
   @override
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
     // TODO: implement initState
     super.initState();
+
   }
+
+
+
+
+  Future <String> getUerName () async{
+
+   getUserName =await SharedPref.getUerName();
+return getUserName;
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     bool isTap = true;
+
+
 
     return Scaffold(
       floatingActionButton: GestureDetector(
@@ -137,28 +156,34 @@ class _SettingScreenState extends State<SettingScreen> {
                   },
                   child: Builder(builder: (context) {
                     return GestureDetector(
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return buildLogoutAlertDialog(
-                            context: context,
-                            onLogout: () => context
-                                .read<SignoutCubit>()
-                                .signout()
-                                .then((value) =>
-                                    SharedPref.saveLoggedInStatus(false))
-                                .then((value) => Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const AddSchool(
-                                                isAddSchoolScreen: false,
-                                              )),
-                                      (Route<dynamic> route) => false,
-                                    )),
-                            onCancel: () => Navigator.pop(context),
-                          );
-                        },
-                      ),
+               onTap: () => showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    return buildLogoutAlertDialog(
+      context: context,
+      onLogout: () => context
+          .read<SignoutCubit>()
+          .signout()
+          .then((value) => SharedPref.saveLoggedInStatus(false))
+          .then((value) => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LoginScreen(
+
+                                username:getUserName,
+
+                              )
+
+
+                        ),
+                (Route<dynamic> route) => false,
+              )),
+      onCancel: () => Navigator.pop(context),
+    );
+  },
+),
+
+                     
                       child: Text(
                         "Sign out",
                         style: FontUtil.customStyle(
@@ -176,8 +201,10 @@ class _SettingScreenState extends State<SettingScreen> {
               }, listener: (context, state) {
                 if (state is SignoutSuccessState) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Logout Successfully")));
+                      const SnackBar(content: Text("Sign out Successfully")));
                 } else if (state is SignoutErrorState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Sign out Successfully")));
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text("Logout Successfully")));
                 }
@@ -239,6 +266,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               )
             : GestureDetector(
+               
                 onTap: () {
                   log("title:  $title");
                   if (title == "My Profile") {
@@ -248,7 +276,23 @@ class _SettingScreenState extends State<SettingScreen> {
                         builder: (context) => const MyProfileScreen(),
                       ),
                     );
-                  } else if (title == "Change Password") {
+                  }
+
+
+                   else  if (title == "Change Password") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyProfileScreen()));
+                  } else if (title == "Change Sibling") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ChangeSiblings()));
+                  }
+
+                  
+                   else if (title == "Change Password") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -373,8 +417,8 @@ AlertDialog buildLogoutAlertDialog({
 }) {
   return AlertDialog(
     backgroundColor: MyColors.white,
-    title: const Text('Log Out'),
-    content: const Text('Are you sure you want to log out?'),
+    title: const Text('Sign out'),
+    content: const Text('Are you sure you want to Sign out?'),
     actions: <Widget>[
       TextButton(
         onPressed: onCancel,
@@ -389,7 +433,7 @@ AlertDialog buildLogoutAlertDialog({
       TextButton(
         onPressed: onLogout,
         child: Text(
-          'Log Out',
+          'Sign out',
           style: FontUtil.customStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

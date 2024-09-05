@@ -39,6 +39,8 @@ const double radius9 = 9;
 const double radiusLarge = 10;
 const double radiusExtraLarge = 12;
 const double radiusRegularLarge = 20;
+
+const double radius6 = 6;
 const double radius25 = 25;
 const double radius15 = 15;
 const double radius20 = 20;

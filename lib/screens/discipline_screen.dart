@@ -71,15 +71,15 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${MyStrings.positivePoints}: ${double.parse(totalPositiveP).toStringAsFixed(2)}",
+                            Text(
+                                "${MyStrings.positivePoints}: ${  totalPositiveP=="" ?  "N/A" : double.parse(totalPositiveP).toStringAsFixed(2) }",
                                 style: FontUtil.customStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
-                              Text(
-                                "${MyStrings.negativePoints}: ${double.parse(totalNegitiveP).toStringAsFixed(2)}",
+                             Text(
+                                "${MyStrings.negativePoints}: ${  totalNegitiveP=="" ? "N/A" :  double.parse(totalNegitiveP).toStringAsFixed(2)}",
                                 style: FontUtil.customStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
@@ -91,15 +91,16 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${MyStrings.positivePoints}: ${double.parse(totalPositiveP).toStringAsFixed(2)}",
+                             Text(
+                                "${MyStrings.positivePoints}: ${  totalPositiveP=="" ? "N/A" : double.parse(totalPositiveP).toStringAsFixed(2) }",
                                 style: FontUtil.customStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     textColor: MyColors.monthNameColor),
                               ),
-                              Text(
-                                "${MyStrings.negativePoints}: ${double.parse(totalNegitiveP).toStringAsFixed(2)}",
+                           
+                            Text(
+                                "${MyStrings.negativePoints}: ${  totalNegitiveP=="" ? "N/A" : double.parse(totalNegitiveP).toStringAsFixed(2) }",
                                 style: FontUtil.customStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,

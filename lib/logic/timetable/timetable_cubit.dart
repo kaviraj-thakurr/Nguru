@@ -4,6 +4,7 @@ import 'package:nguru/logic/timetable/timetable_state.dart';
 
 class TimeTableCubit extends Cubit<TimeTableState> {
   final AuthRepo? authRepo;
+  int _selectedDay = DateTime.now().weekday;
 
   TimeTableCubit(this.authRepo) : super(TimeTableInitState());
 
@@ -22,4 +23,11 @@ class TimeTableCubit extends Cubit<TimeTableState> {
       emit(TimeTableErrorState(e.toString()));
     }
   }
+
+  void setSelectedDay(int day) {
+    _selectedDay = day;
+    getTimeTableList(); // Optionally refresh data based on the new day
+  }
+
+  int get selectedDay => _selectedDay;
 }

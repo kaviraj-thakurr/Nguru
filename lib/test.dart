@@ -1,51 +1,99 @@
 import 'package:flutter/material.dart';
 
 
-class RadioButtonExample extends StatefulWidget {
-  @override
-  _RadioButtonExampleState createState() => _RadioButtonExampleState();
-}
-
-class _RadioButtonExampleState extends State<RadioButtonExample> {
-  int? _selectedValue; // To store the selected radio button value
-  String _displayText = "Please select an option"; // Initial display text
-
+class ReportCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Radio Button Example"),
+        title: const Text('Student Report Card'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ReportCard(
+        studentName: 'John Doe',
+        studentClass: 'Grade 10',
+        rollNumber: '23',
+        subjects: const [
+          {'name': 'Mathematics', 'grade': 'A'},
+          {'name': 'Science', 'grade': 'B+'},
+          {'name': 'English', 'grade': 'A-'},
+          {'name': 'History', 'grade': 'B'},
+          {'name': 'Geography', 'grade': 'B+'},
+        ],
+        finalGrade: 'B+',
+        remarks: 'Good performance overall, but needs improvement in Science and History.',
+      ),
+    );
+  }
+}
+
+class ReportCard extends StatelessWidget {
+  final String studentName;
+  final String studentClass;
+  final String rollNumber;
+  final List<Map<String, String>> subjects;
+  final String finalGrade;
+  final String remarks;
+
+  ReportCard({
+    required this.studentName,
+    required this.studentClass,
+    required this.rollNumber,
+    required this.subjects,
+    required this.finalGrade,
+    required this.remarks,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List<Widget>.generate(5, (int index) {
-              return Row(
-                children: [
-                  Radio<int>(
-                   activeColor: Colors.green,
-                    
-                    value: index,
-                    groupValue: _selectedValue,
-                    onChanged: (int? value) {
-                      setState(() {
-                        _selectedValue = value;
-                        _displayText = "You selected option ${_selectedValue! + 1}";
-                      });
-                    },
-                  ),
-                  Text("Option ${index + 1}"),
-                ],
-              );
-            }),
-          ),
-          SizedBox(height: 20),
+          // Student Info Section
           Text(
-            _displayText,
-            style: TextStyle(fontSize: 20),
+            'Student Name: $studentName',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 4),
+          Text('Class: $studentClass'),
+          Text('Roll Number: $rollNumber'),
+          const SizedBox(height: 16),
+
+          // Subject Grades Section
+          const Text(
+            'Subjects & Grades:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ...subjects.map((subject) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(subject['name']!),
+                  Text(subject['grade']!),
+                ],
+              ),
+            );
+          }).toList(),
+          const SizedBox(height: 16),
+
+          // Final Grade Section
+          Text(
+            'Final Grade: $finalGrade',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+
+          // Remarks Section
+          const Text(
+            'Remarks:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(remarks),
         ],
       ),
     );

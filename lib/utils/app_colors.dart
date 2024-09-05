@@ -8,6 +8,7 @@ class MyColors {
 static const Color notificationSubtitle = Color(0xFF6A6A6A);
   static const Color sessionText = Color(0xFF231F20);
   static const Color grey = Colors.grey;
+  static const Color subHeader = Color(0xFF070707);
   static  Color customDataColor = const Color(0xFF070707).withOpacity(0.7);
   static const Color assignmentDateColor = Color(0xFF0160AE);
   static const Color primaryColor = Color(0xFF4CAF50);

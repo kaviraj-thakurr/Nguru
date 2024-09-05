@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
+import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 import 'package:nguru/screens/forgot_password.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
@@ -24,6 +26,7 @@ import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/logic/login_cubit/login_cubit.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
 import 'package:nguru/utils/app_utils.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
 import 'package:velocity_x/velocity_x.dart';
 
@@ -31,12 +34,21 @@ class LoginScreen extends StatefulWidget {
   final String? title;
   final String? schoolLogo;
   final String? schoolUrl;
-  final String subDomain;
-  final String schoolNickName;
-   final String trimmedSchoolUrl;
+  final String? subDomain;
+  final String? schoolNickName;
+  final String? trimmedSchoolUrl;
+  final String? username;
 
-
-  const LoginScreen({super.key, this.title, this.schoolLogo, this.schoolUrl, required this.subDomain, required this.schoolNickName, required this.trimmedSchoolUrl});
+  const LoginScreen({
+    super.key,
+    this.title,
+    this.schoolLogo,
+    this.schoolUrl,
+    this.subDomain,
+    this.schoolNickName,
+    this.trimmedSchoolUrl,
+    this.username,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -53,16 +65,30 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isFirstTime = true;
   Box<UserModel>? box;
   List<UserModel>? addSchoolList;
+  bool isMinized = true;
 
   Future<void> openAddSchoolBox() async {
     box = await Hive.openBox<UserModel>('listItems');
-     addSchoolList = box?.values.toList();
-      int index = findUserModelIndex(addSchoolList??[],widget.schoolNickName,widget.subDomain, widget.trimmedSchoolUrl??"" );
-  
-    selectedRadio = addSchoolList?.elementAt(index).schoolNickName ?? "";
-    schoolUrlGlobal =
-        "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
-            "";
+    addSchoolList = box?.values.toList();
+    int index = findUserModelIndex(
+        addSchoolList ?? [],
+        widget.schoolNickName ?? "",
+        widget.subDomain ?? "",
+        widget.trimmedSchoolUrl ?? "");
+
+    if (index != -1) {
+      selectedRadio = addSchoolList?.elementAt(index).schoolNickName ?? "";
+      schoolUrlGlobal =
+          "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
+              "";
+    }
+    if(addSchoolList?.length==1){
+      selectedRadio = addSchoolList?.elementAt(0).schoolNickName ?? "";
+      schoolUrlGlobal =
+          "${addSchoolList?.elementAt(0).schoolUrl}${addSchoolList?.elementAt(0).subDomain}" ??
+              "";
+    }
+
     removeDuplicateSchools(addSchoolList);
     setState(() {});
     log("fetching: $addSchoolList");
@@ -82,6 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     openAddSchoolBox();
     super.initState();
+    userNameController.text = widget.username ?? "";
+    debugPrint("user name: ${userNameController.text}");
+
     userNameController.addListener(() {
       context
           .read<FormValidationCubit>()
@@ -123,223 +152,263 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildBody(String schoolName, String schoolPhoto) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: padding23),
-            child: Column(
-              children: [
-                169.heightBox,
-                Image.memory(
-                  base64Decode(schoolPhoto),
-                  height: height150,
-                ),
-                15.heightBox,
-                Text(
-                  schoolName,
-                  style: const TextStyle(color: Colors.black),
-                ),
-                8.heightBox,
-                const GradientDivider(
-                  gradient: MyColors.divider,
-                  height: height1,
-                ),
-                20.heightBox,
+    return WillPopScope(
+      onWillPop: () async {
+        // Minimize the app instead of navigating back
+        SystemNavigator.pop();
 
-                // Row(
-                //   children: [
-                //     Radio(
-                //       activeColor: Color.fromARGB(255, 67, 225, 181),
-                //      // hoverColor: Colors.blue,
-                //       value: 1,
-                //       groupValue: 1,
-                //       onChanged: (value) {},
-                //     ),
-                //     Text(widget.title ?? ""),
-                //   ],
-                // ),
+        return false; // Return false to prevent navigating back
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: padding23),
+              child: Column(
+                children: [
+                  169.heightBox,
+                  Image.memory(
+                    base64Decode(schoolPhoto),
+                    height: height150,
+                  ),
+                  15.heightBox,
+                  Text(
+                    schoolName,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  8.heightBox,
+                  const GradientDivider(
+                    gradient: MyColors.divider,
+                    height: height1,
+                  ),
+                  20.heightBox,
 
-                addSchoolList?.length == null
-                    ? SizedBox()
-                    : SizedBox(
-                        width: double.infinity,
-                        height: 40,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: addSchoolList?.length,
-                            itemBuilder: (context, index) {
-                              String schoolNickName =
-                                  addSchoolList?[index].schoolNickName ?? "";
-                              String schoolUrl =
-                                  "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
-                              return GestureDetector(
-                                onTap: () {
-                                  context.read<AddSchoolCubit>().addSchool(
-                                      addSchoolList?[index].schoolUrl ?? "",
-                                      addSchoolList?[index].subDomain ?? "",
-                                      addSchoolList?[index].schoolNickName ??
-                                          "",
-                                      isNavigating: false);
+                  // Row(
+                  //   children: [
+                  //     Radio(
+                  //       activeColor: Color.fromARGB(255, 67, 225, 181),
+                  //      // hoverColor: Colors.blue,
+                  //       value: 1,
+                  //       groupValue: 1,
+                  //       onChanged: (value) {},
+                  //     ),
+                  //     Text(widget.title ?? ""),
+                  //   ],
+                  // ),
 
-                                  setState(() {
-                                    selectedRadio =
+                  addSchoolList?.length == null
+                      ? SizedBox()
+                      : SizedBox(
+                          width: double.infinity,
+                          height: 40,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: addSchoolList?.length,
+                              itemBuilder: (context, index) {
+                                String schoolNickName =
+                                    addSchoolList?[index].schoolNickName ?? "";
+                                String schoolUrl =
+                                    "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.read<AddSchoolCubit>().addSchool(
+                                        addSchoolList?[index].schoolUrl ?? "",
+                                        addSchoolList?[index].subDomain ?? "",
                                         addSchoolList?[index].schoolNickName ??
-                                            "";
-                                    schoolNickName =
-                                        addSchoolList?[index].schoolNickName ??
-                                            "";
-                                    schoolUrl =
-                                        "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
-                                    schoolUrlGlobal =
-                                        "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
-                                    isSelected = !isSelected;
-                                    isFirstTime = false;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: customRadioButton(
-                                      context,
-                                      selectedRadio == schoolNickName &&
-                                          schoolUrl == schoolUrlGlobal,
-                                      addSchoolList![index].schoolNickName ??
-                                          "",
-                                      addSchoolList?[index]),
-                                ),
-                              );
-                            }),
-                      ),
+                                            "",
+                                        isNavigating: false);
 
-                10.heightBox,
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      BlocBuilder<FormValidationCubit, FormValidationState>(
-                          builder: (context, state) {
-                        return CustomTextFormField(
-                          controller: userNameController,
-                          labelText: MyStrings.userName,
-                          validator: (url) {
-                            if (url == null || url.isEmpty) {
-                              return MyStrings.userNameReq;
+                                    setState(() {
+                                      selectedRadio = addSchoolList?[index]
+                                              .schoolNickName ??
+                                          "";
+                                      schoolNickName = addSchoolList?[index]
+                                              .schoolNickName ??
+                                          "";
+                                      schoolUrl =
+                                          "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
+                                      schoolUrlGlobal =
+                                          "${addSchoolList?[index].schoolUrl ?? ""}${addSchoolList?[index].subDomain}";
+                                      isSelected = !isSelected;
+                                      isFirstTime = false;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: customRadioButton(
+                                        context,
+                                        selectedRadio == schoolNickName &&
+                                            schoolUrl == schoolUrlGlobal,
+                                        addSchoolList![index].schoolNickName ??
+                                            "",
+                                        addSchoolList?[index]),
+                                  ),
+                                );
+                              }),
+                        ),
+
+                  10.heightBox,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        BlocBuilder<FormValidationCubit, FormValidationState>(
+                            builder: (context, state) {
+                          return CustomTextFormField(
+                            controller: userNameController,
+                            labelText: MyStrings.userName,
+                            validator: (url) {
+                              if (url == null || url.isEmpty) {
+                                return MyStrings.userNameReq;
+                              }
+                              return null;
+                            },
+                            autoValidateMode: state.autoValidateUserName
+                                ? AutovalidateMode.onUserInteraction
+                                : AutovalidateMode.disabled,
+                          );
+                        }),
+                        14.heightBox,
+                        TextFormField(
+                          obscureText: _obscureText,
+                          controller: passWordController,
+                          decoration: InputDecoration(
+                            label: const Text(
+                              MyStrings.passWord,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: MyColors.grey,
+                                  fontFamily: APP_FONT),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                color: MyColors.passIcon,
+                                _obscureText
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: paddingVertical15,
+                                horizontal: paddingHorizontal20),
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(9.0)),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: MyColors.borderColor,
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: width1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(9.0)),
+                            ),
+                          ),
+                          style: FontUtil.signInFieldText,
+                          validator: (pass) {
+                            if (pass == null || pass.isEmpty) {
+                              return MyStrings.passWordReq;
                             }
                             return null;
                           },
-                          autoValidateMode: state.autoValidateUserName
-                              ? AutovalidateMode.onUserInteraction
-                              : AutovalidateMode.disabled,
-                        );
-                      }),
-                      14.heightBox,
-                      TextFormField(
-                        obscureText: _obscureText,
-                        controller: passWordController,
-                        decoration: InputDecoration(
-                          label: const Text(
-                            MyStrings.passWord,
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: MyColors.grey,
-                                fontFamily: APP_FONT),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              color: MyColors.passIcon,
-                              _obscureText
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: paddingVertical15,
-                              horizontal: paddingHorizontal20),
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: MyColors.borderColor,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: width1),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(9.0)),
-                          ),
                         ),
-                        style: FontUtil.signInFieldText,
-                        validator: (pass) {
-                          if (pass == null || pass.isEmpty) {
-                            return MyStrings.passWordReq;
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (userNameController.text.trim().isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(MyStrings
+                                    .userNameReq), // Show an error message
+                              ),
+                            );
+                          } else {
+                            NavigationService.navigateTo(
+                              ForgotPassword(
+                                  username: userNameController.text.trim()),
+                              context,
+                            );
                           }
-                          return null;
                         },
+                        child: Text(
+                          MyStrings.forgotPassword,
+                          style: FontUtil.forgotPassword,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        NavigationService.navigateTo(
-                            const ForgotPassword(), context);
-                      },
-                      child: Text(
-                        MyStrings.forgotPassword,
-                        style: FontUtil.forgotPassword,
-                      ),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const AddSchool(isAddSchoolScreen: true),
+                          ));
+                    },
+                    child: Text(
+                      MyStrings.add,
+                      style: FontUtil.add,
                     ),
-                  ],
-                ),
-                BlocConsumer<LoginCubit, LoginState>(builder: (context, state) {
-                  if (state is LoginLoadingState) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return PrimaryButton(
-                      title: MyStrings.signIn,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<LoginCubit>().logIn(
-                                userNameController.text.trim(),
-                                passWordController.text.toString(),
-                                widget.schoolUrl ?? "",
-                              );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(MyStrings.enterUserNamePass),
-                            ),
-                          );
-                        }
-                      },
-                    );
-                  }
-                }, listener: (context, state) {
-                  if (state is LoginSuccessState) {
-                    NavigationService.navigateTo(
-                        const NguruDashboardScreen(), context);
-                  } else if (state is LoginForgetPasswordState) {
-                    isFromForgotPassword = false;
-                    NavigationService.navigateTo(
-                        const ResetPasswordScreen(), context);
-                  } else if (state is LoginErrorState) {
-                    _showSnackBar(context, state.message);
-                  }
-                }),
-              ],
+                  ),
+                  BlocConsumer<LoginCubit, LoginState>(
+                      builder: (context, state) {
+                    if (state is LoginLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return PrimaryButton(
+                        title: MyStrings.signIn,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<LoginCubit>().logIn(
+                                  userNameController.text.trim(),
+                                  passWordController.text.toString(),
+                                  widget.schoolUrl ?? "",
+                                );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(MyStrings.enterUserNamePass),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }
+                  }, listener: (context, state) {
+                    if (state is LoginSuccessState) {
+                      debugPrint(
+                          "usernaaaaaaaaaaaame-->${userNameController.text}");
+                      SharedPref.saveUsername(userNameController.text.trim());
+
+                      NavigationService.navigateTo(
+                          const NguruDashboardScreen(), context);
+                    } else if (state is LoginForgetPasswordState) {
+                      isFromForgotPassword = false;
+                      NavigationService.navigateTo(
+                          const ResetPasswordScreen(), context);
+                    } else if (state is LoginErrorState) {
+                      _showSnackBar(context, state.message);
+                    }
+                  }),
+                ],
+              ),
             ),
           ),
         ),

@@ -95,6 +95,28 @@ class FontUtil {
       color: MyColors.forgetPassword,
       fontFamily: APP_FONT);
 
+ static TextStyle subHeader = const TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: MyColors.subHeader,
+      fontFamily: APP_FONT);
+
+
+
+       static TextStyle subName = const TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      color: MyColors.subHeader,
+      fontFamily: APP_FONT);
+
+
+       static TextStyle subMarks = const TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      color: MyColors.subHeader,
+      fontFamily: APP_FONT);
+
+
   // static TextStyle cardTitle = TextStyle(
   //     fontSize: 14,
   //     fontWeight: FontWeight.w500,
