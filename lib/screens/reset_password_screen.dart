@@ -4,6 +4,9 @@ import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_state.dart';
+import 'package:nguru/logic/reset_password_policy/reset_password_policy_cubit.dart';
+import 'package:nguru/logic/reset_password_policy/reset_password_policy_state.dart';
+import 'package:nguru/models/reset_password_policy_model.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_strings.dart';
@@ -21,6 +24,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confiremNewPasswordController = TextEditingController();
   bool _obscureText = true;
+
+  @override
+  void initState() {
+    context.read<ResetPasswordPolicyCubit>().resetPasswordPolicy();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -201,6 +210,40 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               return null;
             },
           ),
+          10.heightBox,
+          BlocConsumer<ResetPasswordPolicyCubit,ResetPasswordPolicyState>(
+            listener: (context,state){},
+            builder: (context,state){
+              if(state is ResetPasswordPolicyLoadingState){
+                  return const SizedBox();
+              }
+              else if(state is ResetPasswordPolicySuccessState){
+                return  Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap:() => showDialog(
+                        context: context, 
+                        builder: (BuildContext context) { 
+                          return buildPasswordPolicyAlertDialog(context: context,resetPasswordPolicyModel: state.resetPasswordPolicyModel);
+                         }
+
+                      ),
+                      child: Text("Reset Password Policy",style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.blueShade),)),
+                  ],
+                );
+              }
+              else if(state is ResetPasswordPolicyErrorState){
+                  return const Text(MyStrings.error);
+              }
+              else {
+                 return const Text(MyStrings.undefinedState);
+              }
+            }, ),
+
+          
+
+
          
           30.heightBox,
           BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
@@ -244,4 +287,37 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ),
     ));
   }
+
+
+  AlertDialog buildPasswordPolicyAlertDialog({
+  required BuildContext context,
+  List<ResetPasswordPolicyModel>? resetPasswordPolicyModel
+}) {
+  return  AlertDialog(
+    backgroundColor: MyColors.white,
+    title:  Text('Reset Password Policy'),
+    content:  SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('User Name Policy: ',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+              10.heightBox,
+              // ListView.builder(itemBuilder: (context,index){
+              //   return    resetPasswordPolicyModel[index].key == "CORE_PSWD_LENGHT_MAX" ? Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
+
+              // })
+              
+            ],
+          ),
+        ],
+      ),
+    ),
+   
+  );
+}
 }

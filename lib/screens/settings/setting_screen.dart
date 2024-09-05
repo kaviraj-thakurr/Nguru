@@ -38,7 +38,7 @@ class _SettingScreenState extends State<SettingScreen> {
   List<String> settingitems = [
     "My Profile",
     "Change Sibling",
-    //  "Change Session",
+    "Change Session",
     "Add School",
     "Push Notification",
     "Change Password",
@@ -50,35 +50,25 @@ class _SettingScreenState extends State<SettingScreen> {
   ];
 
   bool toggle = false;
-   var getUserName;
+  var getUserName;
 
   @override
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
     // TODO: implement initState
     super.initState();
-
   }
 
-
-
-
-  Future <String> getUerName () async{
-
-   getUserName =await SharedPref.getUerName();
-return getUserName;
-
-
+  Future<String> getUerName() async {
+    getUserName = await SharedPref.getUerName();
+    return getUserName;
   }
-
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     bool isTap = true;
-
-
 
     return Scaffold(
       floatingActionButton: GestureDetector(
@@ -104,13 +94,108 @@ return getUserName;
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is DashboardSuccessState) {
-                  return customSettingProfileWidget(
-                      context,
-                      screenWidth,
-                      screenHeight,
-                      state.studentName!,
-                      "${state.qualification} ${state.section!}",
-                      state.admissionNumber!);
+                  return Column(
+                    children: [
+                      customSettingProfileWidget(
+                          context,
+                          screenWidth,
+                          screenHeight,
+                          state.studentName!,
+                          "${state.qualification} ${state.section!}",
+                          state.admissionNumber!),
+                      SizedBox(
+                        height: screenHeight * 0.58,
+                        width: double.infinity,
+                        child: ListView.builder(
+                            itemCount: settingitems.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: settingItemsListTile(
+                                    context, settingitems[index],
+                                    isTapped: isTap,
+                                    onToggleChanged: (bool value) {
+                                  setState(() {
+                                    isTap = !isTap;
+                                    log("istap $isTap");
+                                  });
+                                  return isTap;
+                                },
+
+                                    // () => {
+                                    //       Navigator.push(
+                                    //           context,
+                                    //           MaterialPageRoute(
+                                    //               builder: (context) => StoryScreen()))
+                                    //     },
+                                    isNotificationTile: false),
+                              );
+                            }),
+                      ),
+                      20.heightBox,
+                      Center(
+                        child: ShaderMask(
+                          blendMode: BlendMode.srcIn,
+                          shaderCallback: (Rect bounds) {
+                            return MyColors.buttonColors.createShader(bounds);
+                          },
+                          child: Builder(builder: (context) {
+                            return GestureDetector(
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return buildLogoutAlertDialog(
+                                    context: context,
+                                    onLogout: () => context
+                                        .read<SignoutCubit>()
+                                        .signout()
+                                        .then((value) =>
+                                            SharedPref.saveLoggedInStatus(
+                                                false))
+                                        .then(
+                                      (value) async {
+                                        String schoolNickName = await SharedPref
+                                                .getSchoolNickName() ??
+                                            "";
+                                        String schoolSubDomain =
+                                            await SharedPref.getSubDomain() ??
+                                                "";
+                                        String schoolUrl =
+                                            await SharedPref.getSchoolUrl() ??
+                                                "";
+
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => LoginScreen(
+                                                    username: getUserName,
+                                                    schoolNickName:
+                                                        schoolNickName,
+                                                    subDomain: schoolSubDomain,
+                                                    trimmedSchoolUrl: schoolUrl,
+                                                  )),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      },
+                                    ),
+                                    onCancel: () => Navigator.pop(context),
+                                  );
+                                },
+                              ),
+                              child: Text(
+                                "Sign out",
+                                style: FontUtil.customStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  );
                 } else if (state is DashboardErrorState) {
                   return customSettingProfileWidget(
                       context, screenWidth, screenHeight, "", "", "");
@@ -119,82 +204,6 @@ return getUserName;
                       context, screenWidth, screenHeight, "", "", "");
                 }
               }),
-              SizedBox(
-                height: screenHeight * 0.58,
-                width: double.infinity,
-                child: ListView.builder(
-                    itemCount: settingitems.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: settingItemsListTile(
-                            context, settingitems[index], isTapped: isTap,
-                            onToggleChanged: (bool value) {
-                          setState(() {
-                            isTap = !isTap;
-                            log("istap $isTap");
-                          });
-                          return isTap;
-                        },
-
-                            // () => {
-                            //       Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) => StoryScreen()))
-                            //     },
-                            isNotificationTile: false),
-                      );
-                    }),
-              ),
-              20.heightBox,
-              Center(
-                child: ShaderMask(
-                  blendMode: BlendMode.srcIn,
-                  shaderCallback: (Rect bounds) {
-                    return MyColors.buttonColors.createShader(bounds);
-                  },
-                  child: Builder(builder: (context) {
-                    return GestureDetector(
-               onTap: () => showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    return buildLogoutAlertDialog(
-      context: context,
-      onLogout: () => context
-          .read<SignoutCubit>()
-          .signout()
-          .then((value) => SharedPref.saveLoggedInStatus(false))
-          .then((value) => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LoginScreen(
-
-                                username:getUserName,
-
-                              )
-
-
-                        ),
-                (Route<dynamic> route) => false,
-              )),
-      onCancel: () => Navigator.pop(context),
-    );
-  },
-),
-
-                     
-                      child: Text(
-                        "Sign out",
-                        style: FontUtil.customStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            textColor: MyColors.boldTextColor),
-                      ),
-                    );
-                  }),
-                ),
-              ),
               BlocConsumer<SignoutCubit, SignoutState>(
                   builder: (context, state) {
                 return const SizedBox();
@@ -266,7 +275,6 @@ return getUserName;
                 ),
               )
             : GestureDetector(
-               
                 onTap: () {
                   log("title:  $title");
                   if (title == "My Profile") {
@@ -276,23 +284,12 @@ return getUserName;
                         builder: (context) => const MyProfileScreen(),
                       ),
                     );
-                  }
-
-
-                   else  if (title == "Change Password") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyProfileScreen()));
-                  } else if (title == "Change Sibling") {
+                  }  else if (title == "Change Sibling") {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ChangeSiblings()));
-                  }
-
-                  
-                   else if (title == "Change Password") {
+                  } else if (title == "Change Password") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -306,26 +303,21 @@ return getUserName;
                         builder: (context) => const ChangeSessionScreen(),
                       ),
                     );
-                  }
-
-                  else if ( title == "Privacy & Policy"){
+                  } else if (title == "Privacy & Policy") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const PrivacyPolicyScreen(),
                       ),
                     );
-                  }
-
-                  else if ( title == "Terms of use"){
+                  } else if (title == "Terms of use") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const TermsOfUseScreen(),
                       ),
                     );
-                  }
-                  else if ( title == "Feedback"){
+                  } else if (title == "Feedback") {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

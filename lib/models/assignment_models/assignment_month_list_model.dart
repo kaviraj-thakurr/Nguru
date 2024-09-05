@@ -30,7 +30,7 @@ class AssignmentsMonthList {
 
 class AssignmentMonthList {
     int dayKey;
-    int assignmentStatus;
+    int? assignmentStatus;
     DateTime calendarDate;
 
     AssignmentMonthList({

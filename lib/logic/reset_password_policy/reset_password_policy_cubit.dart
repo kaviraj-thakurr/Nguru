@@ -8,10 +8,10 @@ class ResetPasswordPolicyCubit extends Cubit<ResetPasswordPolicyState>{
   final AuthRepo ? authRepo;
   ResetPasswordPolicyCubit(this.authRepo):super(ResetPasswordPolicyInitState());
   
-Future <void> resetPasswordPolicy (String newPassword, String oldPassword) async{
+Future <void> resetPasswordPolicy () async{
   try{
     emit(ResetPasswordPolicyLoadingState());
-    final result = await authRepo?.getResetPasswordPolicy(newPassword: newPassword, oldPassword: oldPassword);
+    final result = await authRepo?.getResetPasswordPolicy();
     if(result != null){
       if(result.isNotEmpty){
         emit(ResetPasswordPolicySuccessState(

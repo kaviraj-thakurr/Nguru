@@ -21,10 +21,12 @@ import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AssignmentScreen extends StatefulWidget {
+  final DateTime startDate;
+  final DateTime endDate;
   final  bool ? isNotificationScreen  ;
 final  DateTime? notificationScreenDate;
   final int?month;
-  const AssignmentScreen({super.key, this.month, this.isNotificationScreen, this.notificationScreenDate});
+  const AssignmentScreen({super.key, this.month, this.isNotificationScreen, this.notificationScreenDate, required this.startDate, required this.endDate});
 
   @override
   State<AssignmentScreen> createState() => _AssignmentScreenState();
@@ -43,7 +45,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   @override
   void initState() {
     super.initState();
-      if(widget.notificationScreenDate == null){
+      if(widget.notificationScreenDate != null){
      context
         .read<AssignmentMonthListCubit>()
         .getAssignmentMonthList(currentDate.month);
@@ -56,7 +58,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         
          context.read<AssignmentListCubit>().getAssignmentList(
                     widget.notificationScreenDate?.month,
-                   "${DateFormat('yyyy-MM-dd').format(widget.notificationScreenDate!)}T00:00:00");
+                   "${DateFormat('yyyy-MM-dd').format(DateTime(currentDate.year,currentDate.month,currentDate.day))}T00:00:00",DateTime.now().month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString(),);
 
   
 
@@ -85,14 +87,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
               screenTitleHeader("Assignment",
                   onPressed: () => Navigator.pop(context)),
               20.heightBox,
-              AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate),
+              AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,startDate: widget.startDate ,endDate:widget.endDate ,),
               Expanded(
                 child: BlocBuilder<AssignmentListCubit, AssignmentListState>(
                   builder: (context, state) {
                     if (state is AssignmentListLoadingState) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is AssignmentListSuccessState) {
-                      if (state.subjectList.isEmpty) {
+                      if (state.subjectList?.isEmpty ?? false) {
                         return Center(
                             child: Column(
                           children: [
@@ -122,7 +124,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                       }
                       return PageView.builder(
                         controller: _pageController,
-                        itemCount: state.subjectList.length,
+                        itemCount: state.subjectList?.length,
                         onPageChanged: (index) {},
                         itemBuilder: (context, index) {
                            final subjects = state.subjectList;
@@ -130,26 +132,26 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           return ListView.builder(
                           //  physics: const NeverScrollableScrollPhysics(),
                              shrinkWrap: true,
-                            itemCount: subjects.length,
+                            itemCount: subjects?.length,
                             itemBuilder: (context,index) {
-                                final assignments = state.subjectList[index];
+                                final assignments = state.subjectList?[index];
                               return ListView.builder(
-                                itemCount: assignments.assignments?.length ?? 0,
+                                itemCount: assignments?.assignments?.length ?? 0,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final assignment = assignments.assignments![index];
+                                  final assignment = assignments?.assignments![index];
                                   return 
                                   Padding(
                                     padding: const EdgeInsets.all(padding3),
                                     child: 
                                     cardDesign(
                                         context,
-                                        assignment.assignmentName,
-                                        assignments.subjectName,
+                                        assignment?.assignmentName,
+                                        assignments?.subjectName,
                                         removeHtmlTags(
-                                            "${assignment.assignmentDetail}"),
-                                        assignment.assignmentDate,
+                                            "${assignment?.assignmentDetail}"),
+                                        assignment?.assignmentDate,
                                         assignment),
                                   );
                                 },
@@ -197,9 +199,25 @@ Widget cardDesign(BuildContext context, String? title, String? subject,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title ?? "",
-                  style: FontUtil.circularTitle,
+                GestureDetector(
+                  onTap: (){
+                     Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              StoryDescription(
+                                                isCircular: false,
+                                                isAssignment: true,
+                                                isDiscipline: false,
+                                                circularList: null,
+                                                assignmentList: assignment,
+                                                disciplineList: null,
+                                              )));
+                  },
+                  child: Text(
+                    title ?? "",
+                    style: FontUtil.circularTitle,
+                  ),
                 ),
                 Text(
                   subject ?? "",

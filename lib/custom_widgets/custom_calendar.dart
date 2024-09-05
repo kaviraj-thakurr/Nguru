@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,17 +13,16 @@ import 'package:nguru/utils/app_strings.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
-
-
-final int? month;
+  final int? month;
   final DateTime? startDate;
   final DateTime? endDate;
 
-
-  const CustomCalendar( {super.key, this.month, this.startDate, this.endDate, });
-
-  
-
+  const CustomCalendar({
+    super.key,
+    this.month,
+    this.startDate,
+    this.endDate,
+  });
 
   @override
   _CustomCalendarState createState() => _CustomCalendarState();
@@ -36,16 +34,15 @@ class _CustomCalendarState extends State<CustomCalendar> {
 
   @override
   void initState() {
-     log("the start and end dates arerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: ${widget.startDate} ${widget.endDate}");
-    _focusedDay=
-    DateTime(_focusedDay.year, widget.month?? _focusedDay.month, _focusedDay.day);
+    log("the start and end dates : ${widget.startDate} ${widget.endDate}");
+    _focusedDay = DateTime(
+        _focusedDay.year, widget.month ?? _focusedDay.month, _focusedDay.day);
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -53,187 +50,243 @@ class _CustomCalendarState extends State<CustomCalendar> {
           AppGapping.padding30,
           _buildMonthSelector(),
           AppGapping.padding20,
-          BlocConsumer<ParticularMonthAttendanceCubit,ParticularMonthAttendanceState>(
-            listener: (context, state) {},
-            builder: (context,state) {
-              if(state is ParticularMonthAttendanceLoadingState)
-                      {
-                     return  
-                      TableCalendar(
-                rowHeight: 45,
-                daysOfWeekHeight: 20,
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: FontUtil.customStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      textColor: MyColors.calendarDateColor),
-                  weekendStyle: FontUtil.customStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w200,
-                      textColor: MyColors.calendarDateColor),
-                ),
-                firstDay:widget.startDate ?? DateTime.utc(2010, 10, 16),
-                lastDay:widget.endDate ?? DateTime.utc(2030, 3, 14),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                calendarFormat: CalendarFormat.month,
-                calendarStyle: CalendarStyle(
-                  defaultTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.calendarDateColor),
-                  weekendTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.fadedTextColor),
-                  selectedTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      textColor: Colors.blue),
-                  todayTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      textColor: Colors.pink),
-                  todayDecoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.white),
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.white),
-                  ),
-                ),
-                headerVisible: false,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-              );
-                      }
-
-                      if(state is ParticularMonthAttendanceSuccessState)
-                      {
-                     return  TableCalendar(
-                calendarBuilders: CalendarBuilders(
-                  defaultBuilder: (context, day, focusedDay) {
-                    final dayIndex = day.day - 1;            
-                    Color textColor = Colors.black;
-
-                    TextStyle defaultDatesStyle=FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.calendarDateColor);
-
-                    int attendanceStatus =state.particularMonthAttendanceModel
-                        .attendanceMonth!.isEmpty ? 99:  state.particularMonthAttendanceModel
-                        .attendanceMonth![dayIndex].status!;
-
-                    if (attendanceStatus == 0) {
-                      defaultDatesStyle =FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.greenShade_3);
-                    } 
-
-                    else if (attendanceStatus == 3) {
-
-                      defaultDatesStyle =FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.redShade_3);
-                    } 
-
-                    else if (attendanceStatus == 99) {
-
-                       defaultDatesStyle =defaultDatesStyle;
-                    } 
-                    
-                    else {
-                      defaultDatesStyle =defaultDatesStyle;
-                    }
-                    return Center(
-                      child: Text(
-                        '${day.day}',
-                        style: defaultDatesStyle,
+          BlocConsumer<ParticularMonthAttendanceCubit,
+                  ParticularMonthAttendanceState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                if (state is ParticularMonthAttendanceLoadingState) {
+                  return TableCalendar(
+                    rowHeight: 45,
+                    daysOfWeekHeight: 20,
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle: FontUtil.customStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          textColor: MyColors.calendarDateColor),
+                      weekendStyle: FontUtil.customStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w200,
+                          textColor: MyColors.calendarDateColor),
+                    ),
+                    firstDay: widget.startDate ?? DateTime.utc(2010, 10, 16),
+                    lastDay: widget.endDate ?? DateTime.utc(2030, 3, 14),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    calendarFormat: CalendarFormat.month,
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          textColor: MyColors.calendarDateColor),
+                      weekendTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          textColor: MyColors.fadedTextColor),
+                      selectedTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          textColor: Colors.blue),
+                      todayTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          textColor: Colors.pink),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 2, color: Colors.white),
                       ),
-                    );
-                  },
-                ),
-                rowHeight: 45,
-                daysOfWeekHeight: 20,
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: FontUtil.customStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      textColor: MyColors.calendarDateColor),
-                  weekendStyle: FontUtil.customStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w200,
-                      textColor: MyColors.calendarDateColor),
-                ),
-                firstDay:widget.startDate ?? DateTime.utc(2010, 10, 16),
-                lastDay:widget.endDate ?? DateTime.utc(2030, 3, 14),
-                focusedDay: _focusedDay,
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                calendarFormat: CalendarFormat.month,
-                calendarStyle: CalendarStyle(
-                  defaultTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.calendarDateColor),
-                  weekendTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      textColor: MyColors.fadedTextColor),
-                  selectedTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      textColor: Colors.blue),
-                  todayTextStyle: FontUtil.customStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      textColor: Color.fromARGB(255, 116, 229, 231)),
-                  todayDecoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.white),
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.white),
-                  ),
-                ),
-                headerVisible: false,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-              );
-                      }
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 2, color: Colors.white),
+                      ),
+                    ),
+                    headerVisible: false,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                  );
+                }
 
-                      else if(state  is ParticularMonthAttendanceErrorState)
-                      {
-                        return  Center( child:  Text(state.message, style:  FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-                      }
-                      else {
-                      return   Center(child:  Text(MyStrings.undefinedState, style:  FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),);
-                      }
-              
-            }
-          ),
+                if (state is ParticularMonthAttendanceSuccessState) {
+                  return TableCalendar(
+                    onPageChanged: (focusedDay) {
+                      setState(() {
+                        _focusedDay = focusedDay;
+                        currentMonthNumber = _focusedDay.month;
+                      });
+                      context
+                          .read<CumulativeAttendanceCubit>()
+                          .getCumulativeAttendance();
+                      context
+                          .read<ParticularMonthAttendanceCubit>()
+                          .getParticularMonthAttendance(_focusedDay.month);
+                    },
+                    calendarBuilders: CalendarBuilders(
+                      defaultBuilder: (context, day, focusedDay) {
+                        final dayIndex = day.day - 1;
+
+                        TextStyle defaultDatesStyle = FontUtil.customStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            textColor: MyColors.calendarDateColor);
+
+                        int attendanceStatus = state
+                                .particularMonthAttendanceModel
+                                .attendanceMonth!
+                                .isEmpty
+                            ? 99
+                            : state.particularMonthAttendanceModel
+                                .attendanceMonth![dayIndex].status!;
+
+                        //first half ==1
+
+                        if (attendanceStatus == 1) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.blueShade);
+                        }
+
+                        //present ==0
+
+                        if (attendanceStatus == 0) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.greenShade_3);
+                        }
+
+                        //late  ==2
+                        else if (attendanceStatus == 2) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.arc_2);
+                        }
+
+                        //absent ==3
+                        else if (attendanceStatus == 3) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.redShade_1);
+                        }
+
+                        // holiday =5
+                        else if (attendanceStatus == 5) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.greyShade_7);
+                        }
+                        //weekoff ==7
+                        else if (attendanceStatus == 7) {
+                          defaultDatesStyle = FontUtil.customStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              textColor: MyColors.greyShade_3);
+                        }
+
+//default
+
+                        else if (attendanceStatus == 99) {
+                          defaultDatesStyle = defaultDatesStyle;
+                        } else {
+                          defaultDatesStyle = defaultDatesStyle;
+                        }
+                        return Center(
+                          child: Text(
+                            '${day.day}',
+                            style: defaultDatesStyle,
+                          ),
+                        );
+                      },
+                    ),
+                    rowHeight: 45,
+                    daysOfWeekHeight: 20,
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                      weekdayStyle: FontUtil.customStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          textColor: MyColors.calendarDateColor),
+                      weekendStyle: FontUtil.customStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w200,
+                          textColor: MyColors.calendarDateColor),
+                    ),
+                    firstDay: widget.startDate ?? DateTime.utc(2010, 10, 16),
+                    lastDay: widget.endDate ?? DateTime.utc(2030, 3, 14),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+                    calendarFormat: CalendarFormat.month,
+                    calendarStyle: CalendarStyle(
+                      defaultTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          textColor: MyColors.calendarDateColor),
+                      weekendTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          textColor: MyColors.fadedTextColor),
+                      selectedTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          textColor: Colors.blue),
+                      todayTextStyle: FontUtil.customStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          textColor: Color.fromARGB(255, 116, 229, 231)),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 2, color: Colors.white),
+                      ),
+                      selectedDecoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 2, color: Colors.white),
+                      ),
+                    ),
+                    headerVisible: false,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                  );
+                } else if (state is ParticularMonthAttendanceErrorState) {
+                  return Center(
+                    child: Text(
+                      state.message,
+                      style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.boldTextColor),
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      MyStrings.undefinedState,
+                      style: FontUtil.customStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          textColor: MyColors.boldTextColor),
+                    ),
+                  );
+                }
+              }),
           const SizedBox(height: 10),
           _buildLegend(),
           //  const SizedBox(height: 10,),
@@ -246,8 +299,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
   Widget _buildMonthSelector() {
     List<String> months = [];
     DateTime current = widget.startDate ?? DateTime.now();
-        log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
-    while (current.isBefore(widget.endDate ?? DateTime.now()) || current.isAtSameMomentAs(widget.endDate ?? DateTime.now() )) {
+    log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
+    while (current.isBefore(widget.endDate ?? DateTime.now()) ||
+        current.isAtSameMomentAs(widget.endDate ?? DateTime.now())) {
       months.add(DateFormat('MMM').format(current));
       current = DateTime(current.year, current.month + 1, 1);
     }
@@ -263,7 +317,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
           log("months index: $monthIndex");
           DateTime monthDate = DateTime(
             widget.startDate?.year ?? DateTime.now().year,
-            widget.startDate!.month  + monthIndex,
+            widget.startDate!.month + monthIndex,
           );
           log("logic: ${widget.startDate?.month} $monthIndex");
           log("monthDate  object: ${monthDate.year} ${monthDate.month} ${monthDate.day}");
@@ -279,12 +333,14 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   // Update the focused day
                   _focusedDay = DateTime(
                     widget.startDate?.year ?? DateTime.now().year,
-                 widget.startDate!.month  + monthIndex,
+                    widget.startDate!.month + monthIndex,
                     1, // Default day to 1
                   );
-                  currentMonthNumber =_focusedDay.month;
-                  });
-                context.read<CumulativeAttendanceCubit>().getCumulativeAttendance();
+                  currentMonthNumber = _focusedDay.month;
+                });
+                context
+                    .read<CumulativeAttendanceCubit>()
+                    .getCumulativeAttendance();
                 context
                     .read<ParticularMonthAttendanceCubit>()
                     .getParticularMonthAttendance(_focusedDay.month);

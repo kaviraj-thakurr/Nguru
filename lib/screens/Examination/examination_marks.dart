@@ -4,14 +4,14 @@ import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/models/examMarksModel.dart';
 import 'package:nguru/utils/app_assets.dart';
+import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ExaminationScreenMarks extends StatefulWidget {
-  
-  ExamMarksModel ? examinationmarksmodel;
+  final ExamMarksModel? examinationmarksmodel;
 
-   ExaminationScreenMarks({super.key, required this.examinationmarksmodel});
+  ExaminationScreenMarks({super.key, required this.examinationmarksmodel});
 
   @override
   State<ExaminationScreenMarks> createState() => _ExaminationScreenMarksState();
@@ -19,7 +19,6 @@ class ExaminationScreenMarks extends StatefulWidget {
 
 class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
   final TextEditingController searchController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +45,9 @@ class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
                     onPressed: () => Navigator.pop(context),
                   ),
                   20.heightBox,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                     Column(
-                              children: [
-                                // Header row for the table
-                                Row(
+                  Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "Subject",
@@ -78,61 +71,148 @@ class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
                                     ),
                                   ],
                                 ),
+
+
                                 20.heightBox,
-                                // Marks rows
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: widget.examinationmarksmodel?.examinationmarksmodel?.length,
-
-                                  itemBuilder: (context, index) {
-                                    final marks = widget.examinationmarksmodel?.examinationmarksmodel?.elementAt(index);
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            marks?.subjectName ?? "",
-                                            style: FontUtil.subName,
-                                          ),
-                                       5.heightBox,
-                                          Text(
-                                            "${marks?.writtenObtainMarks}/${marks?.maxWrittenMarks}",
-                                            style: FontUtil.subMarks,
-                                          ),
-                                          Text(
-                                            "${marks?.practicalObtainMarks}/${marks?.practicalObtainMarks}",
-                                            style: FontUtil.subMarks,
-                                          ),
-                                          Text(
-                                            "${marks?.oralObtainMarks}/${marks?.maxOralMarks}",
-                                            style: FontUtil.subMarks,
-                                          ),
-                                          Text(
-                                            "${marks?.practicalObtainMarks}/${marks?.maxProjectMarks}",
-                                            style: FontUtil.subMarks,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      
+                      // Subject Column
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                           // Text("Subject", style: FontUtil.subHeader),
+                            10.heightBox,
+                            ...widget.examinationmarksmodel?.examinationmarksmodel
+                                    ?.map((marks) => Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Text(marks.subjectName ?? "", style: FontUtil.subName),
+                                        ))
+                                    .toList() ??
+                                [],
+                          ],
+                        ),
+                      ),
+                      // Theory Column
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: MyColors.examMarksBg,
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                             //   Text("Theory", style: FontUtil.subHeader),
+                                10.heightBox,
+                                ...widget.examinationmarksmodel?.examinationmarksmodel
+                                        ?.map((marks) => Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                              child: Text(
+                                                marks.writtenObtainMarks != null
+                                                    ? "${marks.writtenObtainMarks}/${marks.maxWrittenMarks}"
+                                                    : "-",
+                                                style: FontUtil.subMarks,
+                                              ),
+                                            ))
+                                        .toList() ??
+                                    [],
                               ],
-                            )
-                    ]
-                  )
-                    ]
-                  )
-                                )
-            )
-        
-  ]
-  )
-          );
-                
-                          }
-
-                        
-}         
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Practical Column
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                             //   Text("Practical", style: FontUtil.subHeader),
+                                10.heightBox,
+                                ...widget.examinationmarksmodel?.examinationmarksmodel
+                                        ?.map((marks) => Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                              child: Text(
+                                                marks.practicalObtainMarks != null
+                                                    ? "${marks.practicalObtainMarks}/${marks.maxPracticalMarks}"
+                                                    : "-",
+                                                style: FontUtil.subMarks,
+                                              ),
+                                            ))
+                                        .toList() ??
+                                    [],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Oral Column
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: MyColors.examMarksBg,
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                           //     Text("Oral", style: FontUtil.subHeader),
+                                10.heightBox,
+                                ...widget.examinationmarksmodel?.examinationmarksmodel
+                                        ?.map((marks) => Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                              child: Text(
+                                                marks.oralObtainMarks != null
+                                                    ? "${marks.oralObtainMarks}/${marks.maxOralMarks}"
+                                                    : "-",
+                                                style: FontUtil.subMarks,
+                                              ),
+                                            ))
+                                        .toList() ??
+                                    [],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Project Column
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                            //  Text("Project", style: FontUtil.subHeader),
+                              10.heightBox,
+                              ...widget.examinationmarksmodel?.examinationmarksmodel
+                                      ?.map((marks) => Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: Text(
+                                              marks.projectObtainMarks != null
+                                                  ? "${marks.projectObtainMarks}/${marks.maxProjectMarks}"
+                                                  : "-",
+                                              style: FontUtil.subMarks,
+                                            ),
+                                          ))
+                                      .toList() ??
+                                  [],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

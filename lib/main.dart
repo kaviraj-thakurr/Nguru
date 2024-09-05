@@ -43,6 +43,7 @@ import 'package:nguru/logic/notification_list/notification_list_cubit.dart';
 import 'package:nguru/logic/particular_month_attendance/particular_month_attendance_cubit.dart';
 import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
+import 'package:nguru/logic/reset_password_policy/reset_password_policy_cubit.dart';
 import 'package:nguru/logic/settings/change_siblings_cubit.dart';
 import 'package:nguru/logic/settings/change_session/change_session_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
@@ -258,6 +259,9 @@ var options = {
         ),
         BlocProvider(
           create: (context) => ChangeSessionCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => ResetPasswordPolicyCubit(AuthRepo()),
         ),
       ],
       child: ScreenUtilInit(

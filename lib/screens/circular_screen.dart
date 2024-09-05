@@ -19,10 +19,12 @@ import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CircularScreen extends StatefulWidget {
+   final DateTime startDate;
+  final DateTime endDate;
   final int?month;
 final  bool ? isNotificationScreen  ;
 final  int? notificationScreenDate;
-   CircularScreen({super.key, this.month,this.isNotificationScreen=false ,this.notificationScreenDate});
+   CircularScreen({super.key, this.month,this.isNotificationScreen=false ,this.notificationScreenDate, required this.startDate, required this.endDate});
 
   @override
   State<CircularScreen> createState() => _CircularScreenState();
@@ -97,7 +99,7 @@ class _CircularScreenState extends State<CircularScreen> {
               screenTitleHeader(MyStrings.circular,
                   onPressed: () => Navigator.pop(context)),
               5.heightBox,
-              CircularCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,),
+              CircularCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,startDate: widget.startDate,endDate: widget.endDate,),
               5.heightBox,
               Expanded(
                 child: BlocBuilder<CircularCubit, CircularState>(

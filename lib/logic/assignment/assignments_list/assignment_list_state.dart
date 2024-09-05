@@ -7,8 +7,9 @@ class AssignmentListInitialState extends AssignmentListState {}
 class AssignmentListLoadingState extends AssignmentListState {}
 
 class AssignmentListSuccessState extends AssignmentListState {
-  final List<SubjectList> subjectList;
-   AssignmentListSuccessState({  required this.subjectList});
+  final List<SubjectList>? subjectList;
+  final List<SubjectList>? subjectListForStory;
+   AssignmentListSuccessState( { this.subjectListForStory,   this.subjectList});
 }
 
 class AssignmentListErrorState extends AssignmentListState {

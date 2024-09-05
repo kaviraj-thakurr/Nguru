@@ -58,11 +58,14 @@ class AuthRepo {
 
   //------------------------------------this api method for add school screen---------> //
 
-  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain) async {
+  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain,String schoolNickName) async {
     String fullSchoolUrl = "$schoolurl$subDomain";
 
     try {
       await SharedPref.saveSchoolUrl(fullSchoolUrl);
+       await SharedPref.saveTrimmedUrl(schoolurl);
+      await SharedPref.saveSubDomain(subDomain);
+       await SharedPref.saveSchoolNickName(schoolNickName);
       final res = await _myService.networkPost(
         url: EndUrl.addSchool,
         data: {
@@ -312,11 +315,11 @@ class AuthRepo {
           isStagingLink: true,
           url: EndUrl.currentCircularList,
           data: {
-            "circularID": 1,
+            // "circularID": 1,
             "month": month,
             "type": 1,
             "pageSize": 1000,
-            "pageNumber": 0,
+            // "pageNumber": 0,
             "userID": await SharedPref.getUserID(),
             "schoolID": await SharedPref.getSchoolID(),
             "studentID": await SharedPref.getStudentID(),
@@ -513,30 +516,55 @@ class AuthRepo {
 
     ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
 
-  Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
-    int? pageNumber,
-    required String? newPassword,
-    required String? oldPassword,
-  }) async {
-    try {
-      final res = await _myService.networkPost(
-          url: EndUrl.changePasswordPolicy,
-          isStagingLink: true,
-          data: {
-            "userID": await SharedPref.getUserID(),
-            "schoolID": await SharedPref.getSchoolID(),
-            "studentID": await SharedPref.getStudentID(),
-            "sessionID": await SharedPref.getSessionId(),
-            "schoolURL": await SharedPref.getSchoolUrl(),
-          });
-      List<ResetPasswordPolicyModel> resetResponse =
-          resetPasswordPolicyModelFromJson(res.toString());
-      return resetResponse;
-    } catch (e) {
-      print(e.toString());
-      throw Exception("Failed to logout: $e");
-    }
+String cleanJsonString(String str) {
+  // Replace single quotes around keys with double quotes
+  str = str.replaceAllMapped(
+    RegExp(r'(\w+):'), (match) => '"${match.group(1)}":'
+  );
+
+  // Replace single quotes around string values with double quotes
+  str = str.replaceAllMapped(
+    RegExp(r'(?<=:\s*)(\w+)(?=,|\}|\s)'), (match) => '"${match.group(1)}"'
+  );
+
+  return str;
+}
+
+Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
+  int? pageNumber,
+}) async {
+  try {
+    // Make the network request
+    final res = await _myService.networkPost(
+      url: EndUrl.changePasswordPolicy,
+      isStagingLink: true,
+      data: {
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolURL": await SharedPref.getSchoolUrl(),
+      },
+    );
+
+    // Extract the response body and clean it
+    final responseBody = res.data.toString();
+    final cleanedResponseBody = cleanJsonString(responseBody);
+
+    // Log the cleaned response for debugging
+    log(cleanedResponseBody);
+
+    // Parse the cleaned JSON string into a list of ResetPasswordPolicyModel
+    List<ResetPasswordPolicyModel> resetResponse =
+        resetPasswordPolicyModelFromJson(cleanedResponseBody);
+
+    return resetResponse;
+  } catch (e) {
+    log(e.toString());
+    throw Exception("Failed to get reset password policy: $e");
   }
+}
+
 
 
 

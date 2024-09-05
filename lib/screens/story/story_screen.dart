@@ -86,7 +86,7 @@ class _StoryScreenState extends State<StoryScreen>
 
     context
         .read<AssignmentListCubit>()
-        .getAssignmentList(todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString());
+        .getAssignmentList(todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString(),DateTime.now().month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString(),);
 
     context.read<CircularCubit>().getCurrentCircular(month: 8);
 
@@ -130,7 +130,7 @@ class _StoryScreenState extends State<StoryScreen>
                 } else if (state is AssignmentListSuccessState) {
                   return _storyWidget(screenHeight, screenWidth, true,
                       _assignmentAnimationController, "Assignment", context,
-                      subjectList: state.subjectList);
+                      subjectList: state.subjectListForStory);
                 } else if (state is AssignmentListErrorState) {
                   return const SizedBox();
                 } else {
@@ -259,7 +259,7 @@ class _StoryScreenState extends State<StoryScreen>
 
           if (title == "Assignment") {
             await assignmentCubit.getAssignmentList(
-                todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString());
+                todaysDate.month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString(),DateTime.now().month, DateFormat("yyyy-MM-dd'T'00:00:00").format(DateTime.now()).toString(),);
 
             BlocConsumer<AssignmentListCubit, AssignmentListState>(
                 listener: (context, state) {
@@ -277,7 +277,7 @@ class _StoryScreenState extends State<StoryScreen>
                               isGalleryWidget: false,
                               isCircularWidget: false,
                               isDisciplineWidget: false,
-                              subjectList: state.subjectList ?? [],
+                              subjectList: state.subjectListForStory ?? [],
                               circularList: [],
                               disciplineList: [],
                             )),

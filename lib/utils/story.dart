@@ -162,7 +162,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      const AssignmentScreen()));  // Close the StoryView when done
+                       AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,)));  // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.subjectList!.length - 1) {
@@ -185,7 +185,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      const AssignmentScreen())); // Close the StoryView when done
+                       AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       }
     } else if (widget.isCircularWidget) {
@@ -210,7 +210,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                       CircularScreen())); // Close the StoryView when done
+                       CircularScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       } else {
         if (_currentIndex < widget.circularList!.length - 1) {
@@ -233,7 +233,7 @@ class StoryViewState extends State<StoryView>
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                       CircularScreen())); // Close the StoryView when done
+                       CircularScreen(startDate: widget.startDate,endDate: widget.endDate,))); // Close the StoryView when done
         }
       }
     } else if (widget.isDisciplineWidget) {
@@ -360,12 +360,12 @@ class StoryViewState extends State<StoryView>
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AssignmentScreen()))
+                                builder: (context) =>  AssignmentScreen(startDate: widget.startDate,endDate: widget.endDate,)))
                         : widget.isCircularWidget
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CircularScreen()))
+                                    builder: (context) => CircularScreen(startDate: widget.startDate,endDate: widget.endDate,)))
                             : widget.isDisciplineWidget
                                 ? Navigator.push(
                                     context,
@@ -614,7 +614,7 @@ class CustomStoryWidget extends StatelessWidget {
                                 Text(
                                   subjectList?.subjectName != null
                                       ? "Subject Name: ${subjectList?.subjectName}"
-                                      : MyStrings.notAvailable,
+                                      : "",
                                   textAlign: TextAlign.center,
                                   style: FontUtil.customStyle(
                                       fontSize: 20,
@@ -626,7 +626,7 @@ class CustomStoryWidget extends StatelessWidget {
                                   height: 210,
                                   width: double.infinity,
                                   child: Center(
-                                    child: Text("No Assignments for today!"),
+                                    child: Text("No updates for today!"),
                                   ),
                                 ),
                               ],
@@ -766,7 +766,7 @@ class CustomStoryWidget extends StatelessWidget {
                                         Text(
                                           circularList?.subject != null
                                               ? "Subject : ${circularList?.subject}"
-                                              : MyStrings.notAvailable,
+                                              : "",
                                           textAlign: TextAlign.center,
                                           style: FontUtil.customStyle(
                                               fontSize: 20,
@@ -779,7 +779,7 @@ class CustomStoryWidget extends StatelessWidget {
                                           width: double.infinity,
                                           child: Center(
                                               child: Text(
-                                                  "No circular for today!")),
+                                                  "No updates for today!")),
                                         ),
                                       ],
                                     ),
@@ -949,7 +949,7 @@ class CustomStoryWidget extends StatelessWidget {
                                                   disciplineList?.teacherName !=
                                                           null
                                                       ? "Teacher Name: ${disciplineList?.teacherName}"
-                                                      : MyStrings.notAvailable,
+                                                      : "",
                                                   textAlign: TextAlign.center,
                                                   style: FontUtil.customStyle(
                                                       fontSize: 20,
@@ -963,7 +963,7 @@ class CustomStoryWidget extends StatelessWidget {
                                                     width: double.infinity,
                                                     child: Center(
                                                         child: Text(
-                                                            "No discipline for today!"))),
+                                                            "No updates for today!"))),
                                               ],
                                             ),
                                           ],

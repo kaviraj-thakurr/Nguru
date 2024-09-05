@@ -6,6 +6,9 @@ class SharedPref {
   static const String _schoolIDKey = 'schoolID';
   static const String _studentIDKey = 'studentID';
   static const String _schoolUrl = "schoolUrl";
+  static const String _trimmedSchoolUrl = "trimmedSchoolUrl";
+  static const String _schoolNickName = "schoolNickName";
+  static const String _schoolSubDomain = "schoolSubDomain";
   static const String _sessionID = "sessionId";
   static const String _isLoggedIn = "LoggedIn";
   static const String _startDate = "StartDate";
@@ -16,19 +19,16 @@ class SharedPref {
 
 //Save user Name
 
-static Future<void> saveUsername (String userName) async
-{
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString(_userName, userName);
-}
+  static Future<void> saveUsername(String userName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userName, userName);
+  }
 
   //Save Url
-  static Future<void> saveUrl(String  baseUrl) async {
+  static Future<void> saveUrl(String baseUrl) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_baseUrl, baseUrl);
   }
-
-
 
   // Save UserID
   static Future<void> saveSessionID(int sessionID) async {
@@ -40,6 +40,24 @@ static Future<void> saveUsername (String userName) async
   static Future<void> saveSchoolUrl(String schoolUrl) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_schoolUrl, schoolUrl);
+  }
+
+  // Save UserID
+  static Future<void> saveSchoolNickName(String schoolNickName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_schoolNickName, schoolNickName);
+  }
+
+  // Save UserID
+  static Future<void> saveSubDomain(String schoolSubDomain) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_schoolSubDomain, schoolSubDomain);
+  }
+
+  // Save UserID
+  static Future<void> saveTrimmedUrl(String url) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_trimmedSchoolUrl, url);
   }
 
   // Save UserID
@@ -72,29 +90,27 @@ static Future<void> saveUsername (String userName) async
     await prefs.setString(_startDate, startDate);
   }
 
-
   // Save end date of session
   static Future<void> saveEndDateOfSession(String endDate) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_endDate, endDate);
   }
 
-
   // Save session selected bool
-  static Future<void> saveSessionSeleted({bool isSessionSelected =false}) async {
+  static Future<void> saveSessionSeleted(
+      {bool isSessionSelected = false}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_isFromSelectSessionScreen.toString(), isSessionSelected);
+    await prefs.setBool(
+        _isFromSelectSessionScreen.toString(), isSessionSelected);
   }
 
-
-
 /////////////////////////////////////////////////////////////////// GETTERS
-///
+  ///
 
-static Future<String?> getUerName() async{
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString(_userName);
-}
+  static Future<String?> getUerName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userName);
+  }
 
 // Get Url
   static Future<String?> getBaseUrl() async {
@@ -127,6 +143,25 @@ static Future<String?> getUerName() async{
     return prefs.getString(_schoolUrl);
   }
 
+  static Future<String?> getTrimmedSchoolUrl() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_trimmedSchoolUrl);
+  }
+
+  // Get UserID
+  static Future<String?> getSchoolNickName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(_schoolNickName);
+  }
+
+  // Get UserID
+  static Future<String?> getSubDomain() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(_schoolSubDomain);
+  }
+
   // Get UserID
   static Future<int?> getSessionId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -141,7 +176,6 @@ static Future<String?> getUerName() async{
     return prefs.getBool(_isLoggedIn);
   }
 
-
   // Get logged in status
   static Future<String?> getStartDateOfSession() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -149,14 +183,12 @@ static Future<String?> getUerName() async{
     return prefs.getString(_startDate);
   }
 
-
-    // Get logged in status
+  // Get logged in status
   static Future<String?> getEndDateOfSession() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.getString(_endDate);
   }
-
 
   // Get session selected status
   static Future<bool?> getSessionSelectedStatus() async {
@@ -165,12 +197,7 @@ static Future<String?> getUerName() async{
     return prefs.getBool(_isFromSelectSessionScreen);
   }
 
-
 //////////////////////////////////////////////////// CLEARING ALL SHARED PREFS
-
-
-
-
 
   // Clear all saved data
   static Future<void> clearData() async {

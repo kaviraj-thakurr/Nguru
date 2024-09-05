@@ -9,13 +9,14 @@ class AssignmentListCubit extends Cubit<AssignmentListState> {
 
   AssignmentListCubit(this.authRepo) : super(AssignmentListLoadingState());
 
-  Future<void> getAssignmentList(int? month, String ?assignmentOnParticularDate) async {
+  Future<void> getAssignmentList(int? month, String ?assignmentOnParticularDate,int? currentMonthForStory, String? currentDateForStory) async {
     try {
       emit(AssignmentListLoadingState());
       final result = await authRepo?.getAssignementList(month: month, assignmentOnParticularDate: assignmentOnParticularDate);
+      final storyResult= await authRepo?.getAssignementList(month: currentMonthForStory, assignmentOnParticularDate: currentDateForStory);
       if (result != null) {
         if (result.responseCode == "200") {
-          emit(AssignmentListSuccessState(subjectList: result.subjectList ?? []));
+          emit(AssignmentListSuccessState(subjectList: result.subjectList ?? [],subjectListForStory: storyResult?.subjectList ?? [] ));
         } else {
           emit(AssignmentListErrorState(result.responseMessage ?? "Error occurred"));
         }
