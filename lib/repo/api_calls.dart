@@ -36,6 +36,7 @@ import 'package:nguru/models/push_notification_model.dart';
 import 'package:nguru/models/report_card_model.dart';
 import 'package:nguru/models/reset_password_model.dart';
 import 'package:nguru/models/reset_password_policy_model.dart';
+import 'package:nguru/models/student_profile_model.dart';
 import 'package:nguru/models/timetable_model.dart';
 import 'package:nguru/models/transport_detail_model.dart';
 import 'package:nguru/models/vaccination_model.dart';
@@ -1083,7 +1084,7 @@ Future<ScheduleModel> getScheduleList() async {
   // LIBRARY SEARCH
 
   Future<LibrarySearchBookModel> getLibrarySearchList(
-      {String? searchQuery}) async {
+      {String? bookName, String? keyword,String? authorName}) async {
     try {
       final res = await _myService.networkPost(
           isStagingLink: true,
@@ -1092,9 +1093,9 @@ Future<ScheduleModel> getScheduleList() async {
             "schoolURL": await SharedPref.getSchoolUrl(),
             "schoolID": await SharedPref.getSchoolID(),
             "studentID": await SharedPref.getStudentID(),
-            "bookName": "",
-            "keyword": "$searchQuery",
-            "authorName": "",
+            "bookName": "$bookName",
+            "keyword": "$keyword",
+            "authorName": "$authorName",
             "pageSize": 1000,
             "pageNumber": 1,
             "sessionID": await SharedPref.getSessionId(),
@@ -1489,6 +1490,33 @@ Future<ScheduleModel> getScheduleList() async {
     } catch (e) {
       log(e.toString());
       throw Exception("Failed to set notification status: $e");
+    }
+  }
+
+
+
+
+    ////////////////////////////////////////////////     GET Cumulative Attendance LIST       //////////////////////////////////////////////////////
+
+  Future<StudentProfileModel> getStudentProfile() async {
+    try {
+      final res = await _myService.networkPost(
+          url: EndUrl.myProfileGetDetail,
+          isStagingLink: true,
+          data: {
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
+            "pageNumber": 0
+          });
+      StudentProfileModel studentProfileModel =
+          studentProfileModelFromJson(res.toString());
+      return studentProfileModel;
+    } catch (e) {
+      log(e.toString());
+      throw Exception("Failed to fetch student profile data: $e");
     }
   }
 }

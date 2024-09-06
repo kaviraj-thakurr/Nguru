@@ -289,59 +289,105 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
 
-  AlertDialog buildPasswordPolicyAlertDialog({
+  Widget buildPasswordPolicyAlertDialog({
   required BuildContext context,
   List<ResetPasswordPolicyModel>? resetPasswordPolicyModel
 }) {
-  return  AlertDialog(
+  return  BottomSheet(
     backgroundColor: MyColors.white,
-    title:  Text('Reset Password Policy'),
-    content:  SizedBox(
-      height: 350,
+    enableDrag: true,
+     onClosing: () {  },
+      builder: (BuildContext context) { 
+        return Container(
+          padding: EdgeInsets.all(20),
+          height: 350,
       width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('User Name Policy: ',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-              10.heightBox,
-              // ListView.builder(itemBuilder: (context,index){
-              //   return Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
-
-              // })
-                     Text('1. User Name should be minimum of 6 and maximum of 20 characters.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                      Text('2. User Name will be alphanumeric string and can have "." And "_" character.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                      Text('3. User Name should contain at least 2 alphabets.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-
-
-              
-            ],
-          ),
-          20.heightBox,
-           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Password Policy: ',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-              10.heightBox,
-              // ListView.builder(itemBuilder: (context,index){
-              //   return Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),);
-
-              // })
-                     Text('1.Password should be minimum of 4 characters.',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                      Text('2. Password should be different from last 4 passwords',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-                     //  Text('CORE_PSWD_LENGHT_MAX',style: FontUtil.customStyle(fontSize: 16, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
-
-
-              
-            ],
-          ),
-        ],
+      child: ListView.builder(
+        shrinkWrap: true, 
+        itemCount: resetPasswordPolicyModel?.length ?? 0,
+        itemBuilder: (context, index) {
+          final policy = resetPasswordPolicyModel?[index];
+          switch (policy?.key) {
+            case "CORE_PSWD_LENGHT_MAX":
+              return Text(
+                '• Password should be maximum of 20 characters.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+              ).h8(context);
+            case "PASSWORD_MINIMUM_LENGHT":
+              return Text(
+                '• Password should be minimum of 6 characters.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+             ).h8(context);
+            case "PASSWORD_FIRST_LAST_ALPHABET":
+              return Text(
+                '• Password should contain at least 2 alphabets.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+             ).h8(context);
+            case "PASSWORD_HISTORY_CHECK":
+              return Text(
+                '• Password should be different from last 4 passwords.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+             ).h8(context);
+            case "PASSWORD_ALPHA_NUMERIC":
+              return Text(
+                '• Password must be alphanumeric.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+              ).h8(context);
+            case "PASSWORD_EXIST_USERNAME":
+              return Text(
+                '• Password must not exist in the username.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+              ).h8(context);
+            case "PASSWORD_IDENTICAL_CHAR":
+              return Text(
+                '• Password must not contain identical characters consecutively.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+             ).h8(context);
+            case "PASSWORD_CONSECUTIVE_CHAR":
+              return Text(
+                '• Password must not contain consecutive characters.',
+                style: FontUtil.customStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  textColor: MyColors.boldTextColor,
+                ),
+              ).h8(context);
+            default:
+              return const SizedBox.shrink();
+          }
+        },
       ),
-    ),
+    );
+       },
+   
    
   );
 }

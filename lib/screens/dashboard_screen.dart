@@ -13,12 +13,15 @@ import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/attendence/attendence_cubit.dart';
 import 'package:nguru/logic/attendence/attendence_state.dart';
+import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
+import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_state.dart';
 import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/notification/notification_cubit.dart';
 import 'package:nguru/logic/settings/change_session/change_session_cubit.dart';
 import 'package:nguru/logic/settings/change_session/change_session_state.dart';
+import 'package:nguru/logic/student_profile/student_profile_cubit.dart';
 import 'package:nguru/models/dashboard_model.dart';
 import 'package:nguru/screens/Examination/examination_screen.dart';
 import 'package:nguru/screens/activity_screen.dart';
@@ -60,6 +63,8 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   @override
   void initState() {
     context.read<DashboardCubit>().dashboardGetList();
+    context.read<StudentProfileCubit>().getStudentProfile();
+     context.read<CumulativeAttendanceCubit>().getCumulativeAttendance();
     context.read<NotificationCubit>().notificationCount();
     context.read<FeesCubit>().getTotalFees();
     context.read<AttendanceCubit>().fetchAttendanceData();
@@ -192,10 +197,10 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                          AttendanceMainScreen(startDate: startDate,endDate: endDate ,))),
-                                            child: BlocConsumer<AttendanceCubit,
-                                                AttendanceState>(
+                                            child: BlocConsumer<CumulativeAttendanceCubit,
+                                                CumulativeAttendanceState>(
                                               listener: (context, state) {
-                                                if (state is AttendanceError) {
+                                                if (state is CumulativeAttendanceErrorState) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
                                                     SnackBar(
@@ -204,19 +209,19 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                                 }
                                               },
                                               builder: (context, state) {
-                                                if (state is AttendanceLoading) {
+                                                if (state is CumulativeAttendanceLoadingState) {
                                                   return attendenceAndFeeCard(
                                                     context,
-                                                    mainText: "__",
+                                                    mainText: "_ _",
                                                     footerText: MyStrings.attendence,
                                                     isFeeCard: false,
                                                   );
                                                 } else if (state
-                                                    is AttendanceSuccess) {
+                                                    is CumulativeAttendanceSuccessState) {
                                                   return attendenceAndFeeCard(
                                                     context,
                                                     mainText:
-                                                        "${state.overAllPercentage}%",
+                                                        "${state.attendanceCumulativeModel?.first.overAllPercentage}%",
                                                     footerText: MyStrings.attendence,
                                                     isFeeCard: false,
                                                   );
@@ -243,7 +248,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                             child: attendenceAndFeeCard(
                                               context,
                                               headerText: "Paid 23k",
-                                              mainText: "41%",
+                                              mainText: "_ _",
                                               footerText: "Fees Paid",
                                               isFeeCard: true,
                                             ),

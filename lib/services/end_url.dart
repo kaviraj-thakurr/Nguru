@@ -98,4 +98,10 @@ class EndUrl{
 
   // RESET PASSWORD
     static const String changePasswordPolicy = "ChangePasswordFirstTime/CheckPasswordPolicy";
+
+
+
+// STUDENT PROFILE 
+   static const String myProfileGetDetail = "MyProfile/GetDetail";
+
 }

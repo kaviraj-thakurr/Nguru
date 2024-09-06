@@ -9,6 +9,8 @@ import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
+import 'package:nguru/logic/student_profile/student_profile_cubit.dart';
+import 'package:nguru/logic/student_profile/student_profile_state.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
@@ -54,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   void initState() {
-    context.read<DashboardCubit>().dashboardGetList();
+    // context.read<StudentProfileCubit>().getStudentProfile();
     // TODO: implement initState
     super.initState();
   }
@@ -87,22 +89,25 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Column(children: [
               20.heightBox,
               dashboardAppBar(),
-              BlocBuilder<DashboardCubit, DashboardState>(
+              BlocBuilder<StudentProfileCubit, StudentProfileState>(
                   builder: (context, state) {
-                if (state is DashboardLoadingState) {
+                if (state is StudentProfileLoadingState) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is DashboardSuccessState) {
+                } else if (state is StudentProfileSuccessState) {
                   return Column(
                     children: [
                       customSettingProfileWidget(
                           context,
                           screenWidth,
                           screenHeight,
-                          state.studentName!,
-                          "${state.qualification} ${state.section!}",
-                          state.admissionNumber!),
+                          state.studentProfileState.personalInfo?.studentName ?? "",
+                          "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
+                          state.studentProfileState.personalInfo?.admissionNumber ?? "",
+                         bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "",
+                         gender: state.studentProfileState.personalInfo?.gender ?? "", ),
+                          
                       SizedBox(
                         height: screenHeight * 0.58,
                         width: double.infinity,
@@ -196,7 +201,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                     ],
                   );
-                } else if (state is DashboardErrorState) {
+                } else if (state is StudentProfileErrorState) {
                   return customSettingProfileWidget(
                       context, screenWidth, screenHeight, "", "", "");
                 } else {
@@ -321,7 +326,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const FeedbackListScreen(),
+                        builder: (context) => const AddFeedBackScreen(),
                       ),
                     );
                   }

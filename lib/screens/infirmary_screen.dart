@@ -11,6 +11,8 @@ import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
 import 'package:nguru/logic/dashboard/dashboard_state.dart';
 import 'package:nguru/logic/infirmary_all/infirmary/infirmary_cubit.dart';
 import 'package:nguru/logic/infirmary_all/infirmary/infirmary_state.dart';
+import 'package:nguru/logic/student_profile/student_profile_cubit.dart';
+import 'package:nguru/logic/student_profile/student_profile_state.dart';
 import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -64,23 +66,23 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                 screenTitleHeader(MyStrings.infirmary,
                     onPressed: () => Navigator.pop(context)),
                 20.heightBox,
-                BlocBuilder<DashboardCubit, DashboardState>(
+                BlocBuilder<StudentProfileCubit, StudentProfileState>(
                     builder: (context, state) {
-                  if (state is DashboardLoadingState) {
+                  if (state is StudentProfileLoadingState) {
                     return customSettingProfileWidget(context, screenWidth,
                         screenHeight, "name:", "class:", "Admission no:",
                         bloodGroup: "Blood group:", gender: "Gender:");
-                  } else if (state is DashboardSuccessState) {
-                    return customSettingProfileWidget(
-                        context,
-                        screenWidth,
-                        screenHeight,
-                        "${state.studentName}",
-                        "${state.qualification}   ${state.section}",
-                        "${state.admissionNumber}",
-                        bloodGroup: "Blood group:",
-                        gender: "Gender:");
-                  } else if (state is DashboardErrorState) {
+                  } else if (state is StudentProfileSuccessState) {
+                  return  customSettingProfileWidget(
+                          context,
+                          screenWidth,
+                          screenHeight,
+                          state.studentProfileState.personalInfo?.studentName ?? "",
+                          "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
+                          state.studentProfileState.personalInfo?.admissionNumber ?? "",
+                         bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "",
+                         gender: state.studentProfileState.personalInfo?.gender ?? "", );
+                  } else if (state is StudentProfileErrorState) {
                     return customSettingProfileWidget(
                         context, screenWidth, screenHeight, ": ", "", "",
                         bloodGroup: "", gender: "");

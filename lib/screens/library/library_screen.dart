@@ -5,18 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:nguru/custom_widgets/custom_alert_dialog.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/custom_tags.dart';
+import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/library/history/library_history_cubit.dart';
 import 'package:nguru/logic/library/history/library_history_state.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_cubit.dart';
 import 'package:nguru/logic/library/issue_book/issue_book_state.dart';
-import 'package:nguru/logic/library/reserve_book/reserve_book_cubit.dart';
-import 'package:nguru/logic/library/reserve_book/reserve_book_state.dart';
 import 'package:nguru/logic/library/search_book/search_book_cubit.dart';
 import 'package:nguru/logic/library/search_book/search_book_state.dart';
 import 'package:nguru/models/library_book_search_model.dart';
@@ -40,6 +38,9 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> {
   final TextEditingController searchBarController = TextEditingController();
+   final  TextEditingController bookNameController =TextEditingController();
+ final  TextEditingController keywordController =TextEditingController();
+ final TextEditingController authorNameController =TextEditingController();
   DateTime currentDateForCheckingDueDate = DateTime.now();
   DateTime _focusedDay = DateTime.now();
 
@@ -53,6 +54,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   DateTime? _selectedDay;
 
   ScrollController searchBookController= ScrollController();
+
 
   @override
   void initState() {
@@ -87,13 +89,31 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       child: CustomSearchBar(
                         controller: searchBarController,
                         hintText: MyStrings.search,
-                        onSubmitted: (String value) => value.isEmpty
-                            ? null
-                            : context
-                                .read<LibrarySearchBookCubit>()
+                        onTap: () =>showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return buildLogoutAlertDialog(
+                                  keywordController: keywordController,
+                                  bookNameController: bookNameController,
+                                  authorNameController:authorNameController ,
+                                  context: context,
+                                  onSubmit: () => context.read<LibrarySearchBookCubit>()
                                 .getLibrarySearchBook(
-                                    searchQuery:
-                                        searchBarController.text.toString()),
+                                    bookName:bookNameController.text.toString(),
+                                    keyword: keywordController.text.toString(),
+                                    authorName: authorNameController.text.toString()).then((value) => Navigator.pop(context)).then((value) {bookNameController.clear(); keywordController.clear();authorNameController.clear();
+                                   FocusScope.of(context).unfocus(); }),
+                                  onCancel: () => Navigator.pop(context),
+                                );
+                              },
+                            ),
+                        // onSubmitted: (String value) => value.isEmpty
+                        //     ? null
+                        //     : context
+                        //         .read<LibrarySearchBookCubit>()
+                        //         .getLibrarySearchBook(
+                        //             searchQuery:
+                        //                 searchBarController.text.toString()),
                       ),
                     ),
                     20.heightBox,
@@ -888,4 +908,65 @@ class _LibraryScreenState extends State<LibraryScreen> {
       ),
     );
   }
+
+
+  AlertDialog buildLogoutAlertDialog({
+  required BuildContext context,
+  required VoidCallback onSubmit,
+  required VoidCallback onCancel,
+  required TextEditingController bookNameController,
+  required TextEditingController keywordController,
+  required TextEditingController authorNameController,
+}) {
+  return AlertDialog(
+    backgroundColor: MyColors.white,
+    title: const Text('Search book'),
+    content: SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: Column(
+        children: [
+           CustomTextFormField(
+        controller: bookNameController,
+        labelText: "Book Name",
+      ),
+      10.heightBox,
+      CustomTextFormField(
+        controller: keywordController,
+        labelText: "Keyword",
+      ),
+      10.heightBox,
+      CustomTextFormField(
+        controller: authorNameController,
+        labelText: "Author Name",
+      ),
+      10.heightBox,
+        ],
+      ),
+    ),
+    actions: <Widget>[
+     
+      TextButton(
+        onPressed: onCancel,
+        child: Text(
+          'Cancel',
+          style: FontUtil.customStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textColor: MyColors.boldTextColor),
+        ),
+      ),
+      TextButton(
+        onPressed: onSubmit,
+        child: Text(
+          'Submit',
+          style: FontUtil.customStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              textColor: MyColors.boldTextColor),
+        ),
+      ),
+    ],
+  );
+}
 }

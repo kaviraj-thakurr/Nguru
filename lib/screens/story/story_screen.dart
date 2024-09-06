@@ -125,10 +125,12 @@ class _StoryScreenState extends State<StoryScreen>
               listener: (context, state) {},
               builder: (context, state) {
                 if (state is AssignmentListLoadingState) {
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, false,
                       _assignmentAnimationController, "Assignment", context);
                 } else if (state is AssignmentListSuccessState) {
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(
+                  
+                    screenHeight, screenWidth, state.subjectList!.isNotEmpty ?true :false,
                       _assignmentAnimationController, "Assignment", context,
                       subjectList: state.subjectListForStory);
                 } else if (state is AssignmentListErrorState) {
@@ -142,7 +144,7 @@ class _StoryScreenState extends State<StoryScreen>
               listener: (context, state) {},
               builder: (context, state) {
                 if (state is CircularLoadingState) {
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, false,
                       _circularAnimationController, "Circular", context);
                 } else if (state is CircularSuccessState) {
                   List<CircularList> circularList = state.circularList
@@ -161,7 +163,7 @@ class _StoryScreenState extends State<StoryScreen>
                               selectedDate.day)
                       .toList();
                   log("list count of circular :$circularList");
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, circularList.isNotEmpty ? true : false,
                       _circularAnimationController, "Circular", context,
                       circularList: circularList);
                 } else if (state is CircularErrorState) {
@@ -175,7 +177,7 @@ class _StoryScreenState extends State<StoryScreen>
               listener: (context, state) {},
               builder: (context, state) {
                 if (state is DisciplineLoadingState) {
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, false,
                       _disciplineAnimationController, "Discipline", context);
                 } else if (state is DisciplineSuccessState) {
                   List<DisciplineList> disciplineList = state.disciplineList
@@ -195,7 +197,7 @@ class _StoryScreenState extends State<StoryScreen>
                       .toList();
 
                   log("discipline non filter list: $disciplineList");
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, disciplineList.isNotEmpty ? true :false,
                       _disciplineAnimationController, "Discipline", context,
                       disciplineList: disciplineList);
                 } else if (state is DisciplineFilteredState) {
@@ -217,7 +219,7 @@ class _StoryScreenState extends State<StoryScreen>
 
                   log("discipline filter list: $filteredList");
 
-                  return _storyWidget(screenHeight, screenWidth, true,
+                  return _storyWidget(screenHeight, screenWidth, disciplineList.isNotEmpty ? true : false,
                       _disciplineAnimationController, "Discipline", context,
                       disciplineList: filteredList);
                 } else if (state is AssignmentListErrorState) {
@@ -290,7 +292,7 @@ class _StoryScreenState extends State<StoryScreen>
               } else if (state is AssignmentListErrorState) {
               } else {}
             }, builder: (context, state) {
-              return SizedBox();
+              return const SizedBox();
             });
 
             Future.delayed(const Duration(seconds: 1)).then((_) {
@@ -374,9 +376,10 @@ class _StoryScreenState extends State<StoryScreen>
                   gradientColors:
                       // listData.isNotEmpty
                       //    ?
-                      [MyColors.appColorBlue, MyColors.appColorGreen],
-                  // :
-                  //  [MyColors.greyShade_3, MyColors.greyShade_4],
+                      isColorGradient ?
+                      [MyColors.appColorBlue, MyColors.appColorGreen]
+                  :
+                   [MyColors.greyShade_3, MyColors.greyShade_4],
                   gapSize: 0,
                   radius: 150,
                   strokeWidth: 3,
