@@ -1,32 +1,30 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_tags.dart';
-import 'package:nguru/logic/dashboard/dashboard_cubit.dart';
-import 'package:nguru/logic/dashboard/dashboard_state.dart';
+import 'package:nguru/logic/setting_screen/setting_screen_cubit.dart';
+import 'package:nguru/logic/setting_screen/setting_screen_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
 import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/logic/student_profile/student_profile_cubit.dart';
 import 'package:nguru/logic/student_profile/student_profile_state.dart';
-import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/login/login_screen.dart';
 import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
 import 'package:nguru/screens/settings/add_feedback_screen.dart';
 import 'package:nguru/screens/settings/change_session_screen.dart';
-import 'package:nguru/screens/settings/feedback_list_screen.dart';
 import 'package:nguru/screens/settings/privacy_policy_screen.dart';
 import 'package:nguru/screens/settings/terms_of_use_screen.dart';
 import 'package:nguru/screens/settings/change_siblings.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_strings.dart';
+import 'package:nguru/utils/constants.dart';
 import 'package:nguru/utils/custom_flutter_switch.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -37,33 +35,17 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  List<String> settingitems = [
-    "My Profile",
-    "Change Sibling",
-    "Change Session",
-    "Add School",
-    "Push Notification",
-    "Change Password",
-    "Feedback",
-    "Terms of use",
-    "Privacy & Policy",
-    "Support",
-    "Self Declaration",
-  ];
-
-  bool toggle = false;
   var getUserName;
-
-  @override
-  void initState() {
-    // context.read<StudentProfileCubit>().getStudentProfile();
-    // TODO: implement initState
-    super.initState();
-  }
 
   Future<String> getUerName() async {
     getUserName = await SharedPref.getUerName();
     return getUserName;
+  }
+
+  @override
+  void initState() {
+    context.read<SettingScreenCubit>().initiatingValues();
+    super.initState();
   }
 
   @override
@@ -75,7 +57,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       floatingActionButton: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: SvgPicture.asset("assets/icons/floating_action_button.svg")),
+          child: SvgPicture.asset(MyAssets.homeFloatingButtonIcon)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Stack(
         children: [
@@ -99,45 +81,22 @@ class _SettingScreenState extends State<SettingScreen> {
                   return Column(
                     children: [
                       customSettingProfileWidget(
-                          context,
-                          screenWidth,
-                          screenHeight,
-                          state.studentProfileState.personalInfo?.studentName ?? "",
-                          "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
-                          state.studentProfileState.personalInfo?.admissionNumber ?? "",
-                         bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "",
-                         gender: state.studentProfileState.personalInfo?.gender ?? "", ),
-                          
-                      SizedBox(
-                        height: screenHeight * 0.58,
-                        width: double.infinity,
-                        child: ListView.builder(
-                            itemCount: settingitems.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: settingItemsListTile(
-                                    context, settingitems[index],
-                                    isTapped: isTap,
-                                    onToggleChanged: (bool value) {
-                                  setState(() {
-                                    isTap = !isTap;
-                                    log("istap $isTap");
-                                  });
-                                  return isTap;
-                                },
-
-                                    // () => {
-                                    //       Navigator.push(
-                                    //           context,
-                                    //           MaterialPageRoute(
-                                    //               builder: (context) => StoryScreen()))
-                                    //     },
-                                    isNotificationTile: false),
-                              );
-                            }),
+                        context,
+                        screenWidth,
+                        screenHeight,
+                        state.studentProfileState.personalInfo?.studentName ??
+                            "",
+                        "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
+                        state.studentProfileState.personalInfo
+                                ?.admissionNumber ??
+                            "",
+                        bloodGroup: state
+                                .studentProfileState.personalInfo?.bloodGroup ??
+                            "",
+                        gender:
+                            state.studentProfileState.personalInfo?.gender ??
+                                "",
                       ),
-                      20.heightBox,
                       Center(
                         child: ShaderMask(
                           blendMode: BlendMode.srcIn,
@@ -189,7 +148,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 },
                               ),
                               child: Text(
-                                "Sign out",
+                                MyStrings.signOut,
                                 style: FontUtil.customStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
@@ -203,24 +162,45 @@ class _SettingScreenState extends State<SettingScreen> {
                   );
                 } else if (state is StudentProfileErrorState) {
                   return customSettingProfileWidget(
-                      context, screenWidth, screenHeight, "", "", "");
+                      context, screenWidth, screenHeight, "Name: N/A", "N/A", "N/A",bloodGroup: "N/A",gender: "N/A");
                 } else {
                   return customSettingProfileWidget(
                       context, screenWidth, screenHeight, "", "", "");
                 }
               }),
+              
+                      SizedBox(
+                        height: screenHeight * 0.58,
+                        width: double.infinity,
+                        child: ListView.builder(
+                            itemCount: SettingItem.values.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: settingItemsListTile(
+                                    context, SettingItem.values[index],
+                                    isTapped: isTap,
+                                    onToggleChanged: (bool value) {
+                                  setState(() {
+                                    isTap = !isTap;
+                                    log("istap $isTap");
+                                  });
+                                  return isTap;
+                                }, isNotificationTile: false),
+                              );
+                            }),
+                      ),
+                      20.heightBox,
               BlocConsumer<SignoutCubit, SignoutState>(
                   builder: (context, state) {
                 return const SizedBox();
               }, listener: (context, state) {
                 if (state is SignoutSuccessState) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Sign out Successfully")));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(MyStrings.signOutSuccessfully)));
                 } else if (state is SignoutErrorState) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Sign out Successfully")));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Logout Successfully")));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(MyStrings.signOutSuccessfully)));
                 }
               })
             ]),
@@ -232,112 +212,75 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget settingItemsListTile(
     BuildContext context,
-    String title,
-// onTap(),
-    {
+    SettingItem settingItem, {
     bool? isNotificationTile,
     bool? isTapped,
     Function(bool)? onToggleChanged,
   }) {
-//  bool toggle = isTapped??false;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "$title",
-          style: FontUtil.customStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              textColor: MyColors.fadedTextColor),
-        ),
-        title == "Push Notification"
-            ? GestureDetector(
-                onTap: () => onToggleChanged,
-                child: CustomFlutterSwitch(
-                  toggleSize: 8,
-                  width: 30,
-                  height: 20,
-                  padding: 2,
-                  activeColor: Colors.transparent,
-                  inactiveToggleColor: Colors.grey,
-                  // toggleColor: MyColors.blueShades_1,
-                  //  toggleGradient: MyColors.buttonColors,
-                  activeToggleGradient: MyColors.buttonColors,
-                  inactiveToggleGrdient: MyColors.greyGradient,
-                  inactiveColor: Colors.transparent,
-                  isLoaderActive: false,
-                  switchBorder: Border.all(
-                    color: Colors.grey,
-                    width: 2,
-                  ),
-                  value: isTapped ?? false,
-                  onToggle: (value) => setState(() {
-                    log("$isTapped");
-                    toggle = !value;
-                  }),
-                ),
-              )
-            : GestureDetector(
-                onTap: () {
-                  log("title:  $title");
-                  if (title == "My Profile") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyProfileScreen(),
-                      ),
-                    );
-                  }  else if (title == "Change Sibling") {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ChangeSiblings()));
-                  } else if (title == "Change Password") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ResetPasswordScreen(),
-                      ),
-                    );
-                  } else if (title == "Change Session") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChangeSessionScreen(),
-                      ),
-                    );
-                  } else if (title == "Privacy & Policy") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PrivacyPolicyScreen(),
-                      ),
-                    );
-                  } else if (title == "Terms of use") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TermsOfUseScreen(),
-                      ),
-                    );
-                  } else if (title == "Feedback") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddFeedBackScreen(),
-                      ),
-                    );
-                  }
-                },
-                child: const Icon(
+    return GestureDetector(
+      onTap: () => navigateBasedOnTitle(context, settingItem),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            settingItem.label,
+            style: FontUtil.customStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                textColor: MyColors.fadedTextColor),
+          ),
+          settingItem.label == "Push Notification"
+              ? GestureDetector(
+                  onTap: () => context
+                      .read<SettingScreenCubit>()
+                      .togglePushNotification(),
+                  child: BlocConsumer<SettingScreenCubit, SettingScreenState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state is SettingScreenInitialState) {
+                          return notificationSwitch(false, context);
+                        } else if (state is SettingScreenLoadingState) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is SettingScreenSuccessState) {
+                          return notificationSwitch(state.toggleState, context);
+                        } else {
+                          return notificationSwitch(false, context);
+                        }
+                      }),
+                )
+              : const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
-                ))
-      ],
+                )
+        ],
+      ),
     );
   }
+}
+
+Widget notificationSwitch(bool toggleValue, BuildContext context) {
+  return CustomFlutterSwitch(
+    toggleSize: 8,
+    width: 30,
+    height: 20,
+    padding: 2,
+    activeColor: Colors.transparent,
+    inactiveToggleColor: Colors.grey,
+    activeToggleGradient: MyColors.buttonColors,
+    inactiveToggleGrdient: MyColors.greyGradient,
+    inactiveColor: Colors.transparent,
+    isLoaderActive: false,
+    switchBorder: Border.all(
+      color: Colors.grey,
+      width: 2,
+    ),
+    value: toggleValue,
+    onToggle: (value) =>
+        context.read<SettingScreenCubit>().togglePushNotification(),
+  );
 }
 
 Widget customSettingProfileWidget(
@@ -354,7 +297,6 @@ Widget customSettingProfileWidget(
     width: double.infinity,
     height: screenHeight * 0.1,
     child: Card(
-      //  color: Color.fromARGB(255, 255, 242, 202),
       elevation: 0.1,
       color: MyColors.white,
       child: Padding(
@@ -363,27 +305,26 @@ Widget customSettingProfileWidget(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const CircleAvatar(
-              child: Icon(Icons.person),
-              // backgroundImage: NetworkImage("https://via.placeholder.com/150"),
               radius: 30,
               backgroundColor: MyColors.greyShade_4,
+              child: Icon(Icons.person),
             ),
             10.widthBox,
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                name != null ? Text("$name") : const Text("Anshul Sharma"),
+                Text(name,style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
                 8.heightBox,
                 Row(
                   children: [
                     customTags(
-                        "$classAndSession",
+                        classAndSession,
                         const Color.fromARGB(255, 204, 231, 255),
                         MyColors.blueShades_1),
                     5.widthBox,
                     customTags(
-                        "$admissionNumber",
+                        admissionNumber,
                         const Color.fromARGB(255, 251, 225, 218),
                         MyColors.orangeShades_1),
                     5.widthBox,
@@ -407,6 +348,79 @@ Widget customSettingProfileWidget(
   );
 }
 
+
+// Navigation on particular screen by clicking on it
+void navigateBasedOnTitle(BuildContext context, SettingItem item) {
+  switch (item) {
+    case SettingItem.myProfile:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MyProfileScreen(),
+        ),
+      );
+      break;
+
+    case SettingItem.changeSibling:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ChangeSiblings(),
+        ),
+      );
+      break;
+
+    case SettingItem.changePassword:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ResetPasswordScreen(),
+        ),
+      );
+      break;
+
+    case SettingItem.changeSession:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ChangeSessionScreen(),
+        ),
+      );
+      break;
+
+    case SettingItem.privacyPolicy:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PrivacyPolicyScreen(),
+        ),
+      );
+      break;
+
+    case SettingItem.termsOfUse:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const TermsOfUseScreen(),
+        ),
+      );
+      break;
+
+    case SettingItem.feedback:
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AddFeedBackScreen(),
+        ),
+      );
+      break;
+
+    default:
+      break;
+  }
+}
+
+// Alirt dialog for sign out
 AlertDialog buildLogoutAlertDialog({
   required BuildContext context,
   required VoidCallback onLogout,
@@ -414,13 +428,13 @@ AlertDialog buildLogoutAlertDialog({
 }) {
   return AlertDialog(
     backgroundColor: MyColors.white,
-    title: const Text('Sign out'),
-    content: const Text('Are you sure you want to Sign out?'),
+    title: const Text(MyStrings.signOut),
+    content: const Text(MyStrings.areYouSureYouWantToSignOut),
     actions: <Widget>[
       TextButton(
         onPressed: onCancel,
         child: Text(
-          'Cancel',
+          MyStrings.cancel,
           style: FontUtil.customStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -430,7 +444,7 @@ AlertDialog buildLogoutAlertDialog({
       TextButton(
         onPressed: onLogout,
         child: Text(
-          'Sign out',
+          MyStrings.signOut,
           style: FontUtil.customStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

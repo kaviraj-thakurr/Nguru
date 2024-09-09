@@ -77,4 +77,8 @@ static const String examDown = "assets/icons/exam_download.svg";
 
 static const String activity_2 = "assets/icons/activity.svg";
 
+
+//home floating button icon
+static const String homeFloatingButtonIcon = "assets/icons/floating_action_button.svg";
+
 }

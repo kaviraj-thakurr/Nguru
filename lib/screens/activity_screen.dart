@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
+import 'package:nguru/custom_widgets/custom_tab_selector.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/activity/activity_cubit.dart';
 import 'package:nguru/logic/activity/activity_state.dart';
@@ -26,18 +29,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<String> selecterItems = [
     "Event Result",
+    "Event Reslt",
+    "Event esult",
   ];
-  DateTime _focusedDay = DateTime.now();
-  void _onDaySelected(DateTime selectedDay) {
+  int currentTab = 0;
+  void onTabSelection(int currentTabb) {
     setState(() {
-      _focusedDay = selectedDay;
+      currentTab = currentTabb;
     });
   }
 
   @override
   void initState() {
     context.read<ActivityCubit>().getActivity();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -51,23 +55,25 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               10.heightBox,
               Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: dashboardAppBar(),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 15,right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 15),
                 child: CustomSearchBar(controller: _searchController),
               ),
               Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: screenTitleHeader(MyStrings.activity,onPressed: ()=>Navigator.pop(context)),
+                child: screenTitleHeader(MyStrings.activity,
+                    onPressed: () => Navigator.pop(context)),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15,left: 15,right: 15,bottom: 5),
+                padding: const EdgeInsets.only(
+                    top: 15, left: 15, right: 15, bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    buildSelector(selecterItems, _focusedDay, _onDaySelected),
+                    customTabSelector(selecterItems, currentTab, onTabSelection,false),
                   ],
                 ),
               ),
@@ -80,51 +86,52 @@ class _ActivityScreenState extends State<ActivityScreen> {
                             child: CircularProgressIndicator(),
                           );
                         } else if (state is ActivitySuccessState) {
-                          return 
-                          state.activityList.isEmpty ?
-                           Center(
-                              child: Column(
-                              children: [
-                                160.heightBox,
-                                SvgPicture.asset(
-                                  MyAssets.noDataFound,
-                                  height: height150,
-                                ),
-                                5.heightBox,
-                                Text(
-                                  MyStrings.noActivityFound,
-                                  style: FontUtil.customStyle(
-                                      fontSize: 14.h,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: APP_FONT,
-                                      textColor: MyColors.noDataFoundTitle),
-                                ),
-                              ],
-                            ))
-                            :
-                           Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                itemCount: state.activityList.length,
-                                itemBuilder: (context, index) {
-                                  var items = state.activityList[index];
-                                  return Column(
-                                    children: [
-                                      activityItems(context,
-                                          eventName: items.activityName,
-                                          eventLevel: items.eventLevel,
-                                          position: items.position,
-                                          eventDate: DateFormat("MMM dd").format(
-                                              DateFormat("dd-MMM-yyyy").parse(
-                                                  items.eventDate ??
-                                                      "dd-MMM-yyyy")),
-                                          points: items.points.toString()),
-                                      15.heightBox,
-                                    ],
-                                  );
-                                }),
-                          );
+                          return state.activityList.isEmpty
+                              ? Center(
+                                  child: Column(
+                                  children: [
+                                    160.heightBox,
+                                    SvgPicture.asset(
+                                      MyAssets.noDataFound,
+                                      height: height150,
+                                    ),
+                                    5.heightBox,
+                                    Text(
+                                      MyStrings.noActivityFound,
+                                      style: FontUtil.customStyle(
+                                          fontSize: 14.h,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: APP_FONT,
+                                          textColor: MyColors.noDataFoundTitle),
+                                    ),
+                                  ],
+                                ))
+                              : Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      itemCount: state.activityList.length,
+                                      itemBuilder: (context, index) {
+                                        var items = state.activityList[index];
+                                        return Column(
+                                          children: [
+                                            activityItems(context,
+                                                eventName: items.activityName,
+                                                eventLevel: items.eventLevel,
+                                                position: items.position,
+                                                eventDate: DateFormat("MMM dd")
+                                                    .format(DateFormat(
+                                                            "dd-MMM-yyyy")
+                                                        .parse(
+                                                            items.eventDate ??
+                                                                "dd-MMM-yyyy")),
+                                                points:
+                                                    items.points.toString()),
+                                            15.heightBox,
+                                          ],
+                                        );
+                                      }),
+                                );
                         } else if (state is ActivityErrorState) {
                           return Center(
                             child: Text(
@@ -155,82 +162,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 }
 
-Widget buildSelector(
-  List<String> selecterItems,
-  DateTime focusedDay,
-  Function(DateTime) onDaySelected,
-) {
-  return SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(right: 8.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: selecterItems.map((month) {
-        bool isSelected = focusedDay.month == selecterItems.indexOf(month) + 1;
-        isSelected=true;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: GestureDetector(
-            onTap: () {
-              onDaySelected(
-                DateTime(
-                  focusedDay.year,
-                  selecterItems.indexOf(month) + 1,
-                ),
-              );
-            },
-            child: isSelected ==true
-                ? ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return MyColors.buttonColors.createShader(bounds);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0, horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Colors.white, // This color is not visible
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Text(
-                        month,
-                        style: FontUtil.customStyle(
-                          fontSize: 10,
-                          fontWeight:
-                              isSelected==true ? FontWeight.w500 : FontWeight.w400,
-                          textColor: MyColors.monthNameColor,
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 6.0, horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      border: Border.all(
-                        color: Colors.grey, // This color is not visible
-                        width: 1.0,
-                      ),
-                    ),
-                    child: Text(
-                      month,
-                      style: FontUtil.customStyle(
-                        fontSize: 10,
-                        fontWeight:
-                            isSelected ==true ? FontWeight.w500 : FontWeight.w400,
-                        textColor: MyColors.monthNameColor,
-                      ),
-                    ),
-                  ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
+
 
 Widget activityItems(BuildContext context,
     {String? eventName,
@@ -259,21 +191,24 @@ Widget activityItems(BuildContext context,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  eventName ?? "${MyStrings.eventName}:  ${MyStrings.notAvailable}",
+                  eventName ??
+                      "${MyStrings.eventName}:  ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
                 Text(
-                  houseName ?? "${MyStrings.houseName}:  ${MyStrings.notAvailable}",
+                  houseName ??
+                      "${MyStrings.houseName}:  ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
                 Text(
-                  eventLevel ?? "${MyStrings.eventLevel}: ${MyStrings.notAvailable}",
+                  eventLevel ??
+                      "${MyStrings.eventLevel}: ${MyStrings.notAvailable}",
                   style: FontUtil.customStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

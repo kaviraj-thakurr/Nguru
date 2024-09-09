@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
+import 'package:nguru/custom_widgets/custom_tab_selector.dart';
 import 'package:nguru/custom_widgets/custom_tags.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/custom_widgets/primary_butttons.dart';
@@ -26,7 +26,6 @@ import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LibraryScreen extends StatefulWidget {
@@ -38,29 +37,44 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> {
   final TextEditingController searchBarController = TextEditingController();
-   final  TextEditingController bookNameController =TextEditingController();
- final  TextEditingController keywordController =TextEditingController();
- final TextEditingController authorNameController =TextEditingController();
+  final TextEditingController bookNameController = TextEditingController();
+  final TextEditingController keywordController = TextEditingController();
+  final TextEditingController authorNameController = TextEditingController();
   DateTime currentDateForCheckingDueDate = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
 
-  List<String> months = [
+// for tab selector
+  List<String> selecterItems = [
     "Issued Book",
     "Reserve",
     "History",
   ];
+
+  int currentTab = 0;
+  void onTabSelection(int currentTabb) {
+    setState(() {
+      currentTab = currentTabb;
+      seletedIndex = currentTabb;
+    });
+    currentTabb == 0
+        ? context.read<LibraryIssueBookCubit>().getLibraryIssueBook()
+        : currentTabb == 1
+            ? context.read<LibrarySearchBookCubit>().getLibrarySearchBook()
+            : currentTabb == 2
+                ? context.read<LibraryHistoryCubit>().getLibraryHistory()
+                : null;
+  }
+
+  //
   int seletedIndex = 0;
 
-  DateTime? _selectedDay;
 
-  ScrollController searchBookController= ScrollController();
-
+  ScrollController searchBookController = ScrollController();
 
   @override
   void initState() {
     context.read<LibraryIssueBookCubit>().getLibraryIssueBook();
     context.read<LibraryHistoryCubit>().getLibraryHistory();
-      context.read<LibrarySearchBookCubit>().getLibrarySearchBook();
+    context.read<LibrarySearchBookCubit>().getLibrarySearchBook();
     super.initState();
   }
 
@@ -81,39 +95,42 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   children: [
                     20.heightBox,
                     Padding(
-                     padding: const EdgeInsets.only(left: 10,right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: dashboardAppBar(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10,right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: CustomSearchBar(
                         controller: searchBarController,
                         hintText: MyStrings.search,
-                        onTap: () =>showDialog(
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return buildLibrarySearchAlertDialog(
+                              keywordController: keywordController,
+                              bookNameController: bookNameController,
+                              authorNameController: authorNameController,
                               context: context,
-                              builder: (BuildContext context) {
-                                return buildLogoutAlertDialog(
-                                  keywordController: keywordController,
-                                  bookNameController: bookNameController,
-                                  authorNameController:authorNameController ,
-                                  context: context,
-                                  onSubmit: () => context.read<LibrarySearchBookCubit>()
-                                .getLibrarySearchBook(
-                                    bookName:bookNameController.text.toString(),
-                                    keyword: keywordController.text.toString(),
-                                    authorName: authorNameController.text.toString()).then((value) => Navigator.pop(context)).then((value) {bookNameController.clear(); keywordController.clear();authorNameController.clear();
-                                   FocusScope.of(context).unfocus(); }),
-                                  onCancel: () => Navigator.pop(context),
-                                );
-                              },
-                            ),
-                        // onSubmitted: (String value) => value.isEmpty
-                        //     ? null
-                        //     : context
-                        //         .read<LibrarySearchBookCubit>()
-                        //         .getLibrarySearchBook(
-                        //             searchQuery:
-                        //                 searchBarController.text.toString()),
+                              onSubmit: () => context
+                                  .read<LibrarySearchBookCubit>()
+                                  .getLibrarySearchBook(
+                                      bookName:
+                                          bookNameController.text.toString(),
+                                      keyword:
+                                          keywordController.text.toString(),
+                                      authorName:
+                                          authorNameController.text.toString())
+                                  .then((value) => Navigator.pop(context))
+                                  .then((value) {
+                                bookNameController.clear();
+                                keywordController.clear();
+                                authorNameController.clear();
+                                FocusScope.of(context).unfocus();
+                              }),
+                              onCancel: () => Navigator.pop(context),
+                            );
+                          },
+                        ),
                       ),
                     ),
                     20.heightBox,
@@ -123,7 +140,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        _buildCategorySelector(),
+                        customTabSelector(
+                            selecterItems, currentTab, onTabSelection, false),
                       ],
                     ),
                     10.heightBox,
@@ -133,7 +151,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             ? Expanded(child: reserveBook(context))
                             : seletedIndex == 2
                                 ? historyBook(context)
-                                :const SizedBox(),
+                                : const SizedBox(),
                     footer(context),
                   ],
                 ),
@@ -157,39 +175,38 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is LibraryHistorySuccessState) {
-              return 
-              state.libraryHistory.isEmpty ?
-              Center(
-                              child: Column(
-                              children: [
-                                160.heightBox,
-                                SvgPicture.asset(
-                                  MyAssets.noDataFound,
-                                  height: height150,
-                                ),
-                                5.heightBox,
-                                Text(
-                                  MyStrings.noLibraryHistoryFound,
-                                  style: FontUtil.customStyle(
-                                      fontSize: 14.h,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: APP_FONT,
-                                      textColor: MyColors.noDataFoundTitle),
-                                ),
-                              ],
-                            ))
-                            :
-              GridView.builder(
-                 padding: EdgeInsets.zero,
-                  itemCount: state.libraryHistory.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: 260,
-                      crossAxisSpacing: 10,
-                      crossAxisCount: 2),
-                  itemBuilder: (context, index) {
-                    return book(context,
-                        libraryHistory: state.libraryHistory[index]);
-                  });
+              return state.libraryHistory.isEmpty
+                  ? Center(
+                      child: Column(
+                      children: [
+                        160.heightBox,
+                        SvgPicture.asset(
+                          MyAssets.noDataFound,
+                          height: height150,
+                        ),
+                        5.heightBox,
+                        Text(
+                          MyStrings.noLibraryHistoryFound,
+                          style: FontUtil.customStyle(
+                              fontSize: 14.h,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: APP_FONT,
+                              textColor: MyColors.noDataFoundTitle),
+                        ),
+                      ],
+                    ))
+                  : GridView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: state.libraryHistory.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisExtent: 260,
+                              crossAxisSpacing: 10,
+                              crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        return book(context,
+                            libraryHistory: state.libraryHistory[index]);
+                      });
             } else if (state is LibraryHistoryErrorState) {
               return Center(
                 child: Text(
@@ -232,38 +249,34 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       textColor: MyColors.boldTextColor),
                 ),
               );
-              ;
             } else if (state is LibrarySearchBookLoadingState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state is LibrarySearchBookSuccessState) {
               return state.librarySearch.isEmpty
-              ?    
-              Center(
-                              child: Column(
-                              children: [
-                                160.heightBox,
-                                SvgPicture.asset(
-                                  MyAssets.noDataFound,
-                                  height: height150,
-                                ),
-                                5.heightBox,
-                                Text(
-                                  MyStrings.noSearchedBookFound,
-                                  style: FontUtil.customStyle(
-                                      fontSize: 14.h,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: APP_FONT,
-                                      textColor: MyColors.noDataFoundTitle),
-                                ),
-                              ],
-                            ))
-                            
-                    
+                  ? Center(
+                      child: Column(
+                      children: [
+                        160.heightBox,
+                        SvgPicture.asset(
+                          MyAssets.noDataFound,
+                          height: height150,
+                        ),
+                        5.heightBox,
+                        Text(
+                          MyStrings.noSearchedBookFound,
+                          style: FontUtil.customStyle(
+                              fontSize: 14.h,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: APP_FONT,
+                              textColor: MyColors.noDataFoundTitle),
+                        ),
+                      ],
+                    ))
                   : GridView.builder(
-                    padding: EdgeInsets.zero,
-                    controller: searchBookController,
+                      padding: EdgeInsets.zero,
+                      controller: searchBookController,
                       itemCount: state.librarySearch.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -312,40 +325,38 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is LibraryIssueBookSuccessState) {
-              return 
-
-               state.libraryIssued.isEmpty ?
-              Center(
-                              child: Column(
-                              children: [
-                                160.heightBox,
-                                SvgPicture.asset(
-                                  MyAssets.noDataFound,
-                                  height: height150,
-                                ),
-                                5.heightBox,
-                                Text(
-                                  MyStrings.noLibraryIssuedBookFound,
-                                  style: FontUtil.customStyle(
-                                      fontSize: 14.h,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: APP_FONT,
-                                      textColor: MyColors.noDataFoundTitle),
-                                ),
-                              ],
-                            ))
-                            :
-              GridView.builder(
-                 padding: EdgeInsets.zero,
-                  itemCount: state.libraryIssued.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: 260,
-                      crossAxisSpacing: 10,
-                      crossAxisCount: 2),
-                  itemBuilder: (context, index) {
-                    return book(context,
-                        libraryIssued: state.libraryIssued[index]);
-                  });
+              return state.libraryIssued.isEmpty
+                  ? Center(
+                      child: Column(
+                      children: [
+                        160.heightBox,
+                        SvgPicture.asset(
+                          MyAssets.noDataFound,
+                          height: height150,
+                        ),
+                        5.heightBox,
+                        Text(
+                          MyStrings.noLibraryIssuedBookFound,
+                          style: FontUtil.customStyle(
+                              fontSize: 14.h,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: APP_FONT,
+                              textColor: MyColors.noDataFoundTitle),
+                        ),
+                      ],
+                    ))
+                  : GridView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: state.libraryIssued.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisExtent: 260,
+                              crossAxisSpacing: 10,
+                              crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        return book(context,
+                            libraryIssued: state.libraryIssued[index]);
+                      });
             } else if (state is LibraryIssueBookErrorState) {
               return Center(
                 child: Text(
@@ -384,19 +395,29 @@ class _LibraryScreenState extends State<LibraryScreen> {
         librarySearch?.accessionNo;
     var dueDate = libraryHistory?.returnDate ?? libraryIssued?.dueDate;
     var issueDate = libraryHistory?.issueDate ?? libraryIssued?.issueDate;
-    bool isBookSelected = false;
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
         return GestureDetector(
           onTap: () => setState(() {
-          seletedIndex ==0 ?    Navigator.push(context, MaterialPageRoute(builder: (context)=> BookDescriptionScreen(libraryIssued: libraryIssued)))
-          : 
-                    seletedIndex ==1 ?    Navigator.push(context, MaterialPageRoute(builder: (context)=> BookDescriptionScreen(librarySearch: librarySearch)))
-          :
-                    seletedIndex ==2 ?    Navigator.push(context, MaterialPageRoute(builder: (context)=> BookDescriptionScreen(libraryHistory: libraryHistory)))
-          :
-          null;
-
+            seletedIndex == 0
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookDescriptionScreen(
+                            libraryIssued: libraryIssued)))
+                : seletedIndex == 1
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BookDescriptionScreen(
+                                librarySearch: librarySearch)))
+                    : seletedIndex == 2
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BookDescriptionScreen(
+                                    libraryHistory: libraryHistory)))
+                        : null;
           }),
           child: Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -405,12 +426,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color:
-                  //  isBookSelected
-                  //     ?
-                  //      MyColors.appColor2
-                  //     :
-                       MyColors.boarderColor,
+                  color: MyColors.boarderColor,
                   width: 2.0,
                 ),
               ),
@@ -595,195 +611,57 @@ class _LibraryScreenState extends State<LibraryScreen> {
               ),
             ],
           )
-        // : seletedIndex == 1
-        //     ? Padding(
-        //         padding: const EdgeInsets.all(10.0),
-        //         child: PrimaryButton(
-        //             title: "Reserve",
-        //             onPressed: () {
-        //               customModalBottomSheet(context);
-        //             }),
-        //       )
-            : seletedIndex == 2
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 10,
-                              width: 10,
-                              color: MyColors.greenShade_3,
-                            ),
-                            5.widthBox,
-                            Text(
-                              "On time submission",
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          ],
+        : seletedIndex == 2
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 20,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 10,
+                          width: 10,
+                          color: MyColors.greenShade_3,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 10,
-                              width: 10,
-                              color: MyColors.redShade_3,
-                            ),
-                            5.widthBox,
-                            Text(
-                              "Late Submission",
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox();
-  }
-
-  Widget customCalendar(BuildContext context) {
-    return TableCalendar(
-      rowHeight: 45,
-      daysOfWeekHeight: 20,
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekdayStyle: FontUtil.customStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            textColor: MyColors.calendarDateColor),
-        weekendStyle: FontUtil.customStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w200,
-            textColor: MyColors.calendarDateColor),
-      ),
-      firstDay: DateTime.utc(2010, 10, 16),
-      lastDay: DateTime.utc(2030, 3, 14),
-      focusedDay: _focusedDay,
-      selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
-        });
-      },
-      calendarFormat: CalendarFormat.month,
-      calendarStyle: CalendarStyle(
-        defaultTextStyle: FontUtil.customStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            textColor: MyColors.calendarDateColor),
-        weekendTextStyle: FontUtil.customStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            textColor: MyColors.fadedTextColor),
-        selectedTextStyle: FontUtil.customStyle(
-            fontSize: 13, fontWeight: FontWeight.w700, textColor: Colors.blue),
-        todayTextStyle: FontUtil.customStyle(
-            fontSize: 13, fontWeight: FontWeight.w700, textColor: Colors.pink),
-        todayDecoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white),
-        ),
-        selectedDecoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(width: 2, color: Colors.white),
-        ),
-      ),
-      headerVisible: false,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-    );
-  }
-
-  Widget buildMonthSelector() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) + 1;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _focusedDay = DateTime(
-                    _focusedDay.year,
-                    months.indexOf(month) + 1,
-                  );
-                 
-                });
-              },
-              child: isSelected
-                  ? ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return MyColors.buttonColors.createShader(bounds);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          border: Border.all(
-                            color: Colors.white, // This color is not visible
-                            width: 1.0,
-                          ),
-                        ),
-                        child: Text(
-                          month,
+                        5.widthBox,
+                        Text(
+                          "On time submission",
                           style: FontUtil.customStyle(
-                            fontSize: 10,
-                            fontWeight:
-                                isSelected ? FontWeight.w500 : FontWeight.w400,
-                            textColor: MyColors.monthNameColor,
-                          ),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.boldTextColor),
                         ),
-                      ),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0, horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Colors.grey, // This color is not visible
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Text(
-                        month,
-                        style: FontUtil.customStyle(
-                          fontSize: 10,
-                          fontWeight:
-                              isSelected ? FontWeight.w500 : FontWeight.w400,
-                          textColor: MyColors.monthNameColor,
-                        ),
-                      ),
+                      ],
                     ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
+                  ),
+                  SizedBox(
+                    height: 20,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 10,
+                          width: 10,
+                          color: MyColors.redShade_3,
+                        ),
+                        5.widthBox,
+                        Text(
+                          "Late Submission",
+                          style: FontUtil.customStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.boldTextColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox();
   }
 
   void customModalBottomSheet(BuildContext context) {
@@ -799,7 +677,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
               //mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 10.heightBox,
-
                 Container(
                   height: 8,
                   width: MediaQuery.of(context).size.width * 0.3,
@@ -808,10 +685,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       borderRadius: BorderRadius.circular(30)),
                 ),
                 10.heightBox,
-                //  buildMonthSelector(),
-                10.heightBox,
-                customCalendar(context),
-                //   CustomCalendar(),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: PrimaryButton(
@@ -828,145 +701,62 @@ class _LibraryScreenState extends State<LibraryScreen> {
     );
   }
 
-  Widget _buildCategorySelector() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: months.map((month) {
-          bool isSelected = _focusedDay.month == months.indexOf(month) +1;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: GestureDetector(
-              onTap: () {
-                 isSelected = _focusedDay.month == months.indexOf(month) + 1;
-                setState(() {
-                  _focusedDay = DateTime(
-                    _focusedDay.year,
-                    months.indexOf(month) + 1,
-                  );
-                });
-                seletedIndex = months.indexOf(month);
-                log("selected: ${months.indexOf(month)}");
-                 log("seleccccTttttt: $seletedIndex");
-                  seletedIndex == 0 
-                  ? context.read<LibraryIssueBookCubit>().getLibraryIssueBook()
-                   : seletedIndex ==1 ?context.read<LibrarySearchBookCubit>().getLibrarySearchBook()
-                   : seletedIndex ==2 ? context.read<LibraryHistoryCubit>().getLibraryHistory()
-                   :null;
-              },
-              child: isSelected
-                  ? ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return MyColors.buttonColors.createShader(bounds);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          border: Border.all(
-                            color: Colors.white, // This color is not visible
-                            width: 1.0,
-                          ),
-                        ),
-                        child: Text(
-                          month,
-                          style: FontUtil.customStyle(
-                            fontSize: 10,
-                            fontWeight:
-                                isSelected ? FontWeight.w500 : FontWeight.w400,
-                            textColor: MyColors.monthNameColor,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0, horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Colors.grey, // This color is not visible
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Text(
-                        month,
-                        style: FontUtil.customStyle(
-                          fontSize: 10,
-                          fontWeight:
-                              isSelected ? FontWeight.w500 : FontWeight.w400,
-                          textColor: MyColors.monthNameColor,
-                        ),
-                      ),
-                    ),
+  AlertDialog buildLibrarySearchAlertDialog({
+    required BuildContext context,
+    required VoidCallback onSubmit,
+    required VoidCallback onCancel,
+    required TextEditingController bookNameController,
+    required TextEditingController keywordController,
+    required TextEditingController authorNameController,
+  }) {
+    return AlertDialog(
+      backgroundColor: MyColors.white,
+      title: const Text('Search book'),
+      content: SizedBox(
+        height: 200,
+        width: double.infinity,
+        child: Column(
+          children: [
+            CustomTextFormField(
+              controller: bookNameController,
+              labelText: "Book Name",
             ),
-          );
-        }).toList(),
+            10.heightBox,
+            CustomTextFormField(
+              controller: keywordController,
+              labelText: "Keyword",
+            ),
+            10.heightBox,
+            CustomTextFormField(
+              controller: authorNameController,
+              labelText: "Author Name",
+            ),
+            10.heightBox,
+          ],
+        ),
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: onCancel,
+          child: Text(
+            'Cancel',
+            style: FontUtil.customStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                textColor: MyColors.boldTextColor),
+          ),
+        ),
+        TextButton(
+          onPressed: onSubmit,
+          child: Text(
+            'Submit',
+            style: FontUtil.customStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                textColor: MyColors.boldTextColor),
+          ),
+        ),
+      ],
     );
   }
-
-
-  AlertDialog buildLogoutAlertDialog({
-  required BuildContext context,
-  required VoidCallback onSubmit,
-  required VoidCallback onCancel,
-  required TextEditingController bookNameController,
-  required TextEditingController keywordController,
-  required TextEditingController authorNameController,
-}) {
-  return AlertDialog(
-    backgroundColor: MyColors.white,
-    title: const Text('Search book'),
-    content: SizedBox(
-      height: 200,
-      width: double.infinity,
-      child: Column(
-        children: [
-           CustomTextFormField(
-        controller: bookNameController,
-        labelText: "Book Name",
-      ),
-      10.heightBox,
-      CustomTextFormField(
-        controller: keywordController,
-        labelText: "Keyword",
-      ),
-      10.heightBox,
-      CustomTextFormField(
-        controller: authorNameController,
-        labelText: "Author Name",
-      ),
-      10.heightBox,
-        ],
-      ),
-    ),
-    actions: <Widget>[
-     
-      TextButton(
-        onPressed: onCancel,
-        child: Text(
-          'Cancel',
-          style: FontUtil.customStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              textColor: MyColors.boldTextColor),
-        ),
-      ),
-      TextButton(
-        onPressed: onSubmit,
-        child: Text(
-          'Submit',
-          style: FontUtil.customStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              textColor: MyColors.boldTextColor),
-        ),
-      ),
-    ],
-  );
-}
 }

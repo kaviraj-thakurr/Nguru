@@ -189,4 +189,18 @@ class MyStrings {
 
     // setting screen
     static const String changeSession = "Change Session";
+
+
+    // feedback screen
+    static const String pleaseAddProperDetails = "Please add proper details!";
+    static const String send = "Send";
+    static const String feedback = "Feedback";
+    static const String name = "Name";
+
+
+    // sign out
+    static const String areYouSureYouWantToSignOut = 'Are you sure you want to Sign out?';
+    static const String signOut = 'Sign out';
+    static const String cancel = 'Cancel';
+    static const String signOutSuccessfully = 'Sign out Successfully';
 }

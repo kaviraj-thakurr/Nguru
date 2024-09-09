@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nguru/custom_widgets/month_selector.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_state.dart';
 import 'package:nguru/models/calendar_event_model.dart';
@@ -15,7 +16,9 @@ class EventCalendar extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
   const EventCalendar({
-    super.key, required this.startDate, required this.endDate,
+    super.key,
+    required this.startDate,
+    required this.endDate,
   });
 
   @override
@@ -26,26 +29,20 @@ class EventCalendarState extends State<EventCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-
   @override
   void initState() {
-    
-   // getSessionDates();
     super.initState();
-     _focusedDay.isAfter(widget.endDate)
+    _focusedDay.isAfter(widget.endDate)
         ? _focusedDay = widget.endDate
         : _focusedDay = _focusedDay;
-   _focusedDay.isAfter(widget.endDate) ? context.read<CalendarEventCubit>().getCalendarEvent(widget.endDate.month):  context.read<CalendarEventCubit>().getCalendarEvent(_focusedDay.month);
-   
+    _focusedDay.isAfter(widget.endDate)
+        ? context
+            .read<CalendarEventCubit>()
+            .getCalendarEvent(widget.endDate.month)
+        : context
+            .read<CalendarEventCubit>()
+            .getCalendarEvent(_focusedDay.month);
   }
-
-  // Future<void> getSessionDates() async {
-  //   _startDate = DateFormat("dd-MMM-yyyy")
-  //       .parse(await SharedPref.getStartDateOfSession() ?? "");
-  //   _endDate = DateFormat("dd-MMM-yyyy")
-  //       .parse(await SharedPref.getEndDateOfSession() ?? "");
-  //   log(" init call :  $_startDate $_endDate");
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +52,19 @@ class EventCalendarState extends State<EventCalendar> {
       child: Column(
         children: [
           AppGapping.padding30,
-          _buildMonthSelector(),
+          monthSelector(
+            widget.startDate,
+            widget.endDate,
+            _focusedDay,
+            (selectedDate) {
+              setState(() {
+                _focusedDay = selectedDate;
+              });
+              context
+                  .read<CalendarEventCubit>()
+                  .getCalendarEvent(selectedDate.month);
+            },
+          ),
           AppGapping.padding20,
           BlocConsumer<CalendarEventCubit, CalendarEventState>(
               listener: (context, state) {},
@@ -344,106 +353,6 @@ class EventCalendarState extends State<EventCalendar> {
           //  const SizedBox(height: 10,),
           //    customAttendenceFooterCard(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMonthSelector() {
-    List<String> months = [];
-    DateTime current = widget.startDate;
-        log(" init call from _buildMonthSelector :  ${widget.startDate} ${widget.endDate}");
-    while (current.isBefore(widget.endDate) || current.isAtSameMomentAs(widget.endDate)) {
-      months.add(DateFormat('MMM').format(current));
-      current = DateTime(current.year, current.month + 1, 1);
-    }
-    log("months list: $months");
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: months.map((month) {
-          int monthIndex = months.indexOf(month);
-          log("months index: $monthIndex");
-          DateTime monthDate = DateTime(
-            widget.startDate.year,
-            widget.startDate.month + monthIndex,
-          );
-          log("logic: ${widget.startDate.month} $monthIndex");
-          log("monthDate  object: ${monthDate.year} ${monthDate.month} ${monthDate.day}");
-
-          bool isSelected = _focusedDay.year == monthDate.year &&
-              _focusedDay.month == monthDate.month;
-          log("currentt yearr: ${_focusedDay.year} ${monthDate.year}");
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  // Update the focused day
-                  _focusedDay = DateTime(
-                    widget.startDate.year,
-                    widget.startDate.month + monthIndex,
-                    1, // Default day to 1
-                  );
-
-                  log("focus  yearrr: ${_focusedDay.year} ${_focusedDay.month} ${_focusedDay.day}");
-                });
-                context
-                    .read<CalendarEventCubit>()
-                    .getCalendarEvent(_focusedDay.month);
-                isParticularEventDateSelected = false;
-              },
-              child: isSelected
-                  ? ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return MyColors.buttonColors.createShader(bounds);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 1.0,
-                          ),
-                        ),
-                        child: Text(
-                          month,
-                          style: FontUtil.customStyle(
-                            fontSize: 10,
-                            fontWeight:
-                                isSelected ? FontWeight.w500 : FontWeight.w400,
-                            textColor: MyColors.monthNameColor,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0, horizontal: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Text(
-                        month,
-                        style: FontUtil.customStyle(
-                          fontSize: 10,
-                          fontWeight:
-                              isSelected ? FontWeight.w500 : FontWeight.w400,
-                          textColor: MyColors.monthNameColor,
-                        ),
-                      ),
-                    ),
-            ),
-          );
-        }).toList(),
       ),
     );
   }

@@ -24,6 +24,7 @@ import 'package:nguru/logic/examination/exam_marks/exam_marks_cubit.dart';
 import 'package:nguru/logic/examination/exam_sehedule/exam_sehedule_cubit.dart';
 import 'package:nguru/logic/examination/report_card/report_card_cubit.dart';
 import 'package:nguru/logic/fee/fee_list_cubit.dart';
+import 'package:nguru/logic/feedback/send_feedback/send_feedback_cubit.dart';
 import 'package:nguru/logic/fees/fees_cubit.dart';
 import 'package:nguru/logic/discipline/descipline_cubit.dart';
 import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
@@ -44,6 +45,7 @@ import 'package:nguru/logic/particular_month_attendance/particular_month_attenda
 import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/reset_password/reset_password_cubit.dart';
 import 'package:nguru/logic/reset_password_policy/reset_password_policy_cubit.dart';
+import 'package:nguru/logic/setting_screen/setting_screen_cubit.dart';
 import 'package:nguru/logic/settings/change_siblings_cubit.dart';
 import 'package:nguru/logic/settings/change_session/change_session_cubit.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
@@ -266,6 +268,12 @@ var options = {
         ),
         BlocProvider(
           create: (context) => StudentProfileCubit(AuthRepo()),
+        ),
+         BlocProvider(
+          create: (context) => SendFeedbackCubit(AuthRepo()),
+        ),
+        BlocProvider(
+          create: (context) => SettingScreenCubit(AuthRepo()),
         ),
       ],
       child: ScreenUtilInit(
