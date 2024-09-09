@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/logic/circular/circular_list/circular_state.dart';
+
 import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';

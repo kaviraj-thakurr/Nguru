@@ -14,7 +14,8 @@ import 'package:nguru/logic/attendance_bar_chart/attendance_bar_chart_cubit.dart
 import 'package:nguru/logic/attendence/attendence_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/chatsend_button/chat_send_button_cubit.dart';
-import 'package:nguru/logic/circular/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_detail/curcular_detail_cubit.dart';
+import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
 import 'package:nguru/logic/communication/communication_cubit.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_cubit.dart';
 import 'package:nguru/logic/create_communication/save_message_subject_cubit.dart';
@@ -50,6 +51,7 @@ import 'package:nguru/logic/timetable/timetable_cubit.dart';
 import 'package:nguru/logic/transport/transport_cubit.dart';
 import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
+import 'package:nguru/screens/circular_detail_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
 
 
@@ -258,6 +260,10 @@ var options = {
         ),
         BlocProvider(
           create: (context) => ChangeSessionCubit(AuthRepo()),
+        ),
+
+            BlocProvider(
+          create: (context) => CircularDetailsCubit(AuthRepo()),
         ),
       ],
       child: ScreenUtilInit(

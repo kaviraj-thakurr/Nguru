@@ -91,16 +91,24 @@ class _ChatUiScreenState extends State<ChatScreen> {
           )),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(padding18),
+              padding: const EdgeInsets.all(padding15),
               child: Column(
                 children: [
                   // User Info Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      IconButton(
+                          iconSize: 25,
+                          color: Colors.black,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back)),
                       const CircleAvatar(
                         maxRadius: 25,
-                        backgroundImage: NetworkImage("url"),
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
                       ),
                       10.widthBox,
                       Text(
@@ -363,7 +371,8 @@ class _ChatUiScreenState extends State<ChatScreen> {
                                                       .symmetric(
                                                       vertical: 5,
                                                       horizontal: 12),
-                                                  padding:const EdgeInsets.all(10),
+                                                  padding:
+                                                      const EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     color: isUserMessage
                                                         ? MyColors.blueShade_3
@@ -390,17 +399,37 @@ class _ChatUiScreenState extends State<ChatScreen> {
                                         });
                                       }
 
-                                     return const SizedBox();
+                                      return const SizedBox();
                                     })
-                                  :  Center(
-                                      child: Column(
-                                        children: [
-                                          20.heightBox,
-                                        const  Divider(
-                                            thickness: 1,
-                                            color: MyColors.greyShade_4,
+                                  : const SizedBox(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Divider(
+                                              color: Colors
+                                                  .grey, // Customize the color here
+                                              thickness:
+                                                  1.0, // Customize the thickness here
+                                            ),
                                           ),
-                                       const   Text("Initiate New Chat!"),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Text(
+                                              'Please type in your query.',
+                                              style: TextStyle(
+                                                color:
+                                                    Colors.grey, // Text color
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Divider(
+                                              color: Colors
+                                                  .grey, // Same color as the first divider
+                                              thickness: 1.0, // Same thickness
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -537,7 +566,7 @@ class _ChatUiScreenState extends State<ChatScreen> {
                             ],
                           ),
                         )
-                      :const SizedBox(),
+                      : const SizedBox(),
 
                   widget.isNewChat == false
                       ? Padding(
@@ -659,11 +688,10 @@ class _ChatUiScreenState extends State<ChatScreen> {
                       .read<CommunicationCubit>()
                       .getCommunicationDetails())
                   .then((value) {
-                    setState(() {
-                       initiatedTheChat = true;
-                    });
-                  })
-                  .then((value) {
+                setState(() {
+                  initiatedTheChat = true;
+                });
+              }).then((value) {
                 BlocListener<SaveMessageSubjectCubit, SaveMessageSubjectState>(
                     listener: (context, state) {
                   if (state is SaveMessageSubjectSuccessState) {
@@ -671,7 +699,7 @@ class _ChatUiScreenState extends State<ChatScreen> {
                         content: Text("Subject Created Successfully!")));
                   } else if (state is SaveMessageSubjectErrorState) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Something went Wrong!")));
+                        const SnackBar(content: Text("Something went Wrong!")));
                   }
                 });
               }),

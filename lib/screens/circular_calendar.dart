@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:nguru/logic/circular/circular_cubit.dart';
-import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
+
 import 'package:nguru/models/circular_model/circular_model.dart';
 
 import 'package:nguru/utils/app_colors.dart';

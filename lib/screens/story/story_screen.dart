@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/assignment_list_state.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
-import 'package:nguru/logic/circular/circular_cubit.dart';
-import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_list/circular_state.dart';
+
 import 'package:nguru/logic/discipline/descipline_cubit.dart';
 import 'package:nguru/logic/discipline/descipline_state.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';

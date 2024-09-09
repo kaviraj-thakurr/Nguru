@@ -51,7 +51,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 customAppBar(),
                 screenTitleHeader(MyStrings.timeTable,
                     onPressed: () => Navigator.pop(context)),
-                40.heightBox,
+                20.heightBox,
                 weekDaysRow(),
                 30.heightBox,
                 Expanded(

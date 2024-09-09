@@ -33,6 +33,7 @@ import 'package:nguru/screens/library/library_screen.dart';
 
 import 'package:nguru/screens/story/story_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
+import 'package:nguru/test.dart';
 
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
@@ -208,6 +209,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                                   return attendenceAndFeeCard(
                                                     context,
                                                     mainText: "__",
+                                                    
                                                     footerText: MyStrings.attendence,
                                                     isFeeCard: false,
                                                   );
@@ -265,15 +267,17 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                     height: screenHeight * 0.17,
                                     width: screenWidth,
                                     child: Row(
+                                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         customCard(
+                                        
                                           context: context,
                                           title: MyStrings.timetable,
                                           content: MyStrings.timeTablesub,
                                           isPngImage: false,
                                           onIconPressed: () {
                                             NavigationService.navigateTo(
-                                                const TimetableScreen(), context);
+                                                 const TimetableScreen(), context);
                                           },
                                           cardWidth: screenWidth * 0.5,
                                           cardHeight: double.maxFinite,
@@ -281,6 +285,7 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                         ),
                                         15.widthBox,
                                         customCard(
+
                                           context: context,
                                           title: MyStrings.examination,
                                           content: MyStrings.examinationSub,
@@ -458,62 +463,56 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
   }
 
   Widget customCard({
-    required BuildContext context,
-    required String title,
-    required String content,
-    // required IconData icon,
-    required VoidCallback onIconPressed,
-    required String image,
-    double? cardHeight,
-    double? cardWidth,
-    bool? isPngImage,
-  }) {
-    return Container(
-      height: cardHeight,
-      width: cardWidth,
-      decoration: BoxDecoration(
-        gradient: MyColors.cardColors,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: GestureDetector(
-        onTap: onIconPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(title, maxLines: 1, style: FontUtil.cardTitle),
-              Text(content, maxLines: 3, style: FontUtil.cardsubTitle),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.bottomLeft,
-                    icon: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return MyColors.arrowColor.createShader(bounds);
-                      },
-                      child: SvgPicture.asset(MyAssets.arrowIcon
-                          // color: MyColors.white,
-                          ),
-                    ),
-                    color: Colors.transparent,
-                    onPressed: onIconPressed,
-                  ),
-                  Flexible(
-                    child: isPngImage == false
-                        ? SvgPicture.asset(image)
-                        : Image.asset(image),
-                  ),
-                ],
+  required BuildContext context,
+  required String title,
+  required String content,
+  required VoidCallback onIconPressed,
+  required String image,
+  double? cardHeight,
+  double? cardWidth,
+  bool? isPngImage,
+  int? titleMaxLines = 1,   // Optional maxLines for title
+  int? contentMaxLines = 3, // Optional maxLines for content
+}) {
+  return Container(
+    height: cardHeight,
+    width: cardWidth,
+    decoration: BoxDecoration(
+      gradient: MyColors.cardColors,
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(title, maxLines: titleMaxLines, style: FontUtil.cardTitle),
+          Text(content, maxLines: contentMaxLines, style: FontUtil.cardsubTitle),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return MyColors.arrowColor.createShader(bounds);
+                  },
+                  child: SvgPicture.asset(MyAssets.arrowIcon),
+                ),
+                color: Colors.transparent,
+                onPressed: onIconPressed,
+              ),
+              Flexible(
+                child: isPngImage == false
+                    ? SvgPicture.asset(image)
+                    : Image.asset(image),
               ),
             ],
           ),
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
