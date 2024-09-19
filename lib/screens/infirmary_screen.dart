@@ -52,6 +52,7 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: MyColors.white,
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),
@@ -71,7 +72,8 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                   if (state is StudentProfileLoadingState) {
                     return customSettingProfileWidget(context, screenWidth,
                         screenHeight, "name:", "class:", "Admission no:",
-                        bloodGroup: "Blood group:", gender: "Gender:");
+                        bloodGroup: "Blood group:", gender: "Gender:",
+                        studentPicture: "");
                   } else if (state is StudentProfileSuccessState) {
                   return  customSettingProfileWidget(
                           context,
@@ -81,15 +83,17 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                           "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
                           state.studentProfileState.personalInfo?.admissionNumber ?? "",
                          bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "",
-                         gender: state.studentProfileState.personalInfo?.gender ?? "", );
+                         gender: state.studentProfileState.personalInfo?.gender ?? "", 
+                          studentPicture:   state.studentProfileState.personalInfo?.studentPicture ?? "", 
+);
                   } else if (state is StudentProfileErrorState) {
                     return customSettingProfileWidget(
                         context, screenWidth, screenHeight, ": ", "", "",
                         bloodGroup: "", gender: "");
                   } else {
                     return customSettingProfileWidget(context, screenWidth,
-                        screenHeight, "name:", "class:", "Admission no:",
-                        bloodGroup: "Blood group:", gender: "Gender:");
+                        screenHeight, "name:", "class:", "Admission no:", 
+                        bloodGroup: "Blood group:", gender: "Gender:",studentPicture: "");
                   }
                 }),
                 20.heightBox,

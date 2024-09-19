@@ -9,7 +9,8 @@ class Networking {
   //Production link
   // final baseUrl = "https://quickschool.niitnguru.com/mobileappservice/Api/";
 
-  
+  //mobileappservice/Api -- https://quickschool.niitnguru.com/mobileappservice/Api/Circular/GetMainList/
+  //stagging url :-
   //Stagging link
   final baseUrl = "https://qsstg.niiteducation.com/mobileappservice/Api/";
   //Api fun for post API

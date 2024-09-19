@@ -53,11 +53,11 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                   customAppBar(),
 
                   screenTitleHeader(MyStrings.discipline,
-                      onPressed: () => Navigator.pop(context)),
+                      onPressed: () => {Navigator.pop(context),Navigator.pop(context)}),
 
                   35.heightBox,
 
-                  DisciplineCalendar(startDate: widget.startDate, endDate: widget.endDate,),
+                 DisciplineCalendar(startDate: widget.startDate, endDate: widget.endDate,),
                   15.heightBox,
                   BlocConsumer<DisciplineCubit, DisciplineState>(
                       listener: (context, state) {},

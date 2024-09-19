@@ -29,8 +29,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<String> selecterItems = [
     "Event Result",
-    "Event Reslt",
-    "Event esult",
   ];
   int currentTab = 0;
   void onTabSelection(int currentTabb) {
@@ -198,14 +196,14 @@ Widget activityItems(BuildContext context,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.boldTextColor),
                 ),
-                Text(
-                  houseName ??
-                      "${MyStrings.houseName}:  ${MyStrings.notAvailable}",
-                  style: FontUtil.customStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      textColor: MyColors.boldTextColor),
-                ),
+                // Text(
+                //   houseName ??
+                //       "${MyStrings.houseName}:  ${MyStrings.notAvailable}",
+                //   style: FontUtil.customStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w500,
+                //       textColor: MyColors.boldTextColor),
+                // ),
                 Text(
                   eventLevel ??
                       "${MyStrings.eventLevel}: ${MyStrings.notAvailable}",

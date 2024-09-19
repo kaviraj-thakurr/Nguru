@@ -96,6 +96,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     if (state is GalleryItemListLoadingState) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (state is GalleryItemListSuccessState) {
+                      bool isNavigating = false; 
                       return 
                       state.galleryItemList.galleryList!.isEmpty ?
                            Center(
@@ -132,7 +133,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             final dashPictureGalleryId = state.galleryItemList
                                 .galleryList?[index].dashPichtureGalleryId;
                             return GestureDetector(
-                              onTap: () => context
+                              onTap: () {
+                                if (isNavigating) return;
+                                isNavigating = true;
+                                 context
                                   .read<GalleryPhotosCubit>()
                                   .getGalleryPhotos(dashPictureGalleryId)
                                   .then(
@@ -142,8 +146,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                             builder: (context) => showStories(
                                                 screenHeight,
                                                 screenWidth,
-                                                dashPictureGalleryId ?? 0))),
-                                  ),
+                                                dashPictureGalleryId ?? 0))).then((value) => isNavigating = false),
+                                                
+                                  );
+                              },
                               child: customPhotoWidget(
                                   screenHeight,
                                   screenWidth,

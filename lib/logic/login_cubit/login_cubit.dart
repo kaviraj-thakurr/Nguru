@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nguru/logic/login_cubit/login_state.dart';
 import 'package:nguru/repo/api_calls.dart';
+import 'package:nguru/services/firebase_api.dart';
 import 'package:nguru/utils/app_utils.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
@@ -17,6 +18,7 @@ class LoginCubit extends Cubit<LoginState> {
           await authRepo?.logIn(userName: userName, password: password,schoolUrl: schoolUrl.trim()) ;
       if (result != null) {
         if (result.responseCode == "200") {
+          await FirebaseApi().initNotifications();
           await SharedPref.saveUserID(result.userId ??0);
           await SharedPref.saveSchoolID(result.schoolId ?? 0);
           await SharedPref.saveStudentID(result.studentProfile?.studentId ?? 0);

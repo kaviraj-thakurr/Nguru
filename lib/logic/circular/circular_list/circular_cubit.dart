@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:nguru/logic/circular/circular_state.dart';
-import 'package:nguru/logic/discipline/descipline_state.dart';
-import 'package:nguru/logic/gallery_cubit/gallery_state.dart';
+import 'package:nguru/logic/circular/circular_list/circular_state.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/repo/api_calls.dart';
 
@@ -21,12 +19,13 @@ class CircularCubit extends Cubit<CircularState> {
     try {
       emit(CircularLoadingState());
       final result = await authRepo?.getCurrentCircular(page: "page", month: month);
+      final storyResult = await authRepo?.getCurrentCircular(page: "page", month: month);
       if (result != null) {
         if (result.responseCode == "200") {
           currentPage = page;
           totalRecords = result.pagination?.totalRecords ?? 0;
           emit(CircularSuccessState(
-              circularList: result.circularList ?? []));
+              circularList: result.circularList ?? [], storyCircularList: storyResult?.circularList ?? []));
               circularList = (state as CircularSuccessState).circularList;
         } else {
           emit(CircularErrorState(result.responseMessage ?? "Error occurred"));

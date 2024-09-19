@@ -52,8 +52,8 @@ class CustomSearchBar extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),  // Adjust padding as needed
                   child: SvgPicture.asset(
                     MyAssets.searchIcon,
-                    width: 17,
-                    height: 17,
+                    width: 15,
+                    height: 15,
                     fit: BoxFit.scaleDown,  // Ensures it scales within the padding constraints
                   ),
                 ),

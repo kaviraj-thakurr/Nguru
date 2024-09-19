@@ -28,7 +28,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             //39.heightBox,
             screenTitleHeader("My Profile",onPressed:()=> Navigator.pop(context)),
             20.heightBox,
-            customSettingProfileWidget(context, screenWidth, screenHeight,"","",""),
+            customSettingProfileWidget(context, screenWidth, screenHeight,"","","",studentPicture: ""),
             14.heightBox,
             personInfoCard(context, "https://via.placeholder.com/150",
                 "personName", "classAndSection", "idNo", (p0) => {}),

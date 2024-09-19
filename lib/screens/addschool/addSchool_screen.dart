@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ import 'package:nguru/custom_widgets/primary_butttons.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_cubit.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/screens/login/login_screen.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AddSchool extends StatefulWidget {
@@ -41,6 +44,13 @@ class _AddSchoolState extends State<AddSchool> {
   bool isEditable = false;
   Box<UserModel>? box;
   String selectedRadio = '';
+
+    var getBaseURl;
+
+  Future<String> getBaseUrl() async {
+    getBaseURl = await SharedPref.getBaseUrl();
+    return getBaseURl;
+  }
 
   void _toggleEditability() {
     setState(() {
@@ -82,6 +92,7 @@ class _AddSchoolState extends State<AddSchool> {
   @override
   void initState() {
     super.initState();
+    getBaseUrl();
     schoolUrlController.text = MyStrings.defaultSchoolUrl;
     openAddSchoolBox();
     schoolNameController.addListener(() {
@@ -176,7 +187,7 @@ class _AddSchoolState extends State<AddSchool> {
                         builder: (context, state) {
                           return CustomTextFormField(
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
+                              LengthLimitingTextInputFormatter(30)
                             ],
                             controller: subdomainController,
                             labelText: MyStrings.subdomain,
@@ -184,7 +195,7 @@ class _AddSchoolState extends State<AddSchool> {
                                 ? AutovalidateMode.onUserInteraction
                                 : AutovalidateMode.disabled,
                             validator: _validateSubDomain,
-                            onChanged: (value) => subdomainController.text,
+                            onChanged: (value) => subdomainController.text.trim(),
                           );
                         },
                       ),
@@ -193,7 +204,7 @@ class _AddSchoolState extends State<AddSchool> {
                         builder: (context, state) {
                           return CustomTextFormField(
                             inputFormatters: [
-                              LengthLimitingTextInputFormatter(20)
+                              LengthLimitingTextInputFormatter(30)
                             ],
                             controller: schoolNameController,
                             labelText: MyStrings.schoolName,
@@ -212,12 +223,15 @@ class _AddSchoolState extends State<AddSchool> {
                   visible: !widget.isAddSchoolScreen,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const AddSchool(isAddSchoolScreen: true),
-                          ));
+                      _validateSchoolUrl;
+                      _validateSubDomain;
+                      _validateSchoolName;
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           const AddSchool(isAddSchoolScreen: true),
+                      //     ));
                     },
                     child: Text(
                       MyStrings.add,
@@ -234,7 +248,10 @@ class _AddSchoolState extends State<AddSchool> {
                   } else {
                     return PrimaryButton(
                       title: MyStrings.submit,
-                      onPressed: () {
+                      onPressed: () async {
+
+                              await SharedPref.saveUrl("${schoolUrlController}"+"mobileappservice/Api/");
+          log("schooooooooooooooolurl ----------->${"${schoolUrlController}"+"mobileappservice/Api/"}");
                         if (_formKey.currentState!.validate()) {
                           context.read<AddSchoolCubit>().saveToHive(
                               schoolUrlController.text.trim(),
@@ -313,6 +330,7 @@ class _AddSchoolState extends State<AddSchool> {
 
                     NavigationService.navigateTo(
                         LoginScreen(
+
                           title: schoolNameController.text,
                           schoolLogo: state.schoolPhoto,
                           schoolUrl: schoolUrlController.text +
@@ -410,6 +428,10 @@ class _AddSchoolState extends State<AddSchool> {
     }
     if (value.length < 3) {
       return MyStrings.schoolNameLeastName;
+    }
+
+     if (value.trim().isEmpty) {
+      return MyStrings.enterSchoolName;
     }
     return null;
   }

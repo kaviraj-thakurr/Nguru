@@ -321,7 +321,7 @@ class StoryViewState extends State<StoryView>
 
   @override
   void dispose() {
-    _animationController.dispose();
+   // _animationController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -372,7 +372,8 @@ class StoryViewState extends State<StoryView>
                                     MaterialPageRoute(
                                         builder: (context) =>
                                              DisciplineScreen(startDate: widget.startDate ,endDate: widget.endDate,)))
-                                : null
+                                : null,
+                                 _animationController.dispose(),
                   },
               child: SvgPicture.asset(
                 MyAssets.backArrow,

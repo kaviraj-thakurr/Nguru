@@ -115,6 +115,7 @@ class _ExaminationScreenMarksState extends State<ExaminationScreenMarks> {
                                                     ? "${marks.writtenObtainMarks}/${marks.maxWrittenMarks}"
                                                     : "-",
                                                 style: FontUtil.subMarks,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ))
                                         .toList() ??

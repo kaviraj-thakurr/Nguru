@@ -5,7 +5,7 @@ import 'package:nguru/repo/api_calls.dart';
 class SettingScreenCubit extends Cubit<SettingScreenState> {
   final AuthRepo? authRepo;
 
-  SettingScreenCubit(this.authRepo) : super(SettingScreenLoadingState());
+  SettingScreenCubit(this.authRepo) : super(SettingScreenInitialState());
 
 
      // initiating values

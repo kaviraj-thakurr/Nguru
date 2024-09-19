@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
 import 'package:nguru/logic/add_school_cubit/addschool_state.dart';
 import 'package:nguru/repo/api_calls.dart';
+import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 
 class AddSchoolCubit extends Cubit<AddSchoolState> {
   final AuthRepo? authRepo;
@@ -45,6 +46,8 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
         schoolName,
         subDomain,schoolNickName
       );
+      await SharedPref.saveUrl(schoolName+"mobileappservice/Api/");
+          log("schooooooooooooooolurl ----------->${schoolName+"mobileappservice/Api/"}");
 
       openAddSchoolBox();
       if (result != null) {
@@ -69,6 +72,7 @@ class AddSchoolCubit extends Cubit<AddSchoolState> {
           //   ));
           // }
           
+
           if (isNavigating) {
             emit(AddSchoolSuccessState(
               schoolName: result.schoolName,

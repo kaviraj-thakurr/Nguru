@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,15 +38,16 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   var getUserName;
 
-  Future<String> getUerName() async {
-    getUserName = await SharedPref.getUerName();
-    return getUserName;
-  }
-
   @override
   void initState() {
     context.read<SettingScreenCubit>().initiatingValues();
     super.initState();
+    getUerName();
+  }
+
+  Future<String> getUerName() async {
+    getUserName = await SharedPref.getUerName();
+    return getUserName;
   }
 
   @override
@@ -96,101 +98,94 @@ class _SettingScreenState extends State<SettingScreen> {
                         gender:
                             state.studentProfileState.personalInfo?.gender ??
                                 "",
-                      ),
-                      Center(
-                        child: ShaderMask(
-                          blendMode: BlendMode.srcIn,
-                          shaderCallback: (Rect bounds) {
-                            return MyColors.buttonColors.createShader(bounds);
-                          },
-                          child: Builder(builder: (context) {
-                            return GestureDetector(
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return buildLogoutAlertDialog(
-                                    context: context,
-                                    onLogout: () => context
-                                        .read<SignoutCubit>()
-                                        .signout()
-                                        .then((value) =>
-                                            SharedPref.saveLoggedInStatus(
-                                                false))
-                                        .then(
-                                      (value) async {
-                                        String schoolNickName = await SharedPref
-                                                .getSchoolNickName() ??
-                                            "";
-                                        String schoolSubDomain =
-                                            await SharedPref.getSubDomain() ??
-                                                "";
-                                        String schoolUrl =
-                                            await SharedPref.getSchoolUrl() ??
-                                                "";
-
-                                        // ignore: use_build_context_synchronously
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => LoginScreen(
-                                                    username: getUserName,
-                                                    schoolNickName:
-                                                        schoolNickName,
-                                                    subDomain: schoolSubDomain,
-                                                    trimmedSchoolUrl: schoolUrl,
-                                                  )),
-                                          (Route<dynamic> route) => false,
-                                        );
-                                      },
-                                    ),
-                                    onCancel: () => Navigator.pop(context),
-                                  );
-                                },
-                              ),
-                              child: Text(
-                                MyStrings.signOut,
-                                style: FontUtil.customStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    textColor: MyColors.boldTextColor),
-                              ),
-                            );
-                          }),
-                        ),
+                       studentPicture:   state.studentProfileState.personalInfo?.studentPicture ?? "", 
                       ),
                     ],
                   );
                 } else if (state is StudentProfileErrorState) {
-                  return customSettingProfileWidget(
-                      context, screenWidth, screenHeight, "Name: N/A", "N/A", "N/A",bloodGroup: "N/A",gender: "N/A");
+                  return customSettingProfileWidget(context, screenWidth,
+                      screenHeight, "Name: N/A", "N/A", "N/A",
+                      bloodGroup: "N/A", gender: "N/A");
                 } else {
                   return customSettingProfileWidget(
-                      context, screenWidth, screenHeight, "", "", "");
+                      context, screenWidth, screenHeight, "", "", "",);
                 }
               }),
-              
-                      SizedBox(
-                        height: screenHeight * 0.58,
-                        width: double.infinity,
-                        child: ListView.builder(
-                            itemCount: SettingItem.values.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: settingItemsListTile(
-                                    context, SettingItem.values[index],
-                                    isTapped: isTap,
-                                    onToggleChanged: (bool value) {
-                                  setState(() {
-                                    isTap = !isTap;
-                                    log("istap $isTap");
-                                  });
-                                  return isTap;
-                                }, isNotificationTile: false),
-                              );
-                            }),
+              SizedBox(
+                height: screenHeight * 0.58,
+                width: double.infinity,
+                child: ListView.builder(
+                    itemCount: SettingItem.values.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: settingItemsListTile(
+                            context, SettingItem.values[index], isTapped: isTap,
+                            onToggleChanged: (bool value) {
+                          setState(() {
+                            isTap = !isTap;
+                            log("istap $isTap");
+                          });
+                          return isTap;
+                        }, isNotificationTile: false),
+                      );
+                    }),
+              ),
+              20.heightBox,
+              Center(
+                child: ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (Rect bounds) {
+                    return MyColors.buttonColors.createShader(bounds);
+                  },
+                  child: Builder(builder: (context) {
+                    return GestureDetector(
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return buildLogoutAlertDialog(
+                            context: context,
+                            onLogout: () => context
+                                .read<SignoutCubit>()
+                                .signout()
+                                .then((value) =>
+                                    SharedPref.saveLoggedInStatus(false))
+                                .then(
+                              (value) async {
+                                String schoolNickName =
+                                    await SharedPref.getSchoolNickName() ?? "";
+                                String schoolSubDomain =
+                                    await SharedPref.getSubDomain() ?? "";
+                                String schoolUrl =
+                                    await SharedPref.getSchoolUrl() ?? "";
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen(
+                                            username: getUserName,
+                                            schoolNickName: schoolNickName,
+                                            subDomain: schoolSubDomain,
+                                            trimmedSchoolUrl: schoolUrl,
+                                          )),
+                                  (Route<dynamic> route) => false,
+                                );
+                              },
+                            ),
+                            onCancel: () => Navigator.pop(context),
+                          );
+                        },
                       ),
-                      20.heightBox,
+                      child: Text(
+                        MyStrings.signOut,
+                        style: FontUtil.customStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            textColor: MyColors.boldTextColor),
+                      ),
+                    );
+                  }),
+                ),
+              ),
               BlocConsumer<SignoutCubit, SignoutState>(
                   builder: (context, state) {
                 return const SizedBox();
@@ -291,7 +286,8 @@ Widget customSettingProfileWidget(
     String classAndSession,
     String admissionNumber,
     {String? bloodGroup,
-    String? gender}) {
+    String? gender,
+      String? studentPicture,}) {
   return Container(
     alignment: Alignment.center,
     width: double.infinity,
@@ -304,17 +300,44 @@ Widget customSettingProfileWidget(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const CircleAvatar(
-              radius: 30,
-              backgroundColor: MyColors.greyShade_4,
-              child: Icon(Icons.person),
-            ),
+          studentPicture==null || studentPicture ==""?
+          
+            CircleAvatar(
+                  radius: 30,
+                
+                  backgroundColor: MyColors.greyShade_4,
+                  child:  Icon(Icons.person,
+                          color: Colors.white) 
+                      
+                )
+                :
+
+            CircleAvatar(
+                  radius: 30,
+                  backgroundImage: studentPicture.isNotEmpty
+                      ? Image.memory(
+                          base64Decode(studentPicture),
+                          fit: BoxFit.fill,
+                        ).image
+                      : null, // Display the network image if URL is provided
+                  backgroundColor: MyColors.greyShade_4,
+                  child: studentPicture.isEmpty
+                      ? const Icon(Icons.person,
+                          color: Colors.white) // Fallback icon if no image
+                      : null,
+                ),
             10.widthBox,
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name,style: FontUtil.customStyle(fontSize: 14, fontWeight: FontWeight.w500, textColor: MyColors.boldTextColor),),
+                Text(
+                  name,
+                  style: FontUtil.customStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      textColor: MyColors.boldTextColor),
+                ),
                 8.heightBox,
                 Row(
                   children: [
@@ -334,7 +357,7 @@ Widget customSettingProfileWidget(
                         MyColors.yellowShade_5),
                     5.widthBox,
                     customTags(
-                        "$gender",
+                       gender == "M" ? "Male" : gender =="F" ? "Female" :"",
                         MyColors.greenShade_3.withOpacity(0.2),
                         MyColors.greenShade_3)
                   ],
@@ -348,17 +371,16 @@ Widget customSettingProfileWidget(
   );
 }
 
-
 // Navigation on particular screen by clicking on it
 void navigateBasedOnTitle(BuildContext context, SettingItem item) {
   switch (item) {
     case SettingItem.myProfile:
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MyProfileScreen(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const MyProfileScreen(),
+      //   ),
+      // );
       break;
 
     case SettingItem.changeSibling:

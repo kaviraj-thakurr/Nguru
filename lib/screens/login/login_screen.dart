@@ -81,14 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
       schoolUrlGlobal =
           "${addSchoolList?.elementAt(index).schoolUrl}${addSchoolList?.elementAt(index).subDomain}" ??
               "";
-      
     }
     if (addSchoolList?.length == 1) {
       selectedRadio = addSchoolList?.elementAt(0).schoolNickName ?? "";
       schoolUrlGlobal =
           "${addSchoolList?.elementAt(0).schoolUrl}${addSchoolList?.elementAt(0).subDomain}" ??
               "";
-      
     }
 
     removeDuplicateSchools(addSchoolList);
@@ -360,7 +358,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else {
                       return PrimaryButton(
                         title: MyStrings.signIn,
-                        onPressed: () {
+                        onPressed: () async {
+                          await SharedPref.saveUsername(
+                              userNameController.text.trim());
                           if (_formKey.currentState!.validate()) {
                             context.read<LoginCubit>().logIn(
                                   userNameController.text.trim(),
@@ -385,6 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       NavigationService.navigateTo(
                           const NguruDashboardScreen(), context);
+                   //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const NguruDashboardScreen()));
                     } else if (state is LoginForgetPasswordState) {
                       isFromForgotPassword = false;
                       NavigationService.navigateTo(

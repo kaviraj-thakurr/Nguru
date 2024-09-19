@@ -13,6 +13,7 @@ import 'package:nguru/models/change_siblings_model.dart';
 import 'package:nguru/models/change_session_model.dart';
 import 'package:nguru/models/chatMessagesList.dart';
 import 'package:nguru/models/chatsend_button_model.dart';
+import 'package:nguru/models/circularDetailsModel.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/communication_models.dart';
 import 'package:nguru/models/contact_us_model.dart';
@@ -59,14 +60,15 @@ class AuthRepo {
 
   //------------------------------------this api method for add school screen---------> //
 
-  Future<AddSchoolModel> addSchool(String schoolurl, String subDomain,String schoolNickName) async {
+  Future<AddSchoolModel> addSchool(
+      String schoolurl, String subDomain, String schoolNickName) async {
     String fullSchoolUrl = "$schoolurl$subDomain";
 
     try {
       await SharedPref.saveSchoolUrl(fullSchoolUrl);
-       await SharedPref.saveTrimmedUrl(schoolurl);
+      await SharedPref.saveTrimmedUrl(schoolurl);
       await SharedPref.saveSubDomain(subDomain);
-       await SharedPref.saveSchoolNickName(schoolNickName);
+      await SharedPref.saveSchoolNickName(schoolNickName);
       final res = await _myService.networkPost(
         url: EndUrl.addSchool,
         data: {
@@ -111,11 +113,8 @@ class AuthRepo {
 
   Future<ForgetPassWordModel> forgotPassword(String userName) async {
     try {
-      final res =
-          await _myService.networkPost(
-            isStagingLink: true,
-            url: EndUrl.forgetPassword,
-             data: {
+      final res = await _myService
+          .networkPost(isStagingLink: true, url: EndUrl.forgetPassword, data: {
         "deviceToken":
             "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
         "deviceType": "1",
@@ -335,6 +334,49 @@ class AuthRepo {
     }
   }
 
+////// CIRCULAR DETAIL ///
+
+  Future<CircularDetailModel> getCircularDetails({
+    String? deviceToken,
+    String? deviceType,
+    String? page,
+    //  required String password,
+    String? schoolUrl,
+    int? circularID,
+    String? circularNo,
+    // required String userName
+  }) async {
+    try {
+      String schoolUrl = await SharedPref.getSchoolUrl() ?? "";
+      var userID = await SharedPref.getUserID() ?? "";
+      var schoolID = await SharedPref.getSchoolID();
+      var studentID = await SharedPref.getStudentID();
+      var sessionID = await SharedPref.getSessionId();
+      final res = await _myService.networkPost(
+          isStagingLink: true,
+          url: EndUrl.circularDetailList,
+          data: {
+            "circularID": circularID,
+            "circularNo": circularNo,
+
+            "type": 1,
+            "pageSize": 1000,
+           "pageNumber": 1,
+            "userID": userID,
+            "schoolID": schoolID,
+            "studentID": studentID,
+            "sessionID": sessionID,
+            "schoolURL": schoolUrl,
+          });
+      CircularDetailModel circularDetailModel =
+          circularDetailModelFromJson(res.toString());
+      return circularDetailModel;
+    } catch (e) {
+      print(e.toString());
+      throw Exception("Failed to login: $e");
+    }
+  }
+
   ////////////////////////////////////////////////     Dicipline STORY ON TAP      //////////////////////////////////////////////////////
 
   Future<DisciplineModel> getCurrentDicipline({
@@ -470,8 +512,6 @@ class AuthRepo {
     }
   }
 
-
-
   ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
 
   Future<ResetPasswordModel> resetPassword({
@@ -512,62 +552,6 @@ class AuthRepo {
       throw Exception("Failed to logout: $e");
     }
   }
-
-
-
-    ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
-
-String cleanJsonString(String str) {
-  // Replace single quotes around keys with double quotes
-  str = str.replaceAllMapped(
-    RegExp(r'(\w+):'), (match) => '"${match.group(1)}":'
-  );
-
-  // Replace single quotes around string values with double quotes
-  str = str.replaceAllMapped(
-    RegExp(r'(?<=:\s*)(\w+)(?=,|\}|\s)'), (match) => '"${match.group(1)}"'
-  );
-
-  return str;
-}
-
-Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
-  int? pageNumber,
-}) async {
-  try {
-    // Make the network request
-    final res = await _myService.networkPost(
-      url: EndUrl.changePasswordPolicy,
-      isStagingLink: true,
-      data: {
-        "userID": await SharedPref.getUserID(),
-        "schoolID": await SharedPref.getSchoolID(),
-        "studentID": await SharedPref.getStudentID(),
-        "sessionID": await SharedPref.getSessionId(),
-        "schoolURL": await SharedPref.getSchoolUrl(),
-      },
-    );
-
-    // Extract the response body and clean it
-    final responseBody = res.data.toString();
-    final cleanedResponseBody = cleanJsonString(responseBody);
-
-    // Log the cleaned response for debugging
-    log(cleanedResponseBody);
-
-    // Parse the cleaned JSON string into a list of ResetPasswordPolicyModel
-    List<ResetPasswordPolicyModel> resetResponse =
-        resetPasswordPolicyModelFromJson(cleanedResponseBody);
-
-    return resetResponse;
-  } catch (e) {
-    log(e.toString());
-    throw Exception("Failed to get reset password policy: $e");
-  }
-}
-
-
-
 
   ////////////////////////////////////////////////     FEES API      //////////////////////////////////////////////////////
 
@@ -742,32 +726,29 @@ Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
   Future<ChatSendButton> sendMessageButton(
       String? message, int? appMessageID) async {
     try {
-      final res = await _myService.networkPost(url: EndUrl.sendMessage,isStagingLink: true, 
-      data:
-    {
-	"appMessageID":appMessageID,
-	"circularID":0,
-	"content":message,
-	"contentType":0,
-	"createdForUserId":"114989",
-	"downloadAttachment":0,
-	"isNotification":0,
-	"messageTypeId":0,
-	"month":0,
-	"pageNumber":0,
-	"pageSize":0,
-	"schoolID":await SharedPref.getSchoolID(),
-	"schoolUrl":await SharedPref.getSchoolUrl(),
-	"sessionID":await SharedPref.getSessionId(),
-	"studentID":await SharedPref.getStudentID(),
-	"subjectID":0,
-	"type":0,
-	"userID":await SharedPref.getUserID(),
-	"year":0
-}
+      final res = await _myService
+          .networkPost(url: EndUrl.sendMessage, isStagingLink: true, data: {
+        "appMessageID": appMessageID,
+        "circularID": 0,
+        "content": message,
+        "contentType": 0,
+        "createdForUserId": "114989",
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 0,
+        "pageSize": 0,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "subjectID": 0,
+        "type": 0,
+        "userID": await SharedPref.getUserID(),
+        "year": 0
+      });
 
-      );
-      
       ChatSendButton chatSendButton = chatSendButtonFromJson(res.toString());
       return chatSendButton;
     } catch (e) {
@@ -962,26 +943,20 @@ Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
     }
   }
 
-
-  
   ////////////////////////////CHANGE SIBLINGS //////////////////////////
 
-
-Future<ChangeSiblingsModel> getSiblingsList() async {
+  Future<ChangeSiblingsModel> getSiblingsList() async {
     try {
-      final res =
-          await _myService.networkPost(
-            url: EndUrl.changeSiblings,
-            isStagingLink: true,
-             data: {
- 
-  "userID":  await SharedPref.getUserID(),
-  "schoolID":  await SharedPref.getSchoolID(),
-  "studentID":  await SharedPref.getStudentID(),
-  "sessionID":  await SharedPref.getSessionId(),
-  "schoolURL":  await SharedPref.getSchoolUrl(),
-});
-      ChangeSiblingsModel changeSiblingsModel = changeSiblingsModelFromJson(res.toString());
+      final res = await _myService
+          .networkPost(url: EndUrl.changeSiblings, isStagingLink: true, data: {
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolURL": await SharedPref.getSchoolUrl(),
+      });
+      ChangeSiblingsModel changeSiblingsModel =
+          changeSiblingsModelFromJson(res.toString());
       return changeSiblingsModel;
     } catch (e) {
       log(e.toString());
@@ -989,26 +964,19 @@ Future<ChangeSiblingsModel> getSiblingsList() async {
     }
   }
 
-
 /////////////////////////// Exam Marks List //////////////////////////////
 
-Future<ExamMarksModel> getExamMarks() async {
+  Future<ExamMarksModel> getExamMarks() async {
     try {
-      final res = await _myService.networkPost(
-          isStagingLink: true,
-          url: EndUrl.examMarksList,
-          data: 
- {
-
- "userID":await SharedPref.getUserID(),
-  "schoolID": await SharedPref.getSchoolID(),
- "studentID":await SharedPref.getStudentID(),
-"sessionID":await SharedPref.getSessionId(),
- "schoolUrl":await SharedPref.getSchoolUrl(),
-}
-          );
-      ExamMarksModel examMarksModel =
-         examMarksModelFromJson(res.toString());
+      final res = await _myService
+          .networkPost(isStagingLink: true, url: EndUrl.examMarksList, data: {
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+      });
+      ExamMarksModel examMarksModel = examMarksModelFromJson(res.toString());
       return examMarksModel;
     } catch (e) {
       print(e.toString());
@@ -1016,37 +984,30 @@ Future<ExamMarksModel> getExamMarks() async {
     }
   }
 
-
   //////////////////////////////Report Card List ////////////////////////
-  
- Future<ReportCardModel> getReportCardList() async {
-    try {
-      final res = await _myService.networkPost(
-          isStagingLink: true,
-          url: EndUrl.reportCardList,
-          data: 
-     {
-"appMessageID":0,
- "circularID":0,
-  "contentType":0,
- "downloadAttachment":0,
-  "isNotification":0,
-"messageTypeId":0,
- "month":0,
-"pageNumber":1,
- "pageSize":8,
- "schoolID":await SharedPref.getSchoolID(),
- "schoolUrl":await SharedPref.getSchoolUrl(),
- "sessionID":await SharedPref.getSessionId(),
-"studentID":await SharedPref.getStudentID(),
 
-"type":0,
- "userID":await SharedPref.getUserID(),
-"year":0
-}
-          );
-      ReportCardModel reportCardModel =
-          reportCardModelFromJson(res.toString());
+  Future<ReportCardModel> getReportCardList() async {
+    try {
+      final res = await _myService
+          .networkPost(isStagingLink: true, url: EndUrl.reportCardList, data: {
+        "appMessageID": 0,
+        "circularID": 0,
+        "contentType": 0,
+        "downloadAttachment": 0,
+        "isNotification": 0,
+        "messageTypeId": 0,
+        "month": 0,
+        "pageNumber": 1,
+        "pageSize": 8,
+        "schoolID": await SharedPref.getSchoolID(),
+        "schoolUrl": await SharedPref.getSchoolUrl(),
+        "sessionID": await SharedPref.getSessionId(),
+        "studentID": await SharedPref.getStudentID(),
+        "type": 0,
+        "userID": await SharedPref.getUserID(),
+        "year": 0
+      });
+      ReportCardModel reportCardModel = reportCardModelFromJson(res.toString());
       return reportCardModel;
     } catch (e) {
       print(e.toString());
@@ -1054,24 +1015,20 @@ Future<ExamMarksModel> getExamMarks() async {
     }
   }
 
-
-
 ///////////////////////////////// GET EXAM SCHEDULE LIST //////////////////////
-  
-Future<ScheduleModel> getScheduleList() async {
+
+  Future<ScheduleModel> getScheduleList() async {
     try {
-      final res =
-          await _myService.networkPost(
-            url: EndUrl.examScheduleList,
-            isStagingLink: true,
-             data: {
- 
-  "userID":  await SharedPref.getUserID(),
-  "schoolID":  await SharedPref.getSchoolID(),
-  "studentID":  await SharedPref.getStudentID(),
-  "sessionID":  await SharedPref.getSessionId(),
-  "schoolURL":  await SharedPref.getSchoolUrl(),
-});
+      final res = await _myService.networkPost(
+          url: EndUrl.examScheduleList,
+          isStagingLink: true,
+          data: {
+            "userID": await SharedPref.getUserID(),
+            "schoolID": await SharedPref.getSchoolID(),
+            "studentID": await SharedPref.getStudentID(),
+            "sessionID": await SharedPref.getSessionId(),
+            "schoolURL": await SharedPref.getSchoolUrl(),
+          });
       ScheduleModel scheduleModel = scheduleModelFromJson(res.toString());
       return scheduleModel;
     } catch (e) {
@@ -1079,7 +1036,6 @@ Future<ScheduleModel> getScheduleList() async {
       throw Exception("Failed to fetch schedule list: $e");
     }
   }
-
 
   // LIBRARY SEARCH
 
@@ -1108,8 +1064,6 @@ Future<ScheduleModel> getScheduleList() async {
       throw Exception("Failed to fetch library book search list: $e");
     }
   }
-
-
 
 // RESERVE A BOOK
 
@@ -1430,9 +1384,7 @@ Future<ScheduleModel> getScheduleList() async {
     }
   }
 
-
- ////////////////////////////////////////////////    SEND FEEDBACK    //////////////////////////////////////////////////////
-
+  ////////////////////////////////////////////////    SEND FEEDBACK    //////////////////////////////////////////////////////
 
   Future<Map<String, String>> sendFeedback(
       String name, String email, String feedback) async {
@@ -1462,9 +1414,7 @@ Future<ScheduleModel> getScheduleList() async {
     }
   }
 
-
-   ////////////////////////////////////////////////    PUSH NOTIFICATION    //////////////////////////////////////////////////////
-
+  ////////////////////////////////////////////////    PUSH NOTIFICATION    //////////////////////////////////////////////////////
 
   Future<Map<String, String>> pushNotification(int isNotification) async {
     try {
@@ -1519,4 +1469,58 @@ Future<ScheduleModel> getScheduleList() async {
       throw Exception("Failed to fetch student profile data: $e");
     }
   }
+
+
+
+      ////////////////////////////////////////////////     REST PASSWORD API      //////////////////////////////////////////////////////
+
+String cleanJsonString(String str) {
+  // Replace single quotes around keys with double quotes
+  str = str.replaceAllMapped(
+    RegExp(r'(\w+):'), (match) => '"${match.group(1)}":'
+  );
+
+  // Replace single quotes around string values with double quotes
+  str = str.replaceAllMapped(
+    RegExp(r'(?<=:\s*)(\w+)(?=,|\}|\s)'), (match) => '"${match.group(1)}"'
+  );
+
+  return str;
+}
+
+Future<List<ResetPasswordPolicyModel>> getResetPasswordPolicy({
+  int? pageNumber,
+}) async {
+  try {
+    // Make the network request
+    final res = await _myService.networkPost(
+      url: EndUrl.changePasswordPolicy,
+      isStagingLink: true,
+      data: {
+        "userID": await SharedPref.getUserID(),
+        "schoolID": await SharedPref.getSchoolID(),
+        "studentID": await SharedPref.getStudentID(),
+        "sessionID": await SharedPref.getSessionId(),
+        "schoolURL": await SharedPref.getSchoolUrl(),
+      },
+    );
+
+    // Extract the response body and clean it
+    final responseBody = res.data.toString();
+    final cleanedResponseBody = cleanJsonString(responseBody);
+
+    // Log the cleaned response for debugging
+    log(cleanedResponseBody);
+
+    // Parse the cleaned JSON string into a list of ResetPasswordPolicyModel
+    List<ResetPasswordPolicyModel> resetResponse =
+        resetPasswordPolicyModelFromJson(cleanedResponseBody);
+
+    return resetResponse;
+  } catch (e) {
+    log(e.toString());
+    throw Exception("Failed to get reset password policy: $e");
+  }
+}
+
 }

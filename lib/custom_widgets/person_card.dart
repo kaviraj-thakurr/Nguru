@@ -1,4 +1,7 @@
 
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
@@ -12,7 +15,7 @@ Widget personInfoCard(
    // Function(String) onNameChange,
     ) {
  
-
+      log("student profile picture: $profileImage");
   // Ensure the personName is a valid value
  
 
@@ -33,20 +36,42 @@ Widget personInfoCard(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: [
-        profileImage.isNotEmpty
-            ? Flexible(
-          flex: 2,
-          child: CircleAvatar(
-            radius: 45.0,
-            backgroundImage: NetworkImage(profileImage),
-          ),
-        )
-            :const Flexible(
-          child:  CircleAvatar(
-            radius: 45.0,
-            backgroundImage:
-            NetworkImage('https://via.placeholder.com/150'),
-          ),
+       //profileImage.isNotEmpty
+        //     ? Flexible(
+        //   flex: 2,
+        //   child: CircleAvatar(
+        //     radius: 45.0,
+        //     backgroundImage: NetworkImage(profileImage),
+        //   ),
+        // )
+        //     :
+             Flexible(
+          child:  profileImage==null || profileImage =="" || profileImage =="null"?
+          
+          const  CircleAvatar(
+                  radius: 30,
+                
+                  backgroundColor: MyColors.greyShade_4,
+                  child:  Icon(Icons.person,
+                          color: Colors.white) 
+                      
+                )
+                :
+
+            CircleAvatar(
+                  radius: 30,
+                  backgroundImage: profileImage.isNotEmpty
+                      ? Image.memory(
+                          base64Decode(profileImage),
+                          fit: BoxFit.fill,
+                        ).image
+                      : null, // Display the network image if URL is provided
+                  backgroundColor: MyColors.greyShade_4,
+                  child: profileImage.isEmpty
+                      ? const Icon(Icons.person,
+                          color: Colors.white) // Fallback icon if no image
+                      : null,
+                ),
         ),
 
         // for drop down value change (will make it bottom drop down)

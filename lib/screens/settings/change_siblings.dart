@@ -48,9 +48,10 @@ class _ChangeSiblingsState extends State<ChangeSiblings> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding10),
+            padding: const EdgeInsets.all(padding18),
             child: Column(
               children: [
+                10.heightBox,
                 dashboardAppBar(),
                 5.heightBox,
                 screenTitleHeader("Change Siblings",

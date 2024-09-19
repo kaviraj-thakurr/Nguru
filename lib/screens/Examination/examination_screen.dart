@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:nguru/custom_widgets/appbar.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
@@ -315,43 +314,32 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  subject,
-                  style: FontUtil.customStyle(
-                    fontSize: 16.h,
-                    fontWeight: FontWeight.w500,
-                    textColor: MyColors.addButtonColor,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  term ?? "",
-                  style: FontUtil.customStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    textColor: MyColors.teacherNameColor,
-                  ),
-                ),
-              ],
+            Text(
+              subject,
+              style: FontUtil.customStyle(
+                fontSize: 14.h,
+                fontWeight: FontWeight.w500,
+                textColor: MyColors.addButtonColor,
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: onTap,
-                  icon: Icon(
-                    selectedCategoryIndex == 0
-                        ? Icons.arrow_downward
-                        : selectedCategoryIndex == 1
-                            ? Icons.arrow_forward
-                            : Icons.arrow_forward,
-                  ),
-                ),
-              ],
+                          const  SizedBox(height: 2),
+            Text(
+              term ?? "",
+              style: FontUtil.customStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                textColor: MyColors.teacherNameColor,
+              ),
+            ),
+            IconButton(
+              onPressed: onTap,
+              icon: Icon(
+                selectedCategoryIndex == 0
+                    ? Icons.arrow_downward
+                    : selectedCategoryIndex == 1
+                        ? Icons.arrow_forward
+                        : Icons.arrow_forward,
+              ),
             ),
           ],
         ),

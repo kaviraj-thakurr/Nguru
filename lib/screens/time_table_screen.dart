@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
 import 'package:nguru/custom_widgets/custom_gradient_button.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
@@ -51,7 +52,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 customAppBar(),
                 screenTitleHeader(MyStrings.timeTable,
                     onPressed: () => Navigator.pop(context)),
-                40.heightBox,
+                20.heightBox,
                 weekDaysRow(),
                 30.heightBox,
                 Expanded(
@@ -204,7 +205,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                   textColor: MyColors.appColor1),
             ),
             Text(
-              time,
+              dateTimeFormate(time),
               style: FontUtil.customStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -255,7 +256,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
     }
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.080,
+      height: MediaQuery.of(context).size.height * 0.090,
       width: double.maxFinite,
       decoration: BoxDecoration(
           color: MyColors.searchBox, borderRadius: BorderRadius.circular(6)),
@@ -270,7 +271,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 RichText(
                   text: TextSpan(
                     style: FontUtil.customStyle(
-                      fontSize: 26.h,
+                      fontSize: 24.h,
                       fontWeight: FontWeight.w600,
                       textColor: MyColors.addButtonColor,
                     ),
@@ -300,7 +301,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 
                  
                   style: FontUtil.customStyle(
-                    fontSize: 17.h,
+                    fontSize: 14.h,
                     fontWeight: FontWeight.w500,
                     textColor: MyColors.teacherNameColor,
                   ),
@@ -310,7 +311,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                   child: Text(
                     subject,
                     style: FontUtil.customStyle(
-                      fontSize: 17.h,
+                      fontSize: 14.h,
                       fontWeight: FontWeight.w500,
                       textColor: MyColors.teacherNameColor,
                     ),
@@ -331,7 +332,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                       textColor: MyColors.periodOrTimeColor),
                 ),
                 Text(
-                  "${item.time}",
+                 dateTimeFormate(item.time ?? ""),
                   style: FontUtil.customStyle(
                       fontSize: 12.h,
                       fontWeight: FontWeight.w500,
@@ -355,5 +356,41 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
     } else {
       return "th";
     }
+  }
+}
+
+
+String dateTimeFormate(String time) {
+  String timeRange = time;
+  
+  // Split the time range into start and end times
+  List<String> times = timeRange.split(' -');
+  if (times.length != 2) {
+    print('Invalid time range format');
+    return "";
+  }
+
+  String startTimeStr = times[0].trim();
+  String endTimeStr = times[1].trim();
+
+  // Define the input and output formats
+  DateFormat inputFormat = DateFormat('HH:mm:ss');
+  DateFormat outputFormat = DateFormat('h:mma');
+
+  try {
+    // Parse and format start time
+    DateTime startTime = inputFormat.parse(startTimeStr);
+    String formattedStartTime = outputFormat.format(startTime);
+
+    // Parse and format end time
+    DateTime endTime = inputFormat.parse(endTimeStr);
+    String formattedEndTime = outputFormat.format(endTime);
+
+    // Print the result
+    debugPrint('$formattedStartTime - $formattedEndTime');
+    return "$formattedStartTime - $formattedEndTime";
+  } catch (e) {
+    print('Error parsing time: $e');
+    return "";
   }
 }

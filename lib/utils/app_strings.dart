@@ -53,6 +53,7 @@ class MyStrings {
   static const String signIn = "Sign in";
   static const String forgotPassword = "Forgot password?";
   static const String enterSchoolUrl = "Enter School URL";
+  static const String schoolNameEmpty = "Enter School URL";
   static const String subdomainRequired = "Enter School Sub Domain";
   static const String enterUserNamePass = "Enter Username and Password";
   static const String nicknamerequired = "Nickname required";
@@ -113,6 +114,7 @@ class MyStrings {
 
   static const String error = "Some error occured!";
   static const String undefinedState = "Some undefined state error!";
+  static const String relaunchPlease = "Relaunch Please!";
   static const String assignment = "Assignment";
   static const String endDate = "End Date";
   static const String date = "Date";
@@ -170,6 +172,7 @@ class MyStrings {
 
     // Gallery
     static const String noGalleryItemsFound = "No Gallery Items Found!";
+    static const String bookDescription = "Book Description";
 
 
     // activity

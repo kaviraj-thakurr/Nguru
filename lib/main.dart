@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,8 @@ import 'package:nguru/logic/attendance_bar_chart/attendance_bar_chart_cubit.dart
 import 'package:nguru/logic/attendence/attendence_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/chatsend_button/chat_send_button_cubit.dart';
-import 'package:nguru/logic/circular/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_detail/curcular_detail_cubit.dart';
+import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
 import 'package:nguru/logic/communication/communication_cubit.dart';
 import 'package:nguru/logic/contact_us_cubit/contact_us_cubit.dart';
 import 'package:nguru/logic/create_communication/save_message_subject_cubit.dart';
@@ -55,17 +57,27 @@ import 'package:nguru/logic/transport/transport_cubit.dart';
 import 'package:nguru/repo/api_calls.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
-
-
-
+import 'package:nguru/services/firebase_api.dart';
+import 'package:nguru/utils/app_strings.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+final navigatorKey= GlobalKey<NavigatorState>();
 void main() async {
-
     WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: const FirebaseOptions(
+    apiKey: 'AIzaSyAP7vt3y0wlTJEs19Znobz9g0KtiO-dczg',
+    appId: '1:591088132412:android:f17c5cec7e501c87',
+    messagingSenderId: '591088132412',
+    projectId: 'niitparent-app',
+    storageBucket: 'xxx',
+  )
+);
+ // await FirebaseApi().initNotifications();
   await FlutterDownloader.initialize(
     debug: true, // Set to false for release
   );
+
 
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
@@ -89,7 +101,6 @@ Razorpay _razorpay = Razorpay();
   _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
   _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
   _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -119,19 +130,13 @@ var options = {
   }
 };
 
-// try{
-//   _razorpay.open(options);
-// }
-// catch(e){
 
-// }
 
 
 
 @override
   void dispose() {
     _razorpay.clear(); // Removes all listeners
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -275,6 +280,9 @@ var options = {
         BlocProvider(
           create: (context) => SettingScreenCubit(AuthRepo()),
         ),
+            BlocProvider(
+          create: (context) => CircularDetailsCubit(AuthRepo()),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -316,7 +324,7 @@ class _NguruMainScreenState extends State<NguruMainScreen> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is MainScreenLoadingState) {
-            return const Scaffold(
+            return const  Scaffold(
               body: SizedBox(),
             );
           } else if (state is MainScreenLoggedInStatusState) {
@@ -324,14 +332,14 @@ class _NguruMainScreenState extends State<NguruMainScreen> {
           } else if (state is MainScreenAddSchoolScreenState) {
             return const AddSchool(isAddSchoolScreen: false);
           } else if (state is MainScreenErrorState) {
-            return const Scaffold(
+            return const  Scaffold(
                 body: Center(
-              child: Text("Relaunch Please!"),
+              child: Text(MyStrings.relaunchPlease),
             ));
           } else {
             return const Scaffold(
                 body: Center(
-              child: Text("Undefined state!"),
+              child: Text(MyStrings.undefinedState),
             ));
           }
         },

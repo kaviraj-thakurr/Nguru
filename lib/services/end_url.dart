@@ -17,6 +17,7 @@ class EndUrl{
    static const String assignmentCalendarList = "Assignment/GetCalenderList/";
    static const String assignmentList = "Assignment/GetAssignmentList/";
    static const String currentCircularList = "Circular/GetMainList/";
+   static const String circularDetailList = 'Circular/GetDetailList';
    
    static const String currentDisciplineList = "Discipline/GetList/";
    static const String contactUs = "ContactUs/GetContact/";

@@ -14,6 +14,7 @@ Future <void> signout () async{
     final result = await authRepo?.logOut();
     if(result != null){
       if(result["responseCode"] == "200"){
+        
         emit(SignoutSuccessState(
           responseMessage: result["responseMessage"]
         ));

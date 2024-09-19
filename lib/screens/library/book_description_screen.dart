@@ -11,6 +11,7 @@ import 'package:nguru/models/library_book_search_model.dart';
 import 'package:nguru/models/library_history_model.dart';
 import 'package:nguru/models/library_issued_book_model.dart';
 import 'package:nguru/utils/app_assets.dart';
+import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -32,6 +33,7 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
    @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.white,
         body: Stack(children: [
       Image.asset(MyAssets.background_2),
       Column(children: [
@@ -46,7 +48,7 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
         ),
         Padding(
           padding: const EdgeInsets.all(15.0),
-          child: screenTitleHeader(MyStrings.changeSession,
+          child: screenTitleHeader(MyStrings.bookDescription,
               onPressed: () => Navigator.pop(context)),
         ),
         Expanded(
@@ -133,40 +135,43 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
 
                     ,
                  widget.librarySearch != null 
-                 ?   PrimaryButton(
-                      title: "Reserve",
-                       onPressed: (){
-                        customAlertDiaog(
-                "Reserve Book",
-                "Want to reserve ${widget.librarySearch?.bookName ?? ""} !",
-                "Cancel",
-                "Reserve",
-                context: context,
-                onSubmit: () => context.read<ReserveBookCubit>().reserveBook(
-                    widget. librarySearch?.bookId,
-                   widget.  librarySearch?.accessionNo,
-                   widget.  librarySearch?.issueReturnId)
-                  .then((value) => Navigator.pop(context)).then((value) =>
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content:
-                              BlocBuilder<ReserveBookCubit, ReserveBookState>(
-                                  builder: (context, state) {
-                        if (state is ReserveBookLoadingState) {
-                          return const Text("");
-                        }
-                        if (state is ReserveBookSuccessState) {
-                          return Text(
-                              "Reserve ${widget.librarySearch?.bookName ?? ""} Successfully");
-                        } else if (state is ReserveBookErrorState) {
-                          return Text("${state.message}");
-                        } else {
-                          return const SizedBox();
-                        }
-                      })))).then((value) =>{} ),
-                onCancel: () {
-                
-                  Navigator.pop(context);} );
-                       }) : SizedBox()
+                 ?   Padding(
+                   padding: const EdgeInsets.only(left: 10,right: 10),
+                   child: PrimaryButton(
+                        title: "Reserve",
+                         onPressed: (){
+                          customAlertDiaog(
+                                   "Reserve Book",
+                                   "Want to reserve ${widget.librarySearch?.bookName ?? ""} ?",
+                                   "Cancel",
+                                   "Reserve",
+                                   context: context,
+                                   onSubmit: () => context.read<ReserveBookCubit>().reserveBook(
+                      widget. librarySearch?.bookId,
+                     widget.  librarySearch?.accessionNo,
+                     widget.  librarySearch?.issueReturnId)
+                    .then((value) => Navigator.pop(context)).then((value) =>  Navigator.pop(context)).then((value) =>
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                BlocBuilder<ReserveBookCubit, ReserveBookState>(
+                                    builder: (context, state) {
+                          if (state is ReserveBookLoadingState) {
+                            return const Text("");
+                          }
+                          if (state is ReserveBookSuccessState) {
+                            return Text(
+                                "Reserve ${widget.librarySearch?.bookName ?? ""} Successfully");
+                          } else if (state is ReserveBookErrorState) {
+                            return Text("${state.message}");
+                          } else {
+                            return const SizedBox();
+                          }
+                        })))).then((value) =>{} ),
+                                   onCancel: () {
+                                   
+                    Navigator.pop(context);} );
+                         }),
+                 ) : SizedBox()
                   ],
                 ),
         )

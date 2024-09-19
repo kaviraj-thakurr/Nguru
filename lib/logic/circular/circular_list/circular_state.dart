@@ -8,7 +8,8 @@ class CircularLoadingState extends CircularState {}
 
 class CircularSuccessState extends CircularState {
    List<CircularList> circularList;
-   CircularSuccessState({  required this.circularList});
+   List<CircularList> storyCircularList;
+   CircularSuccessState({  required this.circularList, required this.storyCircularList});
 }
 
 

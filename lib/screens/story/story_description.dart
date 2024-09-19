@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
+import 'package:nguru/logic/circular/circular_detail/circular_detail_state.dart';
+import 'package:nguru/logic/circular/circular_detail/curcular_detail_cubit.dart';
 import 'package:nguru/models/assignment_models/assignment_list_model.dart';
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/models/discipline_model/discipline_model.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/custom_download_file.dart';
 import 'package:nguru/utils/remove_html_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -31,9 +36,83 @@ class StoryDescription extends StatefulWidget {
 }
 
 class _StoryDescriptionState extends State<StoryDescription> {
+
+
+  @override
+  void initState() {
+    context.read<CircularDetailsCubit>().getCurrentCircularDetails(circularID: widget.circularList?.circularId,circularNo: widget.circularList?.circularNo.toString());
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: widget.isCircular
+          ? BlocConsumer<CircularDetailsCubit,CircularDetailState>(
+            listener: (context, state) {
+              
+            },
+            builder: (context,state) {
+              if(state is CircularDetailLoadingState){
+
+              }
+
+            else  if(state is CircularDetailSuccessState){
+
+              return   GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1), // Shadow color
+                          spreadRadius: 3, // Spread radius
+                          blurRadius: 4, // Blur radius
+                          offset: const Offset(0, 7), // Offset of the shadow
+                        ),
+                      ],
+                    ),
+                    child: SvgPicture.asset(MyAssets.floatingActionDownloadButton),
+                  ),
+                  onTap: () => {
+                       
+                            onSaveWithDialogPressed(state.circularDetailList.contentData  ?? ""),
+                          
+                      });
+
+              }
+
+            else  if(state is CircularDetailErrorState){
+
+              return const SizedBox.shrink();
+
+              }
+
+              return GestureDetector(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1), // Shadow color
+                          spreadRadius: 3, // Spread radius
+                          blurRadius: 4, // Blur radius
+                          offset: const Offset(0, 7), // Offset of the shadow
+                        ),
+                      ],
+                    ),
+                    child: SvgPicture.asset(MyAssets.floatingActionDownloadButton),
+                  ),
+                  onTap: () => {
+                       
+                            // onSaveWithDialogPressed(
+                            //     widget.circularList![_currentIndex].base64Image),
+                          
+                      });
+            }
+          ) : const SizedBox(),
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),

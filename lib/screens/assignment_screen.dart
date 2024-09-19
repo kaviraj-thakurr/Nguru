@@ -85,7 +85,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
               dashboardAppBar(),
               10.heightBox,
               screenTitleHeader("Assignment",
-                  onPressed: () => Navigator.pop(context)),
+                  onPressed: () => {Navigator.pop(context),Navigator.pop(context)}),
               20.heightBox,
               AssignmentCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,startDate: widget.startDate ,endDate:widget.endDate ,),
               Expanded(

@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
+import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
-import 'package:nguru/logic/circular/circular_cubit.dart';
-import 'package:nguru/logic/circular/circular_state.dart';
+import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
+import 'package:nguru/logic/circular/circular_list/circular_state.dart';
+
 import 'package:nguru/models/circular_model/circular_model.dart';
 import 'package:nguru/screens/circular_calendar.dart';
 import 'package:nguru/screens/story/story_description.dart';
@@ -97,7 +99,7 @@ class _CircularScreenState extends State<CircularScreen> {
               },),
               10.heightBox,
               screenTitleHeader(MyStrings.circular,
-                  onPressed: () => Navigator.pop(context)),
+                  onPressed: () => {Navigator.pop(context),Navigator.pop(context)}),
               5.heightBox,
               CircularCalendar(isNotificationScreen: true,notificationScreenDate: widget.notificationScreenDate,startDate: widget.startDate,endDate: widget.endDate,),
               5.heightBox,
@@ -156,6 +158,11 @@ class _CircularScreenState extends State<CircularScreen> {
                                     return Column(
                                       children: [
                                         cardDesign(
+                                          onTap: (){
+
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> StoryDescription(isAssignment: false, isCircular: true, isDiscipline: false, assignmentList: null, circularList: circular, disciplineList:null)));
+
+                                          },
                                           context: context,
                                           circular: circular,
                                         ),
@@ -182,7 +189,10 @@ class _CircularScreenState extends State<CircularScreen> {
   }
 
   Widget cardDesign(
-      {required BuildContext context, required CircularList circular}) {
+      {required BuildContext context,
+
+      required void Function() onTap,
+       required CircularList circular}) {
   final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
 
@@ -203,15 +213,18 @@ class _CircularScreenState extends State<CircularScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    circular.subject ?? MyStrings.noSubject,
-                    style: FontUtil.circularTitle,
+                  InkWell(
+                    onTap:onTap,
+                    child: Text(
+                      circular.subject ?? MyStrings.noSubject,
+                      style: FontUtil.circularTitle,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        circular.description ?? MyStrings.noDescription,
+                        circular.circularDate ?? MyStrings.noDescription,
                         style: FontUtil.circularSubtitle,
                       ),
                       IconButton(

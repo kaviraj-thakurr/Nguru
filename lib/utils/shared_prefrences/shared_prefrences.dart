@@ -14,11 +14,19 @@ class SharedPref {
   static const String _startDate = "StartDate";
   static const String _endDate = "EndDate";
   static const String _isFromSelectSessionScreen = "SessionSelected";
+   static const String _fcmToken = "fcmToken";
 
   static const String _userName = "userName";
 
-//Save user Name
 
+//Save user Name
+  static Future<void> saveFcmToken(String fcmToken) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_fcmToken, fcmToken);
+  }
+
+
+//Save user Name
   static Future<void> saveUsername(String userName) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_userName, userName);
@@ -195,6 +203,13 @@ class SharedPref {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.getBool(_isFromSelectSessionScreen);
+  }
+
+    // Get fcm token
+  static Future<String?> getFcmToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString(_fcmToken);
   }
 
 //////////////////////////////////////////////////// CLEARING ALL SHARED PREFS
