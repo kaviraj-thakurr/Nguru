@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_search_bar.dart';
-import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_cubit.dart';
 import 'package:nguru/logic/calendar_event/calendar_event_state.dart';
 import 'package:nguru/models/calendar_event_model.dart';
@@ -13,6 +10,7 @@ import 'package:nguru/screens/event_calendar.dart';
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
+import 'package:nguru/utils/app_gapping.dart';
 import 'package:nguru/utils/app_strings.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -55,13 +53,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
       children: [
         Image.asset(MyAssets.background_2),
         Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(padding18),
             child: Column(
               children: [
                 10.heightBox,
-                                dashboardAppBar(),
-                                CustomSearchBar(controller: searchBarController),
-                                10.heightBox,
+                dashboardAppBar(),
+                CustomSearchBar(controller: searchBarController),
+                10.heightBox,
                 EventCalendar(
                   startDate: widget.startDate,
                   endDate: widget.endDate,
@@ -107,8 +105,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListView.builder(
                                     padding: EdgeInsets.zero,
-                                    itemCount: state
-                                        .calendarEventFilteredList?.length,
+                                    itemCount:
+                                        state.calendarEventFilteredList?.length,
                                     itemBuilder: (context, index) {
                                       return footer(
                                           index,

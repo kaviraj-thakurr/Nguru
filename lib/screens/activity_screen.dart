@@ -56,6 +56,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 10.heightBox,
                                   dashboardAppBar(),
                                   CustomSearchBar(controller: _searchController),
+                                  30.heightBox,
+                                  screenTitleHeader(MyStrings.activity,
+                    onPressed: () => Navigator.pop(context)),
                                   10.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,

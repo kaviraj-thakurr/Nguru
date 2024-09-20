@@ -13,7 +13,6 @@ import 'package:nguru/logic/signout/signout_state.dart';
 import 'package:nguru/logic/student_profile/student_profile_cubit.dart';
 import 'package:nguru/logic/student_profile/student_profile_state.dart';
 import 'package:nguru/screens/login/login_screen.dart';
-import 'package:nguru/screens/my_profile_screen.dart';
 import 'package:nguru/screens/reset_password_screen.dart';
 import 'package:nguru/screens/settings/add_feedback_screen.dart';
 import 'package:nguru/screens/settings/change_session_screen.dart';
@@ -70,10 +69,11 @@ class _SettingScreenState extends State<SettingScreen> {
             fit: BoxFit.fill,
           )),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(18.0),
             child: Column(children: [
-              20.heightBox,
+              10.heightBox,
               dashboardAppBar(),
+              10.heightBox,
               BlocBuilder<StudentProfileCubit, StudentProfileState>(
                   builder: (context, state) {
                 if (state is StudentProfileLoadingState) {
@@ -99,7 +99,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         gender:
                             state.studentProfileState.personalInfo?.gender ??
                                 "",
-                       studentPicture:   state.studentProfileState.personalInfo?.studentPicture ?? "", 
+                        studentPicture: state.studentProfileState.personalInfo
+                                ?.studentPicture ??
+                            "",
                       ),
                     ],
                   );
@@ -109,13 +111,20 @@ class _SettingScreenState extends State<SettingScreen> {
                       bloodGroup: "N/A", gender: "N/A");
                 } else {
                   return customSettingProfileWidget(
-                      context, screenWidth, screenHeight, "", "", "",);
+                    context,
+                    screenWidth,
+                    screenHeight,
+                    "",
+                    "",
+                    "",
+                  );
                 }
               }),
               SizedBox(
                 height: screenHeight * 0.58,
                 width: double.infinity,
                 child: ListView.builder(
+                    padding: EdgeInsets.zero,
                     itemCount: SettingItem.values.length,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -237,7 +246,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (state is SettingScreenSuccessState) {
-                      context.read<PushNotificationCubit>().pushNotification(state.toggleState);
+                      context
+                          .read<PushNotificationCubit>()
+                          .pushNotification(state.toggleState);
                       return notificationSwitch(state.toggleState, context);
                     } else {
                       return notificationSwitch(false, context);
@@ -276,15 +287,16 @@ Widget notificationSwitch(bool toggleValue, BuildContext context) {
 }
 
 Widget customSettingProfileWidget(
-    BuildContext context,
-    double screenWidth,
-    double screenHeight,
-    String name,
-    String classAndSession,
-    String admissionNumber,
-    {String? bloodGroup,
-    String? gender,
-      String? studentPicture,}) {
+  BuildContext context,
+  double screenWidth,
+  double screenHeight,
+  String name,
+  String classAndSession,
+  String admissionNumber, {
+  String? bloodGroup,
+  String? gender,
+  String? studentPicture,
+}) {
   return Container(
     alignment: Alignment.center,
     width: double.infinity,
@@ -297,32 +309,25 @@ Widget customSettingProfileWidget(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-          studentPicture==null || studentPicture ==""?
-          
-            CircleAvatar(
-                  radius: 30,
-                
-                  backgroundColor: MyColors.greyShade_4,
-                  child:  Icon(Icons.person,
-                          color: Colors.white) 
-                      
-                )
-                :
-
-            CircleAvatar(
-                  radius: 30,
-                  backgroundImage: studentPicture.isNotEmpty
-                      ? Image.memory(
-                          base64Decode(studentPicture),
-                          fit: BoxFit.fill,
-                        ).image
-                      : null, // Display the network image if URL is provided
-                  backgroundColor: MyColors.greyShade_4,
-                  child: studentPicture.isEmpty
-                      ? const Icon(Icons.person,
-                          color: Colors.white) // Fallback icon if no image
-                      : null,
-                ),
+            studentPicture == null || studentPicture == ""
+                ? CircleAvatar(
+                    radius: 30,
+                    backgroundColor: MyColors.greyShade_4,
+                    child: Icon(Icons.person, color: Colors.white))
+                : CircleAvatar(
+                    radius: 30,
+                    backgroundImage: studentPicture.isNotEmpty
+                        ? Image.memory(
+                            base64Decode(studentPicture),
+                            fit: BoxFit.fill,
+                          ).image
+                        : null, // Display the network image if URL is provided
+                    backgroundColor: MyColors.greyShade_4,
+                    child: studentPicture.isEmpty
+                        ? const Icon(Icons.person,
+                            color: Colors.white) // Fallback icon if no image
+                        : null,
+                  ),
             10.widthBox,
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -354,7 +359,11 @@ Widget customSettingProfileWidget(
                         MyColors.yellowShade_5),
                     5.widthBox,
                     customTags(
-                       gender == "M" ? "Male" : gender =="F" ? "Female" :"",
+                        gender == "M"
+                            ? "Male"
+                            : gender == "F"
+                                ? "Female"
+                                : "",
                         MyColors.greenShade_3.withOpacity(0.2),
                         MyColors.greenShade_3)
                   ],

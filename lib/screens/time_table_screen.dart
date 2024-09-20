@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/appbar.dart';
+import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_gradient_button.dart';
 import 'package:nguru/custom_widgets/screen_header.dart';
 import 'package:nguru/logic/timetable/timetable_cubit.dart';
@@ -45,11 +46,13 @@ class _TimetableScreenState extends State<TimetableScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(19.0),
+            padding: const  EdgeInsets.all(18),
             child: Column(
               children: [
                 10.heightBox,
-                customAppBar(),
+                                dashboardAppBar(),
+                              
+                                10.heightBox,
                 screenTitleHeader(MyStrings.timeTable,
                     onPressed: () => Navigator.pop(context)),
                 20.heightBox,

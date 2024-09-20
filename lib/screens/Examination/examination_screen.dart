@@ -83,178 +83,172 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(padding12),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Custom app bar
-                  dashboardAppBar(),
-                  5.heightBox,
-
-                  // Search bar
-                  CustomSearchBar(controller: searchController),
-                  12.heightBox,
-
-                  screenTitleHeader("Examination",
-                      onPressed: () => Navigator.pop(context)),
-
-                  5.heightBox,
-
-                  // Category selector
-                  buildSelector(buttons, selectedCategoryIndex, (int index) {
-                    setState(() {
-                      selectedCategoryIndex = index;
-                    });
+            padding: const EdgeInsets.all(padding18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+               10.heightBox,
+                              dashboardAppBar(),
+                              CustomSearchBar(controller: searchController),
+                              10.heightBox,
+                screenTitleHeader("Examination",
+                    onPressed: () => Navigator.pop(context)),
+            
+                5.heightBox,
+            
+                // Category selector
+                buildSelector(buttons, selectedCategoryIndex, (int index) {
+                  setState(() {
+                    selectedCategoryIndex = index;
+                  });
+                }),
+                10.heightBox,
+            
+                // List of items based on the selected category
+                Expanded(
+                  child: Builder(builder: (context) {
+                    if (selectedCategoryIndex == 1) {
+                      return BlocBuilder<ExamScheduleListCubit,
+                          ExamScheduleListState>(
+                        builder: (context, state) {
+                          if (state is ExamScheduleListLoadingState) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (state is ExamScheduleListSuccessState) {
+                            return ListView.builder(
+                              itemCount: state.scheduleModel
+                                      .examinationschedulemodel?.length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                return timeCard1(
+                                        context: context,
+                                        scheduleModel: state.scheduleModel,
+                                        subject: state.scheduleModel
+                                                .examinationschedulemodel
+                                                ?.elementAt(index)
+                                                .examName ??
+                                            "",
+                                        selectedCategoryIndex:
+                                            selectedCategoryIndex,
+                                        onTap: () {
+                                          if (selectedCategoryIndex == 1) {
+                                            NavigationService.navigateTo(
+                                                ExamSchedule(
+                                                  scheduleModel:
+                                                      state.scheduleModel,
+                                                  subjectName: state
+                                                      .scheduleModel
+                                                      ?.examinationschedulemodel?[
+                                                          index]
+                                                      .subjectName,
+                                                  examDate: state
+                                                      .scheduleModel
+                                                      ?.examinationschedulemodel?[
+                                                          index]
+                                                      .examdate,
+                                                ),
+                                                context);
+                                          }
+                                        })
+                                    .pSymmetric(
+                                        v: 8); // Padding between cards
+                              },
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      );
+                    } else if (selectedCategoryIndex == 0) {
+                      return BlocBuilder<ReportCardListCubit,
+                          ReportCardListState>(
+                        builder: (context, state) {
+                          if (state is ReportCardListLoadingState) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (state is ReportCardListSuccessState) {
+                            return ListView.builder(
+                              itemCount:
+                                  state.reportCardModel.report?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                return timeCard1(
+                                  context: context,
+                                  url: state.reportCardModel.report
+                                          ?.elementAt(index)
+                                          .reportUrl ??
+                                      "",
+                                  subject: state.reportCardModel.report
+                                          ?.elementAt(index)
+                                          .reportName ??
+                                      "",
+                                  selectedCategoryIndex:
+                                      selectedCategoryIndex,
+                                  onTap: () {
+                                    if (selectedCategoryIndex == 0) {
+                                      return launchBrowser(state
+                                          .reportCardModel
+                                          .report?[index]
+                                          .reportUrl);
+                                    }
+                                  },
+                                ).pSymmetric(v: 8); // Padding between cards
+                              },
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      );
+                    } else if (selectedCategoryIndex == 2) {
+                      return BlocBuilder<ExamMarksListCubit,
+                          ExamMarksListState>(
+                        builder: (context, state) {
+                          if (state is ExamMarksListLoadingState) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (state is ExamMarksListSuccessState) {
+                            return ListView.builder(
+                              itemCount: state.examMarksModel
+                                      .examinationmarksmodel?.length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                return timeCard1(
+                                        context: context,
+                                        examinationmarksmodel:
+                                            state.examMarksModel,
+                                        subject: state.examMarksModel
+                                                .examinationmarksmodel
+                                                ?.elementAt(index)
+                                                .examName ??
+                                            "",
+                                        selectedCategoryIndex:
+                                            selectedCategoryIndex,
+                                        onTap: () {
+                                          if (selectedCategoryIndex == 2) {
+                                            NavigationService.navigateTo(
+                                                ExaminationScreenMarks(
+                                                    examinationmarksmodel:
+                                                        state.examMarksModel),
+                                                context);
+                                          }
+                                        })
+                                    .pSymmetric(
+                                        v: 8); // Padding between cards
+                              },
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('No data available for this category.'),
+                      );
+                    }
                   }),
-                  10.heightBox,
-
-                  // List of items based on the selected category
-                  Expanded(
-                    child: Builder(builder: (context) {
-                      if (selectedCategoryIndex == 1) {
-                        return BlocBuilder<ExamScheduleListCubit,
-                            ExamScheduleListState>(
-                          builder: (context, state) {
-                            if (state is ExamScheduleListLoadingState) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (state is ExamScheduleListSuccessState) {
-                              return ListView.builder(
-                                itemCount: state.scheduleModel
-                                        .examinationschedulemodel?.length ??
-                                    0,
-                                itemBuilder: (context, index) {
-                                  return timeCard1(
-                                          context: context,
-                                          scheduleModel: state.scheduleModel,
-                                          subject: state.scheduleModel
-                                                  .examinationschedulemodel
-                                                  ?.elementAt(index)
-                                                  .examName ??
-                                              "",
-                                          selectedCategoryIndex:
-                                              selectedCategoryIndex,
-                                          onTap: () {
-                                            if (selectedCategoryIndex == 1) {
-                                              NavigationService.navigateTo(
-                                                  ExamSchedule(
-                                                    scheduleModel:
-                                                        state.scheduleModel,
-                                                    subjectName: state
-                                                        .scheduleModel
-                                                        ?.examinationschedulemodel?[
-                                                            index]
-                                                        .subjectName,
-                                                    examDate: state
-                                                        .scheduleModel
-                                                        ?.examinationschedulemodel?[
-                                                            index]
-                                                        .examdate,
-                                                  ),
-                                                  context);
-                                            }
-                                          })
-                                      .pSymmetric(
-                                          v: 8); // Padding between cards
-                                },
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        );
-                      } else if (selectedCategoryIndex == 0) {
-                        return BlocBuilder<ReportCardListCubit,
-                            ReportCardListState>(
-                          builder: (context, state) {
-                            if (state is ReportCardListLoadingState) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (state is ReportCardListSuccessState) {
-                              return ListView.builder(
-                                itemCount:
-                                    state.reportCardModel.report?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return timeCard1(
-                                    context: context,
-                                    url: state.reportCardModel.report
-                                            ?.elementAt(index)
-                                            .reportUrl ??
-                                        "",
-                                    subject: state.reportCardModel.report
-                                            ?.elementAt(index)
-                                            .reportName ??
-                                        "",
-                                    selectedCategoryIndex:
-                                        selectedCategoryIndex,
-                                    onTap: () {
-                                      if (selectedCategoryIndex == 0) {
-                                        return launchBrowser(state
-                                            .reportCardModel
-                                            .report?[index]
-                                            .reportUrl);
-                                      }
-                                    },
-                                  ).pSymmetric(v: 8); // Padding between cards
-                                },
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        );
-                      } else if (selectedCategoryIndex == 2) {
-                        return BlocBuilder<ExamMarksListCubit,
-                            ExamMarksListState>(
-                          builder: (context, state) {
-                            if (state is ExamMarksListLoadingState) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (state is ExamMarksListSuccessState) {
-                              return ListView.builder(
-                                itemCount: state.examMarksModel
-                                        .examinationmarksmodel?.length ??
-                                    0,
-                                itemBuilder: (context, index) {
-                                  return timeCard1(
-                                          context: context,
-                                          examinationmarksmodel:
-                                              state.examMarksModel,
-                                          subject: state.examMarksModel
-                                                  .examinationmarksmodel
-                                                  ?.elementAt(index)
-                                                  .examName ??
-                                              "",
-                                          selectedCategoryIndex:
-                                              selectedCategoryIndex,
-                                          onTap: () {
-                                            if (selectedCategoryIndex == 2) {
-                                              NavigationService.navigateTo(
-                                                  ExaminationScreenMarks(
-                                                      examinationmarksmodel:
-                                                          state.examMarksModel),
-                                                  context);
-                                            }
-                                          })
-                                      .pSymmetric(
-                                          v: 8); // Padding between cards
-                                },
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        );
-                      } else {
-                        return const Center(
-                          child: Text('No data available for this category.'),
-                        );
-                      }
-                    }),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
