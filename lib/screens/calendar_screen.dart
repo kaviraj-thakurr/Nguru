@@ -48,7 +48,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     initCubit();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +62,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 dashboardAppBar(),
                                 CustomSearchBar(controller: searchBarController),
                                 10.heightBox,
+                EventCalendar(
+                  startDate: widget.startDate,
+                  endDate: widget.endDate,
+                ),
+                20.heightBox,
                 Expanded(
                   child: SizedBox(
                       child: BlocConsumer<CalendarEventCubit,
