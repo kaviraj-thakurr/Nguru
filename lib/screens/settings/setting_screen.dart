@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
 import 'package:nguru/custom_widgets/custom_tags.dart';
+import 'package:nguru/logic/push_notification/push_notification_cubit.dart';
 import 'package:nguru/logic/setting_screen/setting_screen_cubit.dart';
 import 'package:nguru/logic/setting_screen/setting_screen_state.dart';
 import 'package:nguru/logic/signout/signout_cubit.dart';
@@ -226,26 +227,22 @@ class _SettingScreenState extends State<SettingScreen> {
                 textColor: MyColors.fadedTextColor),
           ),
           settingItem.label == "Push Notification"
-              ? GestureDetector(
-                  onTap: () => context
-                      .read<SettingScreenCubit>()
-                      .togglePushNotification(),
-                  child: BlocConsumer<SettingScreenCubit, SettingScreenState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        if (state is SettingScreenInitialState) {
-                          return notificationSwitch(false, context);
-                        } else if (state is SettingScreenLoadingState) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (state is SettingScreenSuccessState) {
-                          return notificationSwitch(state.toggleState, context);
-                        } else {
-                          return notificationSwitch(false, context);
-                        }
-                      }),
-                )
+              ? BlocConsumer<SettingScreenCubit, SettingScreenState>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    if (state is SettingScreenInitialState) {
+                      return notificationSwitch(false, context);
+                    } else if (state is SettingScreenLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is SettingScreenSuccessState) {
+                      context.read<PushNotificationCubit>().pushNotification(state.toggleState);
+                      return notificationSwitch(state.toggleState, context);
+                    } else {
+                      return notificationSwitch(false, context);
+                    }
+                  })
               : const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,

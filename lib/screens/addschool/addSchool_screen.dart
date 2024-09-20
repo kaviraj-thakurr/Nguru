@@ -223,15 +223,21 @@ class _AddSchoolState extends State<AddSchool> {
                   visible: !widget.isAddSchoolScreen,
                   child: TextButton(
                     onPressed: () {
-                      _validateSchoolUrl;
-                      _validateSubDomain;
-                      _validateSchoolName;
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) =>
-                      //           const AddSchool(isAddSchoolScreen: true),
-                      //     ));
+                      String errorMessage = '';
+                          if (schoolUrlController.text.isEmpty) {
+                            errorMessage = MyStrings.enterSchoolUrl;
+                          } else if (subdomainController.text.isEmpty) {
+                            errorMessage = MyStrings.subDomainRequired;
+                          } else if (_validateSchoolName(
+                                  schoolNameController.text) !=
+                              null) {
+                            errorMessage = MyStrings.schoolNameRequired;
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(errorMessage),
+                            ),
+                          );
                     },
                     child: Text(
                       MyStrings.add,

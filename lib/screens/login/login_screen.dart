@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:nguru/custom_widgets/custom_textformfield.dart';
 import 'package:nguru/local_database/add_school_list_hive_box.dart';
+import 'package:nguru/logic/forgot_password/forgot_password_cubit.dart';
+import 'package:nguru/logic/forgot_password/forgot_password_state.dart';
 import 'package:nguru/logic/form_validation/form_validation_cubit.dart';
 import 'package:nguru/screens/addschool/addSchool_screen.dart';
 import 'package:nguru/screens/dashboard_screen.dart';
@@ -321,11 +323,55 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           } else {
-                            NavigationService.navigateTo(
-                              ForgotPassword(
-                                  username: userNameController.text.trim()),
-                              context,
-                            );
+                        //      if (_formKey.currentState!.validate()) {
+                        //   isFromForgotPassword = true;
+                        //   context.read<ForgetPassCubit>().forgotPassword(
+                        //         userNameController.text.trim(),
+                        //       );
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text(MyStrings.enterUserNamePass),
+                        //     ),
+                        //   );
+                        // }
+                            context.read<ForgetPassCubit>().forgotPassword(
+                                userNameController.text.trim(),);
+                            
+                       BlocConsumer<ForgetPassCubit, ForgetPasswordState>(
+                    builder: (context, state) {
+                  if (state is ForgetPassLoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return PrimaryButton(
+                      title: MyStrings.submit,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          isFromForgotPassword = true;
+                          context.read<ForgetPassCubit>().forgotPassword(
+                                userNameController.text.trim(),
+                              );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(MyStrings.enterUserNamePass),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }
+                }, listener: (context, state) {
+                  if (state is ForgetPassSuccessState) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(MyStrings.forgotPassInstruction)));
+                   
+                  } else if (state is ForgetPassErrorState) {
+                    _showSnackBar(context, state.message);
+                  }
+                });
                           }
                         },
                         child: Text(

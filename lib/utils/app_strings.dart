@@ -29,6 +29,7 @@ class MyStrings {
   static const String appName = "Nguru";
   static const String transport = "Transport";
   static const String schoolNameRequired = "School Name required";
+  static const String subDomainRequired = "Sub Domain required";
   static const String add = "Add School";
   static const String submit = "Submit";
   static const String needHelp = "Need help?";

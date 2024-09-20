@@ -105,4 +105,9 @@ class EndUrl{
 // STUDENT PROFILE 
    static const String myProfileGetDetail = "MyProfile/GetDetail";
 
+
+
+   // notification on off
+   static const String notificationSet = "Notification/Set";
+
 }

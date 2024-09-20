@@ -14,12 +14,23 @@ class SharedPref {
   static const String _startDate = "StartDate";
   static const String _endDate = "EndDate";
   static const String _isFromSelectSessionScreen = "SessionSelected";
+
    static const String _fcmToken = "fcmToken";
+   static const String _notificationToggle = "notificationToggle";
 
   static const String _userName = "userName";
 
 
-//Save user Name
+  // Save logged in status
+  static Future<void> saveNotificationToggle(bool isNotificationToggle) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_notificationToggle.toString(), isNotificationToggle);
+  }
+
+
+
+
+//Save fcmToken
   static Future<void> saveFcmToken(String fcmToken) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_fcmToken, fcmToken);
@@ -210,6 +221,13 @@ class SharedPref {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     return prefs.getString(_fcmToken);
+  }
+
+    // Get notification toggle
+  static Future<bool?> getNotificationToggle() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getBool(_notificationToggle);
   }
 
 //////////////////////////////////////////////////// CLEARING ALL SHARED PREFS

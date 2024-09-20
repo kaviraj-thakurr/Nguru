@@ -57,13 +57,13 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
         children: [
           Image.asset(MyAssets.background_2),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(18),
             child: Column(
               children: [
-                20.heightBox,
-                dashboardAppBar(),
-                CustomSearchBar(controller: _searchController),
-                20.heightBox,
+                10.heightBox,
+                                dashboardAppBar(),
+                                CustomSearchBar(controller: _searchController),
+                                10.heightBox,
                 screenTitleHeader(MyStrings.infirmary,
                     onPressed: () => Navigator.pop(context)),
                 20.heightBox,

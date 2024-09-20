@@ -49,110 +49,99 @@ class _ActivityScreenState extends State<ActivityScreen> {
       body: Stack(
         children: [
           Image.asset(MyAssets.background_2),
-          Column(
-            children: [
-              10.heightBox,
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: dashboardAppBar(),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: CustomSearchBar(controller: _searchController),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: screenTitleHeader(MyStrings.activity,
-                    onPressed: () => Navigator.pop(context)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 15, left: 15, right: 15, bottom: 5),
-                child: Row(
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              children: [
+                10.heightBox,
+                                  dashboardAppBar(),
+                                  CustomSearchBar(controller: _searchController),
+                                  10.heightBox,
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     customTabSelector(selecterItems, currentTab, onTabSelection,false),
                   ],
                 ),
-              ),
-              Expanded(
-                  child: BlocConsumer<ActivityCubit, ActivityState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        if (state is ActivityLoadingState) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (state is ActivitySuccessState) {
-                          return state.activityList.isEmpty
-                              ? Center(
-                                  child: Column(
-                                  children: [
-                                    160.heightBox,
-                                    SvgPicture.asset(
-                                      MyAssets.noDataFound,
-                                      height: height150,
-                                    ),
-                                    5.heightBox,
-                                    Text(
-                                      MyStrings.noActivityFound,
-                                      style: FontUtil.customStyle(
-                                          fontSize: 14.h,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: APP_FONT,
-                                          textColor: MyColors.noDataFoundTitle),
-                                    ),
-                                  ],
-                                ))
-                              : Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: state.activityList.length,
-                                      itemBuilder: (context, index) {
-                                        var items = state.activityList[index];
-                                        return Column(
-                                          children: [
-                                            activityItems(context,
-                                                eventName: items.activityName,
-                                                eventLevel: items.eventLevel,
-                                                position: items.position,
-                                                eventDate: DateFormat("MMM dd")
-                                                    .format(DateFormat(
-                                                            "dd-MMM-yyyy")
-                                                        .parse(
-                                                            items.eventDate ??
-                                                                "dd-MMM-yyyy")),
-                                                points:
-                                                    items.points.toString()),
-                                            15.heightBox,
-                                          ],
-                                        );
-                                      }),
-                                );
-                        } else if (state is ActivityErrorState) {
-                          return Center(
-                            child: Text(
-                              state.message,
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              MyStrings.undefinedState,
-                              style: FontUtil.customStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  textColor: MyColors.boldTextColor),
-                            ),
-                          );
-                        }
-                      })),
-            ],
+                Expanded(
+                    child: BlocConsumer<ActivityCubit, ActivityState>(
+                        listener: (context, state) {},
+                        builder: (context, state) {
+                          if (state is ActivityLoadingState) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (state is ActivitySuccessState) {
+                            return state.activityList.isEmpty
+                                ? Center(
+                                    child: Column(
+                                    children: [
+                                      160.heightBox,
+                                      SvgPicture.asset(
+                                        MyAssets.noDataFound,
+                                        height: height150,
+                                      ),
+                                      5.heightBox,
+                                      Text(
+                                        MyStrings.noActivityFound,
+                                        style: FontUtil.customStyle(
+                                            fontSize: 14.h,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: APP_FONT,
+                                            textColor: MyColors.noDataFoundTitle),
+                                      ),
+                                    ],
+                                  ))
+                                : Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount: state.activityList.length,
+                                        itemBuilder: (context, index) {
+                                          var items = state.activityList[index];
+                                          return Column(
+                                            children: [
+                                              activityItems(context,
+                                                  eventName: items.activityName,
+                                                  eventLevel: items.eventLevel,
+                                                  position: items.position,
+                                                  eventDate: DateFormat("MMM dd")
+                                                      .format(DateFormat(
+                                                              "dd-MMM-yyyy")
+                                                          .parse(
+                                                              items.eventDate ??
+                                                                  "dd-MMM-yyyy")),
+                                                  points:
+                                                      items.points.toString()),
+                                              15.heightBox,
+                                            ],
+                                          );
+                                        }),
+                                  );
+                          } else if (state is ActivityErrorState) {
+                            return Center(
+                              child: Text(
+                                state.message,
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor),
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                MyStrings.undefinedState,
+                                style: FontUtil.customStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: MyColors.boldTextColor),
+                              ),
+                            );
+                          }
+                        })),
+              ],
+            ),
           ),
         ],
       ),

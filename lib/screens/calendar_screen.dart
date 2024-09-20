@@ -55,113 +55,109 @@ class _CalendarScreenState extends State<CalendarScreen> {
       children: [
         Image.asset(MyAssets.background_2),
         Padding(
-            padding: const EdgeInsets.all(8),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 1,
-              width: double.infinity,
-              child: Column(
-                children: [
-                  20.heightBox,
-                  dashboardAppBar(),
-                  CustomSearchBar(
-                    controller: searchBarController,
-                    hintText: MyStrings.search,
-                  ),
-                  screenTitleHeader(MyStrings.calender,
-                      onPressed: () => Navigator.pop(context)),
-                  EventCalendar(
-                    startDate: widget.startDate,
-                    endDate: widget.endDate,
-                  ),
-                  20.heightBox,
-                  Expanded(
-                    child: SizedBox(
-                        child: BlocConsumer<CalendarEventCubit,
-                                CalendarEventState>(
-                            listener: (context, state) {},
-                            builder: (context, state) {
-                              if (state is CalendarEventLoadingState) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else if (state is CalendarEventSuccessState &&
-                                  cubit.calendarEventList.isNotEmpty) {
-                                return isParticularEventDateSelected
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount: state
-                                                .calendarEventListData.length,
-                                            itemBuilder: (context, index) {
-                                              return footer(index, context,
-                                                  state.calendarEventListData);
-                                            }),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount:
-                                                cubit.calendarEventList.length,
-                                            itemBuilder: (context, index) {
-                                              return footer(index, context,
-                                                  cubit.calendarEventList);
-                                            }),
-                                      );
-                              } else if (state is CalendarEventFilteredState) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: state
-                                          .calendarEventFilteredList?.length,
-                                      itemBuilder: (context, index) {
-                                        return footer(
-                                            index,
-                                            context,
-                                            state.calendarEventFilteredList ??
-                                                []);
-                                      }),
-                                );
-                              } else if (cubit.calendarEventList.isEmpty) {
-                                return Center(
-                                  child: Text(
-                                    MyStrings.noEventsForThisMonth,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textColor: MyColors.boldTextColor),
-                                  ),
-                                );
-                              } else if (state is CalendarEventErrorState) {
-                                return Center(
-                                  child: Text(
-                                    "error${state.message}",
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textColor: MyColors.boldTextColor),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: Text(
-                                    MyStrings.undefinedState,
-                                    style: FontUtil.customStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        textColor: MyColors.boldTextColor),
-                                  ),
-                                );
-                              }
-                            })),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.03,
-                  ),
-                ],
-              ),
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              children: [
+                20.heightBox,
+                dashboardAppBar(),
+                CustomSearchBar(
+                  controller: searchBarController,
+                  hintText: MyStrings.search,
+                ),
+                screenTitleHeader(MyStrings.calender,
+                    onPressed: () => Navigator.pop(context)),
+                EventCalendar(
+                  startDate: widget.startDate,
+                  endDate: widget.endDate,
+                ),
+                20.heightBox,
+                Expanded(
+                  child: SizedBox(
+                      child: BlocConsumer<CalendarEventCubit,
+                              CalendarEventState>(
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            if (state is CalendarEventLoadingState) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (state is CalendarEventSuccessState &&
+                                cubit.calendarEventList.isNotEmpty) {
+                              return isParticularEventDateSelected
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          itemCount: state
+                                              .calendarEventListData.length,
+                                          itemBuilder: (context, index) {
+                                            return footer(index, context,
+                                                state.calendarEventListData);
+                                          }),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          itemCount:
+                                              cubit.calendarEventList.length,
+                                          itemBuilder: (context, index) {
+                                            return footer(index, context,
+                                                cubit.calendarEventList);
+                                          }),
+                                    );
+                            } else if (state is CalendarEventFilteredState) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    itemCount: state
+                                        .calendarEventFilteredList?.length,
+                                    itemBuilder: (context, index) {
+                                      return footer(
+                                          index,
+                                          context,
+                                          state.calendarEventFilteredList ??
+                                              []);
+                                    }),
+                              );
+                            } else if (cubit.calendarEventList.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  MyStrings.noEventsForThisMonth,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                              );
+                            } else if (state is CalendarEventErrorState) {
+                              return Center(
+                                child: Text(
+                                  "error${state.message}",
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                  MyStrings.undefinedState,
+                                  style: FontUtil.customStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      textColor: MyColors.boldTextColor),
+                                ),
+                              );
+                            }
+                          })),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
+              ],
             )),
       ],
     ));

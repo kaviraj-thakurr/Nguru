@@ -115,9 +115,8 @@ class AuthRepo {
     try {
       final res = await _myService
           .networkPost(isStagingLink: true, url: EndUrl.forgetPassword, data: {
-        "deviceToken":
-            "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-        "deviceType": "1",
+        "deviceToken": await SharedPref.getFcmToken(),
+         "deviceType": "1",
         "password": "",
         "schoolUrl": await SharedPref.getSchoolUrl(),
         "userName": userName
@@ -176,8 +175,7 @@ class AuthRepo {
           "appMessageID": 0,
           "circularID": 0,
           "contentType": 0,
-          "deviceToken":
-              "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
+         "deviceToken": await SharedPref.getFcmToken(),
           "deviceType": "1",
           "downloadAttachment": 0,
           "isNotification": 0,
@@ -629,9 +627,8 @@ class AuthRepo {
             "appMessageID": 0,
             "circularID": 0,
             "contentType": 0,
-            "deviceToken":
-                "egHYgbv1QiqwROrA6TvcKf:APA91bFdMzQfCILVclHscc9PmRT1eQHHdG62PNNLsI78pWvkbKjlFzEU3BgZuOvIHJrLo7yoyUNHPpE3s5c33Rsil7mIoAQpTlIiEzbrAfmuCNibeRIb4kGeLo82_mJBZ5OWugcg63S8",
-            "deviceType": "1",
+           "deviceToken": await SharedPref.getFcmToken(),
+             "deviceType": "1",
             "downloadAttachment": 0,
             "isNotification": 0,
             "messageTypeId": 0,
@@ -1313,9 +1310,8 @@ class AuthRepo {
     try {
       final res = await _myService
           .networkPost(url: EndUrl.signInLogout, isStagingLink: true, data: {
-        "deviceToken":
-            "cWG3o3r8R-WRIDh0lqWcGJ:APA91bG1WdxTuuYeiQkbbIN-24cCiejfBKFsU0x_2vde55fINGSoOGZmXD-479iD--hAJLJj4fOp_O2T9bydOL46zwy8q7nyfioUm3zFBogwW2QHXWo1XQEQZ4xYE-LOghv16MxHto93",
-        "deviceType": 1,
+         "deviceToken": await SharedPref.getFcmToken(),
+          "deviceType": 1,
         "userID": await SharedPref.getUserID(),
         "schoolID": await SharedPref.getSchoolID(),
         "studentID": await SharedPref.getStudentID(),
@@ -1416,13 +1412,13 @@ class AuthRepo {
 
   ////////////////////////////////////////////////    PUSH NOTIFICATION    //////////////////////////////////////////////////////
 
-  Future<Map<String, String>> pushNotification(int isNotification) async {
+  Future<Map<String, String>> pushNotification(bool isNotification) async {
     try {
       final res = await _myService
-          .networkPost(url: EndUrl.sendFeedback, isStagingLink: true, data: {
+          .networkPost(url: EndUrl.notificationSet, isStagingLink: true, data: {
         "deviceType": 1,
-        "deviceToken": "sample string 2",
-        "isNotification": isNotification,
+        "deviceToken": await SharedPref.getFcmToken(),
+        "isNotification": isNotification ? 1 : 0,
         "userID": await SharedPref.getUserID(),
         "schoolID": await SharedPref.getSchoolID(),
         "studentID": await SharedPref.getStudentID(),

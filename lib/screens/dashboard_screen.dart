@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,14 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nguru/custom_widgets/attendence_and_fee_card.dart';
 import 'package:nguru/custom_widgets/custom_appbar.dart';
-
 import 'package:nguru/custom_widgets/custom_searchbar.dart';
 import 'package:nguru/custom_widgets/navigation_services.dart';
 import 'package:nguru/custom_widgets/person_card.dart';
 import 'package:nguru/logic/assignment/assignment_month_list/assignment_month_list_cubit.dart';
 import 'package:nguru/logic/assignment/assignments_list/asssignment_list_cubit.dart';
 import 'package:nguru/logic/attendence/attendence_cubit.dart';
-import 'package:nguru/logic/attendence/attendence_state.dart';
 import 'package:nguru/logic/circular/circular_list/circular_cubit.dart';
 import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_cubit.dart';
 import 'package:nguru/logic/cumulative_attendance/cumulative_attendance_state.dart';
@@ -34,19 +31,14 @@ import 'package:nguru/screens/calendar_screen.dart';
 import 'package:nguru/screens/fees/fee_main_screen.dart';
 import 'package:nguru/screens/gallery_screen.dart';
 import 'package:nguru/screens/infirmary_screen.dart';
-
 import 'package:nguru/screens/settings/setting_screen.dart';
 import 'package:nguru/screens/library/library_screen.dart';
-
 import 'package:nguru/screens/story/story_screen.dart';
 import 'package:nguru/screens/time_table_screen.dart';
-import 'package:nguru/test.dart';
-
 import 'package:nguru/utils/app_assets.dart';
 import 'package:nguru/utils/app_colors.dart';
 import 'package:nguru/utils/app_font.dart';
 import 'package:nguru/utils/app_gapping.dart';
-
 import 'package:nguru/utils/app_strings.dart';
 import 'package:nguru/utils/shared_prefrences/shared_prefrences.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -268,11 +260,11 @@ class _NguruDashboardScreenState extends State<NguruDashboardScreen> {
                                           Flexible(
                                             flex: 5,
                                             child: GestureDetector(
-                                              // onTap: () => Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) =>
-                                              //             const FeesMainScreen())),
+                                              onTap: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const FeesMainScreen())),
                                               child: attendenceAndFeeCard(
                                                 context,
                                                 headerText: "Paid 23k",
