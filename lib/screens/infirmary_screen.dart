@@ -82,18 +82,18 @@ class _InfirmaryScreenState extends State<InfirmaryScreen> {
                           state.studentProfileState.personalInfo?.studentName ?? "",
                           "${state.studentProfileState.personalInfo?.className ?? ""} ${state.studentProfileState.personalInfo?.section ?? ""}",
                           state.studentProfileState.personalInfo?.admissionNumber ?? "",
-                         bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "",
+                         bloodGroup: state.studentProfileState.personalInfo?.bloodGroup ?? "Blood group: ",
                          gender: state.studentProfileState.personalInfo?.gender ?? "", 
-                          studentPicture:   state.studentProfileState.personalInfo?.studentPicture ?? "", 
+                          studentPicture:   state.studentProfileState.personalInfo?.studentPicture ?? "Gender: ", 
 );
                   } else if (state is StudentProfileErrorState) {
                     return customSettingProfileWidget(
                         context, screenWidth, screenHeight, ": ", "", "",
-                        bloodGroup: "", gender: "");
+                        bloodGroup: "Blood group: ", gender: "Gender: ");
                   } else {
                     return customSettingProfileWidget(context, screenWidth,
                         screenHeight, "name:", "class:", "Admission no:", 
-                        bloodGroup: "Blood group:", gender: "Gender:",studentPicture: "");
+                        bloodGroup: "Blood group:", gender: "Gender: ",studentPicture: "");
                   }
                 }),
                 20.heightBox,

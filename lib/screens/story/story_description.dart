@@ -49,6 +49,7 @@ class _StoryDescriptionState extends State<StoryDescription> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.white,
       floatingActionButton: widget.isCircular
           ? BlocConsumer<CircularDetailsCubit,CircularDetailState>(
             listener: (context, state) {

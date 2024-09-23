@@ -259,6 +259,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           obscureText: _obscureText,
                           controller: passWordController,
+                          inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny spaces
+                          ],
                           decoration: InputDecoration(
                             label: const Text(
                               MyStrings.passWord,

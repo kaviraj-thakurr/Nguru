@@ -479,6 +479,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                   width: 60,
                                   child: customTags(
                                       dueDate.toString(),
+                                    libraryIssued !=null ? 
+                                     MyColors.yellowShade_5
+                                          :
                                       currentDateForCheckingDueDate.isAfter(
                                               DateFormat("dd MMM yyyy")
                                                   .parse(dueDate ?? ""))

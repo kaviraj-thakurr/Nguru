@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,8 +27,8 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
-  int selectedDay = DateTime.now().weekday; 
-  bool isSelected=false;
+  int selectedDay = DateTime.now().weekday;
+  bool isSelected = false;
 
   @override
   void initState() {
@@ -46,13 +48,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
             ),
           ),
           Padding(
-            padding: const  EdgeInsets.all(18),
+            padding: const EdgeInsets.all(18),
             child: Column(
               children: [
                 10.heightBox,
-                                dashboardAppBar(),
-                              
-                                10.heightBox,
+                dashboardAppBar(),
+                10.heightBox,
                 screenTitleHeader(MyStrings.timeTable,
                     onPressed: () => Navigator.pop(context)),
                 20.heightBox,
@@ -84,26 +85,22 @@ class _TimetableScreenState extends State<TimetableScreen> {
   Widget weekDaysRow() {
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: List.generate(7, (index) {
-        return gradientRoundedBorderButton(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(7, (index) {
+          return gradientRoundedBorderButton(
             title: days[index],
             onPressed: () {
               setState(() {
                 selectedDay = index + 1;
               });
             },
-          //  fontSize: 12,
+            //  fontSize: 12,
             fontWeight:
-selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
-          isSelected: selectedDay == index + 1,);
-
-      })
-    );
+                selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
+            isSelected: selectedDay == index + 1,
+          );
+        }));
   }
-
-
-  
 
   Widget timetablePage(BuildContext context, List<ListTimeTable>? list) {
     if (list == null || list.isEmpty) {
@@ -161,7 +158,9 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
     }
 
     return SingleChildScrollView(
-      child: Column(
+
+      child:
+       Column(
         children: filteredList.asMap().entries.map((entry) {
           int index = entry.key;
           ListTimeTable item = entry.value;
@@ -288,10 +287,10 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                           child: Text(
                             getSuffix(int.parse("${item.periodSrNo}")),
                             style: FontUtil.customStyle(
-                    fontSize: 17.h,
-                    fontWeight: FontWeight.w500,
-                    textColor: MyColors.teacherNameColor,
-                  ),
+                              fontSize: 17.h,
+                              fontWeight: FontWeight.w500,
+                              textColor: MyColors.teacherNameColor,
+                            ),
                           ),
                         ),
                       ),
@@ -300,9 +299,9 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                 ),
                 20.widthBox,
                 Text(
-                 teacherName.length > 23 ? '${teacherName.substring(0, 23)}.' : teacherName,
-                
-                 
+                  teacherName.length > 23
+                      ? '${teacherName.substring(0, 23)}.'
+                      : teacherName,
                   style: FontUtil.customStyle(
                     fontSize: 14.h,
                     fontWeight: FontWeight.w500,
@@ -335,7 +334,7 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
                       textColor: MyColors.periodOrTimeColor),
                 ),
                 Text(
-                 dateTimeFormate(item.time ?? ""),
+                  dateTimeFormate(item.time ?? ""),
                   style: FontUtil.customStyle(
                       fontSize: 12.h,
                       fontWeight: FontWeight.w500,
@@ -362,34 +361,33 @@ selectedDay == index + 1 ? FontWeight.bold : FontWeight.normal,
   }
 }
 
-
 String dateTimeFormate(String time) {
   String timeRange = time;
+
   
-  // Split the time range into start and end times
   List<String> times = timeRange.split(' -');
   if (times.length != 2) {
-    print('Invalid time range format');
+    debugPrint('Invalid time range format');
     return "";
   }
 
   String startTimeStr = times[0].trim();
   String endTimeStr = times[1].trim();
 
-  // Define the input and output formats
+
   DateFormat inputFormat = DateFormat('HH:mm:ss');
   DateFormat outputFormat = DateFormat('h:mma');
 
   try {
-    // Parse and format start time
+
     DateTime startTime = inputFormat.parse(startTimeStr);
     String formattedStartTime = outputFormat.format(startTime);
 
-    // Parse and format end time
+
     DateTime endTime = inputFormat.parse(endTimeStr);
     String formattedEndTime = outputFormat.format(endTime);
 
-    // Print the result
+
     debugPrint('$formattedStartTime - $formattedEndTime');
     return "$formattedStartTime - $formattedEndTime";
   } catch (e) {

@@ -29,6 +29,12 @@ class DisciplineScreen extends StatefulWidget {
 class _DisciplineScreenState extends State<DisciplineScreen> {
   TextEditingController searchController = TextEditingController();
   DateTime focusedDay = DateTime.now();
+  // for tab selector
+  List<String> selecterItems = [
+    "Discipline",
+    "Student behaviour",
+    "Student counselling",
+  ];
 
   @override
   void initState() {
@@ -227,22 +233,6 @@ class _DisciplineScreenState extends State<DisciplineScreen> {
                           );
                         }
                       }),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     IconButton(
-                  //         onPressed: () {},
-                  //         icon: SvgPicture.asset(MyAssets.back_arrow)),
-                  //     IconButton(
-                  //         onPressed: () {},
-                  //         icon: SvgPicture.asset(MyAssets.front_arrow)),
-                  //   ],
-                  // ),
-                  // Text('asdasdas')
-                  // const CustomProgressBar(
-                  //   progress: 0.3,
-                  //   dotCount: 0,
-                  // )
                 ],
               ),
             ),

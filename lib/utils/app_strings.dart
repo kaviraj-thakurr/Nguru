@@ -37,7 +37,7 @@ class MyStrings {
   static const String subdomain = "Sub Domain";
   static const String currentpass = "Current Password";
   static const String newpass = "New Password";
-  static const String timetable = "TimeTable";
+  static const String timetable = "Timetable";
   static const String confirmnewpass = "Confirm New Password";
   static const String customData =
       "Please sign in to access your child’s school information.";
